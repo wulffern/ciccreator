@@ -27,7 +27,7 @@ namespace cIcCore{
         setWidth(0);
         setHeight(0);
     }
-    Rect::Rect(QString layer, qreal x, qreal y, qreal width, qreal height){
+    Rect::Rect(QString layer, int x, int y, int width, int height){
         _layer = layer;
         setLeft(x);
         setTop(y);
@@ -92,19 +92,19 @@ namespace cIcCore{
         moveTo(rect->left(),rect->top());
     }
 
-    qreal Rect::snap(qreal x){
-        qreal GRID= 5;
-        qreal _x = (x/GRID)*GRID;
+    int Rect::snap(int x){
+        int GRID= 5;
+        int _x = (x/GRID)*GRID;
         return _x;
     }
 
-    Rect* Rect::adjustedOnce(qreal xp1){
+    Rect* Rect::adjustedOnce(int xp1){
         Rect* rect = new Rect(layer(),left() - xp1, bottom() - xp1, width() + 2*xp1, height() + 2*xp1);
         return rect;
     }
 
 
-    void Rect::mirrorX(qreal ax){
+    void Rect::mirrorX(int ax){
         this->setLeft(2.0*ax - this->left());
         this->setRight(2.0*ax - this->right());
 
@@ -117,7 +117,7 @@ namespace cIcCore{
         emit updated();
     }
 
-    void Rect::mirrorY(qreal ay){
+    void Rect::mirrorY(int ay){
 
         this->setTop(2 *  ay - this->top());
         this->setBottom(2 *  ay - this->bottom());

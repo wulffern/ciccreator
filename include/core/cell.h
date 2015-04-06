@@ -41,7 +41,7 @@ namespace cIcCore{
     void mirrorY(qreal ay);
     void moveTo(qreal ax, qreal ay);
     void moveCenter(qreal ax, qreal ay);
-    QRectF calcBoundingRect();
+    QRect calcBoundingRect();
     QString toString();
     static Cell * createInstance();
     QString name(){return _name;}

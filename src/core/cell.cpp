@@ -160,16 +160,16 @@ namespace cIcCore{
 
 
   void Cell::updateBoundingRect(){
-    QRectF r = this->calcBoundingRect();
+    QRect r = this->calcBoundingRect();
     qDebug() << r;
     this->setRect(r);
   }
 
-  QRectF Cell::calcBoundingRect(){
-    qreal x1  = std::numeric_limits<qreal>::max();
-    qreal y1  = std::numeric_limits<qreal>::max();
-    qreal x2  = -std::numeric_limits<qreal>::max();
-    qreal y2  =  -std::numeric_limits<qreal>::max();
+  QRect Cell::calcBoundingRect(){
+    qreal x1  = std::numeric_limits<int>::max();
+    qreal y1  = std::numeric_limits<int>::max();
+    qreal x2  = -std::numeric_limits<int>::max();
+    qreal y2  =  -std::numeric_limits<int>::max();
 
     qDebug() << x1 << " " << y1 << " " << x2 << " " << y2;
     foreach(Rect* cr, _children) {
@@ -190,11 +190,11 @@ namespace cIcCore{
           }
 
       }
-    QRectF r;
-    r.setLeft(x1);
-    r.setTop(y1);
-    r.setRight(x2);
-    r.setBottom(y2);
+    QRect r;
+    r.setX(x1);
+    r.setY(y1);
+    r.setWidth(x2 - x1);
+    r.setHeight(y2 - y1);
     return r;
 
 
