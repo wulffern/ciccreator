@@ -27,7 +27,7 @@ namespace cIcCore{
 
     class Rect : public QObject
     {
-        Q_OBJECT;
+      Q_OBJECT
 
     public:
         Rect();

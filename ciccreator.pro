@@ -5,6 +5,7 @@
 QT += core
 QT -= gui
 
+
 CONFIG += qt console debug
 CONFIG -= app_bundle
 
@@ -20,7 +21,12 @@ INCLUDEPATH += include/
 
 # Input
 
+HEADERS +=  include/core/rect.h include/core/cell.h include/core/design.h \ 
+    include/core/patterntile.h \
+    include/core/patterntransistor.h
 
-HEADERS +=  include/core/rect.h include/core/cell.h include/core/design.h 
-SOURCES += src/core/rect.cpp src/core/cell.cpp src/core/design.cpp src/main.cpp 
+SOURCES += src/core/rect.cpp src/core/cell.cpp  src/main.cpp \ 
+    src/core/patterntile.cpp \
+    src/core/patterntransistor.cpp \
+    src/core/design.cpp
 

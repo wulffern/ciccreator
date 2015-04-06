@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
 	qWarning() << "argc : " << argc;
 	qWarning() << "argv[0] : " << argv[0];
 	qWarning() << "argv[1] : " << argv[1];
+
 	
 	if(argc ==  2){
 		cIcCore::Design * c = new cIcCore::Design();

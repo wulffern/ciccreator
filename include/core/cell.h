@@ -20,17 +20,20 @@
 #define CIC_CORE_CELL_H
 
 #include <QObject>
+
 #include "rect.h"
 
 namespace cIcCore{
 
   class Cell: public Rect
   {
-    Q_OBJECT;
+    Q_OBJECT
+    Q_PROPERTY(QString name READ name WRITE setName)
 
   public:
     Cell();
-
+    Cell(const Cell&);
+    ~Cell();
     Rect * getRect(QString layer);
     void add(Rect* rect);
     void translate(qreal dx, qreal dy);
@@ -41,6 +44,8 @@ namespace cIcCore{
     QRectF calcBoundingRect();
     QString toString();
     static Cell * createInstance();
+    QString name(){return _name;}
+    QString setName(QString val){ _name = val; return _name;}
 
   private:
     QList<Rect*> _children;
@@ -55,8 +60,8 @@ namespace cIcCore{
 
   };
 
-
-
 }
+
+Q_DECLARE_METATYPE(cIcCore::Cell)
 
 #endif

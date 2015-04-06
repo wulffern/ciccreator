@@ -25,23 +25,27 @@
 #include <QObject>
 #include <QString>
 #include <QJsonObject>
-#include <core/cell.h>
-
+//#include <QMetaType>
+#include "core/patterntransistor.h"
 namespace cIcCore{
 
     class Design: public QObject
     {
-        Q_OBJECT;
+        Q_OBJECT
 
-		typedef Cell * (*fp)();
+		//typedef Cell * (*fp)();
 		
     public:
         Design();
         void read(QString filename);
+		
 
     private:
-        QHash<QString,fp> cellTranslator;
+        QHash<QString,QString> cellTranslator;
+      QHash<QString,QString> nameTranslator;
 		QHash<QString,Cell> _designs;
+		void findAllParents(QList<Cell *> reverse_parents,QString inh);
+		void createCell(QString cl, QJsonObject jobj);
 
     signals:
 
