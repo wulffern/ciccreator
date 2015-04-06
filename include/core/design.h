@@ -38,6 +38,8 @@ namespace cIcCore{
     public:
         Design();
         void read(QString filename);
+        void runIfObjectCanMethods(Cell * c, QJsonObject jobj);
+        void runAllMethods(QString jname, Cell *c, QJsonObject jobj);
 		
 
     private:

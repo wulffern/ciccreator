@@ -41,6 +41,10 @@ namespace cIcCore{
 
   }
 
+  void Cell::paint(){qDebug() << "Painting Cell";}
+  void Cell::route(){}
+  void Cell::place(){}
+  void Cell::addAllPorts(){}
 
   Rect* Cell::getRect(QString layer){
     foreach (Rect* child, _children){
@@ -71,7 +75,7 @@ namespace cIcCore{
     this->updateBoundingRect();
   }
 
-  void Cell::translate(qreal dx, qreal dy) {
+  void Cell::translate(int dx, int dy) {
 
     Rect::translate(dx,dy);
 
@@ -86,12 +90,12 @@ namespace cIcCore{
     this->updateBoundingRect();
   }
 
-  void Cell::mirrorX(qreal ax) {
+  void Cell::mirrorX(int ax) {
     this->setLeft(2*ax - this->left());
     this->setRight(2*ax - this->right());
 
     if (this->right() < this->left()) {
-        qreal tmp = this->left();
+        int tmp = this->left();
         this->setLeft(this->right());
         this->setRight(tmp);
       }
@@ -106,13 +110,13 @@ namespace cIcCore{
     emit updated();
   }
 
-  void Cell::mirrorY(qreal ay) {
+  void Cell::mirrorY(int ay) {
 
     this->setTop(2 *  ay - this->top());
     this->setBottom(2 *  ay - this->bottom());
 
     if (this->bottom() < this->top()) {
-        qreal tmp = this->top();
+        int tmp = this->top();
         this->setTop(this->bottom());
         this->setTop(tmp);
       }
@@ -127,10 +131,10 @@ namespace cIcCore{
     emit updated();
   }
 
-  void Cell::moveTo(qreal ax, qreal ay) {
+  void Cell::moveTo(int ax, int ay) {
 
-    qreal x1 = this->left();
-    qreal y1 = this->top();
+    int x1 = this->left();
+    int y1 = this->top();
 
     this->setRight(this->right() + ax - this->left());
     this->setBottom(this->bottom() + ay - this->top());
@@ -146,14 +150,14 @@ namespace cIcCore{
 
   }
 
-  void Cell::moveCenter(qreal ax, qreal ay) {
+  void Cell::moveCenter(int ax, int ay) {
     this->updateBoundingRect();
 
-    qreal xc1 = this->centerX();
-    qreal yc1 = this->centerY();
+    int xc1 = this->centerX();
+    int yc1 = this->centerY();
 
-    qreal xpos = this->left() - ( xc1 - ax );
-    qreal ypos = this->top() - ( yc1 - ay );
+    int xpos = this->left() - ( xc1 - ax );
+    int ypos = this->top() - ( yc1 - ay );
 
     this->moveTo(xpos,ypos);
   }
@@ -161,15 +165,15 @@ namespace cIcCore{
 
   void Cell::updateBoundingRect(){
     QRect r = this->calcBoundingRect();
-    qDebug() << r;
-    this->setRect(r);
+   // qDebug() << r;
+    //this->setRect(r);
   }
 
   QRect Cell::calcBoundingRect(){
-    qreal x1  = std::numeric_limits<int>::max();
-    qreal y1  = std::numeric_limits<int>::max();
-    qreal x2  = -std::numeric_limits<int>::max();
-    qreal y2  =  -std::numeric_limits<int>::max();
+    int x1  = std::numeric_limits<int>::max();
+    int y1  = std::numeric_limits<int>::max();
+    int x2  = -std::numeric_limits<int>::max();
+    int y2  =  -std::numeric_limits<int>::max();
 
     qDebug() << x1 << " " << y1 << " " << x2 << " " << y2;
     foreach(Rect* cr, _children) {

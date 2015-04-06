@@ -23,41 +23,46 @@
 
 namespace cIcCore{
 
-    class PatternTile: public Cell
-    {
-        Q_OBJECT
-		Q_PROPERTY(int minPolyLength READ minPolyLength WRITE setMinPolyLength())
-		
-    public:
-		
-        PatternTile();
-		
-		PatternTile(const PatternTile&);
+  class PatternTile: public Cell
+  {
+    Q_OBJECT
+    Q_PROPERTY(int minPolyLength READ minPolyLength WRITE setMinPolyLength)
 
-		~PatternTile();
+  public:
 
-       Q_INVOKABLE void fillCoordinatesFromString(QJsonArray ar);
+    PatternTile();
 
-		QHash<QString,QVariant> initFillCoordinates();
-		void onFillCoordinate(QChar c, QString layer, int x, int y, QHash<QString,QVariant> data);
-		void endFillCoordinate(QHash<QString,QVariant> data);
-		int minPolyLength(){return _minPolyLength;};
-		int setMinPolyLength(int val){
-			_minPolyLength = val;
-			return _minPolyLength;
-		}
+    PatternTile(const PatternTile&);
 
+    ~PatternTile();
 
+    Q_INVOKABLE void fillCoordinatesFromString(QJsonArray ar);
 
+    QHash<QString,QVariant> initFillCoordinates();
+    void onFillCoordinate(QChar c, QString layer, int x, int y, QHash<QString,QVariant> data);
+    void endFillCoordinate(QHash<QString,QVariant> data);
+    int minPolyLength(){return minPolyLength_;}
+    int setMinPolyLength(int val){
+      minPolyLength_ = val;
+      return minPolyLength_;
+    }
+    void paint() override;
 
 
-    private:
-                int _minPolyLength;
-            int _xmax;
-            int _ymax;
-            int _yoffset;
+  private:
+    int minPolyLength_;
+    int xmax_;
+    int ymax_;
+    qreal yoffset_;
+    qreal xoffset_;
+    int xspace_;
+    int yspace_;
+    int currentHeight_;
+    QHash<QString,QList<QString> > layers_;
 
-    };
+   // inline int xs(int x){  return (x + xoffset_)*xspace_;}
+    //inline int ys(int y){ return (y + yoffset_)*yspace_;}
+  };
 
 }
 

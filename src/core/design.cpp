@@ -25,6 +25,7 @@ namespace cIcCore{
        qRegisterMetaType<cIcCore::PatternTile>("cIcCore::PatternTile");
        qRegisterMetaType<cIcCore::PatternTransistor>("cIcCore::PatternTransistor");
        cellTranslator["Gds::GdsPatternTransistor"] = "cIcCore::PatternTransistor";
+       //cellTranslator["Layout::LayoutDigitalCell"] = "cIcCore::Cell";
 
        nameTranslator["type"] = "mosType";
     }
@@ -34,6 +35,67 @@ namespace cIcCore{
 	{
 
 	}
+
+    void Design::runAllMethods(QString jname, Cell *c, QJsonObject jobj){
+      QJsonValue jo = jobj[jname];
+      if(jo.isUndefined()) return;
+      qWarning() << "Running " << jname;
+      QJsonObject job = jo.toObject();
+      this->runIfObjectCanMethods(c,job);
+
+    }
+
+    void Design::runIfObjectCanMethods(Cell * c, QJsonObject jobj){
+
+      const QMetaObject * mobj = c->metaObject();
+      //Make a hash of the existing methods
+      QHash<QString,QMetaMethod> methods;
+      for(int i =0;i<mobj->methodCount();i++){
+         QMetaMethod  m = mobj->method(i);
+         methods[m.name()] = m;
+      }
+      QHash<QString,QMetaProperty> properties;
+      for(int i =0;i<mobj->propertyCount();i++){
+         QMetaProperty  p = c->metaObject()->property(i);
+         properties[p.name()] = p;
+      }
+
+
+      //Search throught the json file and find methods that can be run
+    QRegularExpression re("^new|class|name|before.*|after.*");
+  //qWarning() << "Expression"  <<   re.isValid();
+      foreach( QString key, jobj.keys()){
+        if(re.match(key).hasMatch()){ continue;}
+
+         if(nameTranslator.contains(key)){
+             key = nameTranslator[key];
+           }
+
+      if(methods.contains(key)){
+          QMetaMethod m = methods[key];
+          QJsonArray arg = jobj[key].toArray();
+          m.invoke(c,Qt::DirectConnection, Q_ARG(QJsonArray, arg));
+      }else if(key.endsWith("s")  && methods.contains(key.left(key.length()-1))){
+          //Iterate over array if function exists without the "s" at the end
+          QMetaMethod m = methods[key.left(key.length()-1)];
+          QJsonArray arg = jobj[key].toArray();
+          foreach(QJsonValue v, arg){
+                 QJsonArray ar1 = v.toArray();
+                 m.invoke(c,Qt::DirectConnection, Q_ARG(QJsonArray, ar1));
+          }
+
+      }else if(properties.contains(key)){
+        QMetaProperty p = properties[key];
+        QJsonValue v = jobj[key];
+
+          p.write(c,v.toVariant());
+
+      }else{
+         qWarning() << "Could not find method " << key << " on " << c->metaObject()->className();
+        }
+    }
+
+    }
 
     void Design::createCell(QString cl, QJsonObject jobj){
 
@@ -83,54 +145,42 @@ namespace cIcCore{
         if(id != 0){
             void* vp = QMetaType::create(id);
             Cell * c  = reinterpret_cast<Cell*>(vp);
-            const QMetaObject * obj =  c->metaObject();
+            QString name = jobj["name"].toString();
+            qDebug() << "";
+            qDebug() << "Cell "  << name;
+
+            c->setName(name);
 
             //TODO: Implement events (afterNew, beforeRoute etc)
             //TODO: Make a "runAllMethods" equivalent
 
-            //Make a hash of the existing methods
-            QHash<QString,QMetaMethod> methods;
-            for(int i =0;i<obj->methodCount();i++){
-               QMetaMethod  m = obj->method(i);
-               methods[m.name()] = m;
-            }
-            QHash<QString,QMetaProperty> properties;
-            for(int i =0;i<obj->propertyCount();i++){
-               QMetaProperty  p = obj->property(i);
-               properties[p.name()] = p;
-            }
+           this->runAllMethods("afterNew",c,jobj);
 
-            //Search throught the json file and find methods that can be run
-           foreach( QString key, jobj.keys()){
+           //TODO: Run instance methods from parent
 
-               if(nameTranslator.contains(key)){
+            //Run instancemethods
+           this->runIfObjectCanMethods(c,jobj);
 
-                   key = nameTranslator[key];
-                 }
+            //Place
+            this->runAllMethods("beforePlace",c,jobj);
+            c->place();
+            this->runAllMethods("afterPlace",c,jobj);
 
-            if(methods.contains(key)){
-                QMetaMethod m = methods[key];
-                QJsonArray arg = jobj[key].toArray();
-                m.invoke(c,Qt::DirectConnection, Q_ARG(QJsonArray, arg));
-            }else if(key.endsWith("s")  && methods.contains(key.left(key.length()-1))){
-                //Iterate over array if function exists without the "s" at the end
-                QMetaMethod m = methods[key.left(key.length()-1)];
-                QJsonArray arg = jobj[key].toArray();
-                foreach(QJsonValue v, arg){
-                       QJsonArray ar1 = v.toArray();
-                       m.invoke(c,Qt::DirectConnection, Q_ARG(QJsonArray, ar1));
-                }
+            //Route
+            this->runAllMethods("beforeRoute",c,jobj);
+            c->route();
+            this->runAllMethods("afterRoute",c,jobj);
 
-            }else if(properties.contains(key)){
-              QMetaProperty p = properties[key];
-              QJsonValue v = jobj[key];
+            //Paint
+            this->runAllMethods("beforePaint",c,jobj);
+            c->paint();
+            this->runAllMethods("afterPaint",c,jobj);
+            c->addAllPorts();
 
-                p.write(c,v.toVariant());
 
-            }else{
-               qWarning() << "Could not find method " << key << " on " << obj->className();
-              }
-          }
+
+
+
            // qWarning() << "Found class " <<obj->className()  << " " << obj->methodCount();
 
         }else{

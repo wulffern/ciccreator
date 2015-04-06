@@ -21,9 +21,9 @@ namespace cIcCore {
 
     PatternTile::PatternTile()
     {
-      _ymax = 0;
-      _xmax = 0;
-      _yoffset = 0;
+      ymax_ = 0;
+      xmax_ = 0;
+      yoffset_ = 0;
 
     }
 
@@ -79,7 +79,7 @@ return qh;
       //TODO: implement reverse string
 
       QString layer = ar[0].toString();
-
+      QList<QString> strs;
       for(int i=1;i<ar.count();i++){
           QString str = ar[i].toString();
 
@@ -87,8 +87,8 @@ return qh;
               QChar c = str[x];
               int y = ar.count() - i - 2;
 
-              if(y > _ymax){ _ymax = y;}
-              if(x > _xmax){ _xmax = x;}
+              if(y > ymax_){ ymax_ = y;}
+              if(x > xmax_){ xmax_ = x;}
 
               if(c.isDigit()){
                  continue;
@@ -98,11 +98,60 @@ return qh;
                   this->onFillCoordinate(c,layer,x,y,data);
                }
 
+
             }
+        strs.append(str);
         }
 
-      qWarning() << " ymax = " << _ymax << ", xmax = "<< _xmax;
+      layers_[layer] = strs;
+
+      //qWarning() << " ymax = " << _ymax << ", xmax = "<< _xmax;
       this->endFillCoordinate(data);
+
+    }
+
+    void PatternTile::paint(){
+
+        int xspace = this->xspace_;
+        int yspace = this->yspace_;
+
+        foreach(QString layer, layers_.keys()){
+            QList<QString> strs = layers_[layer];
+
+            for(int x=0;x < xmax_;x++){
+                for(int y=0;y < ymax_;y++){
+                    QString s = strs[strs.length() - y - 1];
+                    qDebug() << layer << s;
+
+                QChar c = s[x];
+                qDebug() << layer << c;
+                Rect rect;
+                rect.setLayer(layer);
+                int xs = (x + xoffset_)*xspace;
+                int ys = (y + yoffset_)*yspace;
+                switch(c.unicode()){
+                  case 'X':
+                  case 'x':
+                     rect.setRect(xs,ys,xspace,yspace);
+                  case 'V':
+                     rect.setRect(xs,ys - yspace/2,xspace,yspace*2);
+                  case 'm':
+                      rect.setRect(xs,ys,xspace,this->minPolyLength());
+                      rect.moveCenter(xs + xspace/2, ys + yspace/2);
+                  case 'w':
+                    int minw = rules->get(layer,"width");
+                    qDebug() << "minWidth  = " << minw;
+                    rect.setRect(xs,ys,xspace,minw);
+                    rect.moveCenter(xs + xspace/2, ys + yspace/2);
+                    currentHeight_ = minw;
+                  }
+                qDebug() << c;
+
+
+               }
+            }
+
+          }
 
     }
 

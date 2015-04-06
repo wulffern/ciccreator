@@ -68,29 +68,29 @@ namespace cIcCore{
         return new Rect(layer, left(), top(), width(), height() );
     }
 
-    void Rect::abut(Rect* rect, qreal dx, qreal dy){
-        moveTo(rect->right() + dx, rect->top()  + dy);
-    }
+//    void Rect::abut(Rect* rect, qreal dx, qreal dy){
+//        moveTo(rect->right() + dx, rect->top()  + dy);
+//    }
 
-    void Rect::abutTopLeft(Rect* rect){
-        moveTo(rect->left()-width(),rect->top());
-    }
+//    void Rect::abutTopLeft(Rect* rect){
+//        moveTo(rect->left()-width(),rect->top());
+//    }
 
-    void Rect::abutBottom(Rect* rect){
-        moveTo(rect->left(),rect->bottom());
-    }
+//    void Rect::abutBottom(Rect* rect){
+//        moveTo(rect->left(),rect->bottom());
+//    }
 
-    void Rect::abutLeft(Rect* rect,qreal dx, qreal dy){
-        moveTo(rect->right() + dx,rect->bottom()+dy);
-    }
+//    void Rect::abutLeft(Rect* rect,qreal dx, qreal dy){
+//        moveTo(rect->right() + dx,rect->bottom()+dy);
+//    }
 
-    void Rect::abutRight(Rect* rect, qreal dx, qreal dy){
-        moveTo(rect->right() + dx,rect->bottom() + dy);
-    }
+//    void Rect::abutRight(Rect* rect, qreal dx, qreal dy){
+//        moveTo(rect->right() + dx,rect->bottom() + dy);
+//    }
 
-    void Rect::abutTopRight(Rect* rect){
-        moveTo(rect->left(),rect->top());
-    }
+//    void Rect::abutTopRight(Rect* rect){
+//        moveTo(rect->left(),rect->top());
+//    }
 
     int Rect::snap(int x){
         int GRID= 5;
@@ -110,7 +110,7 @@ namespace cIcCore{
 
         //Flip left and right if width is negative
         if (this->width() < 0  ) {
-            qreal tmp = this->left();
+            int tmp = this->left();
             this->setLeft(this->right());
             this->setRight(tmp);
         }

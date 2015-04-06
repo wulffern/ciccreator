@@ -21,12 +21,16 @@ INCLUDEPATH += include/
 
 # Input
 
-HEADERS +=  include/core/rect.h include/core/cell.h include/core/design.h \ 
-    include/core/patterntile.h \
-    include/core/patterntransistor.h
+HEADERS +=  include/core/rules.h  \
+include/core/rect.h \
+include/core/cell.h \
+include/core/design.h \ 
+include/core/patterntile.h \
+include/core/patterntransistor.h \
 
-SOURCES += src/core/rect.cpp src/core/cell.cpp  src/main.cpp \ 
+
+SOURCES +=     src/core/rules.cpp src/core/rect.cpp src/core/cell.cpp  src/main.cpp \ 
     src/core/patterntile.cpp \
     src/core/patterntransistor.cpp \
-    src/core/design.cpp
+    src/core/design.cpp \
 

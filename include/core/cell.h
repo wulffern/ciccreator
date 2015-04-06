@@ -36,16 +36,21 @@ namespace cIcCore{
     ~Cell();
     Rect * getRect(QString layer);
     void add(Rect* rect);
-    void translate(qreal dx, qreal dy);
-    void mirrorX(qreal ax);
-    void mirrorY(qreal ay);
-    void moveTo(qreal ax, qreal ay);
-    void moveCenter(qreal ax, qreal ay);
+    void translate(int dx, int dy);
+    void mirrorX(int ax);
+    void mirrorY(int ay);
+    void moveTo(int ax, int ay);
+    void moveCenter(int ax, int ay);
     QRect calcBoundingRect();
     QString toString();
     static Cell * createInstance();
     QString name(){return _name;}
     QString setName(QString val){ _name = val; return _name;}
+
+    virtual void place();
+    virtual void route();
+    virtual void paint();
+    virtual void addAllPorts();
 
   private:
     QList<Rect*> _children;
