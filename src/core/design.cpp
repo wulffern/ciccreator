@@ -178,7 +178,7 @@ namespace cIcCore{
             c->addAllPorts();
 
 
-
+            this->add(c);
 
 
            // qWarning() << "Found class " <<obj->className()  << " " << obj->methodCount();

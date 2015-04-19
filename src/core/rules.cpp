@@ -36,22 +36,21 @@ namespace cIcCore{
 
 }
 
- int Rules::get(QString layer, QString rule){
-   int val = 0;
-qDebug() << "test";
-   qDebug() << rules_;
-   qDebug() << "test";
-   QJsonObject lay =  rules_[layer].toObject();
 
-   if(lay.empty()){
+
+ qreal Rules::get(QString layer, QString rule){
+   qreal v = 0;
+
+    if(rules_.contains(layer)){
+   QHash<QString,qreal> lay =  rules_[layer];
+
+  if(!lay.contains(rule)){
       qDebug() << "Could not find rules for layer " << layer;
      }else{
-   if(lay[rule].isUndefined()){
-       qDebug() << "Could not find rule" << rule << " for layer " << layer ;
-     }else{
-         val = lay[rule].toInt();
+        v = lay[rule];
+
      }
-     }
-  return val;
+      }
+  return v;
  }
 }

@@ -26,6 +26,7 @@ namespace cIcCore{
         setTop(0);
         setWidth(0);
         setHeight(0);
+        rules = Rules::getRules();
     }
     Rect::Rect(QString layer, int x, int y, int width, int height){
         _layer = layer;
@@ -33,6 +34,7 @@ namespace cIcCore{
         setTop(y);
         setWidth(width);
         setHeight(height);
+        rules = Rules::getRules();
     }
 
 

@@ -34,6 +34,12 @@ namespace cIcCore{
 
 	public:
 	  Rules(){
+	   // this->rules_ = 0;
+//		  rules_ = 0;
+	     // QHash<QString, QHash<QString,qreal> > myrules;
+	    //rules_ = myrules;
+//	    rules_ = new QString("test");
+		  //rules_(new  ());
 	  }
 	  ~Rules(){}
 	  Rules(const Rules&){}
@@ -43,21 +49,41 @@ namespace cIcCore{
 
 	  static Rules* getRules(){return myRules_;}
 
-	  int get(QString layer, QString rule);
+	  qreal get(QString layer, QString rule);
 
 	  void setRules(QJsonObject job){
-	      rules_ = job["rules"].toObject();
-	      layers_ = job["layers"].toObject();
-	      technology_ = job["technology"].toObject();
+	    QJsonObject r = job["rules"].toObject();
+
+	    foreach(QString layer, r.keys()){
+		QJsonObject vral = r[layer].toObject();
+		foreach(QString name,vral.keys()){
+		  qreal v = vral[name].toDouble();
+		  this->rules_[name][layer] = v;
+		//  if(this->rules_.contains(layer)){
+		//	QHash<QString,qreal> rl = this->rules_[name];
+		//	rl[name] = v;
+		 // }
+
+		  //rules_ = v;
+		  }
+	    }
+	     // rules_ = job["rules"].toObject();
+	     // layers_ = job["layers"].toObject();
+	     // technology_ = job["technology"].toObject();
 	  }
 
         private:
         static Rules * myRules_;
-          QJsonObject rules_;
-          QJsonObject layers_;
-          QJsonObject technology_;
+          //QJsonObject rules_;
+//          qreal rules_;
+         // QString * rules_;
+          QHash<QString, QHash<QString,qreal> >  rules_;
+          //QJsonObject layers_;
+          //QJsonObject technology_;
 
         };
+
+
 
 }
 

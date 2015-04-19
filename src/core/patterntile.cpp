@@ -125,27 +125,27 @@ return qh;
 
                 QChar c = s[x];
                 qDebug() << layer << c;
-                Rect rect;
-                rect.setLayer(layer);
+                Rect* rect = new Rect();
+                rect->setLayer(layer);
                 int xs = (x + xoffset_)*xspace;
                 int ys = (y + yoffset_)*yspace;
                 switch(c.unicode()){
                   case 'X':
                   case 'x':
-                     rect.setRect(xs,ys,xspace,yspace);
+                     rect->setRect(xs,ys,xspace,yspace);
                   case 'V':
-                     rect.setRect(xs,ys - yspace/2,xspace,yspace*2);
+                     rect->setRect(xs,ys - yspace/2,xspace,yspace*2);
                   case 'm':
-                      rect.setRect(xs,ys,xspace,this->minPolyLength());
-                      rect.moveCenter(xs + xspace/2, ys + yspace/2);
+                      rect->setRect(xs,ys,xspace,this->minPolyLength());
+                      rect->moveCenter(xs + xspace/2, ys + yspace/2);
                   case 'w':
                     int minw = rules->get(layer,"width");
-                    qDebug() << "minWidth  = " << minw;
-                    rect.setRect(xs,ys,xspace,minw);
-                    rect.moveCenter(xs + xspace/2, ys + yspace/2);
+                    rect->setRect(xs,ys,xspace,minw);
+                    rect->moveCenter(xs + xspace/2, ys + yspace/2);
                     currentHeight_ = minw;
                   }
-                qDebug() << c;
+                this->add(rect);
+
 
 
                }

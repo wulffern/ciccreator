@@ -29,7 +29,7 @@
 #include "core/patterntransistor.h"
 namespace cIcCore{
 
-    class Design: public QObject
+    class Design: public Cell
     {
         Q_OBJECT
 

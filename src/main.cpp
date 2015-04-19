@@ -20,7 +20,9 @@ int main(int argc, char *argv[])
 		cIcCore::Design * c = new cIcCore::Design();
 		c->read(file);
 
-	}
+	}else{
+	   qWarning() << "Wrong number of arguments " << argc;
+	  }
 
 		
 
