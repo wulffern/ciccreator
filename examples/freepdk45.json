@@ -1,0 +1,54 @@
+{
+    "layers" : {
+        "OD" : { "number" : 1, "datatype" : 0, "material" : "diffusion", "previous" : "",  "next" : "CO", "pin" : "OD_pin" },
+        "PO" : { "number" : 1, "datatype" : 0, "material" : "poly", "previous" : "",  "next" : "CO", "pin" : "PO_pin" },
+        "M1" : { "number" : 1, "datatype" : 0, "material" : "metal", "previous" : "CO",  "next" : "VIA1", "pin" : "M1_pin" },
+        "M2" : { "number" : 1, "datatype" : 0, "material" : "metal", "previous" : "VIA1", "next" : "VIA2", "pin" : "M2_pin" },
+        "M3" : { "number" : 1, "datatype" : 0, "material" : "metal", "previous" : "VIA2", "next" : "VIA3", "pin" : "M3_pin" },
+        "M4" : { "number" : 1, "datatype" : 0, "material" : "metal", "previous" : "VIA3",  "pin" : "M4_pin" },
+        "CO" : { "number" : 1, "datatype" : 0, "material" : "cut", "previous" : "", "next" : "M1"},
+        "VIA1" : { "number" : 1, "datatype" : 0, "material" : "cut", "previous" : "M1", "next" : "M2" },
+        "VIA2" : { "number" : 1, "datatype" : 0, "material" : "cut", "previous" : "M2", "next" : "M3" },
+        "VIA3" : { "number" : 1, "datatype" : 0, "material" : "cut", "previous" : "M3", "next" : "M4" },
+        "M1_res" : { "number" : 1, "datatype" : 0, "material" : "metalres" },
+        "M2_res" : { "number" : 1, "datatype" : 0, "material" : "metalres" },
+        "M3_res" : { "number" : 1, "datatype" : 0, "material" : "metalres" },
+        "M4_res" : { "number" : 1, "datatype" : 0, "material" : "metalres" },
+        "M1_pin" : { "number" : 1, "datatype" : 0, "material" : "metalres" },
+        "M2_pin" : { "number" : 1, "datatype" : 0, "material" : "metalres" },
+        "M3_pin" : { "number" : 1, "datatype" : 0, "material" : "metalres" },
+        "M4_pin" : { "number" : 1, "datatype" : 0, "material" : "metalres" },
+        "PR" : { "number" : 1, "datatype" : 0 },
+        "NWD" : { "number" : 1, "datatype" : 0 },
+        "NW" : { "number" : 1, "datatype" : 0 },
+        "PPD" : { "number" : 1, "datatype" : 0 },
+        "NPD" : { "number" : 1, "datatype" : 0 },
+        "PP" : { "number" : 1, "datatype" : 0 },
+        "NP" : { "number" : 1, "datatype" : 0 },
+        "TXT" : { "number" : 1, "datatype" : 0}
+
+    },
+    "technology" :{
+        "gamma" : 80,
+        "grid" : 5
+    },
+    "rules" : {
+        "ROUTE": { "horizontalgrid": 18, "verticalgrid" : 18 },
+        "CELL" : { "space" : 40, "digitalspace" : 72 },
+        "PP"   : { "enclosure" : 20, "ODencOpposite" : 20},
+        "PPD"  : { "enclosure" : 20, "ODencOpposite" : 20},
+        "NP"   : { "enclosure" : 20, "ODencOpposite" : 20},
+        "NPD"  : { "enclosure" : 20, "ODencOpposite" : 20},
+        "CO"   : { "space" : 20, "width" : 8.125 , "height" : 8.125},
+        "VIA1" : { "space" : 20, "width" : 8.125 , "height" : 8.125},
+        "VIA2" : { "space" : 20, "width" : 8.75 , "height" : 8.75},
+        "VIA3" : { "space" : 20, "width" : 8.75 , "height" : 8.75},
+        "PO"   : { "space" : 8.75, "width" : 6.25 , "mingatelength" : 6.25},
+        "M1"   : { "space" : 14, "width" : 10 , "enclosure" : 0, "VIA1encOpposite" : 10},
+        "M2"   : { "space" : 14, "width" : 10 , "enclosure" : 0, "VIA1enclosure" : 10, "VIA1encOpposite" : 10, "VIA2encOpposite" : 10},
+        "M3"   : { "space" : 14, "width" : 10 , "enclosure" : 0, "VIA2enclosure" : 10, "VIA2encOpposite" : 10, "VIA3encOpposite" : 10},
+        "M4"   : { "space" : 14, "width" : 10 , "enclosure" : 0, "VIA3enclosure" : 10, "VIA3encOpposite" : 10, "capspace" : 20},
+        "NW"   : { "enclosure" : 200, "digitalspace" : 72},
+        "NWD"   : { "enclosure" : 36, "ODencOpposite" : 20}
+    }
+}

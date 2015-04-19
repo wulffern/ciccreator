@@ -11,12 +11,13 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
-TARGET = build/cic
+TARGET = cic
+DESTDIR = bin
+OBJECTS_DIR=build
+MOC_DIR=build
 DEPENDPATH += .
 
 INCLUDEPATH += include/
-
-
 
 
 # Input
