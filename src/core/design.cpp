@@ -22,79 +22,84 @@
 namespace cIcCore{
 
     Design::Design(){
-       qRegisterMetaType<cIcCore::Cell>("cIcCore::Cell");
-       qRegisterMetaType<cIcCore::PatternTile>("cIcCore::PatternTile");
-       qRegisterMetaType<cIcCore::PatternTransistor>("cIcCore::PatternTransistor");
-       cellTranslator["Gds::GdsPatternTransistor"] = "cIcCore::PatternTransistor";
-       //cellTranslator["Layout::LayoutDigitalCell"] = "cIcCore::Cell";
-
-       nameTranslator["type"] = "mosType";
+        qRegisterMetaType<cIcCore::Cell>("cIcCore::Cell");
+        qRegisterMetaType<cIcCore::PatternTile>("cIcCore::PatternTile");
+        qRegisterMetaType<cIcCore::PatternTransistor>("cIcCore::PatternTransistor");
+        qRegisterMetaType<cIcCore::PatternTransistor>("cIcCore::PatternCapacitor");
+        qRegisterMetaType<cIcCore::PatternTransistor>("cIcCore::PatternCapacitor");
+        cellTranslator["Gds::GdsPatternTransistor"] = "cIcCore::PatternTransistor";
+        cellTranslator["Gds::GdsPatternCapacitor"] = "cIcCore::PatternCapacitor";
+        cellTranslator["Gds::GdsPatternCapacitorGnd"] = "cIcCore::PatternCapacitor";
+        cellTranslator["Layout::LayoutDigitalCell"] = "cIcCore::Cell";
+        nameTranslator["type"] = "mosType";
     }
 
 
     void Design::findAllParents(QList<Cell *> reverse_parents,QString inh)
-	{
+    {
 
-	}
+    }
 
     void Design::runAllMethods(QString jname, Cell *c, QJsonObject jobj){
-      QJsonValue jo = jobj[jname];
-      if(jo.isUndefined()) return;
-      qWarning() << "Running " << jname;
-      QJsonObject job = jo.toObject();
-      this->runIfObjectCanMethods(c,job);
+        QJsonValue jo = jobj[jname];
+        if(jo.isUndefined()) return;
+
+        QJsonObject job = jo.toObject();
+        this->runIfObjectCanMethods(c,job);
 
     }
 
     void Design::runIfObjectCanMethods(Cell * c, QJsonObject jobj){
 
-      const QMetaObject * mobj = c->metaObject();
-      //Make a hash of the existing methods
-      QHash<QString,QMetaMethod> methods;
-      for(int i =0;i<mobj->methodCount();i++){
-         QMetaMethod  m = mobj->method(i);
-         methods[m.name()] = m;
-      }
-      QHash<QString,QMetaProperty> properties;
-      for(int i =0;i<mobj->propertyCount();i++){
-         QMetaProperty  p = c->metaObject()->property(i);
-         properties[p.name()] = p;
-      }
+        const QMetaObject * mobj = c->metaObject();
 
-
-      //Search throught the json file and find methods that can be run
-    QRegularExpression re("^new|class|name|before.*|after.*");
-  //qWarning() << "Expression"  <<   re.isValid();
-      foreach( QString key, jobj.keys()){
-        if(re.match(key).hasMatch()){ continue;}
-
-         if(nameTranslator.contains(key)){
-             key = nameTranslator[key];
-           }
-
-      if(methods.contains(key)){
-          QMetaMethod m = methods[key];
-          QJsonArray arg = jobj[key].toArray();
-          m.invoke(c,Qt::DirectConnection, Q_ARG(QJsonArray, arg));
-      }else if(key.endsWith("s")  && methods.contains(key.left(key.length()-1))){
-          //Iterate over array if function exists without the "s" at the end
-          QMetaMethod m = methods[key.left(key.length()-1)];
-          QJsonArray arg = jobj[key].toArray();
-          foreach(QJsonValue v, arg){
-                 QJsonArray ar1 = v.toArray();
-                 m.invoke(c,Qt::DirectConnection, Q_ARG(QJsonArray, ar1));
-          }
-
-      }else if(properties.contains(key)){
-        QMetaProperty p = properties[key];
-        QJsonValue v = jobj[key];
-
-          p.write(c,v.toVariant());
-
-      }else{
-         qWarning() << "Could not find method " << key << " on " << c->metaObject()->className();
+        //Make a hash of the existing methods
+        QHash<QString,QMetaMethod> methods;
+        for(int i =0;i<mobj->methodCount();i++){
+            QMetaMethod  m = mobj->method(i);
+            methods[m.name()] = m;
         }
-    }
+        QHash<QString,QMetaProperty> properties;
+        for(int i =0;i<mobj->propertyCount();i++){
+            QMetaProperty  p = c->metaObject()->property(i);
+            properties[p.name()] = p;
+        }
+
+
+        //Search throught the json file and find methods that can be run
+        QRegularExpression re("^new|class|name|before.*|after.*");
+        //qWarning() << "Expression"  <<   re.isValid();
+        foreach( QString key, jobj.keys()){
+            if(re.match(key).hasMatch()){ continue;}
+
+            if(nameTranslator.contains(key)){
+                key = nameTranslator[key];
+            }
+
+            if(methods.contains(key)){
+                QMetaMethod m = methods[key];
+                QJsonArray arg = jobj[key].toArray();
+                m.invoke(c,Qt::DirectConnection, Q_ARG(QJsonArray, arg));
+            }else if(key.endsWith("s")  && methods.contains(key.left(key.length()-1))){
+
+                //Iterate over array if function exists without the "s" at the end
+                QMetaMethod m = methods[key.left(key.length()-1)];
+                QJsonArray arg = jobj[key].toArray();
+                foreach(QJsonValue v, arg){
+                    QJsonArray ar1 = v.toArray();
+                    m.invoke(c,Qt::DirectConnection, Q_ARG(QJsonArray, ar1));
+                }
+
+            }else if(properties.contains(key)){
+                QMetaProperty p = properties[key];
+                QJsonValue v = jobj[key];
+
+                p.write(c,v.toVariant());
+
+            }else{
+//         qWarning() << "Could not find method " << key << " on " << c->metaObject()->className();
+            }
+        }
 
     }
 
@@ -108,9 +113,11 @@ namespace cIcCore{
 
 
 
+		//TODO: implement inherit parents
+
 //    #- Inherit class type from parent
         if (jobj.contains("class")  && reverse_parents.count() > 0) {
-//      foreach my $parent (@reverse_parents) {
+//			foreach my $parent (@reverse_parents) {
 //        if ($parent->{class}) {
 //          $class = $parent->{class};
 //        }
@@ -138,8 +145,8 @@ namespace cIcCore{
 
         //Translate the class name if it exists in the translator
         if(cellTranslator.contains(cl)){
-         cl = cellTranslator[cl];
-         }
+            cl = cellTranslator[cl];
+        }
 
         //Make the object, let's see how that works in Qt
         int id = QMetaType::type(cl.toUtf8().data());
@@ -147,21 +154,24 @@ namespace cIcCore{
             void* vp = QMetaType::create(id);
             Cell * c  = reinterpret_cast<Cell*>(vp);
             QString name = jobj["name"].toString();
-            qDebug() << "";
-            qDebug() << "Cell "  << name;
 
             c->setName(name);
 
-            //TODO: Implement events (afterNew, beforeRoute etc)
+			
+			
             //TODO: Make a "runAllMethods" equivalent
 
-           this->runAllMethods("afterNew",c,jobj);
+            this->runAllMethods("afterNew",c,jobj);
 
-           //TODO: Run instance methods from parent
+            //TODO: Run instance methods from parent
 
             //Run instancemethods
-           this->runIfObjectCanMethods(c,jobj);
+            this->runIfObjectCanMethods(c,jobj);
 
+			//TODO: Add spice parsing before place
+
+			//TODO: How will I separate out instances from cells that should be printed to bottom?
+			
             //Place
             this->runAllMethods("beforePlace",c,jobj);
             c->place();
@@ -178,16 +188,16 @@ namespace cIcCore{
             this->runAllMethods("afterPaint",c,jobj);
             c->addAllPorts();
 
-
             this->add(c);
+            this->_designs[c->name()] = c;
 
 
-           // qWarning() << "Found class " <<obj->className()  << " " << obj->methodCount();
+            // qWarning() << "Found class " <<obj->className()  << " " << obj->methodCount();
 
         }else{
 
-        qWarning() << "Class not found " << cl << "\n";
-      }
+            qWarning() << "Class not found " << cl << "\n";
+        }
 
 //    my $obj = new $class ($self->cast($c->{new}));
 //    $obj->hasPR(1);
@@ -284,6 +294,7 @@ namespace cIcCore{
 
 //    $self->endIndent();
 
+        //  this->_designs(name,obj)
 
     }
 
@@ -293,9 +304,34 @@ namespace cIcCore{
         qWarning() << filename << "\n";
         file.setFileName(filename);
         file.open(QIODevice::ReadOnly | QIODevice::Text);
+        //      QStringList buffer;
+        //    QString line = in.readLine();
+        //    int line_number = 1;
+        //    while (!line.isNull()) {
+        //            buffer.append(line);
+        //            line_number++;
+        //            line = in.readLine();
+        //     }
+
         val = file.readAll();
         file.close();
-        QJsonDocument d = QJsonDocument::fromJson(val.toUtf8());
+        QJsonParseError err;
+
+        QJsonDocument d = QJsonDocument::fromJson(val.toUtf8(),&err);
+        if(QJsonParseError::NoError != err.error ){
+            QString verr = val.mid(0,err.offset);
+            int position = 0;
+            int index = verr.indexOf("\n",position+1);
+            int line_count = 1;
+            while(index > 0){
+                position = index;
+                line_count++;
+                index = verr.indexOf("\n",position+1);
+            }
+
+            qWarning() << err.errorString() << " at line " << line_count ;
+
+        }
         QJsonObject obj = d.object();
         QJsonValue cells = obj.take("cells");
         if(cells.isArray()){
@@ -307,7 +343,7 @@ namespace cIcCore{
 
                 //Class name is defined
                 if(v.isString()){
-					this->createCell(v.toString(),c);
+                    this->createCell(v.toString(),c);
                 }
             }
         }else{

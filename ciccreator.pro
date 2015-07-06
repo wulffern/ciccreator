@@ -28,10 +28,16 @@ include/core/cell.h \
 include/core/design.h \ 
 include/core/patterntile.h \
 include/core/patterntransistor.h \
+include/core/patterncapacitor.h \
+include/printer/designprinter.h \
+include/printer/svg.h \
 
 
 SOURCES +=     src/core/rules.cpp src/core/rect.cpp src/core/cell.cpp  src/main.cpp \ 
     src/core/patterntile.cpp \
     src/core/patterntransistor.cpp \
+    src/core/patterncapacitor.cpp \
     src/core/design.cpp \
+    src/printer/designprinter.cpp \
+    src/printer/svg.cpp \
 

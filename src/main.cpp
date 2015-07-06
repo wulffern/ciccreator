@@ -20,6 +20,7 @@
 #include <QCoreApplication>
 #include "core/design.h"
 #include "core/rules.h"
+#include "printer/svg.h"
 #include <iostream>
 #include <QDebug>
 #include <QString>
@@ -38,6 +39,11 @@ int main(int argc, char *argv[])
 		//Load design
 		cIcCore::Design * c = new cIcCore::Design();
 		c->read(file);
+
+		cIcPrinter::Svg * pr = new cIcPrinter::Svg("test");
+		//pr->openFile("test");
+		pr->print(c);
+		
 
 	}else{
 	   qWarning() << "Wrong number of arguments " << argc;

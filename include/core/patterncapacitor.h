@@ -1,7 +1,7 @@
 /*********************************************************************
  *        Copyright (c) 2015 Carsten Wulff Software, Norway
  * *******************************************************************
- * Created       : wulff at 2015-1-26
+ * Created       : wulff at 2015-03-03
  * *******************************************************************
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,45 +16,24 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ********************************************************************/
+#ifndef PATTERNCAPACITOR_H
+#define PATTERNCAPACITOR_H
 
-
-
-#ifndef CIC_CORE_DESIGN_H
-#define CIC_CORE_DESIGN_H
-
-#include <QtCore>
 #include <QObject>
-#include <QString>
-#include <QJsonObject>
-//#include <QMetaType>
-#include "core/patterntransistor.h"
-#include "core/patterncapacitor.h"
+#include "cell.h"
+#include "patterntile.h"
+
 namespace cIcCore{
+class PatternCapacitor : public PatternTile
+{
+  Q_OBJECT
 
-    class Design: public Cell
-    {
-        Q_OBJECT
-
-		//typedef Cell * (*fp)();
-		
-    public:
-        Design();
-        void read(QString filename);
-        void runIfObjectCanMethods(Cell * c, QJsonObject jobj);
-        void runAllMethods(QString jname, Cell *c, QJsonObject jobj);
-        QList<Cell*> designs(){
-             return _designs.values();
-        }
-
-    private:
-        QHash<QString,QString> cellTranslator;
-      QHash<QString,QString> nameTranslator;
-                QMap<QString,Cell*> _designs;
-		void findAllParents(QList<Cell *> reverse_parents,QString inh);
-		void createCell(QString cl, QJsonObject jobj);
-
-    signals:
-
-    };
+public:
+    PatternCapacitor();
+    ~PatternCapacitor();
+};
 }
-#endif
+
+Q_DECLARE_METATYPE(cIcCore::PatternCapacitor)
+
+#endif // PATTERNCAPACITOR_H

@@ -1,7 +1,7 @@
 //====================================================================
-//        Copyright (c) 2015 Carsten Wulff Software, Norway 
+//        Copyright (c) 2015 Carsten Wulff Software, Norway
 // ===================================================================
-// Created       : wulff at 2015-4-6
+// Created       : wulff at 2015-04-03
 // ===================================================================
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -12,50 +12,22 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-//
+
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //====================================================================
 
-#include "core/rules.h"
+#include "core/patterncapacitor.h"
 
 namespace cIcCore{
+  PatternCapacitor::PatternCapacitor()
+  {
 
-   Rules * Rules::myRules_;
+  }
 
-  void Rules::loadRules(QString filename){
-  QString val;
-  QFile file;
-  file.setFileName(filename);
-  file.open(QIODevice::ReadOnly | QIODevice::Text);
-  val = file.readAll();
-  file.close();
-  QJsonDocument d = QJsonDocument::fromJson(val.toUtf8());
-  QJsonObject obj = d.object();
-  Rules::myRules_ = new Rules();
-  Rules::myRules_->setRules(obj);
+  PatternCapacitor::~PatternCapacitor()
+  {
 
+  }
 }
 
-
-
- qreal Rules::get(QString layer, QString rule){
-   qreal v = 0;
-
-   if(rules_.contains(layer)){
-	   QHash<QString,qreal> lay =  rules_[layer];
-	   
-	   if(!lay.contains(rule)){
-		   qDebug() << "Could not find rule "<< rule ;
-	   }else{
-//		   qDebug() << "rules" << rule;
-		   v = lay[rule];
-		   
-	   }
-   }else{
-	   qDebug() << "Could not find rule " << rule << " for layer " << layer << ", no such layer";
-   }
-	 
-   return v;
- }
-}

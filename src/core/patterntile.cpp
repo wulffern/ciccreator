@@ -22,25 +22,29 @@ namespace cIcCore {
 
     PatternTile::PatternTile()
     {
-      ymax_ = 0;
-      xmax_ = 0;
-      yoffset_ = 0;
+        ymax_ = 0;
+        xmax_ = 0;
+        yoffset_ = 0;
+        xoffset_ = 0;
+        xspace_ = 0;
+        yspace_ = 0;
+        minPolyLength_ = 0;
 
     }
 
     PatternTile::~PatternTile()
     {
-	}
+    }
 
-	PatternTile::PatternTile(const PatternTile&)
+    PatternTile::PatternTile(const PatternTile&)
     {
 
     }
 
     QHash<QString,QVariant> PatternTile::initFillCoordinates(){
-      QHash<QString,QVariant> qh;
-return qh;
-   }
+        QHash<QString,QVariant> qh;
+        return qh;
+    }
 
     void PatternTile::onFillCoordinate(QChar c, QString layer, int x, int y, QHash<QString,QVariant> data){
 
@@ -53,11 +57,11 @@ return qh;
 
     void PatternTile::fillCoordinatesFromString(QJsonArray ar){
 
-      QHash<QString,QVariant> data = this->initFillCoordinates();
+        QHash<QString,QVariant> data = this->initFillCoordinates();
 
-      //TODO: implement copyRows function
+        //TODO: implement copyRows function
 
-     // my $ref = $self->copyRows;
+        // my $ref = $self->copyRows;
 
 //       for (my $i=0;$i<scalar(@_);$i+=1) {
 //         my $str = $_[$i];
@@ -76,83 +80,164 @@ return qh;
 //         }
 //       }
 
-      //TODO: implement copy columns
-      //TODO: implement reverse string
+        //TODO: implement copy columns
+        //TODO: implement reverse string
 
-      QString layer = ar[0].toString();
-      QList<QString> strs;
-      for(int i=1;i<ar.count();i++){
-          QString str = ar[i].toString();
 
-          for(int x=0;x < str.length();x++){
-              QChar c = str[x];
-              int y = ar.count() - i - 2;
+        QString layer = ar[0].toString();
+        QList<QString> strs;
+        for(int i=1;i<ar.count();i++){
+            QString str = ar[i].toString();
 
-              if(y > ymax_){ ymax_ = y;}
-              if(x > xmax_){ xmax_ = x;}
+            for(int x=0;x < str.length();x++){
+                QChar c = str[x];
+                int y = ar.count() - i ;
 
-              if(c.isDigit()){
-                 continue;
+                if(y > ymax_){ ymax_ = y;}
+                if(x > xmax_){ xmax_ = x;}
+
+                if(c.isDigit()){
+                    continue;
                 }
-
-              if(c != '-'){
-                  this->onFillCoordinate(c,layer,x,y,data);
-               }
-
-
+                if(c != '-'){
+                    this->onFillCoordinate(c,layer,x,y,data);
+                }
             }
-        strs.append(str);
+            strs.append(str);
         }
 
-      layers_[layer] = strs;
+//		ymax_ += 1;
+		xmax_ += 1;
+		
+        layers_[layer] = strs;
 
-      //qWarning() << " ymax = " << _ymax << ", xmax = "<< _xmax;
-      this->endFillCoordinate(data);
+        //qWarning() << " ymax = " << _ymax << ", xmax = "<< _xmax;
+        this->endFillCoordinate(data);
 
     }
 
     void PatternTile::paint(){
 
+        //Load rules
+        this->xspace_ = this->rules->get("ROUTE","horizontalgrid");
+        this->yspace_ = this->rules->get("ROUTE","verticalgrid");
+
+        if( this->minPolyLength_ == 0 ){
+            this->minPolyLength_ = this->rules->get("PO","mingatelength");
+        }
+
         int xspace = this->xspace_;
         int yspace = this->yspace_;
-
+        int minpoly = this->minPolyLength();
+        int currentHeight_ = yspace;
         foreach(QString layer, layers_.keys()){
             QList<QString> strs = layers_[layer];
 
-            for(int x=0;x < xmax_;x++){
-                for(int y=0;y < ymax_;y++){
+			for(int y=0;y < ymax_;y++){
+            currentHeight_ = yspace;
+				for(int x=0;x < xmax_;x++){
                     QString s = strs[strs.length() - y - 1];
-                    qDebug() << layer << s;
 
-                QChar c = s[x];
-                qDebug() << layer << c;
-                Rect* rect = new Rect();
-                rect->setLayer(layer);
-                int xs = (x + xoffset_)*xspace;
-                int ys = (y + yoffset_)*yspace;
-                switch(c.unicode()){
-                  case 'X':
-                  case 'x':
-                     rect->setRect(xs,ys,xspace,yspace);
-                  case 'V':
-                     rect->setRect(xs,ys - yspace/2,xspace,yspace*2);
-                  case 'm':
-                      rect->setRect(xs,ys,xspace,this->minPolyLength());
-                      rect->moveCenter(xs + xspace/2, ys + yspace/2);
-                  case 'w':
-                    int minw = rules->get(layer,"width");
-                    rect->setRect(xs,ys,xspace,minw);
-                    rect->moveCenter(xs + xspace/2, ys + yspace/2);
-                    currentHeight_ = minw;
-                  }
-                this->add(rect);
+                    QChar c = s[x];
+
+                    Rect* rect = new Rect();
+                    rect->setLayer(layer);
+                    int xs = (x + xoffset_)*xspace;
+                    int ys = (y + yoffset_)*yspace;
 
 
+                    switch(c.unicode()){
+                    case 'X':
+                        currentHeight_ = yspace;
+                    case 'x':
+                        currentHeight_ = yspace;
+                    case 'B':
+                    case 'A':
+                    case 'D':
+                    case 'S':
+                    case 'G':
+					case 'r':
+                    case 'K':
+                    case 'C':
+                    case 'c':
+                        rect->setRect(xs,ys,xspace,currentHeight_);
+                        rect->moveCenter(xs + xspace/2, ys + yspace/2);
+                        break;
+                    case 'V':
+                        rect->setRect(xs,ys - yspace/2,xspace,yspace*2);
+                        break;
+                    case 'm':
+                        rect->setRect(xs,ys,xspace,this->minPolyLength());
+                        rect->moveCenter(xs + xspace/2, ys + yspace/2);
+                        break;
+                    case 'w':
+                        int minw = rules->get(layer,"width");
+                        rect->setRect(xs,ys,xspace,minw);
+                        rect->moveCenter(xs + xspace/2, ys + yspace/2);
+                        currentHeight_ = minw;
+                        break;
 
-               }
+                    }
+
+                    if(!rect->empty()){
+
+                        this->add(rect);
+                    }
+
+
+                    int xoffset = 0;
+
+                    int cw = 0;
+                    int ch = 0;
+                    int cs = 0;
+                    QString lay;
+                    Rect *cr;
+                    Rect *cr1;
+                    switch(c.unicode()){
+                    case 'C':
+                        xoffset = xspace/2;
+                    case 'c':
+                        //TODO: Get next layer based on current
+                        //QString lay = this->rules->get
+                        lay = "CO";
+                        cr = new Rect();
+                        cr->setLayer(lay);
+                        cw = this->rules->get(lay,"width");
+                        ch = this->rules->get(lay,"height");
+                        cs = this->rules->get(lay,"space");
+                        cr->setRect(xs,ys,cw,ch);
+                        cr->moveCenter(xs -xoffset + xspace/2, ys + yspace/2);
+                        this->add(cr);
+
+                        break;
+                    case 'K':
+                        xoffset = xspace/2;
+                    case 'k':
+                        //TODO: Get next layer based on current
+                        //QString lay = this->rules->get
+                        lay = "CO";
+                        cr = new Rect();
+                        cr->setLayer(lay);
+                        cw = this->rules->get(lay,"width");
+                        ch = this->rules->get(lay,"height");
+                        cs = this->rules->get(lay,"space");
+                        cr->setRect(xs,ys,cw,ch);
+                        cr1 = cr->getCopy();
+                        cr->moveCenter(xs -xoffset + xspace/2, ys + yspace/2);
+                        cr1->moveCenter(cr->centerX() - cs - cw/2,cr->centerY());
+                        this->add(cr);
+                        this->add(cr1);
+                        break;
+                    }
+
+
+
+
+
+                }
             }
 
-          }
+        }
 
     }
 

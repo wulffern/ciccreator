@@ -47,7 +47,7 @@ namespace cIcCore{
     static Cell * createInstance();
     QString name(){return _name;}
     QString setName(QString val){ _name = val; return _name;}
-
+    QList<Rect*> children(){return _children;}
     virtual void place();
     virtual void route();
     virtual void paint();

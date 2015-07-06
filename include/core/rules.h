@@ -59,7 +59,7 @@ namespace cIcCore{
 		QJsonObject vral = r[layer].toObject();
 		foreach(QString name,vral.keys()){
 		  qreal v = vral[name].toDouble();
-		  this->rules_[name][layer] = v;
+		  this->rules_[layer][name] = v;
 		//  if(this->rules_.contains(layer)){
 		//	QHash<QString,qreal> rl = this->rules_[name];
 		//	rl[name] = v;

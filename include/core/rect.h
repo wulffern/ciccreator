@@ -49,7 +49,12 @@ namespace cIcCore{
         int height();
         int centerX();
         int centerY();
-
+		bool empty();
+		int x1(){return x1_;}
+		int y1(){return y1_;}
+		int x2(){return x2_;}
+		int y2(){return y2_;}
+		
         void translate(int ax, int ay);
         void moveTo(int x, int y);
         void moveCenter(int x, int y);
@@ -98,6 +103,7 @@ namespace cIcCore{
             y1_ = y;
             x2_ = x + width;
             y2_ = y + height;
+			
         }
         void setRect(QString layer, int x, int y, int width, int height){
             _layer = layer;
@@ -117,7 +123,7 @@ namespace cIcCore{
     inline int Rect::height(){ return y2_ - y1_;}
 
     inline int Rect::centerX(){ return left() + width()/2.0;}
-    inline int Rect::centerY(){ return top() + height()/2.0;}
+    inline int Rect::centerY(){ return bottom() + height()/2.0;}
 
 
     inline void Rect::setLeft(int left){ x1_ = left;emit updated();}
@@ -143,6 +149,13 @@ namespace cIcCore{
       y2_ = y1_ + h;
       emit updated();
     }
+
+	inline bool Rect::empty(){
+		if(x1_ == x2_ || y1_ == y2_){
+			return true;
+		}
+		return false;
+	}
 
     inline void Rect::translate(int ax, int ay){
     x2_ += ax;

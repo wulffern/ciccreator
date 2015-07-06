@@ -42,7 +42,9 @@ namespace cIcCore{
 
   }
 
-  void Cell::paint(){qDebug() << "Painting Cell";}
+  void Cell::paint(){
+//	  qDebug() << "Painting Cell";
+  }
   void Cell::route(){}
   void Cell::place(){}
   void Cell::addAllPorts(){}
@@ -176,7 +178,7 @@ namespace cIcCore{
     int x2  = -std::numeric_limits<int>::max();
     int y2  =  -std::numeric_limits<int>::max();
 
-    qDebug() << x1 << " " << y1 << " " << x2 << " " << y2;
+//    qDebug() << x1 << " " << y1 << " " << x2 << " " << y2;
     foreach(Rect* cr, _children) {
 
         if (cr->left() < x1) {
