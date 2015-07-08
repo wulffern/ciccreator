@@ -315,6 +315,13 @@ namespace cIcCore{
 
         val = file.readAll();
         file.close();
+
+        QString spice_file = filename;
+        spice_file.replace(".json",".spi");
+        _spice_parser.parseFile(spice_file);
+
+
+
         QJsonParseError err;
 
         QJsonDocument d = QJsonDocument::fromJson(val.toUtf8(),&err);

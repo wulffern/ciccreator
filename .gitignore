@@ -3,6 +3,7 @@ moc_*
 *.o
 .DS_Store
 .qmake.*
+*.svg
 *.pro.user.*
 *.pro.user
 Makefile

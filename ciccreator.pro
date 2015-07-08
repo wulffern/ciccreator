@@ -31,6 +31,10 @@ include/core/patterntransistor.h \
 include/core/patterncapacitor.h \
 include/printer/designprinter.h \
 include/printer/svg.h \
+include/spice/spiceparser.h\
+include/spice/spiceobject.h \
+include/spice/subckt.h \
+include/spice/subcktinstance.h \
 
 
 SOURCES +=     src/core/rules.cpp src/core/rect.cpp src/core/cell.cpp  src/main.cpp \ 
@@ -40,4 +44,8 @@ SOURCES +=     src/core/rules.cpp src/core/rect.cpp src/core/cell.cpp  src/main.
     src/core/design.cpp \
     src/printer/designprinter.cpp \
     src/printer/svg.cpp \
+    src/spice/spiceparser.cpp\
+    src/spice/spiceobject.cpp \
+    src/spice/subckt.cpp \
+    src/spice/subcktinstance.cpp \
 
