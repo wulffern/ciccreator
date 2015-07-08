@@ -39,7 +39,34 @@ namespace cIcSpice{
 
     void SubcktInstance::parse(QString buffer,int line_number){
 
-  //    qWarning() << "Parsing subcktinstance : " << buffer;
+        this->setLineNumber(line_number);
+        this->spiceStr().append(buffer);
+
+        //Remove parameters
+        QRegularExpression re_params("\\s+(\\S+)\\s*=\\s*(\\S+)");
+        QRegularExpressionMatchIterator it= re_params.globalMatch(buffer);
+        while (it.hasNext()) {
+            QRegularExpressionMatch m_params = it.next();
+             this->properties()[m_params.captured(1)] = m_params.captured(2);
+        }
+
+
+        buffer.replace(re_params,"");
+
+        //Split on space
+        const QRegularExpression re_space("\\s+");
+        QStringList nodes = buffer.split(re_space);
+
+        //First element should be instance name
+        this->setName(nodes.first());
+        nodes.removeFirst();
+
+        //Last element should be subckt name
+        this->_subckt_name = nodes.last();
+        nodes.removeLast();
+
+        //The rest should be nodes
+        this->setNodes(nodes);
 
     }
 

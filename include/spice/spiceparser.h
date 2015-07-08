@@ -35,14 +35,18 @@ namespace cIcSpice{
 	class SpiceParser: public QObject
 	{
 		Q_OBJECT
-//		Q_PROPERTY(Subckt subckt READ _subckt)
+	//	Q_PROPERTY(QMap<QString, Subckt*> subckt READ subckt)
 	public:
 		SpiceParser();
 		SpiceParser(const SpiceParser&);
 		~SpiceParser();
 		void parseFile(QString filename);
 
-		Subckt* subckt(QString name){
+		QMap<QString,Subckt*> subckt(){
+		  return _subckt;
+		}
+
+		Subckt* getSubckt(QString name){
 			if(_subckt.contains(name)){
 				return _subckt[name];
 			}else{

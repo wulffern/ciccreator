@@ -49,42 +49,38 @@ namespace cIcSpice{
 		    re_subckt_start.setPatternOptions(QRegularExpression::CaseInsensitiveOption);
 		    QRegularExpression re_subckt_end("^\\s*.ends");
 		    re_subckt_end.setPatternOptions(QRegularExpression::CaseInsensitiveOption);
-		    QRegularExpression re_plus("\\s*\\+\\s*$");
+
+
+		    QRegularExpression re_plus("^\\s*\\+");
 
 		    int line_number = 0;
 		    QList<QString> subckt_buffer;
-		    QString spice_line;
 		    while (!in.atEnd())
 		       {
 			 QString line = in.readLine();
 			 line_number++;
-			  if(plusOnPreviousLine){
-			    spice_line.append(line);
-			    plusOnPreviousLine = false;
-			  }else{
-			      spice_line = line;
+
+			 //Handle plus
+			 QRegularExpressionMatch m_hasPlus = re_plus.match(line);
+			 if(m_hasPlus.hasMatch()){
+			     line.replace(re_plus,"");
+			     subckt_buffer.last().append(line);
+			     continue;
 			  }
 
-			  QRegularExpressionMatch m_hasPlus = re_plus.match(line);
-			  if(m_hasPlus.hasMatch()){
-			    plusOnPreviousLine = true;
-			  }
-
-			  if(plusOnPreviousLine){
-			      continue;
-			  }
-
-			  QRegularExpressionMatch m_start = re_subckt_start.match(spice_line);
+			 //Capture start of subckt
+			  QRegularExpressionMatch m_start = re_subckt_start.match(line);
 			  if(m_start.hasMatch()){
 			    isSubckt = true;
 			    subckt_buffer.clear();
 			  }
 
 			  if(isSubckt){
-			      subckt_buffer.append(spice_line);
+			      subckt_buffer.append(line);
 			  }
 
-			  QRegularExpressionMatch m_end = re_subckt_end.match(spice_line);
+			  //Capture end of subckt
+			  QRegularExpressionMatch m_end = re_subckt_end.match(line);
 			  if(m_end.hasMatch()){
 			      isSubckt = false;
 			      Subckt * ckt = new Subckt();

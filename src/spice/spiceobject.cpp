@@ -33,9 +33,6 @@ namespace cIcSpice{
 
     }
 
-    void SpiceObject::parse(QString buffer){
 
-
-    }
 
 }

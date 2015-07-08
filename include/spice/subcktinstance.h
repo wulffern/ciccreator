@@ -30,20 +30,23 @@ namespace cIcSpice{
 	class SubcktInstance: public SpiceObject
 	{
 		Q_OBJECT
-		Q_PROPERTY(QString name READ name WRITE setName)
+		Q_PROPERTY(QString subcktName READ subcktName WRITE setSubcktName)
+
 
 	public:
 		SubcktInstance();
 		SubcktInstance(QString buffer);
 		SubcktInstance(const SubcktInstance&);
 		~SubcktInstance();
-		QString name(){return _name;}
-		QString setName(QString val){ _name = val; return _name;}
-		virtual void parse(QString buffer,int line_number);
+		QString subcktName(){return _subckt_name;}
+		QString setSubcktName(QString val){ _subckt_name = val; return _subckt_name;}
+
+		 void parse(QString buffer,int line_number);
 
 	private:
-		QString _name;
-		QList<QString> nodes;
+
+		QString _subckt_name;
+
 		
 	};
 

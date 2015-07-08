@@ -22,7 +22,7 @@
 #define CIC_CORE_SPICEOBJECT_H
 
 #include <QObject>
-#include <QRegularExpression>|
+#include <QRegularExpression>
 
 namespace cIcSpice{
 
@@ -30,21 +30,39 @@ namespace cIcSpice{
 	{
 		Q_OBJECT
 		Q_PROPERTY(QString name READ name WRITE setName)
+		Q_PROPERTY(QStringList spiceStr READ spiceStr WRITE setSpiceStr)
+		Q_PROPERTY(QStringList nodes READ nodes WRITE setNodes)
 		Q_PROPERTY(int lineNumber READ lineNumber WRITE setLineNumber)
+
+
 
 	public:
 		SpiceObject();
 		SpiceObject(const SpiceObject&);
 		~SpiceObject();
+
 		QString name(){return _name;}
 		QString setName(QString val){ _name = val; return _name;}
+
+		QStringList spiceStr(){return _spice_str;}
+		QStringList setSpiceStr(QStringList val){ _spice_str = val; return _spice_str;}
+
+		QStringList nodes(){return _nodes;}
+		QStringList setNodes(QStringList val){ _nodes = val; return _nodes;}
+
+		QMap<QString,QString> properties(){
+		  return _properties;
+		}
+
 		int lineNumber(){return _line_number;}
 		int setLineNumber(int val){ _line_number = val; return _line_number;}
-		virtual void parse(QString buffer);
+
 
 	private:
 		QString _name;
-		QList<QString> nodes;
+		QMap<QString,QString> _properties;
+		QStringList _spice_str;
+		QStringList _nodes;
 		QList<SpiceObject*> _children;
 		int _line_number;
 

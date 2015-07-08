@@ -47,7 +47,7 @@ namespace cIcCore{
       minPolyLength_ = val;
       return minPolyLength_;
     }
-    void paint() override;
+    void paint() ;
 
 
   private:
