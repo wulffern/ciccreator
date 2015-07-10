@@ -23,6 +23,7 @@
 #include <QObject>
 
 #include "rect.h"
+#include "spice/subckt.h"
 
 namespace cIcCore{
 
@@ -47,6 +48,12 @@ namespace cIcCore{
     static Cell * createInstance();
     QString name(){return _name;}
     QString setName(QString val){ _name = val; return _name;}
+
+    QMap<QString,Cell*>  * designs(){return _designs;}
+    QMap<QString,Cell*>  * setDesigns(QMap<QString,Cell*>  * val){ _designs = val; return _designs;}
+    cIcSpice::Subckt * subckt(){return _subckt;}
+    cIcSpice::Subckt * setSubckt(cIcSpice::Subckt * val){ _subckt = val; return _subckt;}
+
     QList<Rect*> children(){return _children;}
     virtual void place();
     virtual void route();
@@ -58,6 +65,8 @@ namespace cIcCore{
     QString _name;
     bool _hasPR;
     Rect* parent;
+    cIcSpice::Subckt * _subckt;
+    QMap<QString,Cell*> * _designs;
 
   signals:
 

@@ -46,7 +46,20 @@ namespace cIcCore{
 //	  qDebug() << "Painting Cell";
   }
   void Cell::route(){}
-  void Cell::place(){}
+  void Cell::place(){
+
+      QString prev_group = "";
+      foreach(cIcSpice::SubcktInstance * ckt_inst,_subckt->instances()){
+        QString group = ckt_inst->groupName();
+        if(prev_group != group && prev_group != ""){
+            //TODO:Reset Y, and increment X
+          }
+        prev_group = group;
+        Instance * inst = Instance(ckt_inst,designs);
+
+      }
+
+  }
   void Cell::addAllPorts(){}
 
   Rect* Cell::getRect(QString layer){

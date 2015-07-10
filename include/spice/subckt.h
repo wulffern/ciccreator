@@ -39,13 +39,13 @@ namespace cIcSpice{
 		Subckt(QList<QString> buffer);
 		Subckt(const Subckt&);
 		~Subckt();
-		QString name(){return _name;}
-		QString setName(QString val){ _name = val; return _name;}
+
 		 void parse(QList<QString> buffer, int line);
+		 QMap<QString,SubcktInstance*> instances(){return _instances;}
 
 
 	private:
-		QString _name;
+
 		QMap<QString,SubcktInstance*> _instances;
 	};
 

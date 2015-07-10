@@ -168,7 +168,9 @@ namespace cIcCore{
             //Run instancemethods
             this->runIfObjectCanMethods(c,jobj);
 
-			//TODO: Add spice parsing before place
+            //TODO: Add spice parsing before place
+            cIcSpice::Subckt * ckt = _spice_parser.getSubckt(name);
+            c->setSubckt(ckt);
 
 			//TODO: How will I separate out instances from cells that should be printed to bottom?
 			

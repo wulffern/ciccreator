@@ -40,12 +40,15 @@ namespace cIcSpice{
 		~SubcktInstance();
 		QString subcktName(){return _subckt_name;}
 		QString setSubcktName(QString val){ _subckt_name = val; return _subckt_name;}
-
+		QString groupName(){return _group_name;}
+		QString groupTag(){return _group_tag;}
 		 void parse(QString buffer,int line_number);
 
 	private:
 
 		QString _subckt_name;
+		QString _group_name;
+		QString _group_tag;
 
 		
 	};

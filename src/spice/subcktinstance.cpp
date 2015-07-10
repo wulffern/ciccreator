@@ -61,6 +61,12 @@ namespace cIcSpice{
         this->setName(nodes.first());
         nodes.removeFirst();
 
+        QRegularExpression re_group("(\S+)(\d\S+)");
+        QRegularExpressionMatch m_group = re_group.match(this->name());
+        if(m_group.hasMatch()){
+          this->_group_name = m_group.captured(1);
+            this->_group_tag = m_group.captured(2);
+          }
         //Last element should be subckt name
         this->_subckt_name = nodes.last();
         nodes.removeLast();
