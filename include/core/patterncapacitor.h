@@ -16,8 +16,8 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ********************************************************************/
-#ifndef PATTERNCAPACITOR_H
-#define PATTERNCAPACITOR_H
+#ifndef CIC_CORE_PATTERNCAPACITOR_H
+#define CIC_CORE_PATTERNCAPACITOR_H
 
 #include <QObject>
 #include "cell.h"

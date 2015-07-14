@@ -29,295 +29,290 @@
 //#  sub isLibraryCell{ return (shift)->property("isLibraryCell",(shift));}
 namespace cIcCore{
 
-  Cell::Cell(): Rect(){
+    QMap<QString,Cell*> Cell::_allcells;
 
-  }
+    Cell::Cell(): Rect(){
 
-  Cell::Cell(const Cell&){
+    }
+
+    Cell::Cell(const Cell&){
 
 
-  }
+    }
 
-  Cell::~Cell() {
+    Cell::~Cell() {
 
-  }
+    }
 
-  void Cell::paint(){
-//	  qDebug() << "Painting Cell";
-  }
-  void Cell::route(){}
-  void Cell::place(){
+    void Cell::paint(){
+//    qDebug() << "Painting Cell";
+    }
+    void Cell::route(){}
+    void Cell::place(){}
+    void Cell::addAllPorts(){}
 
-      QString prev_group = "";
-      foreach(cIcSpice::SubcktInstance * ckt_inst,_subckt->instances()){
-        QString group = ckt_inst->groupName();
-        if(prev_group != group && prev_group != ""){
-            //TODO:Reset Y, and increment X
-          }
-        prev_group = group;
-        Instance * inst = Instance(ckt_inst,designs);
+    Rect* Cell::getRect(QString layer){
+        foreach (Rect* child, _children){
+            QString lay = child->layer();
+            if (lay.compare(layer) == 0) {
+                return child;
+            }
+        }
+        return 0    ;
+    }
 
+
+
+    void Cell::add(Rect* child){
+
+        if ( child == 0){
+            qDebug() << "Tried to add null-pointer to " << this->name();
+            return;
+        }
+
+        if (child && !_children.contains(child)) {
+            child->parent(this);
+            this->_children.append(child);
+            connect(child,SIGNAL(updated()),this, SLOT(updateBoundingRect()));
+        }
+
+        this->updateBoundingRect();
+    }
+
+
+
+    void Cell::translate(int dx, int dy) {
+
+        Rect::translate(dx,dy);
+
+        foreach(Rect* child, _children) {
+            //if( strcmp(child->metaObject()->className(),"IcEnclosingRect") == 0){
+            //    continue;
+            //  }
+            child->translate(dx,dy);
+        }
+        emit updated();
+
+        this->updateBoundingRect();
+    }
+
+    void Cell::mirrorX(int ax) {
+        this->setLeft(2*ax - this->left());
+        this->setRight(2*ax - this->right());
+
+        if (this->right() < this->left()) {
+            int tmp = this->left();
+            this->setLeft(this->right());
+            this->setRight(tmp);
+        }
+
+        foreach(Rect * child, _children) {
+            //  if( strcmp(child->metaObject()->className(),"IcEnclosingRect") == 0){
+            //      continue;
+            //    }
+            child->mirrorX(ax);
+        }
+        this->updateBoundingRect();
+        emit updated();
+    }
+
+    void Cell::mirrorY(int ay) {
+
+        this->setTop(2 *  ay - this->top());
+        this->setBottom(2 *  ay - this->bottom());
+
+        if (this->bottom() < this->top()) {
+            int tmp = this->top();
+            this->setTop(this->bottom());
+            this->setTop(tmp);
+        }
+
+        foreach(Rect* child, _children) {
+            //if( strcmp(child->metaObject()->className(),"IcEnclosingRect") == 0){
+            //    continue;
+            //  }
+            child->mirrorY(ay);
+        }
+        this->updateBoundingRect();
+        emit updated();
+    }
+
+    void Cell::moveTo(int ax, int ay) {
+
+        int x1 = this->left();
+        int y1 = this->top();
+
+        this->setRight(this->right() + ax - this->left());
+        this->setBottom(this->bottom() + ay - this->top());
+        this->setLeft(ax);
+        this->setTop(ay);
+        foreach(Rect* child, _children) {
+            //if( strcmp(child->metaObject()->className(),"IcEnclosingRect") == 0){
+            //    continue;
+            //  }
+            child->translate( ax - x1, ay -  y1);
+        }
+        emit updated();
+
+    }
+
+    void Cell::moveCenter(int ax, int ay) {
+        this->updateBoundingRect();
+
+        int xc1 = this->centerX();
+        int yc1 = this->centerY();
+
+        int xpos = this->left() - ( xc1 - ax );
+        int ypos = this->top() - ( yc1 - ay );
+
+        this->moveTo(xpos,ypos);
+    }
+
+
+    void Cell::updateBoundingRect(){
+        //Rect r;
+        Rect r = this->calcBoundingRect();
+        this->setRect(r);
+        // qDebug() << r;
+
+    }
+
+    Rect Cell::calcBoundingRect(){
+
+
+        int x1  = std::numeric_limits<int>::max();
+        int y1  = std::numeric_limits<int>::max();
+        int x2  = -std::numeric_limits<int>::max();
+        int y2  =  -std::numeric_limits<int>::max();
+
+        foreach(Rect* cr, this->_children) {
+
+            int cx1 = cr->x1();
+            int cx2 = cr->x2();
+            int cy1 = cr->y1();
+            int cy2 = cr->y2();
+
+            if (cx1 < x1) {
+                x1 = cx1;
+            }
+
+            if (cy1 < y1) {
+                y1 = cy1;
+            }
+            if (cx2 > x2) {
+                x2 = cx2;
+            }
+            if (cy2 > y2) {
+                y2 = cy2;
+
+            }
+        }
+        Rect r;
+
+        r.setPoint1(x1,y1);
+        r.setPoint2(x2,y2);
+//        qWarning() << 		Rect r = c->_cell->calcBoundingRect();r.toString();
+        return r;
+    }
+
+    QString Cell::toString(){
+        QString str;
+        str.append(Rect::toString());
+        str.append("\n {\n");
+        QString strpar = this->metaObject()->className();
+        foreach(Rect* child, _children){
+            str.append("  ");
+            str.append(child->toString());
+            str.append("\n");
+        }
+        str.append(" }");
+        return str;
+
+    }
+
+    /*
+      void Cell::toPrinter{
+      my $self = shift;
+      my $printer = shift;
+      if (this->schObject) {
+      this->schObject->toPrinter($printer);
+      }
       }
 
-  }
-  void Cell::addAllPorts(){}
+      void Cell::childrenToGds{
+      my $self = shift;
+      my $gdsref = shift;
+      my $xorg = shift;
+      my $yorg = shift;
+      my $mirror = shift;
+      my $mirror_line = shift;
 
-  Rect* Cell::getRect(QString layer){
-    foreach (Rect* child, _children){
-        QString lay = child->layer();
-        if (lay.compare(layer) == 0) {
-            return child;
-          }
+      my @children = @{this->children};
+      foreach my $child (@children) {
+      $child->toGds($gdsref,$xorg,$yorg,$mirror,$mirror_line);
       }
-    return 0    ;
-  }
-
-  Cell * Cell::createInstance()
-  {
-    Cell * c = new Cell();
-    return c;
-
-  }
-
-  void Cell::add(Rect* child){
-
-
-    if (child && !_children.contains(child)) {
-        child->parent(this);
-        this->_children.append(child);
-        connect(child,SIGNAL(updated()),this, SLOT(updateBoundingRect()));
       }
 
-    this->updateBoundingRect();
-  }
+      void Cell::toGds{
+      my $self = shift;
+      my $gdsref = shift;
+      my $xorg = shift;
+      my $yorg = shift;
+      my $mirror = shift;
+      my $mirror_line = shift;
 
-  void Cell::translate(int dx, int dy) {
-
-    Rect::translate(dx,dy);
-
-    foreach(Rect* child, _children) {
-        if( strcmp(child->metaObject()->className(),"IcEnclosingRect") == 0){
-            continue;
-          }
-        child->translate(dx,dy);
-      }
-    emit updated();
-
-    this->updateBoundingRect();
-  }
-
-  void Cell::mirrorX(int ax) {
-    this->setLeft(2*ax - this->left());
-    this->setRight(2*ax - this->right());
-
-    if (this->right() < this->left()) {
-        int tmp = this->left();
-        this->setLeft(this->right());
-        this->setRight(tmp);
+      if (this->mirror) {
+      $mirror = this->mirror;
+      $mirror_line = this->mirror_line;
       }
 
-    foreach(Rect * child, _children) {
-        if( strcmp(child->metaObject()->className(),"IcEnclosingRect") == 0){
-            continue;
-          }
-        child->mirrorX(ax);
-      }
-    this->updateBoundingRect();
-    emit updated();
-  }
-
-  void Cell::mirrorY(int ay) {
-
-    this->setTop(2 *  ay - this->top());
-    this->setBottom(2 *  ay - this->bottom());
-
-    if (this->bottom() < this->top()) {
-        int tmp = this->top();
-        this->setTop(this->bottom());
-        this->setTop(tmp);
+      if (ref(this->parent) eq "Gds::GdsLib") {
+      $gdsref->printBgnstr(-name=>this->name);
+      this->childrenToGds($gdsref,$xorg,$yorg,$mirror,$mirror_line);
+      if (this->hasPR) {
+      this->SUPER::toGds($gdsref,$xorg,$yorg,$mirror,$mirror_line);
       }
 
-    foreach(Rect* child, _children) {
-        if( strcmp(child->metaObject()->className(),"IcEnclosingRect") == 0){
-            continue;
-          }
-        child->mirrorY(ay);
+      if (this->schObject && this->schObject->can("ports")) {
+      my @ports = @{this->schObject->ports};
+      if ($gdsref->can("printPin")) {
+      print this->schObject."\n";
+      foreach my $p (@ports) {
+      if ($p->rect) {
+      $gdsref->printPin(-obj => $p);
       }
-    this->updateBoundingRect();
-    emit updated();
-  }
-
-  void Cell::moveTo(int ax, int ay) {
-
-    int x1 = this->left();
-    int y1 = this->top();
-
-    this->setRight(this->right() + ax - this->left());
-    this->setBottom(this->bottom() + ay - this->top());
-    this->setLeft(ax);
-    this->setTop(ay);
-    foreach(Rect* child, _children) {
-        if( strcmp(child->metaObject()->className(),"IcEnclosingRect") == 0){
-            continue;
-          }
-        child->translate( ax - x1, ay -  y1);
       }
-    emit updated();
-
-  }
-
-  void Cell::moveCenter(int ax, int ay) {
-    this->updateBoundingRect();
-
-    int xc1 = this->centerX();
-    int yc1 = this->centerY();
-
-    int xpos = this->left() - ( xc1 - ax );
-    int ypos = this->top() - ( yc1 - ay );
-
-    this->moveTo(xpos,ypos);
-  }
-
-
-  void Cell::updateBoundingRect(){
-    QRect r = this->calcBoundingRect();
-   // qDebug() << r;
-    //this->setRect(r);
-  }
-
-  QRect Cell::calcBoundingRect(){
-    int x1  = std::numeric_limits<int>::max();
-    int y1  = std::numeric_limits<int>::max();
-    int x2  = -std::numeric_limits<int>::max();
-    int y2  =  -std::numeric_limits<int>::max();
-
-//    qDebug() << x1 << " " << y1 << " " << x2 << " " << y2;
-    foreach(Rect* cr, _children) {
-
-        if (cr->left() < x1) {
-            x1 = cr->left();
-          }
-
-        if (cr->top() < y1) {
-            y1 = cr->top();
-          }
-        if (cr->right() > x2) {
-            x2 = cr->right();
-          }
-        if (cr->bottom() > y2) {
-            y2 = cr->bottom();
-
-          }
+      } elsif ($gdsref->can("printText")) {
+      foreach my $p (@ports) {
+      if ($p->rect) {
+      $p->{xorg} = $xorg;
+      $p->{yorg} = $yorg;
+      $p->{mirror} = $mirror;
+      $p->{mirror_line} = $mirror_line;
+      $gdsref->printText(
+      -layer => this->rules->layerToNumber($p->layer."_pin"),
+      -string => $p->text,
+      -dataType => 0,
+      -x => ($p->xc + this->snap($p->portSize/2.0) ),
+      -y => ($p->yc +this->snap($p->portSize/2.0) ),
+      );
+      my $port = new Gds::GdsRect($p->layer,$p->xc,$p->yc,$p->portSize,$p->portSize);
+      $port->toGds($gdsref,$xorg,$yorg,$mirror,$mirror_line);
+      }
+      }
+      }
+      }
+      $gdsref->printEndstr();
+      } else {
+      this->childrenToGds($gdsref,$xorg,$yorg,$mirror,$mirror_line);
+      if (this->hasPR) {
+      this->SUPER::toGds($gdsref,$xorg,$yorg,$mirror,$mirror_line);
+      }
 
       }
-    QRect r;
-    r.setX(x1);
-    r.setY(y1);
-    r.setWidth(x2 - x1);
-    r.setHeight(y2 - y1);
-    return r;
-
-
-  }
-
-  QString Cell::toString(){
-    QString str;
-    str.append(Rect::toString());
-    str.append("\n {\n");
-    QString strpar = this->metaObject()->className();
-    foreach(Rect* child, _children){
-        str.append("  ");
-        str.append(child->toString());
-        str.append("\n");
       }
-    str.append(" }");
-    return str;
+      }
 
-  }
-
-  /*
-  void Cell::toPrinter{
-  my $self = shift;
-  my $printer = shift;
-  if (this->schObject) {
-  this->schObject->toPrinter($printer);
-  }
-  }
-
-  void Cell::childrenToGds{
-  my $self = shift;
-  my $gdsref = shift;
-  my $xorg = shift;
-  my $yorg = shift;
-  my $mirror = shift;
-  my $mirror_line = shift;
-
-  my @children = @{this->children};
-  foreach my $child (@children) {
-  $child->toGds($gdsref,$xorg,$yorg,$mirror,$mirror_line);
-  }
-  }
-
-  void Cell::toGds{
-  my $self = shift;
-  my $gdsref = shift;
-  my $xorg = shift;
-  my $yorg = shift;
-  my $mirror = shift;
-  my $mirror_line = shift;
-
-  if (this->mirror) {
-  $mirror = this->mirror;
-  $mirror_line = this->mirror_line;
-  }
-
-  if (ref(this->parent) eq "Gds::GdsLib") {
-  $gdsref->printBgnstr(-name=>this->name);
-  this->childrenToGds($gdsref,$xorg,$yorg,$mirror,$mirror_line);
-  if (this->hasPR) {
-  this->SUPER::toGds($gdsref,$xorg,$yorg,$mirror,$mirror_line);
-  }
-
-  if (this->schObject && this->schObject->can("ports")) {
-  my @ports = @{this->schObject->ports};
-  if ($gdsref->can("printPin")) {
-  print this->schObject."\n";
-  foreach my $p (@ports) {
-  if ($p->rect) {
-  $gdsref->printPin(-obj => $p);
-  }
-  }
-  } elsif ($gdsref->can("printText")) {
-  foreach my $p (@ports) {
-  if ($p->rect) {
-  $p->{xorg} = $xorg;
-  $p->{yorg} = $yorg;
-  $p->{mirror} = $mirror;
-  $p->{mirror_line} = $mirror_line;
-  $gdsref->printText(
-  -layer => this->rules->layerToNumber($p->layer."_pin"),
-  -string => $p->text,
-  -dataType => 0,
-  -x => ($p->xc + this->snap($p->portSize/2.0) ),
-  -y => ($p->yc +this->snap($p->portSize/2.0) ),
-  );
-  my $port = new Gds::GdsRect($p->layer,$p->xc,$p->yc,$p->portSize,$p->portSize);
-  $port->toGds($gdsref,$xorg,$yorg,$mirror,$mirror_line);
-  }
-  }
-  }
-  }
-  $gdsref->printEndstr();
-  } else {
-  this->childrenToGds($gdsref,$xorg,$yorg,$mirror,$mirror_line);
-  if (this->hasPR) {
-  this->SUPER::toGds($gdsref,$xorg,$yorg,$mirror,$mirror_line);
-  }
-
-  }
-  }
-  }
-
-  1;
-*/
+      1;
+    */
 }

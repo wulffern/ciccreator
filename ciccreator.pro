@@ -35,7 +35,8 @@ include/spice/spiceparser.h\
 include/spice/spiceobject.h \
 include/spice/subckt.h \
 include/spice/subcktinstance.h \
-    include/core/instances.h
+    include/core/instance.h \
+    include/core/layoutcell.h
 
 
 SOURCES +=     src/core/rules.cpp src/core/rect.cpp src/core/cell.cpp  src/main.cpp \ 
@@ -49,5 +50,6 @@ SOURCES +=     src/core/rules.cpp src/core/rect.cpp src/core/cell.cpp  src/main.
     src/spice/spiceobject.cpp \
     src/spice/subckt.cpp \
     src/spice/subcktinstance.cpp \
-    src/core/instance.cpp
+    src/core/instance.cpp \
+    src/core/layoutcell.cpp
 

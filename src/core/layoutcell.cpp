@@ -1,7 +1,7 @@
 //====================================================================
 //        Copyright (c) 2015 Carsten Wulff Software, Norway 
 // ===================================================================
-// Created       : wulff at 2015-7-15
+// Created       : wulff at 2015-7-14
 // ===================================================================
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -16,46 +16,43 @@
 //   You should have received a copy of the GNU General Public License
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //====================================================================
+#include "core/layoutcell.h"
 
+namespace cIcCore{
 
-#ifndef CIC_PRINTER_SVG
-#define CIC_PRINTER_SVG
+    LayoutCell::LayoutCell()
+    {
 
-#include <QObject>
-#include <QString>
-#include "printer/designprinter.h"
-namespace cIcPrinter{
-	using namespace cIcCore;
-	
-    class Svg : public DesignPrinter{
+    }
 
-    public:
+    LayoutCell::~LayoutCell()
+    {
 
-        Svg(QString filename):DesignPrinter(filename){
-           
+    }
+
+    void LayoutCell::place(){
+
+        QString prev_group = "";
+        int prev_width = 0;
+        int x = 0;
+        int y = 0;
+        foreach(cIcSpice::SubcktInstance * ckt_inst,_subckt->instances()){
+            QString group = ckt_inst->groupName();
+            if(prev_group != group && prev_group != ""){
+                //TODO:Reset Y, and increment X
+                y = 0;
+                x = x+ prev_width;
+            }
+            prev_group = group;
+
+            Cell * inst = Instance::getInstance(ckt_inst->subcktName());
+            this->add(inst);
+            inst->moveTo(x,y);
+            prev_width = inst->width();
+            y += inst->height();
+            //Instance * inst = Instance(ckt_inst,designs);
         }
-        ~Svg(){
-            
-        }
-        
-        virtual void startCell(Cell * cell);
-		virtual void endCell();
-		//      void endFile();
- //      void printInstance(Instance & inst);
- //      void printInitLib(string name) ;
- //      void printEndLib() ;
- //      void printInitCell(Cell & cell) ;
- //      void printEndCell() ;
- //      void printText(Text & text);
-  //     void printPin(Pin & pin);
-        virtual void printRect(Rect * rect);
-//		virtual void printCell(Cell * rect);
-		virtual void printReference(Cell * o);
-        
 
-      
-    
-  };
-};
+    }
 
-#endif
+}

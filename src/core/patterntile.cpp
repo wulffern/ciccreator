@@ -237,6 +237,7 @@ namespace cIcCore {
                 }
             }
 
+                        this->updateBoundingRect();
         }
 
     }

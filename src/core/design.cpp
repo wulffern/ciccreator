@@ -23,6 +23,7 @@ namespace cIcCore{
 
     Design::Design(){
         qRegisterMetaType<cIcCore::Cell>("cIcCore::Cell");
+		qRegisterMetaType<cIcCore::LayoutCell>("cIcCore::LayoutCell");
         qRegisterMetaType<cIcCore::PatternTile>("cIcCore::PatternTile");
         qRegisterMetaType<cIcCore::PatternTransistor>("cIcCore::PatternTransistor");
         qRegisterMetaType<cIcCore::PatternTransistor>("cIcCore::PatternCapacitor");
@@ -30,7 +31,7 @@ namespace cIcCore{
         cellTranslator["Gds::GdsPatternTransistor"] = "cIcCore::PatternTransistor";
         cellTranslator["Gds::GdsPatternCapacitor"] = "cIcCore::PatternCapacitor";
         cellTranslator["Gds::GdsPatternCapacitorGnd"] = "cIcCore::PatternCapacitor";
-        cellTranslator["Layout::LayoutDigitalCell"] = "cIcCore::Cell";
+        cellTranslator["Layout::LayoutDigitalCell"] = "cIcCore::LayoutCell";
         nameTranslator["type"] = "mosType";
     }
 
@@ -157,6 +158,8 @@ namespace cIcCore{
 
             c->setName(name);
 
+	    qWarning() << "Making " << name;
+
 			
 			
             //TODO: Make a "runAllMethods" equivalent
@@ -191,7 +194,8 @@ namespace cIcCore{
             c->addAllPorts();
 
             this->add(c);
-            this->_designs[c->name()] = c;
+            Cell::addCell(c);
+
 
 
             // qWarning() << "Found class " <<obj->className()  << " " << obj->methodCount();

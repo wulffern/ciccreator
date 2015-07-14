@@ -21,59 +21,92 @@
 #define CIC_CORE_CELL_H
 
 #include <QObject>
-
 #include "rect.h"
 #include "spice/subckt.h"
 
 namespace cIcCore{
 
-  class Cell: public Rect
-  {
-    Q_OBJECT
-    Q_PROPERTY(QString name READ name WRITE setName)
+    class Cell: public Rect
+    {
+        Q_OBJECT
+        Q_PROPERTY(QString name READ name WRITE setName)
 
-  public:
-    Cell();
-    Cell(const Cell&);
-    ~Cell();
-    Rect * getRect(QString layer);
-    void add(Rect* rect);
-    void translate(int dx, int dy);
-    void mirrorX(int ax);
-    void mirrorY(int ay);
-    void moveTo(int ax, int ay);
-    void moveCenter(int ax, int ay);
-    QRect calcBoundingRect();
-    QString toString();
-    static Cell * createInstance();
-    QString name(){return _name;}
-    QString setName(QString val){ _name = val; return _name;}
+    public:
+        Cell();
+        Cell(const Cell&);
+        ~Cell();
+        Rect * getRect(QString layer);
+        void add(Rect* rect);
+        void translate(int dx, int dy);
+        void mirrorX(int ax);
+        void mirrorY(int ay);
+        void moveTo(int ax, int ay);
+        void moveCenter(int ax, int ay);
+        virtual Rect  calcBoundingRect();
+        QString toString();
+        //static Cell * createInstance();
+        QString name(){return _name;}
+        QString setName(QString val){ _name = val; return _name;}
+        bool isEmpty(){return _is_empty;}
 
-    QMap<QString,Cell*>  * designs(){return _designs;}
-    QMap<QString,Cell*>  * setDesigns(QMap<QString,Cell*>  * val){ _designs = val; return _designs;}
-    cIcSpice::Subckt * subckt(){return _subckt;}
-    cIcSpice::Subckt * setSubckt(cIcSpice::Subckt * val){ _subckt = val; return _subckt;}
 
-    QList<Rect*> children(){return _children;}
-    virtual void place();
-    virtual void route();
-    virtual void paint();
-    virtual void addAllPorts();
+        cIcSpice::Subckt * subckt(){return _subckt;}
+        cIcSpice::Subckt * setSubckt(cIcSpice::Subckt * val){ _subckt = val; return _subckt;}
 
-  private:
-    QList<Rect*> _children;
-    QString _name;
-    bool _hasPR;
-    Rect* parent;
-    cIcSpice::Subckt * _subckt;
-    QMap<QString,Cell*> * _designs;
+        QList<Rect*> children(){return _children;}
+        QList<Cell*> instances(){return _instances;}
+        virtual void place();
+        virtual void route();
+        virtual void paint();
+        virtual void addAllPorts();
 
-  signals:
+        static bool hasCell(QString cell){
+            return Cell::_allcells.contains(cell);
+        }
 
-  public slots:
-    void updateBoundingRect();
+        static Cell* getCell(QString cell){
+            if(Cell::_allcells.contains(cell)){
+                return Cell::_allcells[cell];
+            }else{
+                Cell * c = new Cell();
+                return c;
+            }
+        }
 
-  };
+        static QList<Cell*> getAllCells(){
+            return Cell::_allcells.values();
+        }
+
+        static Cell* addCell(QString cell,Cell * c){
+            Cell::_allcells[cell] = c;
+            return c;
+        }
+
+        static Cell* addCell(Cell *c){
+            Cell::_allcells[c->name()] = c;
+            return c;
+        }
+
+    protected:
+        static QMap<QString,Cell*> _allcells;
+        cIcSpice::Subckt * _subckt;
+
+    private:
+        QList<Rect*> _children;
+        QList<Cell*> _instances;
+        QString _name;
+        bool _has_pr;
+        bool _is_empty;
+        Rect* parent;
+
+
+
+    signals:
+
+    public slots:
+        void updateBoundingRect();
+
+    };
 
 }
 

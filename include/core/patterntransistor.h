@@ -16,8 +16,8 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ********************************************************************/
-#ifndef PATTERNTRANSISTOR_H
-#define PATTERNTRANSISTOR_H
+#ifndef CIC_CORE_PATTERNTRANSISTOR_H
+#define CIC_CORE_PATTERNTRANSISTOR_H
 
 #include <QObject>
 #include "cell.h"

@@ -27,12 +27,18 @@
 
 namespace cIcCore{
 
-    class Rect : public QObject
+
+
+    class Rect: public QObject
     {
+
       Q_OBJECT
+
 
     public:
         Rect();
+        Rect(const Rect&);
+        ~Rect();
         Rect(QString layer, int left, int top, int width, int height);
 
         Rect* getCopy();
@@ -40,7 +46,7 @@ namespace cIcCore{
 
         QString layer();
 
-        QRect rect();
+       // QRect rect();
         int left();
         int right();
         int top();
@@ -50,6 +56,8 @@ namespace cIcCore{
         int centerX();
         int centerY();
 		bool empty();
+		int x(){return x1_;}
+		int y(){return y1_;}
 		int x1(){return x1_;}
 		int y1(){return y1_;}
 		int x2(){return x2_;}
@@ -60,6 +68,8 @@ namespace cIcCore{
         void moveCenter(int x, int y);
         void mirrorX(int ax);
         void mirrorY(int ay);
+         void setPoint1(int x1, int y1){x1_ = x1;y1_ = y1;}
+         void setPoint2(int x2, int y2){x2_ = x2;y2_ = y2;}
 
      //   void abut(Rect* rect,qreal dx, qreal dy);
      //   void abutTopCenter(Rect* rect, qreal dy);
@@ -97,7 +107,14 @@ namespace cIcCore{
         void setBottom(int bottom);
         void setWidth(int width);
         void setHeight(int height);
-       // void setRect(QRect rect);
+        void setRect(Rect rect){
+          this->x1_ = rect.x1();
+          this->y1_ = rect.y1();
+          this->x2_ = rect.x2();
+          this->y2_ = rect.y2();
+         // qWarning() << rect.toString();
+        }
+
         void setRect( int x, int y, int width, int height){
             x1_  = x;
             y1_ = y;
@@ -114,6 +131,8 @@ namespace cIcCore{
         }
 
     };
+
+
 
     inline int Rect::left(){ return x1_;}
     inline int Rect::right(){ return x2_;}
@@ -134,10 +153,12 @@ namespace cIcCore{
     inline void Rect::setWidth(int width){ x2_ = x1_ + width; emit updated();}
 
     inline void Rect::moveTo(int x, int y){
-        x2_ = x2_ + x - x1_;
-        y2_ = y2_ + y - y1_;
-        x1_ = x;
-        y1_ = y;
+		int width = this->width();
+		int height = this->height();
+		x1_ = x;
+		y1_ = y;
+		x2_ = x + width;
+		y2_ = y + height;
         emit updated();}
 
     inline void Rect::moveCenter(int xc, int yc){

@@ -21,20 +21,35 @@
 
 namespace cIcCore{
 
+    Rect::~Rect(){
+        x1_ = 0;
+        y1_ = 0;
+        x2_ = 0;
+        y2_ = 0;
+
+    }
+    Rect::Rect(const Rect& r){
+        x1_= r.x1_;
+        x2_= r.x2_;
+        y1_= r.y1_;
+        y2_= r.y2_;
+        _layer= r._layer;
+    }
+
     Rect::Rect(){
         _layer = "M1";
-        setLeft(0);
-        setTop(0);
-        setWidth(0);
-        setHeight(0);
+        x1_ = 0;
+        y1_ = 0;
+        x2_ = 0;
+        y2_ = 0;
         rules = Rules::getRules();
     }
     Rect::Rect(QString layer, int x, int y, int width, int height){
         _layer = layer;
-        setLeft(x);
-        setTop(y);
-        setWidth(width);
-        setHeight(height);
+        x1_ = x;
+        y1_ = y;
+        x2_ = x + width;
+        y2_ = y + height;
         rules = Rules::getRules();
     }
 
@@ -48,52 +63,16 @@ namespace cIcCore{
     QString Rect::layer(){  return _layer;}
     void Rect::setLayer(QString layer){  _layer  = layer;}
 
-
-
-//  sub layer{ return (shift)->property("layer",(shift));}
-// sub datatype{ return (shift)->property("datatype",(shift));}
-//sub rules{ return (shift)->property("rules",(shift));}
-
-
-//  void Rect::abutTopCenter(Rect* rect, qreal dy){
-//    moveCenter(rect->center().x,rect->top() + height()/2.0 + dy);
-//  }
-
-
     void Rect::parent(Rect* rect){
         _parent = rect;
     }
 
     Rect* Rect::getCopy(){
-        return new Rect(_layer, left() , top(), width(), height() );
+        return new Rect(_layer, x() , y(), width(), height() );
     }
     Rect* Rect::getCopy(QString layer){
-        return new Rect(layer, left(), top(), width(), height() );
+        return new Rect(layer, x(), y(), width(), height() );
     }
-
-//    void Rect::abut(Rect* rect, qreal dx, qreal dy){
-//        moveTo(rect->right() + dx, rect->top()  + dy);
-//    }
-
-//    void Rect::abutTopLeft(Rect* rect){
-//        moveTo(rect->left()-width(),rect->top());
-//    }
-
-//    void Rect::abutBottom(Rect* rect){
-//        moveTo(rect->left(),rect->bottom());
-//    }
-
-//    void Rect::abutLeft(Rect* rect,qreal dx, qreal dy){
-//        moveTo(rect->right() + dx,rect->bottom()+dy);
-//    }
-
-//    void Rect::abutRight(Rect* rect, qreal dx, qreal dy){
-//        moveTo(rect->right() + dx,rect->bottom() + dy);
-//    }
-
-//    void Rect::abutTopRight(Rect* rect){
-//        moveTo(rect->left(),rect->top());
-//    }
 
     int Rect::snap(int x){
         int GRID= 5;
@@ -102,7 +81,7 @@ namespace cIcCore{
     }
 
     Rect* Rect::adjustedOnce(int xp1){
-        Rect* rect = new Rect(layer(),left() - xp1, bottom() - xp1, width() + 2*xp1, height() + 2*xp1);
+        Rect* rect = new Rect(layer(),x() - xp1, y() - xp1, width() + 2*xp1, height() + 2*xp1);
         return rect;
     }
 

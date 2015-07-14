@@ -29,6 +29,7 @@
 //#include <QMetaType>
 #include "core/patterntransistor.h"
 #include "core/patterncapacitor.h"
+#include "core/layoutcell.h"
 #include "spice/spiceparser.h"
 namespace cIcCore{
 
@@ -43,14 +44,10 @@ namespace cIcCore{
         void read(QString filename);
         void runIfObjectCanMethods(Cell * c, QJsonObject jobj);
         void runAllMethods(QString jname, Cell *c, QJsonObject jobj);
-        QList<Cell*> designs(){
-             return _designs.values();
-        }
 
     private:
         QHash<QString,QString> cellTranslator;
 		QHash<QString,QString> nameTranslator;
-		QMap<QString,Cell*> _designs;
 		void findAllParents(QList<Cell *> reverse_parents,QString inh);
 		void createCell(QString cl, QJsonObject jobj);
 		cIcSpice::SpiceParser _spice_parser;

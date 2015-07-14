@@ -18,8 +18,8 @@
 //====================================================================
 
 
-#ifndef CIC_CORE_SPICEOBJECT_H
-#define CIC_CORE_SPICEOBJECT_H
+#ifndef CIC_SPICE_SPICEOBJECT_H
+#define CIC_SPICE_SPICEOBJECT_H
 
 #include <QObject>
 #include <QRegularExpression>

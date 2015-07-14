@@ -16,55 +16,36 @@
 //   You should have received a copy of the GNU General Public License
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //====================================================================
-#include "core/instance.h"
+#ifndef CIC_CORE_INSTANCE_H
+#define CIC_CORE_INSTANCE_H
+
+#include <QObject>
+#include "cell.h"
 
 namespace cIcCore{
 
-    Instance::Instance()
+    class Instance : public Cell
     {
 
-    }
+        Q_OBJECT
 
-    Instance::Instance(const Instance&)
-    {
+    public:
+        Instance();
+        Instance(const Instance&);
+        ~Instance();
+        virtual Rect calcBoundingRect();
+        // Cell * addInstance(QString cell);
+        static Instance * getInstance(QString cell);
 
-    }
+    private:
+        Cell * _cell;
+
+    };
 
 
-    Instance::~Instance()
-    {
-
-    }
-
-	Rect Instance::calcBoundingRect(){
-		Rect r = this->_cell->calcBoundingRect();
-		r.moveTo(this->x1()-r.x1(), this->y1() - r.y1());
-		return r;
-	}
-
-	Instance * Instance::getInstance(QString cell){
-
-    Instance * c = new Instance();
-
-    if(Cell::_allcells.contains(cell)){
-        c->_cell  = _allcells[cell];
-        c->setName(c->_cell->name());
-        Rect r = c->_cell->calcBoundingRect();
-		qWarning() << r.toString();
-		c->setLayer("PR");
-        c->updateBoundingRect();
-//        c->setRect(r);
-        qWarning() << c->toString();
-        qWarning() << "Adding instance " << c->name();
-     }
-     return c;
-  }
-
-//Cell * Instance::addInstance(QString cell){
-//     Cell * c = Cell::getInstance(cell);
-//     this->_instances.append(c);
-//     connect(c,SIGNAL(updated()),this,SLOT(updateBoundingRect()));
-//     return c;
-//}
 
 }
+
+Q_DECLARE_METATYPE(cIcCore::Instance)
+
+#endif // INSTANCE_H

@@ -61,7 +61,7 @@ namespace cIcSpice{
         this->setName(nodes.first());
         nodes.removeFirst();
 
-        QRegularExpression re_group("(\S+)(\d\S+)");
+        QRegularExpression re_group("(\\S+)(\\d\\S+)");
         QRegularExpressionMatch m_group = re_group.match(this->name());
         if(m_group.hasMatch()){
           this->_group_name = m_group.captured(1);
