@@ -28,6 +28,10 @@ namespace cIcCore{
   {
     Q_OBJECT
     Q_PROPERTY(int minPolyLength READ minPolyLength WRITE setMinPolyLength)
+    Q_PROPERTY(int widthoffset READ widthoffset WRITE setWidthoffset)
+    Q_PROPERTY(int heightoffset READ heightoffset WRITE setHeightoffset)
+    Q_PROPERTY(qreal yoffset READ yoffset WRITE setYoffset)
+    Q_PROPERTY(qreal xoffset READ xoffset WRITE setXoffset)
 
   public:
 
@@ -48,7 +52,18 @@ namespace cIcCore{
       return minPolyLength_;
     }
     void paint() ;
+  virtual Rect calcBoundingRect();
+    qreal widthoffset(){return widthoffset_;}
+    qreal setWidthoffset(qreal widthoffset){widthoffset_ = widthoffset; return widthoffset_;}
 
+    qreal heightoffset(){return heightoffset_;}
+    qreal setHeightoffset(qreal heightoffset){heightoffset_ = heightoffset; return heightoffset_;}
+
+    qreal xoffset(){return xoffset_;}
+    qreal setXoffset(qreal xoffset){xoffset_ = xoffset; return xoffset_;}
+
+    qreal yoffset(){return yoffset_;}
+    qreal setYoffset(qreal yoffset){yoffset_ = yoffset; return yoffset_;}
 
   private:
     int minPolyLength_;
@@ -60,6 +75,9 @@ namespace cIcCore{
     int yspace_;
     int currentHeight_;
     QHash<QString,QList<QString> > layers_;
+
+    qreal widthoffset_;
+    qreal heightoffset_;
 
    // inline int xs(int x){  return (x + xoffset_)*xspace_;}
     //inline int ys(int y){ return (y + yoffset_)*yspace_;}

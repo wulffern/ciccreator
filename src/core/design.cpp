@@ -240,6 +240,7 @@ namespace cIcCore{
 
             this->add(c);
             Cell::addCell(c);
+            qWarning() << c->toString();
             console->decreaseIndent();
 
         }else{

@@ -38,20 +38,27 @@ namespace cIcCore{
         int y = 0;
         foreach(cIcSpice::SubcktInstance * ckt_inst,_subckt->instances()){
             QString group = ckt_inst->groupName();
-            if(prev_group != group && prev_group != ""){
+            qWarning() << ckt_inst->name() << ckt_inst->groupTag() << group;
+            if(prev_group.compare(group) != 0  && prev_group.compare("")  != 0){
                 //TODO:Reset Y, and increment X
                 y = 0;
-                x = x+ prev_width;
+                x = x + prev_width;
+
+
             }
             prev_group = group;
 
             Cell * inst = Instance::getInstance(ckt_inst->subcktName());
+            //qWarning() << inst->calcBoundingRect().toString();
             this->add(inst);
             inst->moveTo(x,y);
             prev_width = inst->width();
+           // qWarning() << prev_width;
             y += inst->height();
             //Instance * inst = Instance(ckt_inst,designs);
         }
+
+        this->updateBoundingRect();
 
     }
 

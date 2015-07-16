@@ -38,7 +38,7 @@ namespace cIcCore{
 
 	Rect Instance::calcBoundingRect(){
 		Rect r = this->_cell->calcBoundingRect();
-		r.moveTo(this->x1()-r.x1(), this->y1() - r.y1());
+		r.moveTo(this->x1()+r.x1(), this->y1() + r.y1());
 		return r;
 	}
 

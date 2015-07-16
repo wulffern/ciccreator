@@ -45,33 +45,14 @@ namespace cIcCore{
 	  ~Rules(){}
 	  Rules(const Rules&){}
 
-
 	  static void loadRules(QString path);
 
 	  static Rules* getRules(){return myRules_;}
 
 	  qreal get(QString layer, QString rule);
-
-	  void setRules(QJsonObject job){
-	    QJsonObject r = job["rules"].toObject();
-
-	    foreach(QString layer, r.keys()){
-		QJsonObject vral = r[layer].toObject();
-		foreach(QString name,vral.keys()){
-		  qreal v = vral[name].toDouble();
-		  this->rules_[layer][name] = v;
-		//  if(this->rules_.contains(layer)){
-		//	QHash<QString,qreal> rl = this->rules_[name];
-		//	rl[name] = v;
-		 // }
-
-		  //rules_ = v;
-		  }
-	    }
-	     // rules_ = job["rules"].toObject();
-	     // layers_ = job["layers"].toObject();
-	     // technology_ = job["technology"].toObject();
-	  }
+	  int gamma(){return gamma_;}
+	  int grid(){return grid_;}
+	  void setRules(QJsonObject job);
 
         private:
         static Rules * myRules_;
@@ -79,6 +60,8 @@ namespace cIcCore{
 //          qreal rules_;
          // QString * rules_;
           QHash<QString, QHash<QString,qreal> >  rules_;
+          int gamma_;
+          int grid_;
           //QJsonObject layers_;
           //QJsonObject technology_;
 

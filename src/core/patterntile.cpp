@@ -29,8 +29,26 @@ namespace cIcCore {
         xspace_ = 0;
         yspace_ = 0;
         minPolyLength_ = 0;
+        widthoffset_ = 0;
+        heightoffset_ = 0;
 
     }
+
+    Rect PatternTile::calcBoundingRect(){
+
+
+        int x1  = 0;
+        int y1  = 0;
+        int x2  = (xmax_ + widthoffset_)*xspace_;
+        int y2  = (ymax_ + heightoffset_)*yspace_;
+
+        Rect r;
+        r.setPoint1(x1,y1);
+        r.setPoint2(x2,y2);
+//        qWarning() << "Testing" << r.toString();
+        return r;
+    }
+
 
     PatternTile::~PatternTile()
     {
@@ -85,12 +103,12 @@ namespace cIcCore {
 
         QString layer = ar[0].toString();
         QList<QString> strs;
-        for(int i=1;i<ar.count();i++){
+        for(int i=0;i<ar.count();i++){
             QString str = ar[i].toString();
 
             for(int x=0;x < str.length();x++){
                 QChar c = str[x];
-                int y = ar.count() - i ;
+                int y = ar.count() - i -1 ;
 
                 if(y > ymax_){ ymax_ = y;}
                 if(x > xmax_){ xmax_ = x;}
@@ -125,15 +143,14 @@ namespace cIcCore {
             this->minPolyLength_ = this->rules->get("PO","mingatelength");
         }
 
-        int xspace = this->xspace_;
-        int yspace = this->yspace_;
+
         int minpoly = this->minPolyLength();
-        int currentHeight_ = yspace;
+        int currentHeight_ = yspace_;
         foreach(QString layer, layers_.keys()){
             QList<QString> strs = layers_[layer];
 
 			for(int y=0;y < ymax_;y++){
-            currentHeight_ = yspace;
+	    currentHeight_ = yspace_;
 				for(int x=0;x < xmax_;x++){
                     QString s = strs[strs.length() - y - 1];
 
@@ -141,15 +158,15 @@ namespace cIcCore {
 
                     Rect* rect = new Rect();
                     rect->setLayer(layer);
-                    int xs = (x + xoffset_)*xspace;
-                    int ys = (y + yoffset_)*yspace;
+                    int xs = (x + xoffset_)*xspace_;
+                    int ys = (y + yoffset_)*yspace_;
 
 
                     switch(c.unicode()){
                     case 'X':
-                        currentHeight_ = yspace;
+                        currentHeight_ = yspace_;
                     case 'x':
-                        currentHeight_ = yspace;
+                        currentHeight_ = yspace_;
                     case 'B':
                     case 'A':
                     case 'D':
@@ -159,32 +176,30 @@ namespace cIcCore {
                     case 'K':
                     case 'C':
                     case 'c':
-                        rect->setRect(xs,ys,xspace,currentHeight_);
-                        rect->moveCenter(xs + xspace/2, ys + yspace/2);
+                        rect->setRect(xs,ys,xspace_,currentHeight_);
+                        rect->moveCenter(xs + xspace_/2, ys + yspace_/2);
                         break;
                     case 'V':
-                        rect->setRect(xs,ys - yspace/2,xspace,yspace*2);
+                        rect->setRect(xs,ys - yspace_/2,xspace_,yspace_*2);
                         break;
                     case 'm':
-                        rect->setRect(xs,ys,xspace,this->minPolyLength());
-                        rect->moveCenter(xs + xspace/2, ys + yspace/2);
+                        rect->setRect(xs,ys,xspace_,this->minPolyLength());
+                        rect->moveCenter(xs + xspace_/2, ys + yspace_/2);
                         break;
                     case 'w':
                         int minw = rules->get(layer,"width");
-                        rect->setRect(xs,ys,xspace,minw);
-                        rect->moveCenter(xs + xspace/2, ys + yspace/2);
+                        rect->setRect(xs,ys,xspace_,minw);
+                        rect->moveCenter(xs + xspace_/2, ys + yspace_/2);
                         currentHeight_ = minw;
                         break;
 
                     }
 
                     if(!rect->empty()){
-
                         this->add(rect);
                     }
 
-
-                    int xoffset = 0;
+                    int cxoffset = 0;
 
                     int cw = 0;
                     int ch = 0;
@@ -194,7 +209,7 @@ namespace cIcCore {
                     Rect *cr1;
                     switch(c.unicode()){
                     case 'C':
-                        xoffset = xspace/2;
+                        cxoffset = xspace_/2;
                     case 'c':
                         //TODO: Get next layer based on current
                         //QString lay = this->rules->get
@@ -205,12 +220,12 @@ namespace cIcCore {
                         ch = this->rules->get(lay,"height");
                         cs = this->rules->get(lay,"space");
                         cr->setRect(xs,ys,cw,ch);
-                        cr->moveCenter(xs -xoffset + xspace/2, ys + yspace/2);
+                        cr->moveCenter(xs -cxoffset + xspace_/2, ys + yspace_/2);
                         this->add(cr);
 
                         break;
                     case 'K':
-                        xoffset = xspace/2;
+                        cxoffset = xspace_/2;
                     case 'k':
                         //TODO: Get next layer based on current
                         //QString lay = this->rules->get
@@ -222,7 +237,7 @@ namespace cIcCore {
                         cs = this->rules->get(lay,"space");
                         cr->setRect(xs,ys,cw,ch);
                         cr1 = cr->getCopy();
-                        cr->moveCenter(xs -xoffset + xspace/2, ys + yspace/2);
+                        cr->moveCenter(xs -cxoffset + xspace_/2, ys + yspace_/2);
                         cr1->moveCenter(cr->centerX() - cs - cw/2,cr->centerY());
                         this->add(cr);
                         this->add(cr1);
@@ -236,8 +251,9 @@ namespace cIcCore {
                 }
             }
 
-                        this->updateBoundingRect();
+
         }
+        this->updateBoundingRect();
 
     }
 

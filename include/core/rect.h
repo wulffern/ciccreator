@@ -66,6 +66,7 @@ namespace cIcCore{
         void translate(int ax, int ay);
         void moveTo(int x, int y);
         void moveCenter(int x, int y);
+        Rules * getRules(){return rules;}
         void mirrorX(int ax);
         void mirrorY(int ay);
          void setPoint1(int x1, int y1){x1_ = x1;y1_ = y1;}

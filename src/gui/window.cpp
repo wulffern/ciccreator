@@ -7,6 +7,8 @@ Window::Window(QWidget *parent) : QWidget(parent)
 
   originalRenderArea = new RenderArea;
 
+  //    originalRenderArea->setZoom(100/rules->gamma());
+
       shapeComboBox = new QComboBox;
       zoom = new QSlider;
       //shapeComboBox->addItem(tr("Clock"));
@@ -23,7 +25,8 @@ Window::Window(QWidget *parent) : QWidget(parent)
       //setupShapes();
       //shapeSelected(0);
 
-      zoom->setMaximum(200);
+
+      zoom->setMaximum(300);
       zoom->setMinimum(1);
       zoom->setValue(100);
       zoom->setOrientation(Qt::Horizontal);
@@ -45,6 +48,7 @@ void Window::loadDesign(Design *d ){
     foreach(Cell* c ,d->getAllCells()){
         shapeComboBox->addItem(c->name());
       }
+ //   shapeComboBox->setCurrentIndex(0);
 }
 
 void Window::shapeSelected(int index)
@@ -59,7 +63,8 @@ void Window::shapeSelected(int index)
 }
 
 void Window::zoomChanged(int zoom){
-  originalRenderArea->setZoom(zoom/100.0);
+   Rules * rules = Rules::getRules();
+  originalRenderArea->setZoom(zoom/100.0/rules->gamma());
 }
 
 }

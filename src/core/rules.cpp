@@ -36,7 +36,30 @@ namespace cIcCore{
   Rules::myRules_->setRules(obj);
 
 }
+  void Rules::setRules(QJsonObject job){
 
+    QJsonObject tech = job["technology"].toObject();
+    gamma_ = tech["gamma"].toInt();
+    grid_ = tech["grid"].toInt();
+
+    QJsonObject r = job["rules"].toObject();
+    foreach(QString layer, r.keys()){
+        QJsonObject vral = r[layer].toObject();
+        foreach(QString name,vral.keys()){
+          qreal v = vral[name].toDouble();
+          this->rules_[layer][name] = v;
+        //  if(this->rules_.contains(layer)){
+        //	QHash<QString,qreal> rl = this->rules_[name];
+        //	rl[name] = v;
+         // }
+
+	  //rules_ = v;
+	  }
+    }
+     // rules_ = job["rules"].toObject();
+     // layers_ = job["layers"].toObject();
+     // technology_ = job["technology"].toObject();
+  }
 
 
  qreal Rules::get(QString layer, QString rule){
@@ -49,7 +72,7 @@ namespace cIcCore{
 		   qDebug() << "Could not find rule "<< rule ;
 	   }else{
 //		   qDebug() << "rules" << rule;
-		   v = lay[rule];
+		   v = lay[rule]*gamma_;
 		   
 	   }
    }else{

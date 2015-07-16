@@ -11,7 +11,8 @@ RenderArea::RenderArea(QWidget *parent)
 {
 
   this->c = new Cell();
-  _zoom = 1;
+  Rules * rules = Rules::getRules();
+  _zoom = 1.0/rules->gamma()  ;
 
 }
 
@@ -43,14 +44,18 @@ void RenderArea::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing);
     painter.fillRect(event->rect(), QBrush(Qt::white));
 
-    //painter.translate(66, 66);
+   // Rules * rules = Rules::getRules();
+   // painter.translate(0, -rules->gamma());
 
     painter.save();
     transformPainter(painter);
     drawShape(painter);
     painter.restore();
+   // painter.setWindow(c->x(),c->y(),c->width(),c->height());
 
     drawOutline(painter);
+
+
 
     transformPainter(painter);
     drawCoordinates(painter);
@@ -97,7 +102,7 @@ QColor RenderArea::getPen(Rect * o){
   }
 
  // color.setAlpha(0.5);
-  color.setAlpha(50);
+  color.setAlpha(100);
 
   return color;
 }
@@ -105,6 +110,10 @@ QColor RenderArea::getPen(Rect * o){
 void RenderArea::drawCell(int x, int y, Cell * c, QPainter &painter){
 
     painter.translate(x,y);
+
+    painter.setPen(QPen(QColor("black"),10));
+    painter.setBrush(QBrush(Qt::NoBrush));
+    painter.drawRect(c->x(),c->y(),c->width(),c->height());
     foreach(Rect * r, c->children()){
            if(r->isInstance()){
               Instance *  inst= (Instance *) r;
@@ -124,8 +133,6 @@ void RenderArea::drawCell(int x, int y, Cell * c, QPainter &painter){
 
 void RenderArea::drawShape(QPainter &painter)
 {
-
-
 
    if(this->c != 0){
 
