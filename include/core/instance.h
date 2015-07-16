@@ -33,6 +33,7 @@ namespace cIcCore{
         Instance();
         Instance(const Instance&);
         ~Instance();
+        Cell * cell(){return _cell;}
         virtual Rect calcBoundingRect();
         // Cell * addInstance(QString cell);
         static Instance * getInstance(QString cell);

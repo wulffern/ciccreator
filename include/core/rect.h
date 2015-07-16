@@ -70,6 +70,13 @@ namespace cIcCore{
         void mirrorY(int ay);
          void setPoint1(int x1, int y1){x1_ = x1;y1_ = y1;}
          void setPoint2(int x2, int y2){x2_ = x2;y2_ = y2;}
+         bool isInstance(){
+           if(strcmp(this->metaObject()->className(),"cIcCore::Instance") == 0){
+               return true;
+             }
+           return false;
+
+         }
 
      //   void abut(Rect* rect,qreal dx, qreal dy);
      //   void abutTopCenter(Rect* rect, qreal dy);

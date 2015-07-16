@@ -1,4 +1,4 @@
-//====================================================================
+  //====================================================================
 //        Copyright (c) 2015 Carsten Wulff Software, Norway
 // ===================================================================
 // Created       : wulff at 2015-04-03
@@ -83,7 +83,6 @@ namespace cIcCore {
         //TODO: implement copy columns
         //TODO: implement reverse string
 
-
         QString layer = ar[0].toString();
         QList<QString> strs;
         for(int i=1;i<ar.count();i++){
@@ -156,7 +155,7 @@ namespace cIcCore {
                     case 'D':
                     case 'S':
                     case 'G':
-					case 'r':
+                    case 'r':
                     case 'K':
                     case 'C':
                     case 'c':

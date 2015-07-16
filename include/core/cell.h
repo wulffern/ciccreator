@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include "rect.h"
+#include <QPainterPath>
 #include "spice/subckt.h"
 
 namespace cIcCore{
@@ -42,6 +43,8 @@ namespace cIcCore{
         void mirrorY(int ay);
         void moveTo(int ax, int ay);
         void moveCenter(int ax, int ay);
+
+
         virtual Rect  calcBoundingRect();
         QString toString();
         //static Cell * createInstance();
@@ -54,7 +57,7 @@ namespace cIcCore{
         cIcSpice::Subckt * setSubckt(cIcSpice::Subckt * val){ _subckt = val; return _subckt;}
 
         QList<Rect*> children(){return _children;}
-        QList<Cell*> instances(){return _instances;}
+
         virtual void place();
         virtual void route();
         virtual void paint();
@@ -93,7 +96,7 @@ namespace cIcCore{
 
     private:
         QList<Rect*> _children;
-        QList<Cell*> _instances;
+        QPainterPath path;
         QString _name;
         bool _has_pr;
         bool _is_empty;

@@ -24,9 +24,11 @@
 
 #include <QtCore>
 #include <QObject>
+#include <QMap>
 #include <QString>
 #include <QJsonObject>
 //#include <QMetaType>
+#include "core/consoleoutput.h"
 #include "core/patterntransistor.h"
 #include "core/patterncapacitor.h"
 #include "core/layoutcell.h"
@@ -36,21 +38,25 @@ namespace cIcCore{
     class Design: public Cell
     {
         Q_OBJECT
-
-		//typedef Cell * (*fp)();
 		
     public:
         Design();
         void read(QString filename);
-        void runIfObjectCanMethods(Cell * c, QJsonObject jobj);
-        void runAllMethods(QString jname, Cell *c, QJsonObject jobj);
 
     private:
+        void runIfObjectCanMethods(Cell * c, QJsonObject jobj, QString theme = "");
+        void runAllMethods(QString jname, Cell *c, QJsonObject jobj);
+        void runAllParentMethods(QString jname, Cell *c, QList<QJsonObject> * parents);
+        void runParentsIfObjectCanMethods(Cell * c, QList<QJsonObject> * parents, QString theme = "");
+        void comment(QString str);
+
         QHash<QString,QString> cellTranslator;
 		QHash<QString,QString> nameTranslator;
-		void findAllParents(QList<Cell *> reverse_parents,QString inh);
-		void createCell(QString cl, QJsonObject jobj);
+		void findAllParents(QList<QJsonObject > *reverse_parents,QString inh);
+		void createCell(QJsonObject jobj);
 		cIcSpice::SpiceParser _spice_parser;
+		QMap<QString,QJsonObject>  _cells;
+		ConsoleOutput * console;
 
     signals:
 

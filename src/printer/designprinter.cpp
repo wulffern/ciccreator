@@ -55,7 +55,6 @@ namespace cIcPrinter{
                 this->printRect(child);
             }
 
-
         }
 
         this->endCell();

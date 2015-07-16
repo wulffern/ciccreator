@@ -17,10 +17,11 @@
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //====================================================================
 
-#include <QCoreApplication>
+#include <QApplication>
 #include "core/design.h"
 #include "core/rules.h"
 #include "printer/svg.h"
+#include "gui/window.h"
 #include <iostream>
 #include <QDebug>
 #include <QString>
@@ -28,7 +29,7 @@
 int main(int argc, char *argv[])
 {
 	
-	if(argc ==  3){
+	if(argc >=  3){
 
 		QString file = argv[1];
 		QString rules = argv[2];
@@ -40,9 +41,16 @@ int main(int argc, char *argv[])
 		cIcCore::Design * c = new cIcCore::Design();
 		c->read(file);
 
-		cIcPrinter::Svg * pr = new cIcPrinter::Svg("test");
+		//cIcPrinter::Svg * pr = new cIcPrinter::Svg("test");
 		//pr->openFile("test");
-		pr->print(c);
+		//pr->print(c);
+	if(argc == 4){
+		QApplication app(argc, argv);
+		cIcGui::Window window;
+		window.loadDesign(c);
+		window.show();
+		return app.exec();
+	  }
 		
 
 	}else{

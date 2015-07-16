@@ -50,12 +50,12 @@ namespace cIcCore{
         c->_cell  = _allcells[cell];
         c->setName(c->_cell->name());
         Rect r = c->_cell->calcBoundingRect();
-		qWarning() << r.toString();
+        //	qWarning() << r.toString();
 		c->setLayer("PR");
         c->updateBoundingRect();
 //        c->setRect(r);
-        qWarning() << c->toString();
-        qWarning() << "Adding instance " << c->name();
+        //qWarning() << c->toString();
+        //qWarning() << "Adding instance " << c->name();
      }
      return c;
   }
