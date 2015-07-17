@@ -1,4 +1,4 @@
-  //====================================================================
+//====================================================================
 //        Copyright (c) 2015 Carsten Wulff Software, Norway
 // ===================================================================
 // Created       : wulff at 2015-04-03
@@ -20,241 +20,268 @@
 
 namespace cIcCore {
 
-    PatternTile::PatternTile()
-    {
-        ymax_ = 0;
-        xmax_ = 0;
-        yoffset_ = 0;
-        xoffset_ = 0;
-        xspace_ = 0;
-        yspace_ = 0;
-        minPolyLength_ = 0;
-        widthoffset_ = 0;
-        heightoffset_ = 0;
+  PatternTile::PatternTile()
+  {
+    ymax_ = 0;
+    xmax_ = 0;
+    yoffset_ = 0;
+    xoffset_ = 0;
+    xspace_ = 0;
+    yspace_ = 0;
+    minPolyLength_ = 0;
+    widthoffset_ = 0;
+    heightoffset_ = 0;
+    mirrorPatternString_ = 0;
 
-    }
+  }
 
-    Rect PatternTile::calcBoundingRect(){
-
-
-        int x1  = 0;
-        int y1  = 0;
-        int x2  = (xmax_ + widthoffset_)*xspace_;
-        int y2  = (ymax_ + heightoffset_)*yspace_;
-
-        Rect r;
-        r.setPoint1(x1,y1);
-        r.setPoint2(x2,y2);
-//        qWarning() << "Testing" << r.toString();
-        return r;
-    }
+  Rect PatternTile::calcBoundingRect(){
 
 
-    PatternTile::~PatternTile()
-    {
-    }
+    int x1  = 0;
+    int y1  = 0;
+    int x2  = (xmax_ + widthoffset_)*xspace_;
+    int y2  = (ymax_ + heightoffset_)*yspace_;
 
-    PatternTile::PatternTile(const PatternTile&)
-    {
-
-    }
-
-    QHash<QString,QVariant> PatternTile::initFillCoordinates(){
-        QHash<QString,QVariant> qh;
-        return qh;
-    }
-
-    void PatternTile::onFillCoordinate(QChar c, QString layer, int x, int y, QHash<QString,QVariant> data){
-
-    }
-
-    void PatternTile::endFillCoordinate(QHash<QString,QVariant> data){
-    }
+    Rect r;
+    r.setPoint1(x1,y1);
+    r.setPoint2(x2,y2);
+    //        qWarning() << "Testing" << r.toString();
+    return r;
+  }
 
 
+  PatternTile::~PatternTile()
+  {
+  }
 
-    void PatternTile::fillCoordinatesFromString(QJsonArray ar){
+  void PatternTile::copyColumn(QJsonObject obj){
+    CopyColumn c;
+    c.count =obj["count"].toInt();
+    c.length = obj["length"].toInt();
+    c.offset= obj["offset"].toInt();
+    copyColumn_.append(c);
+    qWarning() << "Testing " << c.count << " " << c.length << " " << c.offset;
+  }
 
-        QHash<QString,QVariant> data = this->initFillCoordinates();
+  PatternTile::PatternTile(const PatternTile&)
+  {
 
-        //TODO: implement copyRows function
+  }
 
-        // my $ref = $self->copyRows;
+  QHash<QString,QVariant> PatternTile::initFillCoordinates(){
+    QHash<QString,QVariant> qh;
+    return qh;
+  }
 
-//       for (my $i=0;$i<scalar(@_);$i+=1) {
-//         my $str = $_[$i];
-//         push(@strs,$str);
-//         if ($ref) {
-//           next if $i < $ref->{offset};
-//           push(@copyRows,$str);
-//           if ($i== ($ref->{offset} + $ref->{length})) {
-//             for (my $z = 0;$z < $ref->{count};$z++) {
-//               foreach my $s (@copyRows) {
-//                 push(@strs,$s);
-//               }
-//             }
-//           }
-//           next if $i >= ($ref->{offset} + $ref->{length});
-//         }
-//       }
+  void PatternTile::onFillCoordinate(QChar c, QString layer, int x, int y, QHash<QString,QVariant> data){
 
-        //TODO: implement copy columns
-        //TODO: implement reverse string
+  }
 
-        QString layer = ar[0].toString();
-        QList<QString> strs;
-        for(int i=0;i<ar.count();i++){
-            QString str = ar[i].toString();
-
-            for(int x=0;x < str.length();x++){
-                QChar c = str[x];
-                int y = ar.count() - i -1 ;
-
-                if(y > ymax_){ ymax_ = y;}
-                if(x > xmax_){ xmax_ = x;}
-
-                if(c.isDigit()){
-                    continue;
-                }
-                if(c != '-'){
-                    this->onFillCoordinate(c,layer,x,y,data);
-                }
-            }
-            strs.append(str);
-        }
-
-//		ymax_ += 1;
-		xmax_ += 1;
-		
-        layers_[layer] = strs;
-
-        //qWarning() << " ymax = " << _ymax << ", xmax = "<< _xmax;
-        this->endFillCoordinate(data);
-
-    }
-
-    void PatternTile::paint(){
-
-        //Load rules
-        this->xspace_ = this->rules->get("ROUTE","horizontalgrid");
-        this->yspace_ = this->rules->get("ROUTE","verticalgrid");
-
-        if( this->minPolyLength_ == 0 ){
-            this->minPolyLength_ = this->rules->get("PO","mingatelength");
-        }
+  void PatternTile::endFillCoordinate(QHash<QString,QVariant> data){
+  }
 
 
-        int minpoly = this->minPolyLength();
-        int currentHeight_ = yspace_;
-        foreach(QString layer, layers_.keys()){
-            QList<QString> strs = layers_[layer];
 
-			for(int y=0;y < ymax_;y++){
-	    currentHeight_ = yspace_;
-				for(int x=0;x < xmax_;x++){
-                    QString s = strs[strs.length() - y - 1];
+  void PatternTile::fillCoordinatesFromString(QJsonArray ar){
 
-                    QChar c = s[x];
+    QHash<QString,QVariant> data = this->initFillCoordinates();
 
-                    Rect* rect = new Rect();
-                    rect->setLayer(layer);
-                    int xs = (x + xoffset_)*xspace_;
-                    int ys = (y + yoffset_)*yspace_;
+    //TODO: implement copyRows function
+
+    QString layer = ar[0].toString();
+    ar.pop_front();
+
+    QList<QString> strs;
+    for(int i=0;i<ar.count();i++){
+        QString str = ar[i].toString();
+
+        //Copy columns
+        if(copyColumn_.length() > 0){
+            for(int z=0;z<copyColumn_.length();z++){
+                CopyColumn c = copyColumn_[z];
+                if(str.length() < c.offset);
+                QString sorg = str.mid(c.offset,c.length);
+                for(int x=0;x<c.count;x++){
+                    str.insert(c.offset,sorg);
+                  }
+                qWarning() << str;
+              }
+          }
 
 
-                    switch(c.unicode()){
-                    case 'X':
-                        currentHeight_ = yspace_;
-                    case 'x':
-                        currentHeight_ = yspace_;
-                    case 'B':
-                    case 'A':
-                    case 'D':
-                    case 'S':
-                    case 'G':
-                    case 'r':
-                    case 'K':
-                    case 'C':
-                    case 'c':
-                        rect->setRect(xs,ys,xspace_,currentHeight_);
-                        rect->moveCenter(xs + xspace_/2, ys + yspace_/2);
-                        break;
-                    case 'V':
-                        rect->setRect(xs,ys - yspace_/2,xspace_,yspace_*2);
-                        break;
-                    case 'm':
-                        rect->setRect(xs,ys,xspace_,this->minPolyLength());
-                        rect->moveCenter(xs + xspace_/2, ys + yspace_/2);
-                        break;
-                    case 'w':
-                        int minw = rules->get(layer,"width");
-                        rect->setRect(xs,ys,xspace_,minw);
-                        rect->moveCenter(xs + xspace_/2, ys + yspace_/2);
-                        currentHeight_ = minw;
-                        break;
+        if(this->mirrorPatternString()){
+            QString tmp;
+            for(int i=str.length()-1;i >= 0; i--){
+                tmp.append(str[i]);
+              }
+            str = tmp;
+          }
 
-                    }
+        for(int x=0;x < str.length();x++){
+            QChar c = str[x];
+            int y = ar.count() - i -1 ;
 
-                    if(!rect->empty()){
-                        this->add(rect);
-                    }
+            if(y > ymax_){ ymax_ = y;}
+            if(x > xmax_){ xmax_ = x;}
 
-                    int cxoffset = 0;
+            if(c.isDigit()){
+                continue;
+              }
+            if(c != '-'){
+                this->onFillCoordinate(c,layer,x,y,data);
+              }
+          }
+        strs.append(str);
+      }
 
-                    int cw = 0;
-                    int ch = 0;
-                    int cs = 0;
-                    QString lay;
-                    Rect *cr;
-                    Rect *cr1;
-                    switch(c.unicode()){
-                    case 'C':
-                        cxoffset = xspace_/2;
-                    case 'c':
-                        //TODO: Get next layer based on current
-                        //QString lay = this->rules->get
-                        lay = "CO";
-                        cr = new Rect();
-                        cr->setLayer(lay);
-                        cw = this->rules->get(lay,"width");
-                        ch = this->rules->get(lay,"height");
-                        cs = this->rules->get(lay,"space");
-                        cr->setRect(xs,ys,cw,ch);
-                        cr->moveCenter(xs -cxoffset + xspace_/2, ys + yspace_/2);
-                        this->add(cr);
 
-                        break;
-                    case 'K':
-                        cxoffset = xspace_/2;
-                    case 'k':
-                        //TODO: Get next layer based on current
-                        //QString lay = this->rules->get
-                        lay = "CO";
-                        cr = new Rect();
-                        cr->setLayer(lay);
-                        cw = this->rules->get(lay,"width");
-                        ch = this->rules->get(lay,"height");
-                        cs = this->rules->get(lay,"space");
-                        cr->setRect(xs,ys,cw,ch);
-                        cr1 = cr->getCopy();
-                        cr->moveCenter(xs -cxoffset + xspace_/2, ys + yspace_/2);
-                        cr1->moveCenter(cr->centerX() - cs - cw/2,cr->centerY());
-                        this->add(cr);
-                        this->add(cr1);
-                        break;
-                    }
+    layers_[layer] = strs;
+
+    this->endFillCoordinate(data);
+
+  }
+
+  void PatternTile::paint(){
+
+    //Load rules
+    this->xspace_ = this->rules->get("ROUTE","horizontalgrid");
+    this->yspace_ = this->rules->get("ROUTE","verticalgrid");
+
+    if( this->minPolyLength_ == 0 ){
+        this->minPolyLength_ = this->rules->get("PO","mingatelength");
+      }
+
+    qWarning() << "ymax: " << ymax_ << " xmax:" << xmax_;
 
 
 
 
+    int minpoly = this->minPolyLength();
+    int currentHeight_ = yspace_;
+    foreach(QString layer, layers_.keys()){
+        QList<QString> strs = layers_[layer];
+        for(int y=0;y <= ymax_;y++){
+            currentHeight_ = yspace_;
+            for(int x=0;x <= xmax_;x++){
+                QString s = strs[strs.length() - y -1];
 
-                }
-            }
+                QChar c = s[x];
+
+                Rect* rect = new Rect();
+                rect->setLayer(layer);
+                int xs = (x + xoffset_)*xspace_;
+                int ys = (y + yoffset_)*yspace_;
 
 
-        }
-        this->updateBoundingRect();
+                switch(c.unicode()){
+                  case 'X':
+                    currentHeight_ = yspace_;
+                  case 'x':
+                    currentHeight_ = yspace_;
+                  case 'B':
+                  case 'A':
+                  case 'D':
+                  case 'S':
+                  case 'G':
+                  case 'r':
+                  case 'K':
+                  case 'C':
+                  case 'Q':
+                  case 'c':
+                    rect->setRect(xs,ys,xspace_,currentHeight_);
+                    rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
 
-    }
+                    break;
+                  case 'V':
+                    rect->setRect(xs,ys - yspace_/2.0,xspace_,yspace_*2.0);
+                    break;
+                  case 'm':
+                    rect->setRect(xs,ys,xspace_,this->minPolyLength());
+                    rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
+                    break;
+                  case 'w':
+                    int minw = rules->get(layer,"width");
+                    rect->setRect(xs,ys,xspace_,minw);
+                    rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
+                    currentHeight_ = minw;
+                    break;
+
+                  }
+
+                if(!rect->empty()){
+                    this->add(rect);
+                  }
+
+                int cxoffset = 0;
+
+                //TODO: Implement Q
+                int cw = 0;
+                int ch = 0;
+                int cs = 0;
+                QString lay;
+                Rect *cr;
+                Rect *cr1;
+                switch(c.unicode()){
+                  case 'C':
+                    if(this->mirrorPatternString()){
+                        cxoffset = -xspace_/2.0;
+                      }else{
+                        cxoffset = xspace_/2.0;
+                      }
+                  case 'c':
+                    //TODO: Get next layer based on current
+                    //QString lay = this->rules->get
+                    lay = "CO";
+                    cr = new Rect();
+                    cr->setLayer(lay);
+                    cw = this->rules->get(lay,"width");
+                    ch = this->rules->get(lay,"height");
+                    cs = this->rules->get(lay,"space");
+                    cr->setRect(xs,ys,cw,ch);
+
+                    cr->moveCenter(xs -cxoffset + xspace_/2.0, ys + yspace_/2.0);
+
+                    this->add(cr);
+
+                    break;
+                  case 'K':
+                    if(this->mirrorPatternString()){
+                        cxoffset = -xspace_ - xspace_/2.0;
+                      }else{
+                        cxoffset = xspace_/2.0;
+                      }
+                  case 'k':
+                    //TODO: Get next layer based on current
+                    //QString lay = this->rules->get
+                    lay = "CO";
+                    cr = new Rect();
+                    cr->setLayer(lay);
+                    cw = this->rules->get(lay,"width");
+                    ch = this->rules->get(lay,"height");
+                    cs = this->rules->get(lay,"space");
+                    cr->setRect(xs,ys,cw,ch);
+                    cr1 = cr->getCopy();
+                    if(this->mirrorPatternString()){cxoffset -= cs/2 - cw/2;}
+
+                    cr->moveCenter(xs -cxoffset + xspace_/2.0, ys + yspace_/2.0);
+                    cr1->moveCenter(cr->centerX() - cs - cw/2.0,cr->centerY());
+                    this->add(cr);
+                    this->add(cr1);
+                    break;
+                  }
+
+
+
+
+
+              }
+          }
+
+
+      }
+    this->updateBoundingRect();
+
+  }
 
 }

@@ -24,6 +24,12 @@
 
 namespace cIcCore{
 
+  struct CopyColumn{
+    int count;
+    int offset;
+    int length;
+  };
+
   class PatternTile: public Cell
   {
     Q_OBJECT
@@ -32,6 +38,7 @@ namespace cIcCore{
     Q_PROPERTY(int heightoffset READ heightoffset WRITE setHeightoffset)
     Q_PROPERTY(qreal yoffset READ yoffset WRITE setYoffset)
     Q_PROPERTY(qreal xoffset READ xoffset WRITE setXoffset)
+    Q_PROPERTY(int mirrorPatternString READ mirrorPatternString WRITE setMirrorPatternString)
 
   public:
 
@@ -42,6 +49,7 @@ namespace cIcCore{
     ~PatternTile();
 
     Q_INVOKABLE void fillCoordinatesFromString(QJsonArray ar);
+    Q_INVOKABLE void copyColumn(QJsonObject obj);
 
     QHash<QString,QVariant> initFillCoordinates();
     void onFillCoordinate(QChar c, QString layer, int x, int y, QHash<QString,QVariant> data);
@@ -51,8 +59,9 @@ namespace cIcCore{
       minPolyLength_ = val;
       return minPolyLength_;
     }
-    void paint() ;
-  virtual Rect calcBoundingRect();
+    void paint();
+
+    virtual Rect calcBoundingRect();
     qreal widthoffset(){return widthoffset_;}
     qreal setWidthoffset(qreal widthoffset){widthoffset_ = widthoffset; return widthoffset_;}
 
@@ -65,7 +74,11 @@ namespace cIcCore{
     qreal yoffset(){return yoffset_;}
     qreal setYoffset(qreal yoffset){yoffset_ = yoffset; return yoffset_;}
 
+    int mirrorPatternString(){return mirrorPatternString_;}
+    int setMirrorPatternString(int mirrorPatternString){mirrorPatternString_ = mirrorPatternString; return mirrorPatternString_;}
+
   private:
+    int mirrorPatternString_;
     int minPolyLength_;
     int xmax_;
     int ymax_;
@@ -75,10 +88,9 @@ namespace cIcCore{
     int yspace_;
     int currentHeight_;
     QHash<QString,QList<QString> > layers_;
-
     qreal widthoffset_;
     qreal heightoffset_;
-
+    QList<CopyColumn> copyColumn_;
    // inline int xs(int x){  return (x + xoffset_)*xspace_;}
     //inline int ys(int y){ return (y + yoffset_)*yspace_;}
   };

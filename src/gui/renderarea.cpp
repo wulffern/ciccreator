@@ -13,7 +13,9 @@ RenderArea::RenderArea(QWidget *parent)
   this->c = new Cell();
   Rules * rules = Rules::getRules();
   _zoom = 1.0/rules->gamma()  ;
-
+  first = false;
+  xc = 0;
+  yc =0;
 }
 
 void RenderArea::setOperations(const QList<Operation> &operations)
@@ -25,12 +27,13 @@ void RenderArea::setOperations(const QList<Operation> &operations)
 void RenderArea::setCell(Cell *c)
 {
     this->c = c;
+  first = true;
     update();
 }
 
 QSize RenderArea::minimumSizeHint() const
 {
-    return QSize(182, 182);
+    return QSize(800 , 600);
 }
 
 QSize RenderArea::sizeHint() const
@@ -48,17 +51,31 @@ void RenderArea::paintEvent(QPaintEvent *event)
    // painter.translate(0, -rules->gamma());
 
     painter.save();
+
+    if(this->c && this->first){
+      QRect rect = event->rect();
+      Rect r = this->c->calcBoundingRect();
+      qWarning() << r.toString();
+      r.adjust(this->c->width()/8.0);
+      qWarning() << r.toString();
+      float xscale =  ((float)rect.width())/((float)r.width());
+      float yscale = ((float)rect.height())/((float)r.height());
+      float scale = xscale > yscale ? yscale : xscale;
+      _zoom = scale;
+      xc = -r.x();
+      yc = -r.y();
+      first = false;
+    }
+
     transformPainter(painter);
     drawShape(painter);
     painter.restore();
    // painter.setWindow(c->x(),c->y(),c->width(),c->height());
 
-    drawOutline(painter);
 
 
 
-    transformPainter(painter);
-    drawCoordinates(painter);
+
 }
 
 void RenderArea::drawCoordinates(QPainter &painter)
@@ -146,6 +163,7 @@ void RenderArea::transformPainter(QPainter &painter)
 {
 
    painter.scale(_zoom,_zoom);
+   painter.translate(xc,yc);
     for (int i = 0; i < operations.size(); ++i) {
         switch (operations[i]) {
         case Translate:

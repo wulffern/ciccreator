@@ -87,6 +87,9 @@ private:
 
     QList<Operation> operations;
     float _zoom;
+    bool first;
+    int xc;
+    int yc;
     Cell * c;
     QRect xBoundingRect;
     QRect yBoundingRect;

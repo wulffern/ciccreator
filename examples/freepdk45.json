@@ -29,7 +29,7 @@
 
     },
     "technology" :{
-        "gamma" : 80,
+        "gamma" : 10,
         "grid" : 5
     },
     "rules" : {

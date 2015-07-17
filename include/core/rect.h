@@ -39,7 +39,7 @@ namespace cIcCore{
         Rect();
         Rect(const Rect&);
         ~Rect();
-        Rect(QString layer, int left, int top, int width, int height);
+        Rect(QString layer, int left, int bottom, int width, int height);
 
         Rect* getCopy();
         Rect* getCopy(QString layer);
@@ -87,6 +87,7 @@ namespace cIcCore{
       //  void abutLeft(Rect* rect,qreal dx, qreal dy);
      //   void abutRight(Rect* rect,qreal dx, qreal dy);
         void parent(Rect* rect);
+        void adjust(int dx);
         Rect* adjustedOnce(int xp1);
         int snap(int x);
 
@@ -184,6 +185,13 @@ namespace cIcCore{
 			return true;
 		}
 		return false;
+	}
+
+	inline void Rect::adjust(int dx){
+	 x1_ -= dx;
+	 y1_ -=  dx;
+	 x2_ += dx;
+	 y2_ += dx;
 	}
 
     inline void Rect::translate(int ax, int ay){

@@ -116,7 +116,7 @@ namespace cIcCore{
 
 
     QString Rect::toString(){
-        return QString("%6: layer=%1 X=%2 Y=%3 W=%4 H=%5").arg(layer()).arg(left()).arg(top()).arg(width()).arg(height()).arg(this->metaObject()->className());
+        return QString("%6: layer=%1 X=%2 Y=%3 W=%4 H=%5").arg(layer()).arg(left()).arg(bottom()).arg(width()).arg(height()).arg(this->metaObject()->className());
     }
 
 }
