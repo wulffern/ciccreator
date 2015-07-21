@@ -1,3 +1,10 @@
 
+OPT=
+cmd=time ../bin/cic
+tech=../examples/freepdk45.json
+
+device: 
+	${cmd}   ../examples/devices.json ${tech}  ${OPT}
+
 sar:
-	time ../bin/cic   ../../cnano/examples/SAR_LPWR_ST28N/SAR_LPWR_ST28N.json ../examples/freepdk45.json 
+	${cmd}   ../../cnano/examples/SAR_LPWR_ST28N/SAR_LPWR_ST28N.json ${tech} ${OPT}
