@@ -81,4 +81,12 @@ namespace cIcCore{
 	 
    return v;
  }
+
+ int Rules::layerToNumber(QString name){
+  return 1;
+ }
+
+ int Rules::layerToDataType(QString name){
+    return 0;
+ }
 }

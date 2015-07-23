@@ -1,4 +1,13 @@
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifndef EXT_LIBGDS
+#define EXT_LIBGDS
+
+
+
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -17,8 +26,7 @@
 #define TRUE  1
 #define FALSE 0
 
-BYTE  gdsswap;
-short gdsword;
+
 
 #define SKIPOVER( fd, count )  { for ( i=0; i < ((count)-4); i+=2 ) read( (fd), &gdsword, 2 ); }
 #define BAILOUT( message )     { printf( "\n\nERROR: %s\n\n", (message) ); fflush(stdout); exit(-1); }
@@ -136,3 +144,12 @@ void  gds_read_angle( int fd, int count, struct gds_itemtype **ci, BOOL verbose 
 void  gds_write_angle( int fd, float angle );
 void  gds_create_lib( int fd, char *libname, float dbu_um );    
 void  gds_create_text( int fd, char *str, int x, int y, int layer, int size );
+
+
+
+#endif
+
+#ifdef __cplusplus
+}
+
+#endif

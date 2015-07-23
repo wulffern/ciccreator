@@ -18,30 +18,31 @@ OBJECTS_DIR=build
 MOC_DIR=build
 DEPENDPATH += .
 
-INCLUDEPATH += include/
+INCLUDEPATH += src/ external/libgds_dist/
 
 
 # Input
 
-HEADERS +=  include/core/rules.h  \
-include/core/rect.h \
-include/core/cell.h \
-include/core/design.h \ 
-include/core/patterntile.h \
-include/core/patterntransistor.h \
-include/core/patterncapacitor.h \
-include/printer/designprinter.h \
-include/printer/svg.h \
-include/spice/spiceparser.h\
-include/spice/spiceobject.h \
-include/spice/subckt.h \
-include/spice/subcktinstance.h \
-    include/core/instance.h \
-    include/core/layoutcell.h \
-    include/gui/window.h \
-    include/gui/renderarea.h \
-    include/core/consoleoutput.h \
+HEADERS +=  src/core/rules.h  \
+src/core/rect.h \
+src/core/cell.h \
+src/core/design.h \ 
+src/core/patterntile.h \
+src/core/patterntransistor.h \
+src/core/patterncapacitor.h \
+src/printer/designprinter.h \
+src/printer/svg.h \
+src/spice/spiceparser.h\
+src/spice/spiceobject.h \
+src/spice/subckt.h \
+src/spice/subcktinstance.h \
+    src/core/instance.h \
+    src/core/layoutcell.h \
+    src/gui/window.h \
+    src/gui/renderarea.h \
+    src/core/consoleoutput.h \
     external/libgds_dist/libgds.h \
+    src/printer/gds.h
 
 
 SOURCES +=     src/core/rules.cpp src/core/rect.cpp src/core/cell.cpp  src/main.cpp \ 
@@ -61,4 +62,5 @@ SOURCES +=     src/core/rules.cpp src/core/rect.cpp src/core/cell.cpp  src/main.
     src/gui/renderarea.cpp \
     src/core/consoleoutput.cpp \
     external/libgds_dist/libgds.c \
+    src/printer/gds.cpp
 

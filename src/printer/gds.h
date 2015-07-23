@@ -1,67 +1,68 @@
 //====================================================================
-//        Copyright (c) 2015 Carsten Wulff Software, Norway 
+//        Copyright (c) 2015 Carsten Wulff Software, Norway
 // ===================================================================
-// Created       : wulff at 2015-4-19
+// Created       : wulff at 2015-7-15
 // ===================================================================
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
-// 
+//
 //   This program is distributed in the hope that it will be useful,
 //   but WITHOUT ANY WARRANTY; without even the implied warranty of
 //   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //   GNU General Public License for more details.
-// 
+//
 //   You should have received a copy of the GNU General Public License
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //====================================================================
 
-#include <QApplication>
-#include "core/design.h"
-#include "core/rules.h"
-#include "printer/svg.h"
-#include "printer/gds.h"
-#include "gui/window.h"
-#include <iostream>
-#include <QDebug>
+
+#ifndef CIC_PRINTER_GDS
+#define CIC_PRINTER_GDS
+
+
+
+#include <QObject>
 #include <QString>
+#include "printer/designprinter.h"
+#include "libgds.h"
 
-int main(int argc, char *argv[])
-{
-	
-	if(argc >=  3){
+namespace cIcPrinter{
+    using namespace cIcCore;
 
-		QString file = argv[1];
-		QString rules = argv[2];
+    class Gds : public DesignPrinter{
 
-		//Load rules
-		cIcCore::Rules::loadRules(rules);
+    public:
 
-		//Load design
-		cIcCore::Design * c = new cIcCore::Design();
-		c->read(file);
+        Gds(QString filename):DesignPrinter(filename){
 
-		cIcPrinter::Svg * pr = new cIcPrinter::Svg("test");
-		pr->print(c);
+        }
+        ~Gds(){
 
-		cIcPrinter::Gds * gd = new cIcPrinter::Gds("TEST.gds");
-		gd->print(c);
+        }
 
-	if(argc == 4){
-		QApplication app(argc, argv);
-		cIcGui::Window window;
-		window.loadDesign(c);
-		window.show();
-		return app.exec();
-	  }
-		
 
-	}else{
-	   qWarning() << "Wrong number of arguments " << argc;
-	  }
+        virtual void print(Design * d);
 
-		
+    private:
+        virtual void startCell(Cell * cell);
+        virtual void openFile(QString file);
+        virtual void closeFile();
+        virtual void endCell();
+        virtual void startLib(QString name) ;
+        virtual void endLib() ;
+//      virtual void printText(Text & text);
+//         virtual void printPin(Pin & pin);
+        virtual void printRect(Rect * rect);
+        virtual void printReference(Cell * o);
 
-  
-}
+
+        int fd,        x[5],        y[5];
+
+
+
+    };
+};
+
+#endif

@@ -50,6 +50,8 @@ namespace cIcCore{
 	  static Rules* getRules(){return myRules_;}
 
 	  qreal get(QString layer, QString rule);
+	  int layerToNumber(QString name);
+	  int layerToDataType(QString name);
 	  int gamma(){return gamma_;}
 	  int grid(){return grid_;}
 	  void setRules(QJsonObject job);

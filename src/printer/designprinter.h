@@ -47,12 +47,7 @@ namespace cIcPrinter{
 
 
         virtual ~DesignPrinter(){
-            //file.close();
-            //stream.flush();
-//           if(stream.cl)
-//            if(stream.is_open()){
-//                stream.close();
-//            }
+
         }
 
 
