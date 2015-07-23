@@ -48,7 +48,6 @@ namespace cIcPrinter{
         this->startCell(c);
 
         foreach(Rect * child, c->children()){
-//            qWarning() << child->metaObject()->className();
             if(strcmp(child->metaObject()->className(),"cIcCore::Instance") == 0){
                 this->printReference((Cell*)child);
             }else{
@@ -62,7 +61,7 @@ namespace cIcPrinter{
 
     void DesignPrinter::print(Design * d ){
 
-
+		
         foreach(Cell * r, Cell::getAllCells() ){
             this->printCell(r);
         }

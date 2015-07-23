@@ -42,10 +42,10 @@ int main(int argc, char *argv[])
 		cIcCore::Design * c = new cIcCore::Design();
 		c->read(file);
 
-		cIcPrinter::Svg * pr = new cIcPrinter::Svg("test");
-		pr->print(c);
+//		cIcPrinter::Svg * pr = new cIcPrinter::Svg("test");
+//		pr->print(c);
 
-		cIcPrinter::Gds * gd = new cIcPrinter::Gds("TEST.gds");
+		cIcPrinter::Gds * gd = new cIcPrinter::Gds("TEST");
 		gd->print(c);
 
 	if(argc == 4){
