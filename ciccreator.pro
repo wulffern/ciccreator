@@ -40,7 +40,8 @@ include/spice/subcktinstance.h \
     include/core/layoutcell.h \
     include/gui/window.h \
     include/gui/renderarea.h \
-    include/core/consoleoutput.h
+    include/core/consoleoutput.h \
+    external/libgds_dist/libgds.h \
 
 
 SOURCES +=     src/core/rules.cpp src/core/rect.cpp src/core/cell.cpp  src/main.cpp \ 
@@ -58,5 +59,6 @@ SOURCES +=     src/core/rules.cpp src/core/rect.cpp src/core/cell.cpp  src/main.
     src/core/layoutcell.cpp \
     src/gui/window.cpp \
     src/gui/renderarea.cpp \
-    src/core/consoleoutput.cpp
+    src/core/consoleoutput.cpp \
+    external/libgds_dist/libgds.c \
 

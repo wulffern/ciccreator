@@ -1,0 +1,15 @@
+
+libgds     A library of C functions which read and write GDSII pattern format.
+           M. Rooks, Yale University
+           Look at libgds.c for more details on GDS format.
+           Look at write_gds_examples.c obviously.
+
+Simply type "make" to compile the library and the example program. 
+Run the example program to create the file stuff.gds
+then use your favorite CAD program to display the GDS file.
+
+To install the library for general use, copy libgds.a to 
+somewhere in LD_LIBRARY_PATH, such as /usr/local/lib
+and copy libgds.h to somewhere like   /usr/local/include
+
+
