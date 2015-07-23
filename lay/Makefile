@@ -4,7 +4,7 @@ OPT=
 cmd=time ../bin/cic
 
 
-tech=../examples/freepdk45.json
+tech=../examples/soi.json
 
 device: 
 	${cmd}   ../examples/devices.json ${tech}  ${OPT}

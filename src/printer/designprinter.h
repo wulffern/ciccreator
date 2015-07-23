@@ -24,6 +24,7 @@
 #include <QFile>
 #include <QTextStream>
 #include "core/design.h"
+#include <string.h>
 
 namespace cIcPrinter{
     using namespace cIcCore;
@@ -44,6 +45,8 @@ namespace cIcPrinter{
             this->filename = filename;
 
         }
+
+        char * toChar(QString str);
 
 
         virtual ~DesignPrinter(){
@@ -77,7 +80,7 @@ namespace cIcPrinter{
         virtual void openFile(QString file);
         virtual void closeFile();
 
-
+        bool isEmpty(Cell * c);
 
         virtual void startCell(Cell * cell);
         virtual void endCell() = 0;

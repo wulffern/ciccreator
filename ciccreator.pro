@@ -11,7 +11,7 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
-osx:TARGET = cic
+osx:TARGET = cic-darwin
 linux:TARGET = cic-linux
 DESTDIR = bin
 OBJECTS_DIR=build

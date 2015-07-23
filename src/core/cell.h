@@ -100,9 +100,6 @@ namespace cIcCore{
         QString _name;
         bool _has_pr;
         bool _is_empty;
-        Rect* parent;
-
-
 
     signals:
 

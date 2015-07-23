@@ -28,6 +28,33 @@
 
 namespace cIcCore{
 
+        class Layer
+        {
+          public:
+            QString name;
+            int number;
+            int datatype;
+            enum MATERIAL_TYPE {diffusion, poly, metal, cut, metalres,other};
+            MATERIAL_TYPE material;
+            QString previous;
+            QString next;
+            QString pin;
+            QString color;
+
+            Layer(){
+              name = "M1";
+              number = 0;
+              material = diffusion;
+              previous = "CO";
+              next = "VIA1";
+              pin = "M1_pin";
+              color = "";
+            }
+
+
+
+	};
+
 	class Rules: public QObject
 	{
 
@@ -50,6 +77,7 @@ namespace cIcCore{
 	  static Rules* getRules(){return myRules_;}
 
 	  qreal get(QString layer, QString rule);
+	  QString layerToColor(QString name);
 	  int layerToNumber(QString name);
 	  int layerToDataType(QString name);
 	  int gamma(){return gamma_;}
@@ -61,6 +89,7 @@ namespace cIcCore{
           //QJsonObject rules_;
 //          qreal rules_;
          // QString * rules_;
+          QMap<QString,Layer * > layers_;
           QHash<QString, QHash<QString,qreal> >  rules_;
           int gamma_;
           int grid_;

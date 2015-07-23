@@ -90,33 +90,9 @@ void RenderArea::drawOutline(QPainter &painter)
 
 QColor RenderArea::getPen(Rect * o){
 
-  QColor color;
 
+  QColor color(Rules::getRules()->layerToColor(o->layer()));
 
-  if(o->layer() == "PO"){
-      color = QColor("red");
-  }else if(o->layer() == "M1"){
-       color = QColor("blue");
-  }else if(o->layer() == "M2"){
-             color = QColor("goldenrod");
-  }else if(o->layer() == "M3"){
-             color = QColor("aqua");
-  }else if(o->layer() == "M4"){
-             color = QColor("darkgreen");
-  }else if(o->layer() == "M5"){
-             color = QColor("brown");
-  }else if(o->layer() == "M6"){
-             color = QColor("darkviolet");
-
-  }else if(o->layer() == "OD"){
-             color = QColor("green");
-  }else if(o->layer() == "CO"){
-             color = QColor("yellow");
-
-  }else{
-             color = QColor("grey");
-
-  }
 
  // color.setAlpha(0.5);
   color.setAlpha(100);

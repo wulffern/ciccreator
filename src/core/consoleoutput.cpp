@@ -45,6 +45,21 @@ void ConsoleOutput::endComment(QTextStream &out){
 
  }
 
+ void ConsoleOutput::comment(QString str, AnsiColor color){
+   QTextStream out(stdout);
+   out.setFieldWidth(indent);
+   out.setFieldAlignment(QTextStream::AlignRight);
+   out << " ";
+   out.setFieldWidth(0);
+   out << "\033[0;" << color << "m";
+   out.setFieldAlignment(QTextStream::AlignLeft);
+   out.setFieldWidth(0);
+   out.setPadChar(' ');
+   out <<  str;
+   this->endComment(out);
+
+ }
+
 void ConsoleOutput::commentInvokeMethod(QString cell, QString theme, QString method){
   QTextStream out(stdout);
   this->startComment(out);

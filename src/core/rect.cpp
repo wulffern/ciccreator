@@ -63,8 +63,11 @@ namespace cIcCore{
     QString Rect::layer(){  return _layer;}
     void Rect::setLayer(QString layer){  _layer  = layer;}
 
-    void Rect::parent(Rect* rect){
+    Rect *  Rect::parent(Rect* rect){
+      if(rect){
         _parent = rect;
+        }
+      return _parent;
     }
 
     Rect* Rect::getCopy(){

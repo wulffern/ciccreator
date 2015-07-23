@@ -23,10 +23,8 @@ namespace cIcPrinter{
 
 
     void Gds::startLib(QString name){
-        char * cname = name.toUtf8().data();
-		
-		qWarning() << "Library "  << name;
-        gds_create_lib( fd, cname, 0.001 /* um per bit */ );
+
+        gds_create_lib( fd, this->toChar(name), 0.001 /* um per bit */ );
 
     }
 
@@ -46,49 +44,51 @@ namespace cIcPrinter{
 
     void Gds::printReference(Cell * o){
 
-        // char * name = o->name().toUtf8().data();
-        // gds_write_sref( fd );                    // contains an instance of...
-        // gds_write_sname( fd, name );
-        // gds_write_mag( fd, 1.0 );
+        if(this->isEmpty(o)){return ;}
 
-        // ///TODO: Implement rotations
-        //      gds_write_angle( fd, 0 );             // and tilted at some weird angle
-        //  x[0] =  o->x();
-        //  y[0] = o->y();
-        //  gds_write_xy( fd, x, y, 1 );             // at these coordinates (database units)
-        //  gds_write_endel( fd );                   // end of element
+         char * name = o->name().toUtf8().data();
+         gds_write_sref( fd );                    // contains an instance of...
+         gds_write_sname( fd, name );
+         gds_write_mag( fd, 1.0 );
+
+         ///TODO: Implement rotations
+              gds_write_angle( fd, 0 );             // and tilted at some weird angle
+          x[0] =  o->x();
+          y[0] = o->y();
+          gds_write_xy( fd, x, y, 1 );             // at these coordinates (database units)
+          gds_write_endel( fd );                   // end of element
     }
 
     void Gds::printRect(Rect * o){
-        //   gds_write_boundary( fd );       // write just the token
-        //   gds_write_layer( fd, Rules::getRules()->layerToNumber(o->layer()) );       // layer 0, for example
-        //   gds_write_datatype( fd, Rules::getRules()->layerToDataType(o->layer()) );    // datatype 1, for example
+           gds_write_boundary( fd );       // write just the token
+           gds_write_layer( fd, Rules::getRules()->layerToNumber(o->layer()) );       // layer 0, for example
+           gds_write_datatype( fd, Rules::getRules()->layerToDataType(o->layer()) );    // datatype 1, for example
 
-        // x[0] = o->x1();  y[0] = o->y1();       // signed four-byte integers
-        // x[1] = o->x2();  y[1] = o->y1();
-        // x[2] = o->x2();  y[2] = o->y2();       // in this example 1 integer unit = 1 nm
-        // x[3] = o->x1();  y[3] = o->y2();
-        // x[4] = o->x1();  y[4] = o->y1();       // required repetition of first point (yup, that's stupid)
+         x[0] = o->x1();  y[0] = o->y1();       // signed four-byte integers
+         x[1] = o->x2();  y[1] = o->y1();
+         x[2] = o->x2();  y[2] = o->y2();       // in this example 1 integer unit = 1 nm
+         x[3] = o->x1();  y[3] = o->y2();
+         x[4] = o->x1();  y[4] = o->y1();       // required repetition of first point (yup, that's stupid)
 
-        // gds_write_xy( fd, x, y, 5 );    // polygon, four vertices, first vertex repeated => 5 points
-        // gds_write_endel( fd );          // end of element
+         gds_write_xy( fd, x, y, 5 );    // polygon, four vertices, first vertex repeated => 5 points
+         gds_write_endel( fd );          // end of element
     };
 
 
     void Gds::startCell(Cell *cell){
-        char * name = cell->name().toUtf8().data();
+
         gds_write_bgnstr( fd );
-        gds_write_strname( fd, name);
+        gds_write_strname( fd, this->toChar(cell->name()));
+
     }
 
     void Gds::endCell(){
-        gds_write_endstr( fd );                  // end of structure (cell)
+      gds_write_endstr( fd );                  // end of structure (cell)
     }
 
 
     void Gds::openFile(QString file){
-        char * name = file.toUtf8().data();
-        fd = open( name, O_CREAT | O_TRUNC | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH );
+        fd = open( this->toChar(file), O_CREAT | O_TRUNC | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH );
     }
 
     void Gds::closeFile(){
@@ -98,14 +98,21 @@ namespace cIcPrinter{
 
     void Gds::print(Design * d){
 
-        QString name = this->filename;
-        name.append(".gds");
-		qWarning() << name;
-        this->openFile(name);
+      QString name = this->filename;
+      name.append(".gds");
+              //qWarning() << name;
+      this->openFile(name);
+
+
         this->startLib(this->filename);
-        DesignPrinter::print(d);
-        this->endLib();
-        this->closeFile();
+
+          DesignPrinter::print(d);
+          this->endLib();
+          this->closeFile();
+
+
+        //
+
 
     }
 

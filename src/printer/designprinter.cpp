@@ -23,10 +23,20 @@
 namespace cIcPrinter{
 
 
+    char *  DesignPrinter::toChar(QString str){
+      char* cstr;
+      std::string fname = str.toStdString();
+     // qWarning() << fname;
+      cstr = new char [fname.size()+1];
+      strcpy( cstr, fname.c_str() );
+      return cstr;
+    }
+
     void DesignPrinter::startCell(Cell * o){
     }
 
     void DesignPrinter::printReference(Cell * o){
+
     }
 
     void DesignPrinter::openFile(QString filename){
@@ -43,9 +53,25 @@ namespace cIcPrinter{
 
     }
 
+    bool DesignPrinter::isEmpty(Cell * c){
+      if(c->name() == ""){
+          Cell * r = (Cell * ) c->parent();
+
+          if(r != 0){
+           qWarning() << "Error: Empty cell-name encountered in " <<  r->name() ;
+            }
+          return true;
+        }
+      return false;
+    }
+
     void DesignPrinter::printCell(Cell * c){
 
+       if(this->isEmpty(c)){return ;}
+
         this->startCell(c);
+
+
 
         foreach(Rect * child, c->children()){
             if(strcmp(child->metaObject()->className(),"cIcCore::Instance") == 0){
@@ -62,8 +88,9 @@ namespace cIcPrinter{
     void DesignPrinter::print(Design * d ){
 
 		
-        foreach(Cell * r, Cell::getAllCells() ){
-            this->printCell(r);
+	foreach(Cell * cell, Cell::getAllCells() ){
+
+            this->printCell(cell);
         }
 
 

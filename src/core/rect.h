@@ -86,7 +86,7 @@ namespace cIcCore{
      //   void abutBottom(Rect* rect);
       //  void abutLeft(Rect* rect,qreal dx, qreal dy);
      //   void abutRight(Rect* rect,qreal dx, qreal dy);
-        void parent(Rect* rect);
+        Rect * parent(Rect* rect = 0);
         void adjust(int dx);
         Rect* adjustedOnce(int xp1);
         int snap(int x);

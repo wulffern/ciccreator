@@ -23,6 +23,7 @@
 #include "printer/svg.h"
 #include "printer/gds.h"
 #include "gui/window.h"
+#include "core/consoleoutput.h"
 #include <iostream>
 #include <QDebug>
 #include <QString>
@@ -39,19 +40,22 @@ int main(int argc, char *argv[])
 		cIcCore::Rules::loadRules(rules);
 
 		//Load design
-		cIcCore::Design * c = new cIcCore::Design();
-		c->read(file);
+		cIcCore::Design * d = new cIcCore::Design();
+		d->read(file);
 
 //		cIcPrinter::Svg * pr = new cIcPrinter::Svg("test");
 //		pr->print(c);
 
+
+		cIcCore::ConsoleOutput console;
+		console.comment("Writing GDS");
 		cIcPrinter::Gds * gd = new cIcPrinter::Gds("TEST");
-		gd->print(c);
+		gd->print(d);
 
 	if(argc == 4){
 		QApplication app(argc, argv);
 		cIcGui::Window window;
-		window.loadDesign(c);
+		window.loadDesign(d);
 		window.show();
 		return app.exec();
 	  }
