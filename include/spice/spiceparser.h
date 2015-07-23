@@ -23,7 +23,7 @@
 
 #include <QObject>
 #include <QMap>
-#include <Qfile>
+#include <QFile>
 #include <QTextStream>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>

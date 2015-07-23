@@ -34,7 +34,7 @@ namespace cIcCore{
 	    Q_OBJECT
 
 	public:
-	  Rules(){
+	  Rules(QObject *parent = 0){
 	   // this->rules_ = 0;
 //		  rules_ = 0;
 	     // QHash<QString, QHash<QString,qreal> > myrules;

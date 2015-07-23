@@ -1,6 +1,9 @@
 
 OPT=
+
 cmd=time ../bin/cic
+
+
 tech=../examples/freepdk45.json
 
 device: 
