@@ -46,7 +46,6 @@ namespace cIcCore {
     Rect r;
     r.setPoint1(x1,y1);
     r.setPoint2(x2,y2);
-    //        qWarning() << "Testing" << r.toString();
     return r;
   }
 
@@ -61,7 +60,6 @@ namespace cIcCore {
     c.length = obj["length"].toInt();
     c.offset= obj["offset"].toInt();
     copyColumn_.append(c);
-    qWarning() << "Testing " << c.count << " " << c.length << " " << c.offset;
   }
 
   PatternTile::PatternTile(const PatternTile&)
@@ -105,7 +103,6 @@ namespace cIcCore {
                 for(int x=0;x<c.count;x++){
                     str.insert(c.offset,sorg);
                   }
-                qWarning() << str;
               }
           }
 
@@ -152,7 +149,6 @@ namespace cIcCore {
         this->minPolyLength_ = this->rules->get("PO","mingatelength");
       }
 
-    qWarning() << "ymax: " << ymax_ << " xmax:" << xmax_;
 
 
 

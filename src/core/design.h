@@ -42,6 +42,7 @@ namespace cIcCore{
     public:
         Design();
         void read(QString filename);
+		QList<QString> cellNames(){return _cell_names;}
 
     private:
         void runIfObjectCanMethods(Cell * c, QJsonObject jobj, QString theme = "");
@@ -56,6 +57,7 @@ namespace cIcCore{
 		void createCell(QJsonObject jobj);
 		cIcSpice::SpiceParser _spice_parser;
 		QMap<QString,QJsonObject>  _cells;
+		QList<QString> _cell_names;
 		ConsoleOutput * console;
 
     signals:

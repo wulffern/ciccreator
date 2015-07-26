@@ -140,18 +140,10 @@ namespace cIcCore{
     }
 
     void Cell::moveTo(int ax, int ay) {
-
-        int x1 = this->left();
-        int y1 = this->top();
-
-        this->setRight(this->right() + ax - this->left());
-        this->setBottom(this->bottom() + ay - this->top());
-        this->setLeft(ax);
-        this->setTop(ay);
+		int x1 = this->x1();
+		int y1 = this->y1();
+		Rect::moveTo(ax,ay);
         foreach(Rect* child, _children) {
-            //if( strcmp(child->metaObject()->className(),"IcEnclosingRect") == 0){
-            //    continue;
-            //  }
             child->translate( ax - x1, ay -  y1);
         }
         emit updated();

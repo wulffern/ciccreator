@@ -97,7 +97,7 @@ namespace cIcCore{
         c_name = c->name();
       }
     //Search throught the json file and find methods that can be run
-    QRegularExpression re("^new|class|name|before.*|after.*|comment");
+    QRegularExpression re("^new|inherit|leech|class|name|before.*|after.*|comment");
 
     foreach( QString key, jobj.keys()){
         if(re.match(key).hasMatch()){ continue;}
@@ -240,6 +240,7 @@ namespace cIcCore{
 
         this->add(c);
         Cell::addCell(c);
+		_cell_names.append(c->name());
         //qWarning() << c->toString();
         console->decreaseIndent();
 

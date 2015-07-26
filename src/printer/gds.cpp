@@ -46,13 +46,17 @@ namespace cIcPrinter{
 
         if(this->isEmpty(o)){return ;}
 
-         char * name = o->name().toUtf8().data();
+		char * name = this->toChar(o->name());
+
          gds_write_sref( fd );                    // contains an instance of...
          gds_write_sname( fd, name );
-         gds_write_mag( fd, 1.0 );
+		 //        gds_write_mag( fd, 1.0 );
 
+		 
+
+		 
          ///TODO: Implement rotations
-              gds_write_angle( fd, 0 );             // and tilted at some weird angle
+//              gds_write_angle( fd, 0.0 );             // and tilted at some weird angle
           x[0] =  o->x();
           y[0] = o->y();
           gds_write_xy( fd, x, y, 1 );             // at these coordinates (database units)
@@ -60,7 +64,8 @@ namespace cIcPrinter{
     }
 
     void Gds::printRect(Rect * o){
-           gds_write_boundary( fd );       // write just the token
+
+		gds_write_boundary( fd );       // write just the token
            gds_write_layer( fd, Rules::getRules()->layerToNumber(o->layer()) );       // layer 0, for example
            gds_write_datatype( fd, Rules::getRules()->layerToDataType(o->layer()) );    // datatype 1, for example
 
@@ -80,6 +85,9 @@ namespace cIcPrinter{
         gds_write_bgnstr( fd );
         gds_write_strname( fd, this->toChar(cell->name()));
 
+		//- draw PR boundary
+		this->printRect(cell);
+		
     }
 
     void Gds::endCell(){

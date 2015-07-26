@@ -87,11 +87,17 @@ namespace cIcPrinter{
 
     void DesignPrinter::print(Design * d ){
 
-		
-	foreach(Cell * cell, Cell::getAllCells() ){
+		QList<QString> cells = d->cellNames();
+		for(int i=0;i<cells.count();i++){
+			Cell * c = Cell::getCell(cells[i]);
+			if(c){
+            this->printCell(c);
+			}
+		}
+		//QMap<QString,Cells*> cells = d->cells();
+		//foreach(Cell * cell, cells ){
 
-            this->printCell(cell);
-        }
+			//}
 
 
     }
