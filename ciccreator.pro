@@ -6,7 +6,7 @@ QT += core widgets
 
 
 unix:!mac{
-QMAKE_LIBDIR += ~/Qt/5.4/gcc_64/lib  ~/Qt/5.4/gcc_64/plugins/platforms
+   QMAKE_LIBDIR += ~/qt5_4/lib  ~/qt5_4/plugins/platforms
 }
 
 
@@ -18,16 +18,17 @@ mac {
 
 TEMPLATE = app
 
-osx:TARGET = cic-darwin
-linux:TARGET = cic-linux
-DESTDIR = bin
+osx:DESTDIR = bin/darwin
+linux:DESTDIR = bin/linux
+
+TARGET = cic
+
 OBJECTS_DIR=build
 MOC_DIR=build
+
 DEPENDPATH += .
 
 INCLUDEPATH += src/ external/libgds_dist/
-
-
 
 # Input
 
