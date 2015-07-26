@@ -5,9 +5,16 @@
 QT += core widgets
 
 
+unix:!mac{
+QMAKE_LIBDIR += ~/Qt/5.4/gcc_64/lib  ~/Qt/5.4/gcc_64/plugins/platforms
+}
+
 
 CONFIG += qt console debug
-CONFIG -= app_bundle
+
+mac {
+  CONFIG -= app_bundle
+}
 
 TEMPLATE = app
 
@@ -19,6 +26,7 @@ MOC_DIR=build
 DEPENDPATH += .
 
 INCLUDEPATH += src/ external/libgds_dist/
+
 
 
 # Input
