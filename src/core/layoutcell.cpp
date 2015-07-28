@@ -50,7 +50,6 @@ namespace cIcCore{
             this->add(inst);
             inst->moveTo(x,y);
             prev_width = inst->width();
-
             y += inst->height();
 
         }

@@ -37,7 +37,7 @@ namespace cIcCore{
     }
 
     Rect::Rect(){
-        _layer = "M1";
+        _layer = "PR";
         x1_ = 0;
         y1_ = 0;
         x2_ = 0;

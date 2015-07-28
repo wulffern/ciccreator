@@ -77,7 +77,11 @@ namespace cIcCore{
         }
 
         static QList<Cell*> getAllCells(){
-            return Cell::_allcells.values();
+			QList<Cell*> cells;
+			foreach(Cell * cell,_allcells){
+				cells.append(cell);
+			}
+            return cells;
         }
 
         static Cell* addCell(QString cell,Cell * c){
