@@ -280,4 +280,13 @@ namespace cIcCore {
 
   }
 
+	void addEnclosure(QJsonArray ar){
+		QString layer = ar[0].toString();
+		int startx  = ar[1].toInt();
+		QJsonArray encl = ar[2].toArray();
+
+
+
+	}
+
 }
