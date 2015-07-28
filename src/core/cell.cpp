@@ -224,89 +224,42 @@ namespace cIcCore{
 
     }
 
-    /*
-      void Cell::toPrinter{
-      my $self = shift;
-      my $printer = shift;
-      if (this->schObject) {
-      this->schObject->toPrinter($printer);
-      }
-      }
+    Rect* Cell::getBottomLeftRect(){
+      int xmin = std::numeric_limits<int>::max();
+      int ymin = std::numeric_limits<int>::max();
+      Rect * bottomLeft;
+      foreach(Rect * r, this->_children){
+        if(r->x1() < xmin && r->y1() < ymin){
+            if(bottomLeft){
+                delete(bottomLeft);
+              }
+            xmin = r->x();
+            ymin = r->y();
+            bottomLeft = new Rect(r);
+          }
+        }
 
-      void Cell::childrenToGds{
-      my $self = shift;
-      my $gdsref = shift;
-      my $xorg = shift;
-      my $yorg = shift;
-      my $mirror = shift;
-      my $mirror_line = shift;
+      return bottomLeft;
+    }
 
-      my @children = @{this->children};
-      foreach my $child (@children) {
-      $child->toGds($gdsref,$xorg,$yorg,$mirror,$mirror_line);
-      }
-      }
+    Rect* Cell::getTopLeftRect(){
+      int xmin = std::numeric_limits<int>::max();
+      int ymax = -std::numeric_limits<int>::max();
+      Rect * topLeft;
+      foreach(Rect * r, this->_children){
+        if(r->x1() < xmin && r->y2() > ymax){
+            if(topLeft){
+                delete(topLeft);
+              }
+            xmin = r->x();
+            ymax = r->y2();
+           topLeft = new Rect(r);
+          }
+        }
 
-      void Cell::toGds{
-      my $self = shift;
-      my $gdsref = shift;
-      my $xorg = shift;
-      my $yorg = shift;
-      my $mirror = shift;
-      my $mirror_line = shift;
+      return topLeft;
+    }
 
-      if (this->mirror) {
-      $mirror = this->mirror;
-      $mirror_line = this->mirror_line;
-      }
 
-      if (ref(this->parent) eq "Gds::GdsLib") {
-      $gdsref->printBgnstr(-name=>this->name);
-      this->childrenToGds($gdsref,$xorg,$yorg,$mirror,$mirror_line);
-      if (this->hasPR) {
-      this->SUPER::toGds($gdsref,$xorg,$yorg,$mirror,$mirror_line);
-      }
 
-      if (this->schObject && this->schObject->can("ports")) {
-      my @ports = @{this->schObject->ports};
-      if ($gdsref->can("printPin")) {
-      print this->schObject."\n";
-      foreach my $p (@ports) {
-      if ($p->rect) {
-      $gdsref->printPin(-obj => $p);
-      }
-      }
-      } elsif ($gdsref->can("printText")) {
-      foreach my $p (@ports) {
-      if ($p->rect) {
-      $p->{xorg} = $xorg;
-      $p->{yorg} = $yorg;
-      $p->{mirror} = $mirror;
-      $p->{mirror_line} = $mirror_line;
-      $gdsref->printText(
-      -layer => this->rules->layerToNumber($p->layer."_pin"),
-      -string => $p->text,
-      -dataType => 0,
-      -x => ($p->xc + this->snap($p->portSize/2.0) ),
-      -y => ($p->yc +this->snap($p->portSize/2.0) ),
-      );
-      my $port = new Gds::GdsRect($p->layer,$p->xc,$p->yc,$p->portSize,$p->portSize);
-      $port->toGds($gdsref,$xorg,$yorg,$mirror,$mirror_line);
-      }
-      }
-      }
-      }
-      $gdsref->printEndstr();
-      } else {
-      this->childrenToGds($gdsref,$xorg,$yorg,$mirror,$mirror_line);
-      if (this->hasPR) {
-      this->SUPER::toGds($gdsref,$xorg,$yorg,$mirror,$mirror_line);
-      }
-
-      }
-      }
-      }
-
-      1;
-    */
 }

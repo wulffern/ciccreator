@@ -131,6 +131,16 @@ namespace cIcCore{
   }
 
 
+   bool Rules::hasRule(QString layer, QString rule){
+
+     if(rules_.contains(layer)){
+         if(rules_[layer].contains(rule)){
+        return true;
+           }
+       }
+     return false;
+   }
+
   qreal Rules::get(QString layer, QString rule){
     qreal v = 0;
 

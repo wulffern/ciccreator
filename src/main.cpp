@@ -43,8 +43,8 @@ int main(int argc, char *argv[])
 		cIcCore::Design * d = new cIcCore::Design();
 		d->read(file);
 
-//		cIcPrinter::Svg * pr = new cIcPrinter::Svg("test");
-//		pr->print(c);
+		cIcPrinter::Svg * pr = new cIcPrinter::Svg("test");
+		pr->print(d);
 
 
 		cIcCore::ConsoleOutput console;

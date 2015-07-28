@@ -21,6 +21,7 @@
 
 #include <QJsonArray>
 #include "cell.h"
+#include "consoleoutput.h"
 
 namespace cIcCore{
 
@@ -28,6 +29,22 @@ namespace cIcCore{
     int count;
     int offset;
     int length;
+  };
+
+  struct Enclosure{
+    QString layer;
+    int startx;
+    QList<QString> encloseWithLayers;
+
+  };
+
+  struct EnclosureRectangle{
+    QString layer;
+    int x1;
+    int y1;
+    int width;
+    int height;
+    QList<QString> encloseWithLayers;
   };
 
   class PatternTile: public Cell
@@ -43,25 +60,26 @@ namespace cIcCore{
   public:
 
     PatternTile();
-
     PatternTile(const PatternTile&);
-
     ~PatternTile();
 
     Q_INVOKABLE void fillCoordinatesFromString(QJsonArray ar);
     Q_INVOKABLE void copyColumn(QJsonObject obj);
+    Q_INVOKABLE void addEnclosure(QJsonArray ar);
+    Q_INVOKABLE void addEnclosureByRectangle(QJsonArray ar);
+    Q_INVOKABLE void addEnclosuresByRectangle(QJsonArray ar);
 
     QHash<QString,QVariant> initFillCoordinates();
     void onFillCoordinate(QChar c, QString layer, int x, int y, QHash<QString,QVariant> data);
     void endFillCoordinate(QHash<QString,QVariant> data);
-    int minPolyLength(){return minPolyLength_;}
-    int setMinPolyLength(int val){
-      minPolyLength_ = val;
-      return minPolyLength_;
-    }
+
     void paint();
 
     virtual Rect calcBoundingRect();
+
+    int minPolyLength(){return minPolyLength_;}
+    int setMinPolyLength(int val){ minPolyLength_ = val; return minPolyLength_;  }
+
     qreal widthoffset(){return widthoffset_;}
     qreal setWidthoffset(qreal widthoffset){widthoffset_ = widthoffset; return widthoffset_;}
 
@@ -80,19 +98,28 @@ namespace cIcCore{
   private:
     int mirrorPatternString_;
     int minPolyLength_;
+    int currentHeight_;
     int xmax_;
     int ymax_;
     qreal yoffset_;
     qreal xoffset_;
     int xspace_;
     int yspace_;
-    int currentHeight_;
+    QList<Enclosure*> enclosures_;
+     QList<EnclosureRectangle*> enclosures_by_rect_;
     QHash<QString,QList<QString> > layers_;
     qreal widthoffset_;
     qreal heightoffset_;
     QList<CopyColumn> copyColumn_;
-   // inline int xs(int x){  return (x + xoffset_)*xspace_;}
-    //inline int ys(int y){ return (y + yoffset_)*yspace_;}
+    QHash<QString,QHash<int,QHash<int,Rect*> > > rectangles_;
+        QHash<QString,QHash<int,QHash<int,QChar> > > rectangle_strings_;
+    QList<Rect*> findPatternRects(QString layer);
+     QList<Rect*> findPatternStrings(QString layer);
+      Rect * makeRect(QString layer,QChar c,int x, int y);
+      void paintEnclosures();
+
+    inline int translateX(int x){  return (x + xoffset_)*xspace_;}
+    inline int translateY(int y){ return (y + yoffset_)*yspace_;}
   };
 
 }

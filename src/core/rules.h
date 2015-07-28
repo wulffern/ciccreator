@@ -77,6 +77,7 @@ namespace cIcCore{
 	  static Rules* getRules(){return myRules_;}
 
 	  qreal get(QString layer, QString rule);
+	  bool hasRule(QString layer, QString rule);
 	  QString layerToColor(QString	name);
 	  int layerToNumber(QString name);
 	  int layerToDataType(QString name);

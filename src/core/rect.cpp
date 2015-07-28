@@ -36,6 +36,14 @@ namespace cIcCore{
         _layer= r._layer;
     }
 
+    Rect::Rect(Rect * r){
+        x1_= r->x1_;
+        x2_= r->x2_;
+        y1_= r->y1_;
+        y2_= r->y2_;
+        _layer= r->_layer;
+    }
+
     Rect::Rect(){
         _layer = "PR";
         x1_ = 0;
@@ -52,9 +60,6 @@ namespace cIcCore{
         y2_ = y + height;
         rules = Rules::getRules();
     }
-
-
-
 
 //----------------------------------------------------------------------
 // Properties

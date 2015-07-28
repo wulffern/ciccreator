@@ -55,9 +55,9 @@ void RenderArea::paintEvent(QPaintEvent *event)
     if(this->c && this->first){
       QRect rect = event->rect();
       Rect r = this->c->calcBoundingRect();
-      qWarning() << r.toString();
+     // qWarning() << r.toString();
       r.adjust(this->c->width()/8.0);
-      qWarning() << r.toString();
+     // qWarning() << r.toString();
       float xscale =  ((float)rect.width())/((float)r.width());
       float yscale = ((float)rect.height())/((float)r.height());
       float scale = xscale > yscale ? yscale : xscale;
@@ -95,7 +95,7 @@ QColor RenderArea::getPen(Rect * o){
 
 
  // color.setAlpha(0.5);
-  color.setAlpha(100);
+  color.setAlpha(50);
 
   return color;
 }

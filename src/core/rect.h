@@ -38,6 +38,7 @@ namespace cIcCore{
     public:
         Rect();
         Rect(const Rect&);
+        Rect(Rect *r);
         ~Rect();
         Rect(QString layer, int left, int bottom, int width, int height);
 

@@ -97,6 +97,10 @@ namespace cIcCore{
     protected:
         static QMap<QString,Cell*> _allcells;
         cIcSpice::Subckt * _subckt;
+        Rect* getBottomLeftRect();
+        Rect* getTopLeftRect();
+
+
 
     private:
         QList<Rect*> _children;

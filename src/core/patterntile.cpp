@@ -33,6 +33,8 @@ namespace cIcCore {
     heightoffset_ = 0;
     mirrorPatternString_ = 0;
 
+
+
   }
 
   Rect PatternTile::calcBoundingRect(){
@@ -126,6 +128,7 @@ namespace cIcCore {
                 continue;
               }
             if(c != '-'){
+                rectangle_strings_[layer][x][y] = c;
                 this->onFillCoordinate(c,layer,x,y,data);
               }
           }
@@ -139,22 +142,63 @@ namespace cIcCore {
 
   }
 
-  void PatternTile::paint(){
+  Rect * PatternTile::makeRect(QString layer,QChar c,int x, int y){
+    Rect * rect = new Rect();
+    rect->setLayer(layer);
 
     //Load rules
     this->xspace_ = this->rules->get("ROUTE","horizontalgrid");
     this->yspace_ = this->rules->get("ROUTE","verticalgrid");
 
+    int xs = translateX(x);
+    int ys = translateY(y);
+    switch(c.unicode()){
+      case 'X':
+        currentHeight_ = yspace_;
+      case 'x':
+        currentHeight_ = yspace_;
+      case 'B':
+      case 'A':
+      case 'D':
+      case 'S':
+      case 'G':
+      case 'r':
+      case 'K':
+      case 'C':
+      case 'Q':
+      case 'c':
+        rect->setRect(xs,ys,xspace_,currentHeight_);
+        rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
+
+        break;
+      case 'V':
+        rect->setRect(xs,ys - yspace_/2.0,xspace_,yspace_*2.0);
+        break;
+      case 'm':
+        rect->setRect(xs,ys,xspace_,this->minPolyLength());
+        rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
+        break;
+      case 'w':
+        int minw = rules->get(layer,"width");
+        rect->setRect(xs,ys,xspace_,minw);
+        rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
+        currentHeight_ = minw;
+        break;
+
+      }
+    return rect;
+  }
+
+  void PatternTile::paint(){
+
+
+
     if( this->minPolyLength_ == 0 ){
         this->minPolyLength_ = this->rules->get("PO","mingatelength");
       }
 
-
-
-
-
     int minpoly = this->minPolyLength();
-    int currentHeight_ = yspace_;
+    currentHeight_ = yspace_;
     foreach(QString layer, layers_.keys()){
         QList<QString> strs = layers_[layer];
         for(int y=0;y <= ymax_;y++){
@@ -164,52 +208,22 @@ namespace cIcCore {
 
                 QChar c = s[x];
 
-                Rect* rect = new Rect();
-                rect->setLayer(layer);
-                int xs = (x + xoffset_)*xspace_;
-                int ys = (y + yoffset_)*yspace_;
+                if(c == '-'){continue;}
 
-
-                switch(c.unicode()){
-                  case 'X':
-                    currentHeight_ = yspace_;
-                  case 'x':
-                    currentHeight_ = yspace_;
-                  case 'B':
-                  case 'A':
-                  case 'D':
-                  case 'S':
-                  case 'G':
-                  case 'r':
-                  case 'K':
-                  case 'C':
-                  case 'Q':
-                  case 'c':
-                    rect->setRect(xs,ys,xspace_,currentHeight_);
-                    rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
-
-                    break;
-                  case 'V':
-                    rect->setRect(xs,ys - yspace_/2.0,xspace_,yspace_*2.0);
-                    break;
-                  case 'm':
-                    rect->setRect(xs,ys,xspace_,this->minPolyLength());
-                    rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
-                    break;
-                  case 'w':
-                    int minw = rules->get(layer,"width");
-                    rect->setRect(xs,ys,xspace_,minw);
-                    rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
-                    currentHeight_ = minw;
-                    break;
-
-                  }
+                Rect* rect = this->makeRect(layer,c,x,y);
 
                 if(!rect->empty()){
                     this->add(rect);
+                    rectangles_[layer][y][x] = rect;
+                    if(layer == "OD"){
+                        qWarning() << "add: " << layer << y << x;
+                      }
                   }
 
                 int cxoffset = 0;
+
+                int xs = translateX(x);
+                int ys = translateY(y);
 
                 //TODO: Implement Q
                 int cw = 0;
@@ -278,15 +292,204 @@ namespace cIcCore {
       }
     this->updateBoundingRect();
 
+    this->paintEnclosures();
+
   }
 
-	void addEnclosure(QJsonArray ar){
-		QString layer = ar[0].toString();
-		int startx  = ar[1].toInt();
-		QJsonArray encl = ar[2].toArray();
+  QList<Rect*> PatternTile::findPatternRects(QString layer){
+
+    ConsoleOutput console;
+
+    if(!rectangles_.contains(layer)){
+        console.comment("Error: could not find layer '" + layer + "'");
+        return QList<Rect*>();
+      }
+
+    QList<Rect*> columnrects;
+
+   // qWarning() << layer << " " << xmax_ << ymax_;
+
+    QHash<int,QHash<int,Rect*> >  rects = rectangles_[layer];
+    for(int y=0;y<=ymax_;y++){
+
+        if(!rects.contains(y)){ continue;}
+        QHash<int,Rect *> row = rects[y];
+        QList<Rect*> rowrects;
+
+        for(int x=0;x<=xmax_;x++){
+            if(row.contains(x)){
+                qWarning() << "read: " << layer << y << x;
+                Rect* r = row[x];
+                bool foundRect = false;
+                foreach(Rect* rx,rowrects){
+                    if(rx->x2() == r->x1() && rx->y1() == r->y1() && rx->y2() == r->y2()){
+                        rx->setRight(r->x2());
+                        foundRect = true;
+
+                      }
+                  }
+                if(!foundRect){
+                    Rect *  rx = new Rect(r);
+                    rowrects.append(rx);
+                  }
+
+              }
+          }
 
 
 
-	}
+        foreach(Rect * r, rowrects){
+            bool foundRect = false;
+            foreach(Rect* ry,columnrects){
+                if(ry->y2() == r->y1() && ry->x() == r->x1()){
+                    ry->setTop(r->y2());
+                    foundRect = true;
+
+                  }
+              }
+            if(!foundRect){
+                Rect *  ry = new Rect(r);
+                columnrects.append(ry);
+
+              }
+
+          }
+
+
+      }
+
+    return columnrects;
+  }
+
+
+
+  void PatternTile::addEnclosure(QJsonArray ar){
+
+    Enclosure * e = new Enclosure();
+    e->layer = ar[0].toString();
+    e->startx  = ar[1].toInt();
+    QJsonArray encl = ar[2].toArray();
+
+    foreach(QJsonValue enc, encl){
+        e->encloseWithLayers.append(enc.toString()) ;
+      }
+
+    enclosures_.append(e);
+
+  }
+
+  void PatternTile::addEnclosuresByRectangle(QJsonArray ar){
+    foreach(QJsonValue v, ar){
+        this->addEnclosureByRectangle(v.toArray());
+      }
+  }
+
+  void PatternTile::addEnclosureByRectangle(QJsonArray ar){
+    EnclosureRectangle * e= new EnclosureRectangle();
+    e->layer = ar[0].toString();
+    QJsonArray rect = ar[1].toArray();
+
+    QJsonValue x1 = rect[0];
+    if(x1.isString() && x1.toString() == "self"){
+        e->x1 = 0;
+        e->y1 = 0;
+        e->width = this->xmax_ + 1;
+        e->height = this->ymax_ + 1;
+
+      }else{
+    e->x1 = rect[0].toInt();
+    e->y1 = rect[1].toInt();
+
+    QJsonValue w = rect[2];
+    if(w.isString() && w.toString() == "width"){
+        e->width = this->ymax_ + 1;
+    }else{
+        e->width = w.toInt();
+      if(this->copyColumn_.count() > 0){
+         foreach(CopyColumn c,copyColumn_){
+          if(e->x1 < c.offset && (e->y1 + e->width) > c.offset){
+            e->width += (c.length +1)*c.count;
+            }
+           }
+
+      }
+
+
+      }
+
+    QJsonValue h = rect[3];
+    if(h.isString() && h.toString() == "height"){
+        e->height = this->ymax_ + 1;
+    }else{
+
+        //TODO: Adjust for copy rows
+
+         e->height = h.toInt();
+      }
+}
+
+
+
+
+
+
+       QJsonArray encl = ar[2].toArray();
+
+    foreach(QJsonValue enc, encl){
+        e->encloseWithLayers.append(enc.toString()) ;
+      }
+
+    enclosures_by_rect_.append(e);
+
+
+  }
+
+  void PatternTile::paintEnclosures(){
+
+
+    //- Paint enclosures
+    for(int i=0;i<enclosures_.count();i++){
+        Enclosure *e = enclosures_[i];
+        QList<Rect*> rects = this->findPatternRects(e->layer);
+        foreach(QString lay, e->encloseWithLayers){
+            if(rects.count() > e->startx){
+                Rect* r = new Rect(rects[e->startx]);
+
+
+                int enc = 0;
+                if(this->rules->hasRule(lay,e->layer + "enclosure")){
+                    enc = this->rules->get(lay,e->layer + "enclosure");
+                  }else{
+
+                    enc = this->rules->get(lay,"enclosure");
+                  }
+
+                r->adjust(enc);
+                Rect * r_enc = new Rect(r);
+                r_enc->setLayer(lay);
+                qWarning() << r_enc->toString();
+                this->add(r_enc);
+              }
+
+
+          }
+      }
+
+    //- Paint enclosures by rectangle
+    for(int i=0;i<enclosures_by_rect_.count();i++){
+        EnclosureRectangle *e = enclosures_by_rect_[i];
+        foreach(QString lay, e->encloseWithLayers){
+
+                Rect* r = new Rect(e->layer,translateX(e->x1),translateY(e->y1),e->width*xspace_,e->height*yspace_);
+                this->add(r);
+
+
+
+
+          }
+      }
+
+
+  }
 
 }
