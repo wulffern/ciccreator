@@ -103,7 +103,6 @@ namespace cIcPrinter{
               //qWarning() << name;
       this->openFile(name);
 
-
         this->startLib(this->filename);
 
           DesignPrinter::print(d);
