@@ -215,9 +215,6 @@ namespace cIcCore {
                 if(!rect->empty()){
                     this->add(rect);
                     rectangles_[layer][y][x] = rect;
-                    if(layer == "OD"){
-                        qWarning() << "add: " << layer << y << x;
-                      }
                   }
 
                 int cxoffset = 0;
@@ -307,7 +304,6 @@ namespace cIcCore {
 
     QList<Rect*> columnrects;
 
-   // qWarning() << layer << " " << xmax_ << ymax_;
 
     QHash<int,QHash<int,Rect*> >  rects = rectangles_[layer];
     for(int y=0;y<=ymax_;y++){
@@ -318,7 +314,6 @@ namespace cIcCore {
 
         for(int x=0;x<=xmax_;x++){
             if(row.contains(x)){
-                qWarning() << "read: " << layer << y << x;
                 Rect* r = row[x];
                 bool foundRect = false;
                 foreach(Rect* rx,rowrects){
@@ -397,50 +392,49 @@ namespace cIcCore {
         e->height = this->ymax_ + 1;
 
       }else{
-    e->x1 = rect[0].toInt();
-    e->y1 = rect[1].toInt();
+        e->x1 = rect[0].toInt();
+        e->y1 = rect[1].toInt();
 
-    QJsonValue w = rect[2];
-    if(w.isString() && w.toString() == "width"){
-        e->width = this->ymax_ + 1;
-    }else{
-        e->width = w.toInt();
-      if(this->copyColumn_.count() > 0){
-         foreach(CopyColumn c,copyColumn_){
-          if(e->x1 < c.offset && (e->y1 + e->width) > c.offset){
-            e->width += (c.length +1)*c.count;
-            }
-           }
+        QJsonValue w = rect[2];
+        if(w.isString() && w.toString() == "width"){
+            e->width = this->ymax_ + 1;
+          }else{
+            e->width = w.toInt();
+            if(this->copyColumn_.count() > 0){
+                foreach(CopyColumn c,copyColumn_){
+                    if(e->x1 < c.offset && (e->y1 + e->width) > c.offset){
+                        e->width += (c.length +1)*c.count;
+                      }
+                  }
 
+              }
+
+
+          }
+
+        QJsonValue h = rect[3];
+        if(h.isString() && h.toString() == "height"){
+            e->height = this->ymax_ + 1;
+          }else{
+
+            //TODO: Adjust for copy rows
+
+            e->height = h.toInt();
+          }
       }
 
 
-      }
-
-    QJsonValue h = rect[3];
-    if(h.isString() && h.toString() == "height"){
-        e->height = this->ymax_ + 1;
-    }else{
-
-        //TODO: Adjust for copy rows
-
-         e->height = h.toInt();
-      }
-}
 
 
 
 
-
-
-       QJsonArray encl = ar[2].toArray();
+    QJsonArray encl = ar[2].toArray();
 
     foreach(QJsonValue enc, encl){
         e->encloseWithLayers.append(enc.toString()) ;
       }
 
     enclosures_by_rect_.append(e);
-
 
   }
 
@@ -454,7 +448,6 @@ namespace cIcCore {
         foreach(QString lay, e->encloseWithLayers){
             if(rects.count() > e->startx){
                 Rect* r = new Rect(rects[e->startx]);
-
 
                 int enc = 0;
                 if(this->rules->hasRule(lay,e->layer + "enclosure")){
@@ -480,8 +473,8 @@ namespace cIcCore {
         EnclosureRectangle *e = enclosures_by_rect_[i];
         foreach(QString lay, e->encloseWithLayers){
 
-                Rect* r = new Rect(e->layer,translateX(e->x1),translateY(e->y1),e->width*xspace_,e->height*yspace_);
-                this->add(r);
+            Rect* r = new Rect(lay,translateX(e->x1),translateY(e->y1),e->width*xspace_,e->height*yspace_);
+            this->add(r);
 
 
 

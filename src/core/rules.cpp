@@ -55,6 +55,17 @@ namespace cIcCore{
 
   }
 
+  Layer * Rules::getLayer(QString name){
+
+
+    if(this->layers_.contains(name)){
+
+        Layer * l = this->layers_[name];
+        return l;
+      }else{
+        return this->layers_["PR"];
+      }
+  }
 
 
   void Rules::setRules(QJsonObject job){
@@ -67,6 +78,7 @@ namespace cIcCore{
     foreach(QString layer, layers.keys()){
         QJsonObject lay = layers[layer].toObject();
         Layer *ln = new Layer();
+        ln->name = layer;
         ln->datatype = lay["datatype"].toInt();
         ln->number = lay["number"].toInt();
 
@@ -104,8 +116,12 @@ namespace cIcCore{
         if(lay.contains("color")){
             ln->color = lay["color"].toString();
           }
-
-        //qWarning() << layers_;
+        if(lay.contains("fill")){
+        QString fill = lay["fill"].toString();
+         if(fill.startsWith("nofill")){
+            ln->nofill = true;
+        }
+        }
         this->layers_[layer] = ln;
 
       }

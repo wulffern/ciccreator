@@ -135,7 +135,6 @@ namespace cIcCore{
 
           }else{
             console->errorMethodNotFound(c_name,theme, key);
-            //         qWarning() << "Could not find method " << key << " on " << c->metaObject()->className();
           }
       }
 
@@ -241,12 +240,10 @@ namespace cIcCore{
         this->add(c);
         Cell::addCell(c);
 		_cell_names.append(c->name());
-        //qWarning() << c->toString();
         console->decreaseIndent();
 
       }else{
 
-        //qWarning() << "Class not found " << cl << "\n";
       }
 
     //    my $obj = new $class ($self->cast($c->{new}));

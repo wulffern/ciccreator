@@ -27,12 +27,21 @@ namespace cIcCore{
 class PatternTransistor : public PatternTile
 {
   Q_OBJECT
-
+  Q_PROPERTY(QString mosType READ mosType WRITE setMosType)
   //Make the object, let's see how that works in Qt
 
 public:
     PatternTransistor();
     ~PatternTransistor();
+
+
+    QString mosType(){return mosType_;}
+    void setMosType(QString mosType){mosType_ = mosType;}
+
+
+private:
+    QString mosType_;
+
 };
 }
 

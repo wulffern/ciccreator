@@ -73,3 +73,6 @@ SOURCES +=     src/core/rules.cpp src/core/rect.cpp src/core/cell.cpp  src/main.
     external/libgds_dist/libgds.c \
     src/printer/gds.cpp
 
+FORMS += \
+    src/gui/window.ui
+

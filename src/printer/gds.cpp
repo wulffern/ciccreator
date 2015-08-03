@@ -108,7 +108,6 @@ namespace cIcPrinter{
 
       QString name = this->filename;
       name.append(".gds");
-              //qWarning() << name;
       this->openFile(name);
 
         this->startLib(this->filename);

@@ -10,29 +10,47 @@ Window::Window(QWidget *parent) : QWidget(parent)
   //    originalRenderArea->setZoom(100/rules->gamma());
 
       shapeComboBox = new QComboBox;
+      listCells = new QListWidget();
+      listLayers = new QListWidget();
+      splitter = new QSplitter();
+
+
+
       zoom = new QSlider;
       //shapeComboBox->addItem(tr("Clock"));
      // shapeComboBox->addItem(tr("House"));
       //shapeComboBox->addItem(tr("Text"));
       //shapeComboBox->addItem(tr("Truck"));
 
-      QGridLayout *layout = new QGridLayout;
-      layout->addWidget(originalRenderArea, 0, 0);
-      layout->addWidget(zoom,1,0);
-      layout->addWidget(shapeComboBox, 2, 0);
 
-      setLayout(layout);
+
+      QWidget * leftSide = new QWidget;
+      QGridLayout *layout = new QGridLayout;
+
+
+      layout->addWidget(zoom,1,0);
+      layout->addWidget(listCells,2,0);
+      //layout->addWidget(listCells, 1, 0);
+
+      leftSide->setLayout(layout);
+
+      QVBoxLayout *top = new QVBoxLayout();
+
+      splitter->addWidget(leftSide);
+      splitter->addWidget(originalRenderArea);
+      top->addWidget(splitter);
+
+      setLayout(top);
       //setupShapes();
       //shapeSelected(0);
-
 
       zoom->setMaximum(300);
       zoom->setMinimum(1);
       zoom->setValue(100);
       zoom->setOrientation(Qt::Horizontal);
 
+      connect(listCells,SIGNAL(currentRowChanged(int)),this,SLOT(shapeSelected(int)));
 
-          connect(shapeComboBox, SIGNAL(activated(int)), this, SLOT(shapeSelected(int)));
           connect(zoom,SIGNAL(valueChanged(int)),this,SLOT(zoomChanged(int)));
 
       setWindowTitle(tr("Carsten's IC Creator"));
@@ -45,8 +63,9 @@ Window::~Window()
 
 void Window::loadDesign(Design *d ){
     designs = d;
+
     foreach(Cell* c ,d->getAllCells()){
-        shapeComboBox->addItem(c->name());
+        listCells->addItem(c->name());
       }
  //   shapeComboBox->setCurrentIndex(0);
 }

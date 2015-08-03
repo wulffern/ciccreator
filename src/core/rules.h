@@ -40,6 +40,7 @@ namespace cIcCore{
             QString next;
             QString pin;
             QString color;
+            bool nofill;
 
             Layer(){
               name = "M1";
@@ -49,8 +50,8 @@ namespace cIcCore{
               next = "VIA1";
               pin = "M1_pin";
               color = "";
+              nofill = false;
             }
-
 
 
 	};
@@ -84,18 +85,14 @@ namespace cIcCore{
 	  int gamma(){return gamma_;}
 	  int grid(){return grid_;}
 	  void setRules(QJsonObject job);
+	  Layer * getLayer(QString string);
 
         private:
         static Rules * myRules_;
-          //QJsonObject rules_;
-//          qreal rules_;
-         // QString * rules_;
           QMap<QString,Layer * > layers_;
           QHash<QString, QHash<QString,qreal> >  rules_;
           int gamma_;
           int grid_;
-          //QJsonObject layers_;
-          //QJsonObject technology_;
 
         };
 

@@ -26,7 +26,6 @@ namespace cIcPrinter{
     char *  DesignPrinter::toChar(QString str){
       char* cstr;
       std::string fname = str.toStdString();
-     // qWarning() << fname;
       cstr = new char [fname.size()+1];
       strcpy( cstr, fname.c_str() );
       return cstr;

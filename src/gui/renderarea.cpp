@@ -11,7 +11,8 @@ RenderArea::RenderArea(QWidget *parent)
 {
 
   this->c = new Cell();
-  Rules * rules = Rules::getRules();
+
+  rules = Rules::getRules();
   _zoom = 1.0/rules->gamma()  ;
   first = false;
   xc = 0;
@@ -55,9 +56,7 @@ void RenderArea::paintEvent(QPaintEvent *event)
     if(this->c && this->first){
       QRect rect = event->rect();
       Rect r = this->c->calcBoundingRect();
-     // qWarning() << r.toString();
       r.adjust(this->c->width()/8.0);
-     // qWarning() << r.toString();
       float xscale =  ((float)rect.width())/((float)r.width());
       float yscale = ((float)rect.height())/((float)r.height());
       float scale = xscale > yscale ? yscale : xscale;
@@ -88,14 +87,27 @@ void RenderArea::drawOutline(QPainter &painter)
 
 }
 
-QColor RenderArea::getPen(Rect * o){
+QColor RenderArea::setPen(Rect * o,QPainter &painter){
 
 
-  QColor color(Rules::getRules()->layerToColor(o->layer()));
 
 
- // color.setAlpha(0.5);
-  color.setAlpha(50);
+
+
+  Layer *l = rules->getLayer(o->layer());
+
+
+  QColor color(l->color);
+
+  painter.setPen(QPen(color));
+  color.setAlpha(100);
+  if(l->nofill){
+      painter.setBrush(QBrush(Qt::NoBrush));
+    }else{
+       painter.setBrush(QBrush(color));
+    }
+
+
 
   return color;
 }
@@ -112,9 +124,7 @@ void RenderArea::drawCell(int x, int y, Cell * c, QPainter &painter){
               Instance *  inst= (Instance *) r;
               this->drawCell(inst->x(),inst->y(),inst->cell(), painter);
              }else{
-               QColor color = getPen(r);
-               painter.setPen(QPen(color));
-               painter.setBrush(QBrush(color));
+               setPen(r,painter);
                painter.drawRect(r->x(),r->y(),r->width(),r->height());
              }
 

@@ -50,7 +50,6 @@ namespace cIcSpice{
       QRegularExpressionMatch m_subckt_name = re_subckt_name.match(firstLine);
       if(m_subckt_name.hasMatch()){
          this->setName(m_subckt_name.captured(1));
-        //  qWarning() << "Parsing " << this->name();
         }else{
           qWarning() << "Could not parse subcktname on line" << this->lineNumber() << ": " << firstLine;
         }

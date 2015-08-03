@@ -65,7 +65,7 @@ class RenderArea : public QWidget
 
 public:
     RenderArea(QWidget *parent = 0);
-QColor getPen(Rect * r);
+QColor setPen(Rect * r, QPainter &painter);
     void setOperations(const QList<Operation> &operations);
     void setCell(Cell * c);
     void setZoom(float zoom){_zoom = zoom; update();}
@@ -93,6 +93,7 @@ private:
     Cell * c;
     QRect xBoundingRect;
     QRect yBoundingRect;
+    Rules * rules;
 };
 //! [2]
 

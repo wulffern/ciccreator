@@ -46,6 +46,10 @@ namespace cIcCore{
 
 
 
+    void Cell::mirrorCenterX(){
+      this->mirrorX(this->centerX());
+    }
+
     void Cell::paint(){
 //    qDebug() << "Painting Cell";
     }
@@ -205,7 +209,7 @@ namespace cIcCore{
 
         r.setPoint1(x1,y1);
         r.setPoint2(x2,y2);
-//        qWarning() << 		Rect r = c->_cell->calcBoundingRect();r.toString();
+
         return r;
     }
 

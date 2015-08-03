@@ -20,31 +20,31 @@
 
 namespace cIcCore{
 
-    Instance::Instance()
-    {
+  Instance::Instance()
+  {
 
-    }
+  }
 
-    Instance::Instance(const Instance&)
-    {
+  Instance::Instance(const Instance&)
+  {
 
-    }
+  }
 
 
-    Instance::~Instance()
-    {
+  Instance::~Instance()
+  {
 
-    }
+  }
 
-	Rect Instance::calcBoundingRect(){
-		Rect r = this->_cell->calcBoundingRect();
-//		r.moveTo(this->x1()+r.x1(), this->y1() + r.y1());
-		r.moveTo(this->x(), this->y());
+  Rect Instance::calcBoundingRect(){
+    Rect r = this->_cell->calcBoundingRect();
+    //		r.moveTo(this->x1()+r.x1(), this->y1() + r.y1());
+    r.moveTo(this->x(), this->y());
 
-		return r;
-	}
+    return r;
+  }
 
-	Instance * Instance::getInstance(QString cell){
+  Instance * Instance::getInstance(QString cell){
 
     Instance * c = new Instance();
 
@@ -52,21 +52,17 @@ namespace cIcCore{
         c->_cell  = _allcells[cell];
         c->setName(c->_cell->name());
         Rect r = c->_cell->calcBoundingRect();
-        //	qWarning() << r.toString();
-		c->setLayer("PR");
+        c->setLayer("PR");
         c->updateBoundingRect();
-//        c->setRect(r);
-        //qWarning() << c->toString();
-        //qWarning() << "Adding instance " << c->name();
-     }
-     return c;
+      }
+    return c;
   }
 
-//Cell * Instance::addInstance(QString cell){
-//     Cell * c = Cell::getInstance(cell);
-//     this->_instances.append(c);
-//     connect(c,SIGNAL(updated()),this,SLOT(updateBoundingRect()));
-//     return c;
-//}
+  //Cell * Instance::addInstance(QString cell){
+  //     Cell * c = Cell::getInstance(cell);
+  //     this->_instances.append(c);
+  //     connect(c,SIGNAL(updated()),this,SLOT(updateBoundingRect()));
+  //     return c;
+  //}
 
 }

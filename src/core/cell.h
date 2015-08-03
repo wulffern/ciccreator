@@ -42,16 +42,16 @@ namespace cIcCore{
         void mirrorX(int ax);
         void mirrorY(int ay);
         void moveTo(int ax, int ay);
-        void moveCenter(int ax, int ay);
+        Q_INVOKABLE void moveCenter(int ax, int ay);
+        Q_INVOKABLE void mirrorCenterX();
+
 
 
         virtual Rect  calcBoundingRect();
         QString toString();
-        //static Cell * createInstance();
         QString name(){return _name;}
         QString setName(QString val){ _name = val; return _name;}
         bool isEmpty(){return _is_empty;}
-
 
         cIcSpice::Subckt * subckt(){return _subckt;}
         cIcSpice::Subckt * setSubckt(cIcSpice::Subckt * val){ _subckt = val; return _subckt;}

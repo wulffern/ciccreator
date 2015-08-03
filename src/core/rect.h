@@ -122,7 +122,6 @@ namespace cIcCore{
           this->y1_ = rect.y1();
           this->x2_ = rect.x2();
           this->y2_ = rect.y2();
-         // qWarning() << rect.toString();
         }
 
         void setRect( int x, int y, int width, int height){

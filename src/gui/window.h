@@ -5,8 +5,10 @@
 #include <QObject>
 #include <QWidget>
 #include <QComboBox>
+#include <QListWidget>
 #include <QSlider>
 #include <QGridLayout>
+#include <QSplitter>
 #include "core/design.h"
 
 #include "renderarea.h"
@@ -38,8 +40,13 @@ public slots:
 private:
   RenderArea *originalRenderArea;
   QComboBox *shapeComboBox;
+  QListWidget * listCells;
+  QListWidget * listLayers;
   QSlider *zoom;
   Design * designs;
+  QSplitter * splitter;
+  QWidget * leftside;
+
 
 };
 
