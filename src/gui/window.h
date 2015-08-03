@@ -9,6 +9,8 @@
 #include <QSlider>
 #include <QGridLayout>
 #include <QSplitter>
+#include <QScrollArea>
+#include <QShortcut>
 #include "core/design.h"
 
 #include "renderarea.h"
@@ -36,9 +38,12 @@ signals:
 public slots:
     void shapeSelected(int index);
     void zoomChanged(int zoom);
+  void layerClicked(QModelIndex index);
 
 private:
+
   RenderArea *originalRenderArea;
+  QScrollArea *scroll;
   QComboBox *shapeComboBox;
   QListWidget * listCells;
   QListWidget * listLayers;
@@ -46,6 +51,9 @@ private:
   Design * designs;
   QSplitter * splitter;
   QWidget * leftside;
+
+  QShortcut *shift_z;
+    QShortcut *ctrl_z;
 
 
 };

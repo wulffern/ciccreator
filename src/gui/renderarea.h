@@ -65,16 +65,21 @@ class RenderArea : public QWidget
 
 public:
     RenderArea(QWidget *parent = 0);
-QColor setPen(Rect * r, QPainter &painter);
     void setOperations(const QList<Operation> &operations);
     void setCell(Cell * c);
-    void setZoom(float zoom){_zoom = zoom; update();}
+    void setZoom(float zoom);
 
     QSize minimumSizeHint() const Q_DECL_OVERRIDE;
     QSize sizeHint() const Q_DECL_OVERRIDE;
 
+public slots:
+    void zoomIn();
+    void zoomOut();
+
+
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
+
 //! [1]
 
 //! [2]

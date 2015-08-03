@@ -20,14 +20,24 @@
 
 namespace cIcCore{
 
-    LayoutCell::LayoutCell()
-    {
+    //LayoutCell::LayoutCell()
+   // {
 
-    }
+    //}
 
-    LayoutCell::~LayoutCell()
-    {
+    //LayoutCell::LayoutCell(const LayoutCell&){
 
+    //}
+
+    //LayoutCell::~LayoutCell()
+    //{
+
+    //}
+
+
+
+    void LayoutCell::setYoffsetHalf(QJsonValue obj){
+          useHalfHeight = true;
     }
 
     void LayoutCell::place(){
@@ -50,7 +60,11 @@ namespace cIcCore{
             this->add(inst);
             inst->moveTo(x,y);
             prev_width = inst->width();
-            y += inst->height();
+            if(useHalfHeight){
+            y += inst->height()/2;
+              }else{
+                  y += inst->height();
+              }
 
         }
 

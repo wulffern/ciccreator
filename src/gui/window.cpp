@@ -2,89 +2,128 @@
 
 namespace cIcGui{
 
-Window::Window(QWidget *parent) : QWidget(parent)
-{
+  Window::Window(QWidget *parent) : QWidget(parent)
+  {
 
-  originalRenderArea = new RenderArea;
+    originalRenderArea = new RenderArea;
 
-  //    originalRenderArea->setZoom(100/rules->gamma());
-
-      shapeComboBox = new QComboBox;
-      listCells = new QListWidget();
-      listLayers = new QListWidget();
-      splitter = new QSplitter();
+    //    originalRenderArea->setZoom(100/rules->gamma());
 
 
+    shapeComboBox = new QComboBox;
+    listCells = new QListWidget();
+    listLayers = new QListWidget();
+    splitter = new QSplitter();
+    zoom = new QSlider;
+    scroll = new QScrollArea();
 
-      zoom = new QSlider;
-      //shapeComboBox->addItem(tr("Clock"));
-     // shapeComboBox->addItem(tr("House"));
-      //shapeComboBox->addItem(tr("Text"));
-      //shapeComboBox->addItem(tr("Truck"));
+    scroll->setWidget(originalRenderArea);
 
+    QWidget * leftSide = new QWidget;
+    leftSide->resize(150,200);
+    QGridLayout *layout = new QGridLayout;
 
+    layout->addWidget(zoom,1,0);
+    layout->addWidget(listCells,2,0);
+    layout->addWidget(listLayers, 3, 0);
 
-      QWidget * leftSide = new QWidget;
-      QGridLayout *layout = new QGridLayout;
+    leftSide->setLayout(layout);
 
+    QVBoxLayout *top = new QVBoxLayout();
 
-      layout->addWidget(zoom,1,0);
-      layout->addWidget(listCells,2,0);
-      //layout->addWidget(listCells, 1, 0);
+    splitter->addWidget(leftSide);
+    splitter->addWidget(scroll);
+    top->addWidget(splitter);
 
-      leftSide->setLayout(layout);
+    setLayout(top);
+    //setupShapes();
+    //shapeSelected(0);
 
-      QVBoxLayout *top = new QVBoxLayout();
+    zoom->setMaximum(300);
+    zoom->setMinimum(1);
+    zoom->setValue(100);
+    zoom->setOrientation(Qt::Horizontal);
 
-      splitter->addWidget(leftSide);
-      splitter->addWidget(originalRenderArea);
-      top->addWidget(splitter);
+    connect(listCells,SIGNAL(currentRowChanged(int)),this,SLOT(shapeSelected(int)));
 
-      setLayout(top);
-      //setupShapes();
-      //shapeSelected(0);
+    connect(zoom,SIGNAL(valueChanged(int)),this,SLOT(zoomChanged(int)));
 
-      zoom->setMaximum(300);
-      zoom->setMinimum(1);
-      zoom->setValue(100);
-      zoom->setOrientation(Qt::Horizontal);
+    connect(listLayers,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(layerClicked(QModelIndex)));
 
-      connect(listCells,SIGNAL(currentRowChanged(int)),this,SLOT(shapeSelected(int)));
+    setWindowTitle(tr("Custom IC Creator"));
 
-          connect(zoom,SIGNAL(valueChanged(int)),this,SLOT(zoomChanged(int)));
+    shift_z= new QShortcut(QKeySequence(Qt::SHIFT + Qt::Key_Z),this);
+    ctrl_z= new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Z),this);
 
-      setWindowTitle(tr("Carsten's IC Creator"));
-}
+    connect(shift_z,SIGNAL(activated()),originalRenderArea,SLOT(zoomIn()));
+    connect(ctrl_z,SIGNAL(activated()),originalRenderArea,SLOT(zoomOut()));
 
-Window::~Window()
-{
+  }
 
-}
+  Window::~Window()
+  {
 
-void Window::loadDesign(Design *d ){
+  }
+
+  void Window::loadDesign(Design *d ){
     designs = d;
+
+    listCells->clear();
 
     foreach(Cell* c ,d->getAllCells()){
         listCells->addItem(c->name());
       }
- //   shapeComboBox->setCurrentIndex(0);
-}
 
-void Window::shapeSelected(int index)
-{
+
+
+    listLayers->clear();
+
+    Rules * rules = Rules::getRules();
+    QMap<QString,Layer *> layers = rules->layers();
+    QList<Layer *> layerList = layers.values();
+    qSort(layerList);
+    foreach(Layer * l, layerList){
+        if(l->material == Layer::metalres || l->material == Layer::marker || l->material == Layer::metalres){
+            l->visible = false;
+            continue;
+          }
+        QListWidgetItem * item = new QListWidgetItem(l->name);
+        item->setIcon(l->icon());
+
+        listLayers->addItem(item);
+      }
+  }
+
+  void Window::layerClicked(QModelIndex index){
+
+
+    QListWidgetItem * item = listLayers->item(index.row());
+    Layer *l = Rules::getRules()->getLayer(item->text());
+    l->visible = !l->visible;
+    if(l->visible){
+        item->setBackgroundColor(QColor("white"));
+      }else{
+        item->setBackgroundColor(QColor("gray"));
+      }
+    originalRenderArea->update();
+  }
+
+  void Window::shapeSelected(int index)
+  {
     Cell * c = designs->getAllCells().at(index);
     originalRenderArea->setCell(c);
     //originalRenderArea->set
 
- //   QPainterPath shap e = shapes[index];
-   // originalRenderArea->setShape(shape);
+    //   QPainterPath shap e = shapes[index];
+    // originalRenderArea->setShape(shape);
 
-}
+  }
 
-void Window::zoomChanged(int zoom){
-   Rules * rules = Rules::getRules();
-  originalRenderArea->setZoom(zoom/100.0/rules->gamma());
-}
+  void Window::zoomChanged(int zoom){
+    Rules * rules = Rules::getRules();
+    //originalRenderArea->setBa
+    originalRenderArea->setZoom(zoom/100.0/rules->gamma());
+  }
 
 }
 

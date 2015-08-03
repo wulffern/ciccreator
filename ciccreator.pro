@@ -35,23 +35,24 @@ INCLUDEPATH += src/ external/libgds_dist/
 HEADERS +=  src/core/rules.h  \
 src/core/rect.h \
 src/core/cell.h \
-src/core/design.h \ 
+    src/core/instance.h \
+    src/core/layoutcell.h \
 src/core/patterntile.h \
 src/core/patterntransistor.h \
 src/core/patterncapacitor.h \
+src/core/design.h \ 
 src/printer/designprinter.h \
 src/printer/svg.h \
 src/spice/spiceparser.h\
 src/spice/spiceobject.h \
 src/spice/subckt.h \
 src/spice/subcktinstance.h \
-    src/core/instance.h \
-    src/core/layoutcell.h \
     src/gui/window.h \
     src/gui/renderarea.h \
     src/core/consoleoutput.h \
     external/libgds_dist/libgds.h \
-    src/printer/gds.h
+    src/printer/gds.h \
+    src/core/layer.h
 
 
 SOURCES +=     src/core/rules.cpp src/core/rect.cpp src/core/cell.cpp  src/main.cpp \ 

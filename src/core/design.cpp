@@ -26,8 +26,9 @@ namespace cIcCore{
     qRegisterMetaType<cIcCore::LayoutCell>("cIcCore::LayoutCell");
     qRegisterMetaType<cIcCore::PatternTile>("cIcCore::PatternTile");
     qRegisterMetaType<cIcCore::PatternTransistor>("cIcCore::PatternTransistor");
-    qRegisterMetaType<cIcCore::PatternTransistor>("cIcCore::PatternCapacitor");
-    qRegisterMetaType<cIcCore::PatternTransistor>("cIcCore::PatternCapacitor");
+    qRegisterMetaType<cIcCore::PatternCapacitor>("cIcCore::PatternCapacitor");
+    qRegisterMetaType<cIcCore::LayoutCell>("cIcCore::LayoutCell");
+//    qRegisterMetaType<cIcCore::PatternTransistor>("cIcCore::PatternCapacitor");
     cellTranslator["Gds::GdsPatternTransistor"] = "cIcCore::PatternTransistor";
     cellTranslator["Gds::GdsPatternCapacitor"] = "cIcCore::PatternCapacitor";
     cellTranslator["Gds::GdsPatternCapacitorGnd"] = "cIcCore::PatternCapacitor";
@@ -79,6 +80,8 @@ namespace cIcCore{
   void Design::runIfObjectCanMethods(Cell * c, QJsonObject jobj, QString theme){
 
     const QMetaObject * mobj = c->metaObject();
+
+   // qWarning() << mobj->className();
 
     //Make a hash of the existing methods
     QHash<QString,QMetaMethod> methods;
@@ -197,7 +200,8 @@ namespace cIcCore{
     int id = QMetaType::type(cl.toUtf8().data());
     if(id != 0){
         void* vp = QMetaType::create(id);
-        Cell * c  = reinterpret_cast<Cell*>(vp);
+
+        Cell * c  = static_cast<Cell*>(vp);
         QString name = jobj["name"].toString();
         c->setName(name);
         console->increaseIndent();

@@ -33,6 +33,8 @@ namespace cIcCore{
        QJsonParseError err;
     QJsonDocument d = QJsonDocument::fromJson(val.toUtf8(),&err);
 
+
+
     if(QJsonParseError::NoError != err.error ){
         QString verr = val.mid(0,err.offset);
         int position = 0;
@@ -98,6 +100,12 @@ namespace cIcCore{
               }
             else if(mat == "metalres"){
                 ln->material = ln->metalres;
+              }
+            else if(mat == "marker"){
+                ln->material = Layer::marker;
+              }
+            else if(mat == "implant"){
+                ln->material = Layer::implant;
               }
             else {
                 ln->material = ln->other;

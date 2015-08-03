@@ -25,36 +25,11 @@
 #include <QFile>
 #include <QJsonDocument>
 #include <QDebug>
+#include "layer.h"
 
 namespace cIcCore{
 
-        class Layer
-        {
-          public:
-            QString name;
-            int number;
-            int datatype;
-            enum MATERIAL_TYPE {diffusion, poly, metal, cut, metalres,other};
-            MATERIAL_TYPE material;
-            QString previous;
-            QString next;
-            QString pin;
-            QString color;
-            bool nofill;
 
-            Layer(){
-              name = "M1";
-              number = 0;
-              material = diffusion;
-              previous = "CO";
-              next = "VIA1";
-              pin = "M1_pin";
-              color = "";
-              nofill = false;
-            }
-
-
-	};
 
 	class Rules: public QObject
 	{
@@ -62,14 +37,8 @@ namespace cIcCore{
 	    Q_OBJECT
 
 	public:
-	  Rules(QObject *parent = 0){
-	   // this->rules_ = 0;
-//		  rules_ = 0;
-	     // QHash<QString, QHash<QString,qreal> > myrules;
-	    //rules_ = myrules;
-//	    rules_ = new QString("test");
-		  //rules_(new  ());
-	  }
+	  Rules(QObject *parent = 0){}
+
 	  ~Rules(){}
 	  Rules(const Rules&){}
 
@@ -86,10 +55,11 @@ namespace cIcCore{
 	  int grid(){return grid_;}
 	  void setRules(QJsonObject job);
 	  Layer * getLayer(QString string);
+	  QMap<QString,Layer *> layers(){ return layers_;}
 
         private:
         static Rules * myRules_;
-          QMap<QString,Layer * > layers_;
+          QMap<QString,Layer *> layers_;
           QHash<QString, QHash<QString,qreal> >  rules_;
           int gamma_;
           int grid_;
