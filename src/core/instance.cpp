@@ -36,6 +36,10 @@ namespace cIcCore{
 
   }
 
+  void Instance::setSubcktInstance(cIcSpice::SubcktInstance *inst){
+    ckt_inst_ = inst;
+  }
+
   Rect Instance::calcBoundingRect(){
     Rect r = this->_cell->calcBoundingRect();
     //		r.moveTo(this->x1()+r.x1(), this->y1() + r.y1());
@@ -56,6 +60,10 @@ namespace cIcCore{
         c->updateBoundingRect();
       }
     return c;
+  }
+
+  QString Instance::toSpice(){
+    //    this->
   }
 
   //Cell * Instance::addInstance(QString cell){

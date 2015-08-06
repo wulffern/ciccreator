@@ -20,21 +20,19 @@
 
 namespace cIcCore{
 
-    //LayoutCell::LayoutCell()
-   // {
+    LayoutCell::LayoutCell()
+    {
 
-    //}
+    }
 
-    //LayoutCell::LayoutCell(const LayoutCell&){
+    LayoutCell::LayoutCell(const LayoutCell&){
 
-    //}
+    }
 
-    //LayoutCell::~LayoutCell()
-    //{
+    LayoutCell::~LayoutCell()
+    {
 
-    //}
-
-
+    }
 
     void LayoutCell::setYoffsetHalf(QJsonValue obj){
           useHalfHeight = true;
@@ -55,7 +53,8 @@ namespace cIcCore{
             }
             prev_group = group;
 
-            Cell * inst = Instance::getInstance(ckt_inst->subcktName());
+            Instance * inst = Instance::getInstance(ckt_inst->subcktName());
+            inst->setSubcktInstance(ckt_inst);
 
             this->add(inst);
             inst->moveTo(x,y);

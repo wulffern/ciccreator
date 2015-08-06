@@ -20,7 +20,7 @@
 
 namespace cIcCore {
 
-  PatternTile::PatternTile()
+  PatternTile::PatternTile():Cell()
   {
     ymax_ = 0;
     xmax_ = 0;
@@ -32,9 +32,6 @@ namespace cIcCore {
     widthoffset_ = 0;
     heightoffset_ = 0;
     mirrorPatternString_ = 0;
-
-
-
   }
 
   Rect PatternTile::calcBoundingRect(){
@@ -74,16 +71,16 @@ namespace cIcCore {
     return qh;
   }
 
-  void PatternTile::onFillCoordinate(QChar c, QString layer, int x, int y, QHash<QString,QVariant> data){
 
-  }
-
-  void PatternTile::endFillCoordinate(QHash<QString,QVariant> data){
-  }
 
 
 
   void PatternTile::fillCoordinatesFromString(QJsonArray ar){
+
+    //Load rules
+    this->xspace_ = this->rules->get("ROUTE","horizontalgrid");
+    this->yspace_ = this->rules->get("ROUTE","verticalgrid");
+
 
     QHash<QString,QVariant> data = this->initFillCoordinates();
 
@@ -107,7 +104,6 @@ namespace cIcCore {
                   }
               }
           }
-
 
         if(this->mirrorPatternString()){
             QString tmp;
@@ -146,9 +142,7 @@ namespace cIcCore {
     Rect * rect = new Rect();
     rect->setLayer(layer);
 
-    //Load rules
-    this->xspace_ = this->rules->get("ROUTE","horizontalgrid");
-    this->yspace_ = this->rules->get("ROUTE","verticalgrid");
+
 
     int xs = translateX(x);
     int ys = translateY(y);
@@ -192,10 +186,10 @@ namespace cIcCore {
   void PatternTile::paint(){
 
 
-
     if( this->minPolyLength_ == 0 ){
         this->minPolyLength_ = this->rules->get("PO","mingatelength");
       }
+
 
     int minpoly = this->minPolyLength();
     currentHeight_ = yspace_;
@@ -238,8 +232,7 @@ namespace cIcCore {
                       }
                   case 'c':
                     //TODO: Get next layer based on current
-                    //QString lay = this->rules->get
-                    lay = "CO";
+                    lay = this->rules->getNextLayer(layer);
                     cr = new Rect();
                     cr->setLayer(lay);
                     cw = this->rules->get(lay,"width");
@@ -260,8 +253,7 @@ namespace cIcCore {
                       }
                   case 'k':
                     //TODO: Get next layer based on current
-                    //QString lay = this->rules->get
-                    lay = "CO";
+                     lay = this->rules->getNextLayer(layer);
                     cr = new Rect();
                     cr->setLayer(lay);
                     cw = this->rules->get(lay,"width");
@@ -460,7 +452,6 @@ namespace cIcCore {
                 r->adjust(enc);
                 Rect * r_enc = new Rect(r);
                 r_enc->setLayer(lay);
-                qWarning() << r_enc->toString();
                 this->add(r_enc);
               }
 

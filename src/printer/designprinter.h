@@ -54,12 +54,6 @@ namespace cIcPrinter{
         }
 
 
-        virtual void add(QString str){
-            QTextStream s(&file);
-            s << str;
-        }
-
-
         virtual void add(QString & str){
             QTextStream s(&file);
             s << str;
@@ -84,6 +78,8 @@ namespace cIcPrinter{
 
         virtual void startCell(Cell * cell);
         virtual void endCell() = 0;
+        virtual void startLib(QString name);
+        virtual void endLib();
 //      virtual void endFile()  = 0;
         //     virtual void printInstance(Instance & inst)  = 0;
         //     virtual void printInitLib(string name) = 0;

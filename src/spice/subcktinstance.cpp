@@ -37,6 +37,8 @@ namespace cIcSpice{
 
     }
 
+
+
     void SubcktInstance::parse(QString buffer,int line_number){
 
         this->setLineNumber(line_number);
@@ -68,6 +70,7 @@ namespace cIcSpice{
           this->_group_name = m_group.captured(1);
           this->_group_tag = m_group.captured(2);
           }
+
         //Last element should be subckt name
         this->_subckt_name = nodes.last();
         nodes.removeLast();

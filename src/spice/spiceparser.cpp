@@ -87,9 +87,6 @@ namespace cIcSpice{
 			      ckt->parse(subckt_buffer,line_number);
 			      this->_subckt[ckt->name()] = ckt;
 			    }
-
-
-
 		       }
 		       file.close();
 

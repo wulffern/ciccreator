@@ -25,52 +25,53 @@ namespace cIcPrinter{
 
     void Svg::printReference(Cell * o){
 
+        QTextStream ts(&file);
 
-        this->add("<image x=\"");
-        this->add(o->x1());
-        this->add("\" y=\"") ;
-        this->add(o->y1());
-        this->add("\" width=\"");
-        this->add(o->width())  ;
-        this->add("\" height=\"");
-        this->add(o->height());
-        this->add("\" xlink:href=\"") ;
-        this->add(o->name());
-        this->add( ".svg\" />");
+        ts << "<image x=\"";
+        ts << o->x1();
+        ts << "\" y=\"";
+        ts << o->y1();
+        ts << "\" width=\"";
+        ts << o->width()  ;
+        ts << "\" height=\"";
+        ts << o->height();
+        ts << "\" xlink:href=\"" ;
+        ts << o->name();
+        ts <<  ".svg\" />";
 
     }
 
     void Svg::printRect(Rect * o){
-
-        this->add("<rect  x=\"");
-        this->add(o->x1());
-        this->add("\" y=\"");
-        this->add(o->y1());
-        this->add("\" width=\"");
-        this->add(o->width());
-        this->add("\" height=\"");
-        this->add(o->height());
+        QTextStream ts(&file);
+        ts << "<rect  x=\"";
+        ts << o->x1();
+        ts << "\" y=\"";
+        ts << o->y1();
+        ts << "\" width=\"";
+        ts << o->width();
+        ts << "\" height=\"";
+        ts << o->height();
 
         if(o->layer() == "PO"){
-            this->add("\" style=\"fill:red;stroke:red;opacity:0.5\"/>");
+            ts << "\" style=\"fill:red;stroke:red;opacity:0.5\"/>";
         }else if(o->layer() == "M1"){
-            this->add("\" style=\"fill:blue;stroke:blue;opacity:0.5\"/>");
+            ts << "\" style=\"fill:blue;stroke:blue;opacity:0.5\"/>";
         }else if(o->layer() == "M2"){
-            this->add("\" style=\"fill:goldenrod;stroke:goldenrod;opacity:0.5\"/>");
+            ts << "\" style=\"fill:goldenrod;stroke:goldenrod;opacity:0.5\"/>";
         }else if(o->layer() == "M3"){
-            this->add("\" style=\"fill:aqua;stroke:aqua;opacity:0.5\"/>");
+            ts << "\" style=\"fill:aqua;stroke:aqua;opacity:0.5\"/>";
         }else if(o->layer() == "M4"){
-            this->add("\" style=\"fill:darkgreen;stroke:darkgreen;opacity:0.5\"/>");
+            ts << "\" style=\"fill:darkgreen;stroke:darkgreen;opacity:0.5\"/>";
         }else if(o->layer() == "M5"){
-            this->add("\" style=\"fill:brown;stroke:brown;opacity:0.5\"/>");
+            ts << "\" style=\"fill:brown;stroke:brown;opacity:0.5\"/>";
         }else if(o->layer() == "M6"){
-            this->add("\" style=\"fill:darkviolet;stroke:darkviolet;opacity:0.5\"/>");
+            ts << "\" style=\"fill:darkviolet;stroke:darkviolet;opacity:0.5\"/>";
         }else if(o->layer() == "OD"){
-            this->add("\" style=\"fill:green;stroke:green;opacity:0.5\"/>");
+            ts << "\" style=\"fill:green;stroke:green;opacity:0.5\"/>";
         }else if(o->layer() == "CO"){
-            this->add("\" style=\"fill:yellow;stroke:yellow;opacity:0.9\"/>");
+            ts << "\" style=\"fill:yellow;stroke:yellow;opacity:0.9\"/>";
         }else{
-            this->add("\" style=\"fill:grey;stroke:grey;opacity:0.1\"/>");
+            ts << "\" style=\"fill:grey;stroke:grey;opacity:0.1\"/>";
         }
 
 
@@ -82,13 +83,14 @@ namespace cIcPrinter{
         QString file = cell->name();
         file.append(".svg");
         this->openFile(file);
-        this->add("<?xml version=\"1.0\" standalone=\"no\"?>\n"
+        QTextStream ts(&file);
+        ts << "<?xml version=\"1.0\" standalone=\"no\"?>\n"
                   "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \n"
                   "\"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n"
-                  "<svg  width=\"1000\" height=\"1000\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"1.1\">\n");
-        this->add("<g id=\"");
-        this->add(cell->name());
-        this->add("\">\n");
+                  "<svg  width=\"1000\" height=\"1000\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"1.1\">\n";
+        ts << "<g id=\"";
+        ts << cell->name();
+        ts << "\">\n";
 
     }
 
@@ -96,8 +98,9 @@ namespace cIcPrinter{
 
 
     void Svg::endCell(){
-        this->add("</g>\n");
-        this->add("</svg>\n");
+      QTextStream ts(&file);
+        ts << "</g>\n";
+        ts << "</svg>\n";
         this->closeFile();
 
     }

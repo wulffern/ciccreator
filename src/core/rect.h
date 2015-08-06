@@ -94,6 +94,8 @@ namespace cIcCore{
 
         QString toString();
 
+
+
     protected:
         Rules* rules;
 

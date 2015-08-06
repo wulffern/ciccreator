@@ -81,7 +81,6 @@ namespace cIcCore{
 
     const QMetaObject * mobj = c->metaObject();
 
-   // qWarning() << mobj->className();
 
     //Make a hash of the existing methods
     QHash<QString,QMetaMethod> methods;
@@ -105,20 +104,21 @@ namespace cIcCore{
     foreach( QString key, jobj.keys()){
         if(re.match(key).hasMatch()){ continue;}
 
+        QString method_key = key;
         if(nameTranslator.contains(key)){
-            key = nameTranslator[key];
+            method_key = nameTranslator[key];
           }
 
-        if(methods.contains(key)){
-            QMetaMethod m = methods[key];
+        if(methods.contains(method_key)){
+            QMetaMethod m = methods[method_key];
             QJsonArray arg = jobj[key].toArray();
             m.invoke(c,Qt::DirectConnection, Q_ARG(QJsonArray, arg));
             console->commentInvokeMethod(c_name,theme, m.name());
-          }else if(key.endsWith("s")  && methods.contains(key.left(key.length()-1))){
+          }else if(method_key.endsWith("s")  && methods.contains(method_key.left(key.length()-1))){
 
-            console->commentInvokeMethod(c_name,theme, key);
+            console->commentInvokeMethod(c_name,theme, method_key);
             //Iterate over array if function exists without the "s" at the end
-            QMetaMethod m = methods[key.left(key.length()-1)];
+            QMetaMethod m = methods[method_key.left(key.length()-1)];
             QJsonArray arg = jobj[key].toArray();
             foreach(QJsonValue v, arg){
                 if(v.isArray()){
@@ -130,8 +130,8 @@ namespace cIcCore{
                   }
               }
 
-          }else if(properties.contains(key)){
-            QMetaProperty p = properties[key];
+          }else if(properties.contains(method_key)){
+            QMetaProperty p = properties[method_key];
             QJsonValue v = jobj[key];
             p.write(c,v.toVariant());
             console->commentSetProperty(c_name,theme, p.name());
@@ -385,7 +385,6 @@ namespace cIcCore{
           }
 
         qWarning() << err.errorString() << " at line " << line_count ;
-
       }
     QJsonObject obj = d.object();
     QJsonValue cells = obj["cells"];

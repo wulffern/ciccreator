@@ -57,6 +57,11 @@ namespace cIcCore{
 
   }
 
+  double Rules::toMicron(int val){
+      double d = ((double)val)/(1.0e4);
+      return d;
+  }
+
   Layer * Rules::getLayer(QString name){
 
 
@@ -69,6 +74,15 @@ namespace cIcCore{
       }
   }
 
+
+  QString Rules::getNextLayer(QString lay){
+    if(layers_.contains(lay)){
+          return layers_[lay]->next;
+      }else{
+        qWarning() << "Error: Could not find next layer for " << lay;
+      }
+    return lay;
+  }
 
   void Rules::setRules(QJsonObject job){
 

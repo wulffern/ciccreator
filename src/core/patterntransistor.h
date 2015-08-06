@@ -22,26 +22,30 @@
 #include <QObject>
 #include "cell.h"
 #include "patterntile.h"
+#include "spice/mosfet.h"
 
 namespace cIcCore{
+  using namespace cIcSpice;
 class PatternTransistor : public PatternTile
 {
   Q_OBJECT
   Q_PROPERTY(QString mosType READ mosType WRITE setMosType)
-  //Make the object, let's see how that works in Qt
+
 
 public:
     PatternTransistor();
     ~PatternTransistor();
 
+    QString mosType(){return mos_->deviceName();}
+    void setMosType(QString mosType){mos_->setDeviceName( mosType); }
 
-    QString mosType(){return mosType_;}
-    void setMosType(QString mosType){mosType_ = mosType;}
-
+    virtual QHash<QString,QVariant>  initFillCoordinates();
+    virtual void onFillCoordinate(QChar c, QString layer, int x, int y, QHash<QString,QVariant> &data);
+    virtual void endFillCoordinate(QHash<QString, QVariant> &data);
 
 private:
-    QString mosType_;
 
+    Mosfet * mos_;
 };
 }
 

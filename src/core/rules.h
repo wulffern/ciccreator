@@ -37,7 +37,7 @@ namespace cIcCore{
 	    Q_OBJECT
 
 	public:
-	  Rules(QObject *parent = 0){}
+	  Rules(){}
 
 	  ~Rules(){}
 	  Rules(const Rules&){}
@@ -56,6 +56,8 @@ namespace cIcCore{
 	  void setRules(QJsonObject job);
 	  Layer * getLayer(QString string);
 	  QMap<QString,Layer *> layers(){ return layers_;}
+	  QString getNextLayer(QString lay);
+	  double toMicron(int val);
 
         private:
         static Rules * myRules_;

@@ -58,6 +58,8 @@ namespace cIcCore{
 
         QList<Rect*> children(){return _children;}
 
+        virtual cIcSpice::SpiceObject * spiceObject(){return spiceObject_;}
+        virtual void setSpiceObject(cIcSpice::SpiceObject* si){spiceObject_ =  si;}
         virtual void place();
         virtual void route();
         virtual void paint();
@@ -94,18 +96,19 @@ namespace cIcCore{
             return c;
         }
 
+
     protected:
         static QMap<QString,Cell*> _allcells;
         cIcSpice::Subckt * _subckt;
         Rect* getBottomLeftRect();
         Rect* getTopLeftRect();
-
-
+        cIcSpice::SpiceObject * spiceObject_;
 
     private:
         QList<Rect*> _children;
         QPainterPath path;
         QString _name;
+
         bool _has_pr;
 //        bool _is_empty;
 

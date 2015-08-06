@@ -69,9 +69,12 @@ namespace cIcCore{
     Q_INVOKABLE void addEnclosureByRectangle(QJsonArray ar);
     Q_INVOKABLE void addEnclosuresByRectangle(QJsonArray ar);
 
-    QHash<QString,QVariant> initFillCoordinates();
-    void onFillCoordinate(QChar c, QString layer, int x, int y, QHash<QString,QVariant> data);
-    void endFillCoordinate(QHash<QString,QVariant> data);
+    virtual QHash<QString,QVariant> initFillCoordinates();
+    virtual void onFillCoordinate(QChar c, QString layer, int x, int y, QHash<QString,QVariant> &data){
+    }
+
+    virtual void endFillCoordinate(QHash<QString,QVariant> &data){
+    }
 
     void paint();
 
@@ -95,7 +98,11 @@ namespace cIcCore{
     int mirrorPatternString(){return mirrorPatternString_;}
     int setMirrorPatternString(int mirrorPatternString){mirrorPatternString_ = mirrorPatternString; return mirrorPatternString_;}
 
-  private:
+
+
+
+  protected:
+     QHash<QString,QHash<int,QHash<int,QChar> > > rectangle_strings_;
     int mirrorPatternString_;
     int minPolyLength_;
     int currentHeight_;
@@ -112,7 +119,7 @@ namespace cIcCore{
     qreal heightoffset_;
     QList<CopyColumn> copyColumn_;
     QHash<QString,QHash<int,QHash<int,Rect*> > > rectangles_;
-        QHash<QString,QHash<int,QHash<int,QChar> > > rectangle_strings_;
+
     QList<Rect*> findPatternRects(QString layer);
      QList<Rect*> findPatternStrings(QString layer);
       Rect * makeRect(QString layer,QChar c,int x, int y);

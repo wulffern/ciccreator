@@ -20,14 +20,77 @@
 #include "core/patterntransistor.h"
 
 namespace cIcCore{
-  PatternTransistor::PatternTransistor()
+  PatternTransistor::PatternTransistor():PatternTile()
   {
-
+     mos_ = new Mosfet();
+     this->spiceObject_ = mos_;
   }
 
   PatternTransistor::~PatternTransistor()
   {
 
+  }
+
+  QHash<QString,QVariant> PatternTransistor::initFillCoordinates(){
+      QHash<QString,QVariant> data;
+      data["isTransistor"] = false;
+      data["wmin"] = std::numeric_limits<int>::max();
+      data["wmax"] = -std::numeric_limits<int>::max();
+      data["pofinger"] = 0;
+      data["nf"] = 0;
+      data["useMinLength"] = false;
+      return data;
+  }
+
+  void PatternTransistor::onFillCoordinate(QChar c, QString layer, int x, int y, QHash<QString,QVariant> &data){
+
+    if(layer == "PO" && rectangle_strings_.contains("OD") && rectangle_strings_["OD"].contains(x)
+       && rectangle_strings_["OD"][x].contains(y) ){
+
+        data["isTransistor"] = true;
+
+
+        int pofinger = data["pofinger"].toInt();
+        if(pofinger != y){
+            data["nf"] = data["nf"].toInt() +  1;
+          }
+        data["pofinger"] = y;
+
+        if(x < data["wmin"].toInt()){
+           data["wmin"] = x;
+          }
+
+        if(x > data["wmax"].toInt()){
+           data["wmax"] = x;
+          }
+
+
+      if(c == 'm'){
+           data["useMinLength"] = true;
+        }
+
+      }
+  }
+
+
+  void PatternTransistor::endFillCoordinate(QHash<QString,QVariant> &data){
+    if(data["isTransistor"].toBool()){
+
+        int width = (data["wmax"].toInt() - data["wmin"].toInt() + 1)*this->xspace_;
+        mos_->width = this->rules->toMicron(width);
+        if(data["useMinLength"].toBool()){
+            int minlength = this->minPolyLength_;
+            if(minlength == 0){
+              minlength  = this->rules->get("PO","mingatelength");
+              }
+            mos_->length = this->rules->toMicron(minlength);
+          }else{
+            mos_->length = this->rules->toMicron(rules->get("PO","mingatelength"));
+          }
+        mos_->numberOfFingers = data["nf"].toInt();
+        mos_->drainWidth = this->rules->toMicron(this->yspace_);
+        mos_->sourceWidth = this->rules->toMicron(this->yspace_);
+      }
   }
 }
 

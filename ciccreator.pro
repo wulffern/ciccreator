@@ -39,12 +39,13 @@ src/core/cell.h \
     src/core/layoutcell.h \
 src/core/patterntile.h \
 src/core/patterntransistor.h \
+src/spice/spiceobject.h \
+ src/spice/mosfet.h \
 src/core/patterncapacitor.h \
 src/core/design.h \ 
 src/printer/designprinter.h \
 src/printer/svg.h \
 src/spice/spiceparser.h\
-src/spice/spiceobject.h \
 src/spice/subckt.h \
 src/spice/subcktinstance.h \
     src/gui/window.h \
@@ -52,8 +53,8 @@ src/spice/subcktinstance.h \
     src/core/consoleoutput.h \
     external/libgds_dist/libgds.h \
     src/printer/gds.h \
-    src/core/layer.h
-
+    src/core/layer.h \
+    src/printer/spice.h \
 
 SOURCES +=     src/core/rules.cpp src/core/rect.cpp src/core/cell.cpp  src/main.cpp \ 
     src/core/patterntile.cpp \
@@ -72,7 +73,8 @@ SOURCES +=     src/core/rules.cpp src/core/rect.cpp src/core/cell.cpp  src/main.
     src/gui/renderarea.cpp \
     src/core/consoleoutput.cpp \
     external/libgds_dist/libgds.c \
-    src/printer/gds.cpp
+    src/printer/gds.cpp \
+    src/printer/spice.cpp
 
 FORMS += \
     src/gui/window.ui

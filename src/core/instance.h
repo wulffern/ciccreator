@@ -24,24 +24,28 @@
 
 namespace cIcCore{
 
-    class Instance : public Cell
-    {
+  class Instance : public Cell
+  {
 
-        Q_OBJECT
+    Q_OBJECT
 
-    public:
-        Instance();
-        Instance(const Instance&);
-        ~Instance();
-        Cell * cell(){return _cell;}
-        virtual Rect calcBoundingRect();
-        // Cell * addInstance(QString cell);
-        static Instance * getInstance(QString cell);
+  public:
+    Instance();
+    Instance(const Instance&);
+    ~Instance();
+    Cell * cell(){return _cell;}
+    virtual Rect calcBoundingRect();
+    // Cell * addInstance(QString cell);
+    static Instance * getInstance(QString cell);
+    QString toSpice();
+    cIcSpice::SubcktInstance *subcktInstance(){return ckt_inst_;}
+    void setSubcktInstance(cIcSpice::SubcktInstance *inst);
 
-    private:
-        Cell * _cell;
+  private:
+    Cell * _cell;
+    cIcSpice::SubcktInstance * ckt_inst_;
 
-    };
+  };
 
 
 

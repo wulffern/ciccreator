@@ -32,12 +32,11 @@ namespace cIcCore{
     QMap<QString,Cell*> Cell::_allcells;
 
     Cell::Cell(): Rect(){
-
+      spiceObject_ = 0;
     }
 
     Cell::Cell(const Cell&){
-
-
+spiceObject_ = 0;
     }
 
     Cell::~Cell() {

@@ -13,9 +13,9 @@ namespace cIcCore{
     Q_OBJECT
 
   public:
-    LayoutCell(){  useHalfHeight = false;}
-    LayoutCell(const LayoutCell&){}
-    ~LayoutCell() {}
+    LayoutCell();
+    LayoutCell(const LayoutCell&);
+    ~LayoutCell() ;
 
     Q_INVOKABLE void setYoffsetHalf(QJsonValue obj);
 

@@ -22,19 +22,20 @@
 #define CIC_SPICE_SPICEOBJECT_H
 
 #include <QObject>
+#include <QtextStream>
 #include <QRegularExpression>
 
 namespace cIcSpice{
 
 	class SpiceObject: public QObject
 	{
+
+
 		Q_OBJECT
 		Q_PROPERTY(QString name READ name WRITE setName)
 		Q_PROPERTY(QStringList spiceStr READ spiceStr WRITE setSpiceStr)
 		Q_PROPERTY(QStringList nodes READ nodes WRITE setNodes)
 		Q_PROPERTY(int lineNumber READ lineNumber WRITE setLineNumber)
-
-
 
 	public:
 		SpiceObject();
@@ -54,9 +55,21 @@ namespace cIcSpice{
 		  return _properties;
 		}
 
+
+		QString spiceType(){return spiceType_;}
+		QString deviceName(){return deviceName_;}
+		void setDeviceName(QString name){deviceName_ = name;}
+
+
+		virtual QString toSpice( QString instance, QStringList nodes){ QString s; QTextStream ts(&s); ts << instance << " " << nodes.join(' ') ; return s;}
+
+
 		int lineNumber(){return _line_number;}
 		int setLineNumber(int val){ _line_number = val; return _line_number;}
 
+	protected:
+		QString spiceType_;
+		QString deviceName_;
 
 	private:
 		QString _name;
@@ -66,11 +79,15 @@ namespace cIcSpice{
 		QList<SpiceObject*> _children;
 		int _line_number;
 
+
+
 		
 	};
 
 
 }
+
+Q_DECLARE_METATYPE(cIcSpice::SpiceObject)
 
 
 #endif

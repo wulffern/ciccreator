@@ -22,6 +22,7 @@
 #include "core/rules.h"
 #include "printer/svg.h"
 #include "printer/gds.h"
+#include "printer/spice.h"
 #include "gui/window.h"
 #include "core/consoleoutput.h"
 #include <iostream>
@@ -43,8 +44,11 @@ int main(int argc, char *argv[])
 		cIcCore::Design * d = new cIcCore::Design();
 		d->read(file);
 
-		cIcPrinter::Svg * pr = new cIcPrinter::Svg("test");
-		pr->print(d);
+//		cIcPrinter::Svg * pr = new cIcPrinter::Svg("test");
+//		pr->print(d);
+
+		cIcPrinter::Spice * spice = new cIcPrinter::Spice("test");
+		spice->print(d);
 
 
 		cIcCore::ConsoleOutput console;

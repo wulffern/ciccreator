@@ -29,25 +29,26 @@
 
 namespace cIcSpice{
 
-	class Subckt: public SpiceObject
-	{
-		Q_OBJECT
-		Q_PROPERTY(QString name READ name WRITE setName)
+  class Subckt: public SpiceObject
+  {
+    Q_OBJECT
+    Q_PROPERTY(QString name READ name WRITE setName)
 
-	public:
-		Subckt();
-		Subckt(QList<QString> buffer);
-		Subckt(const Subckt&);
-		~Subckt();
-
-		 void parse(QList<QString> buffer, int line);
-		 QMap<QString,SubcktInstance*> instances(){return _instances;}
+  public:
+    Subckt();
+    Subckt(QList<QString> buffer);
+    Subckt(const Subckt&);
+    ~Subckt();
 
 
-	private:
+    void parse(QList<QString> buffer, int line);
+    QMap<QString,SubcktInstance*> instances(){return _instances;}
 
-		QMap<QString,SubcktInstance*> _instances;
-	};
+
+  private:
+
+    QMap<QString,SubcktInstance*> _instances;
+  };
 
 
 }
