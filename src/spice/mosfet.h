@@ -2,6 +2,7 @@
 #define CIC_SPICE_MOSFET
 
 #include <QString>
+#include "core/rules.h"
 #include "spice/spiceobject.h"
 
 namespace cIcSpice{
@@ -23,6 +24,9 @@ namespace cIcSpice{
       multiplier = 1;
       this->deviceName_ = "nch";
       this->spiceType_ = "M";
+      QStringList n;
+      n << "D" << "G" << "S" << "B";
+      this->setNodes(n);
     }
 
     Mosfet(const Mosfet& mos){
@@ -37,7 +41,16 @@ namespace cIcSpice{
     virtual QString toSpice( QString instance, QStringList nodes){
       QString s;
       QTextStream ts(&s);
-      ts << "M" << instance << " " << nodes.join(' ') <<  " " << this->deviceName_ << " w=" << width << " l=" << length << " nf=" << numberOfFingers << " M=" << multiplier;
+
+      cIcCore::Rules * rules = cIcCore::Rules::getRules();
+      cIcCore::Device * mtype = rules->getDevice(this->deviceName());
+
+      if(mtype){
+            ts << "M" << instance << " " << nodes.join(' ') <<  " " << mtype->name << " w=" << width << " l=" << length << " nf=" << numberOfFingers << " M=" << multiplier;
+        }else{
+                ts << "M" << instance << " " << nodes.join(' ') <<  " " << this->deviceName() << " w=" << width << " l=" << length << " nf=" << numberOfFingers << " M=" << multiplier;
+        }
+
     return s;
     }
 

@@ -48,13 +48,19 @@ namespace cIcCore{
 
         qWarning() << "Error[" << filename << "]:" <<  err.errorString() << " at line " << line_count ;
         throw "Die";
-
       }
 
     QJsonObject obj = d.object();
     Rules::myRules_ = new Rules();
     Rules::myRules_->setRules(obj);
 
+  }
+
+  Device * Rules::getDevice(QString dev){
+    if(devices_.contains(dev)){
+        return devices_[dev];
+      }
+    return 0;
   }
 
   double Rules::toMicron(int val){
@@ -89,6 +95,17 @@ namespace cIcCore{
     QJsonObject tech = job["technology"].toObject();
     gamma_ = tech["gamma"].toInt();
     grid_ = tech["grid"].toInt();
+    QJsonObject devices = tech["devices"].toObject();
+    foreach(QString key, devices.keys()){
+        devices_[key] = new Device();
+        QJsonObject dev = devices[key].toObject();
+        devices_[key]->name = dev["name"].toString();
+        QJsonArray ar = dev["ports"].toArray();
+        foreach(QJsonValue p, ar){
+            devices_[key]->ports.append(p.toString());
+          }
+
+      }
 
     QJsonObject layers = job["layers"].toObject();
     foreach(QString layer, layers.keys()){

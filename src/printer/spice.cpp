@@ -21,14 +21,25 @@ namespace cIcPrinter{
     if(!ckt){return;}
 
     //I think these are devices
-    if(ckt->name() == ""){return;}
-
+    //    if(ckt->name() == ""){return;}
     QTextStream ts(&file);
     ts << "\n";
     ts << "*-------------------------------------------------------------\n";
-    ts << ".SUBCKT " << ckt->name() << " " << ckt->nodes().join(' ')  << "\n";
+    ts << "* " << cell->name() << " (" << cell->metaObject()->className() <<")\n";
     ts << "*-------------------------------------------------------------\n";
+    if(ckt->name() != ""){
+        ts << ".SUBCKT " << ckt->name() << " " << ckt->nodes().join(' ')  << "\n";
+      }else{
+        SpiceObject * so = cell->spiceObject();
+        if(so){
 
+            ts << ".SUBCKT " << cell->name() << " " << so->nodes().join(' ')  << "\n";
+            ts << so->toSpice("1", so->nodes()) << "\n";
+          }else{
+            ts << ".SUBCKT " << cell->name() << "\n";
+
+          }
+      }
     this->subcktInPrint = true;
 
   }
@@ -54,14 +65,13 @@ namespace cIcPrinter{
 
     if(!cell){return;}
 
-    SpiceObject * so = cell->spiceObject();
+//    SpiceObject * so = cell->spiceObject();
 
     QTextStream ts(&file);
 
-    if(so && si){
-
-        ts << so->toSpice(si->name(), si->nodes()) << "\n";
-      }else{
+    if(si){
+//        ts << so->toSpice(si->name(), si->nodes()) << "\n";
+//      }else{
         ts << si->name() << " " << si->nodes().join(' ') << " " << si->subcktName() << "\n";
 
       }

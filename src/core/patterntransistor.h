@@ -44,7 +44,6 @@ public:
     virtual void endFillCoordinate(QHash<QString, QVariant> &data);
 
 private:
-
     Mosfet * mos_;
 };
 }

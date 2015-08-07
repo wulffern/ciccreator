@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QFile>
 #include <QJsonDocument>
 #include <QDebug>
@@ -29,7 +30,12 @@
 
 namespace cIcCore{
 
+	class Device{
+	public:
+	  QString name;
+	  QStringList ports;
 
+	};
 
 	class Rules: public QObject
 	{
@@ -46,6 +52,7 @@ namespace cIcCore{
 
 	  static Rules* getRules(){return myRules_;}
 
+	  Device * getDevice(QString dev);
 	  qreal get(QString layer, QString rule);
 	  bool hasRule(QString layer, QString rule);
 	  QString layerToColor(QString	name);
@@ -63,6 +70,7 @@ namespace cIcCore{
         static Rules * myRules_;
           QMap<QString,Layer *> layers_;
           QHash<QString, QHash<QString,qreal> >  rules_;
+          QMap<QString,Device* > devices_;
           int gamma_;
           int grid_;
 
