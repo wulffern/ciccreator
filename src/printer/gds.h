@@ -49,6 +49,8 @@ namespace cIcPrinter{
         virtual void startLib(QString name) ;
         virtual void endLib() ;
 //      virtual void printText(Text & text);
+
+        //TODO: add port printing
 //         virtual void printPin(Pin & pin);
         virtual void printRect(Rect * rect);
         virtual void printReference(Cell * o);

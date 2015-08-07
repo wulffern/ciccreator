@@ -142,7 +142,7 @@ namespace cIcCore {
     Rect * rect = new Rect();
     rect->setLayer(layer);
 
-
+  //TODO: Add port generation
 
     int xs = translateX(x);
     int ys = translateY(y);
