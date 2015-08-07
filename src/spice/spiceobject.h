@@ -22,7 +22,7 @@
 #define CIC_SPICE_SPICEOBJECT_H
 
 #include <QObject>
-#include <QtextStream>
+#include <QTextStream>
 #include <QRegularExpression>
 
 namespace cIcSpice{

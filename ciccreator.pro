@@ -56,7 +56,7 @@ src/spice/subcktinstance.h \
     src/core/layer.h \
     src/printer/spice.h \
 
-SOURCES +=     src/core/rules.cpp src/core/rect.cpp src/core/cell.cpp  src/main.cpp \ 
+SOURCES +=     src/core/rules.cpp src/core/rect.cpp src/core/cell.cpp   \ 
     src/core/patterntile.cpp \
     src/core/patterntransistor.cpp \
     src/core/patterncapacitor.cpp \
@@ -74,8 +74,8 @@ SOURCES +=     src/core/rules.cpp src/core/rect.cpp src/core/cell.cpp  src/main.
     src/core/consoleoutput.cpp \
     external/libgds_dist/libgds.c \
     src/printer/gds.cpp \
-    src/printer/spice.cpp
+    src/printer/spice.cpp\
+    src/main.cpp
 
-FORMS += \
-    src/gui/window.ui
+
 

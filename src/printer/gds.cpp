@@ -44,6 +44,7 @@ namespace cIcPrinter{
 
     void Gds::printReference(Cell * o){
 
+		return;
         if(this->isEmpty(o)){return ;}
 
 		char * name = this->toChar(o->name());
