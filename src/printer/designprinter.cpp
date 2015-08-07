@@ -94,7 +94,6 @@ namespace cIcPrinter{
   void DesignPrinter::print(Design * d ){
 
   this->startLib(this->filename);
-
     QList<QString> cells = d->cellNames();
     for(int i=0;i<cells.count();i++){
         Cell * c = Cell::getCell(cells[i]);
@@ -102,7 +101,6 @@ namespace cIcPrinter{
             this->printCell(c);
           }
       }
-
     this->endLib();
 
   }

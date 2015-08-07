@@ -36,6 +36,13 @@ int main(int argc, char *argv[])
 
 		QString file = argv[1];
 		QString rules = argv[2];
+		QString library = argv[3];
+
+		if(library == ""){
+		    QRegularExpression re("/?([^\/]+)\.json");
+		    QRegularExpressionMatch m = re.match(file);
+		    library = m.captured(1);
+		  }
 
 		//Load rules
 		cIcCore::Rules::loadRules(rules);
@@ -47,16 +54,16 @@ int main(int argc, char *argv[])
 //		cIcPrinter::Svg * pr = new cIcPrinter::Svg("test");
 //		pr->print(d);
 
-		cIcPrinter::Spice * spice = new cIcPrinter::Spice("test");
+		cIcPrinter::Spice * spice = new cIcPrinter::Spice(library);
 		spice->print(d);
 
 
 		cIcCore::ConsoleOutput console;
 		console.comment("Writing GDS");
-		cIcPrinter::Gds * gd = new cIcPrinter::Gds("TEST");
+		cIcPrinter::Gds * gd = new cIcPrinter::Gds(library);
 		gd->print(d);
 
-	if(argc == 4){
+	if(argc == 5){
 		QApplication app(argc, argv);
 		cIcGui::Window window;
 		window.loadDesign(d);

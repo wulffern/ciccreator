@@ -35,15 +35,11 @@ namespace cIcPrinter{
 
     public:
 
-        Gds(QString filename):DesignPrinter(filename){
-
-        }
+        Gds(QString filename);
         ~Gds(){
 
         }
 
-
-        virtual void print(Design * d);
 
     private:
         virtual void startCell(Cell * cell);
@@ -56,12 +52,7 @@ namespace cIcPrinter{
 //         virtual void printPin(Pin & pin);
         virtual void printRect(Rect * rect);
         virtual void printReference(Cell * o);
-
-
         int fd,        x[5],        y[5];
-
-
-
     };
 };
 

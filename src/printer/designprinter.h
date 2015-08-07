@@ -43,7 +43,6 @@ namespace cIcPrinter{
 
         DesignPrinter(QString filename){
             this->filename = filename;
-
         }
 
         char * toChar(QString str);

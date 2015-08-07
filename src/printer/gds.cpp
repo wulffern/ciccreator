@@ -21,41 +21,27 @@
 
 namespace cIcPrinter{
 
+  Gds::Gds(QString filename):DesignPrinter(filename){
+
+          }
 
     void Gds::startLib(QString name){
-
+        openFile(name + ".gds");
         gds_create_lib( fd, this->toChar(name), 0.001 /* um per bit */ );
-
     }
 
     void Gds::endLib(){
         gds_write_endlib( fd );
+        closeFile();
     }
 
-    // void Gds::printText(QString text){
-    //      gds_create_text( fd, "not reflected", 2000, 1500, 2, 500 );
-
-    // }
-
-    // void Gds::printPin(Pin &pin){
-
-
-    //  }
 
     void Gds::printReference(Cell * o){
-
-		return;
         if(this->isEmpty(o)){return ;}
-
 		char * name = this->toChar(o->name());
-
          gds_write_sref( fd );                    // contains an instance of...
          gds_write_sname( fd, name );
-		 //        gds_write_mag( fd, 1.0 );
 
-		 
-
-		 
          ///TODO: Implement rotations
 //              gds_write_angle( fd, 0.0 );             // and tilted at some weird angle
           x[0] =  o->x();
@@ -85,9 +71,8 @@ namespace cIcPrinter{
 
         gds_write_bgnstr( fd );
         gds_write_strname( fd, this->toChar(cell->name()));
-
-		//- draw PR boundary
-		this->printRect(cell);
+                //- draw PR boundary
+                this->printRect(cell);
 		
     }
 
@@ -104,28 +89,5 @@ namespace cIcPrinter{
 
         close( fd );
     }
-
-    void Gds::print(Design * d){
-
-      QString name = this->filename;
-      name.append(".gds");
-      this->openFile(name);
-
-        this->startLib(this->filename);
-
-          DesignPrinter::print(d);
-          this->endLib();
-          this->closeFile();
-
-
-        //
-
-
-    }
-
-
-
-
-
 
 };
