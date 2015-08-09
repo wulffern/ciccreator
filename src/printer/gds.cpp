@@ -40,8 +40,7 @@ namespace cIcPrinter{
 
     gds_write_text( fd );
     gds_write_layer( fd, Rules::getRules()->layerToNumber(p->layer()) );
-    gds_write_datatype( fd, Rules::getRules()->layerToDataType(p->layer()) );
-    gds_write_texttype( fd, 0 );
+    gds_write_texttype( fd, Rules::getRules()->layerToDataType(p->layer()) );
     gds_write_presentation( fd, 0, 1, 1 );  // fd, font, hp, vp
     gds_write_width( fd, 500 );
     gds_write_strans( fd, 0, 0, 0 );        // fd, reflect, abs_angle, abs_mag
