@@ -473,7 +473,15 @@ namespace cIcCore {
         EnclosureRectangle *e = enclosures_by_rect_[i];
         foreach(QString lay, e->encloseWithLayers){
 
+            int enc = 0;
+            if(this->rules->hasRule(lay,e->layer + "enclosure")){
+                enc = this->rules->get(lay,e->layer + "enclosure");
+              }else{
+
+                enc = this->rules->get(lay,"enclosure");
+              }
             Rect* r = new Rect(lay,translateX(e->x1),translateY(e->y1),e->width*xspace_,e->height*yspace_);
+             r->adjust(enc);
             this->add(r);
 
 
