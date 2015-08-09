@@ -101,6 +101,7 @@ namespace cIcCore{
      //   void abutRight(Rect* rect,qreal dx, qreal dy);
         Rect * parent(Rect* rect = 0);
         void adjust(int dx);
+		void adjust(int dx1, int dy1, int dx2, int dy2);
         Rect* adjustedOnce(int xp1);
         int snap(int x);
 
@@ -206,6 +207,13 @@ namespace cIcCore{
 	 y1_ -=  dx;
 	 x2_ += dx;
 	 y2_ += dx;
+	}
+
+     inline void Rect::adjust(int dx1, int dy1, int dx2, int dy2){
+	 x1_ += dx1;
+	 y1_ +=  dy1;
+	 x2_ += dx2;
+	 y2_ += dy2;
 	}
 
     inline void Rect::translate(int ax, int ay){

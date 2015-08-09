@@ -5,7 +5,7 @@ cmd=time ../bin/cic
 CELL=
 GDS=${CELL}.gds
 SPI=${CELL}.spi
-
+LIBPATH=../../icarus_mpw2/lib/
 
 tech=../examples/soi.json
 
@@ -16,6 +16,15 @@ test:
 
 sar:
 	${cmd}   ../../cnano/examples/SAR_LPWR_ST28N/SAR_LPWR_ST28N.json ${tech} SAR_LPWR_ST28N ${OPT}
+
+drc:
+	-rm calibre/${CELL}_drc.svrf
+	-rm calibre/${CELL}_drc.log
+	cat ${LIBPATH}/calibre/calibre.cell.drc | perl -pe 's#gdsii/myCell.gds#${GDS}#ig' | perl -pe 's/myCell/${CELL}/ig' > calibre/${CELL}_drc.svrf
+	calibre -drc -hier -nowait calibre/${CELL}_drc.svrf > calibre/${CELL}_drc.log
+
+	-cat Cdrc/${CELL}.drc.summary | grep RULECHECK | grep -v "= 0" | grep -v "NOT EXECUTED" | grep -v "STATISTICS"| egrep -v '^\s+'
+
 
 
 lvsl:
