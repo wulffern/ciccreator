@@ -102,10 +102,10 @@ namespace cIcGui{
     QList<Layer *> layerList = layers.values();
     qSort(layerList);
     foreach(Layer * l, layerList){
-        if(l->material == Layer::metalres || l->material == Layer::marker || l->material == Layer::metalres){
-            l->visible = false;
-            continue;
-          }
+        //if(l->material == Layer::metalres || l->material == Layer::marker || l->material == Layer::metalres){
+        //    l->visible = false;
+        //    continue;
+        //  }
         QListWidgetItem * item = new QListWidgetItem(l->name);
         item->setIcon(l->icon());
 
