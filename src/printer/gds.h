@@ -52,7 +52,10 @@ namespace cIcPrinter{
         virtual void printRect(Rect * rect);
         virtual void printReference(Cell * o);
         int fd,        x[5],        y[5];
+		int toNano(int angstrom);
     };
+
+	inline int Gds::toNano(int angstrom){ return angstrom/10;}
 };
 
 #endif

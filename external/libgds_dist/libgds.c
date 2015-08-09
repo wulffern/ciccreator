@@ -415,6 +415,7 @@ gds_write_float( int fd, float x )
             {
             bit[i] = floor( pow(2,i+1) * mantita );
             mantita = mantita - bit[i] / pow(2,i+1);
+
             }
 
         stupid[0] = pow(2,7) * sign + e64;
@@ -2249,7 +2250,7 @@ gds_create_lib( int fd, char *libname, float dbu_um )
 
 
     dbu_uu = 0.001;
-    dbu_m  = dbu_um * 1.0e-6; 
+    dbu_m  =  1.0e-9; 
 
     gds_write_header( fd );
     gds_write_bgnlib( fd );

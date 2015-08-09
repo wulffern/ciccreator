@@ -41,11 +41,11 @@ namespace cIcPrinter{
     gds_write_text( fd );
     gds_write_layer( fd, Rules::getRules()->layerToNumber(p->layer()) );
     gds_write_texttype( fd, Rules::getRules()->layerToDataType(p->layer()) );
-    gds_write_presentation( fd, 0, 1, 1 );  // fd, font, hp, vp
-    gds_write_width( fd, 500 );
-    gds_write_strans( fd, 0, 0, 0 );        // fd, reflect, abs_angle, abs_mag
-    x[0] = p->x1();
-    y[0] = p->y1();
+    gds_write_presentation( fd, 0, 0, 0 );  // fd, font, hp, vp
+    gds_write_width( fd, 1 );
+    gds_write_strans( fd, 0, 0, 0.1 );        // fd, reflect, abs_angle, abs_mag
+    x[0] = toNano(p->x1());
+    y[0] = toNano(p->y1());
     gds_write_xy( fd, x, y, 1 );
     gds_write_string( fd, this->toChar(p->name()) );
     gds_write_endel( fd );
@@ -62,8 +62,8 @@ namespace cIcPrinter{
 
     ///TODO: Implement rotations
     //              gds_write_angle( fd, 0.0 );             // and tilted at some weird angle
-    x[0] =  o->x();
-    y[0] = o->y();
+    x[0] =  toNano(o->x());
+				   y[0] = toNano(o->y());
     gds_write_xy( fd, x, y, 1 );             // at these coordinates (database units)
     gds_write_endel( fd );                   // end of element
   }
@@ -74,11 +74,11 @@ namespace cIcPrinter{
     gds_write_layer( fd, Rules::getRules()->layerToNumber(o->layer()) );       // layer 0, for example
     gds_write_datatype( fd, Rules::getRules()->layerToDataType(o->layer()) );    // datatype 1, for example
 
-    x[0] = o->x1();  y[0] = o->y1();       // signed four-byte integers
-    x[1] = o->x2();  y[1] = o->y1();
-    x[2] = o->x2();  y[2] = o->y2();       // in this example 1 integer unit = 1 nm
-    x[3] = o->x1();  y[3] = o->y2();
-    x[4] = o->x1();  y[4] = o->y1();       // required repetition of first point (yup, that's stupid)
+    x[0] = toNano(o->x1());  y[0] = toNano(o->y1());       // signed four-byte integers
+	x[1] = toNano(o->x2());  y[1] = toNano(o->y1());
+    x[2] = toNano(o->x2());  y[2] = toNano(o->y2());       // in this example 1 integer unit = 1 nm
+	x[3] = toNano(o->x1());  y[3] = toNano(o->y2());
+																				  x[4] = toNano(o->x1());  y[4] = toNano(o->y1());       // required repetition of first point (yup, that's stupid)
 
     gds_write_xy( fd, x, y, 5 );    // polygon, four vertices, first vertex repeated => 5 points
     gds_write_endel( fd );          // end of element
