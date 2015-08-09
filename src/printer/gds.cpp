@@ -39,7 +39,8 @@ namespace cIcPrinter{
   void Gds::printPort(Port * p){
 
     gds_write_text( fd );
-    gds_write_layer( fd, Rules::getRules()->layerToDataType(p->layer()) );
+    gds_write_layer( fd, Rules::getRules()->layerToNumber(p->layer()) );
+    gds_write_datatype( fd, Rules::getRules()->layerToDataType(p->layer()) );
     gds_write_texttype( fd, 0 );
     gds_write_presentation( fd, 0, 1, 1 );  // fd, font, hp, vp
     gds_write_width( fd, 500 );
@@ -48,8 +49,9 @@ namespace cIcPrinter{
     y[0] = p->y1();
     gds_write_xy( fd, x, y, 1 );
     gds_write_string( fd, this->toChar(p->name()) );
-
     gds_write_endel( fd );
+
+    qWarning() << "printing port " << p->name();
 
   }
 
