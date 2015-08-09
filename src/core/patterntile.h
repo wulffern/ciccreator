@@ -22,6 +22,7 @@
 #include <QJsonArray>
 #include "cell.h"
 #include "consoleoutput.h"
+#include "core/port.h"
 
 namespace cIcCore{
 
@@ -119,6 +120,7 @@ namespace cIcCore{
     qreal heightoffset_;
     QList<CopyColumn> copyColumn_;
     QHash<QString,QHash<int,QHash<int,Rect*> > > rectangles_;
+    Rect * prev_rect_;
 
     QList<Rect*> findPatternRects(QString layer);
      QList<Rect*> findPatternStrings(QString layer);

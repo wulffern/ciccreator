@@ -32,6 +32,7 @@ namespace cIcCore {
     widthoffset_ = 0;
     heightoffset_ = 0;
     mirrorPatternString_ = 0;
+    prev_rect_  = 0;
   }
 
   Rect PatternTile::calcBoundingRect(){
@@ -138,51 +139,6 @@ namespace cIcCore {
 
   }
 
-  Rect * PatternTile::makeRect(QString layer,QChar c,int x, int y){
-    Rect * rect = new Rect();
-    rect->setLayer(layer);
-
-  //TODO: Add port generation
-
-    int xs = translateX(x);
-    int ys = translateY(y);
-    switch(c.unicode()){
-      case 'X':
-        currentHeight_ = yspace_;
-      case 'x':
-        currentHeight_ = yspace_;
-      case 'B':
-      case 'A':
-      case 'D':
-      case 'S':
-      case 'G':
-      case 'r':
-      case 'K':
-      case 'C':
-      case 'Q':
-      case 'c':
-        rect->setRect(xs,ys,xspace_,currentHeight_);
-        rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
-
-        break;
-      case 'V':
-        rect->setRect(xs,ys - yspace_/2.0,xspace_,yspace_*2.0);
-        break;
-      case 'm':
-        rect->setRect(xs,ys,xspace_,this->minPolyLength());
-        rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
-        break;
-      case 'w':
-        int minw = rules->get(layer,"width");
-        rect->setRect(xs,ys,xspace_,minw);
-        rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
-        currentHeight_ = minw;
-        break;
-
-      }
-    return rect;
-  }
-
   void PatternTile::paint(){
 
 
@@ -204,17 +160,70 @@ namespace cIcCore {
 
                 if(c == '-'){continue;}
 
-                Rect* rect = this->makeRect(layer,c,x,y);
+                Rect * rect = new Rect();
+                rect->setLayer(layer);
 
-                if(!rect->empty()){
+                Port * p = 0;
+
+                int xs = translateX(x);
+                int ys = translateY(y);
+
+                if(c == 'X' or c == 'x'){
+                      currentHeight_ = yspace_;
+                  }
+
+                switch(c.unicode()){
+                  //Create ports
+                  case 'B':
+                  case 'A':
+                  case 'D':
+                  case 'S':
+                  case 'G':
+                    p = new Port(c);
+                    //Create ports
+                  case 'x':
+                  case 'X':
+                  case 'K':
+                  case 'C':
+                  case 'Q':
+                  case 'r':
+                  case 'c':
+                    rect->setRect(xs,ys,xspace_,currentHeight_);
+                    rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
+                    break;
+                  case 'V':
+                    rect->setRect(xs,ys - yspace_/2.0,xspace_,yspace_*2.0);
+                    break;
+                  case 'm':
+                    rect->setRect(xs,ys,xspace_,this->minPolyLength());
+                    rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
+                    break;
+                  case 'w':
+                    int minw = rules->get(layer,"width");
+                    rect->setRect(xs,ys,xspace_,minw);
+                    rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
+                    currentHeight_ = minw;
+                    break;
+                  }
+
+                if(prev_rect_ && prev_rect_->abutsLeft(rect)){
+                    prev_rect_->setRight(rect->x2());
+                    delete(rect);
+                    rect = prev_rect_;
+                  }else
+               if(!rect->empty() && !this->_children.contains(rect)){
                     this->add(rect);
                     rectangles_[layer][y][x] = rect;
                   }
 
-                int cxoffset = 0;
+                prev_rect_ = rect;
 
-                int xs = translateX(x);
-                int ys = translateY(y);
+                if(p){
+                    p->add(rect);
+                    this->add(p);
+                  }
+
+                int cxoffset = 0;
 
                 //TODO: Implement Q
                 int cw = 0;
@@ -253,7 +262,7 @@ namespace cIcCore {
                       }
                   case 'k':
                     //TODO: Get next layer based on current
-                     lay = this->rules->getNextLayer(layer);
+                    lay = this->rules->getNextLayer(layer);
                     cr = new Rect();
                     cr->setLayer(lay);
                     cw = this->rules->get(lay,"width");

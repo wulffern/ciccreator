@@ -21,7 +21,9 @@
 
 namespace cIcPrinter{
 
+    void Svg::printPort(Port *){
 
+    }
 
     void Svg::printReference(Cell * o){
 

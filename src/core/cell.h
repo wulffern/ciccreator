@@ -103,14 +103,11 @@ namespace cIcCore{
         Rect* getBottomLeftRect();
         Rect* getTopLeftRect();
         cIcSpice::SpiceObject * spiceObject_;
+        QList<Rect*> _children;
 
     private:
-        QList<Rect*> _children;
-        QPainterPath path;
         QString _name;
-
         bool _has_pr;
-//        bool _is_empty;
 
     signals:
 

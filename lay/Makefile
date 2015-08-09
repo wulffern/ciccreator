@@ -10,12 +10,12 @@ SPI=${CELL}.spi
 tech=../examples/soi.json
 
 device: 
-	${cmd}   ../examples/devices.json ${tech}  ${OPT}
+	${cmd}   ../examples/devices.json ${tech} devices ${OPT}
 test: 
-	${cmd}   ../examples/test.json ${tech}  ${OPT}
+	${cmd}   ../examples/test.json ${tech}  test ${OPT}
 
 sar:
-	${cmd}   ../../cnano/examples/SAR_LPWR_ST28N/SAR_LPWR_ST28N.json ${tech} ${OPT}
+	${cmd}   ../../cnano/examples/SAR_LPWR_ST28N/SAR_LPWR_ST28N.json ${tech} SAR_LPWR_ST28N ${OPT}
 
 
 lvsl:

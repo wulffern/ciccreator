@@ -25,35 +25,27 @@
 #include <QString>
 #include "printer/designprinter.h"
 namespace cIcPrinter{
-	using namespace cIcCore;
-	
-    class Svg : public DesignPrinter{
+  using namespace cIcCore;
 
-    public:
+  class Svg : public DesignPrinter{
 
-        Svg(QString filename):DesignPrinter(filename){
-           
-        }
-        ~Svg(){
-            
-        }
-        
-        virtual void startCell(Cell * cell);
-		virtual void endCell();
-		//      void endFile();
- //      void printInstance(Instance & inst);
- //      void printInitLib(string name) ;
- //      void printEndLib() ;
- //      void printInitCell(Cell & cell) ;
- //      void printEndCell() ;
- //      void printText(Text & text);
-  //     void printPin(Pin & pin);
-        virtual void printRect(Rect * rect);
-//		virtual void printCell(Cell * rect);
-		virtual void printReference(Cell * o);
-        
+  public:
 
-      
+    Svg(QString filename):DesignPrinter(filename){
+
+    }
+    ~Svg(){
+
+    }
+
+    virtual void startCell(Cell * cell);
+    virtual void endCell();
+    virtual void printPort(Port *);
+    virtual void printRect(Rect * rect);
+    virtual void printReference(Cell * o);
+
+
+
     
   };
 };

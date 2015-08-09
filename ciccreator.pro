@@ -55,6 +55,7 @@ src/spice/subcktinstance.h \
     external/libgds_dist/libgds.h \
     src/core/layer.h \
     src/printer/spice.h \
+    src/core/port.h
 
 SOURCES +=         src/printer/gds.cpp src/core/rules.cpp src/core/rect.cpp src/core/cell.cpp   \
     src/core/patterntile.cpp \

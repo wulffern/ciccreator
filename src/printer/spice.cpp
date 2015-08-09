@@ -10,8 +10,7 @@ namespace cIcPrinter{
 
   Spice::~Spice()
   {
-  }
-
+  } 
 
   void Spice::startCell(Cell * cell){
 
@@ -54,6 +53,10 @@ namespace cIcPrinter{
   }
 
   void Spice::printRect(Rect *rect){
+
+  }
+
+  void Spice::printPort(Port *){
 
   }
 

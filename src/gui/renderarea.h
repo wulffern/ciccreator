@@ -48,6 +48,7 @@
 #include <QWidget>
 #include "core/cell.h"
 #include "core/instance.h"
+#include "core/port.h"
 
 QT_BEGIN_NAMESPACE
 class QPaintEvent;

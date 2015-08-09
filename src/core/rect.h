@@ -77,8 +77,20 @@ namespace cIcCore{
                return true;
              }
            return false;
+         }
+
+         bool isPort(){
+           if(strcmp(this->metaObject()->className(),"cIcCore::Port") == 0){
+               return true;
+             }
+           return false;
 
          }
+
+         bool abutsLeft(Rect * r);
+                  bool abutsRight(Rect * r);
+                           bool abutsTop(Rect * r);
+                                    bool abutsBottom(Rect *);
 
      //   void abut(Rect* rect,qreal dx, qreal dy);
      //   void abutTopCenter(Rect* rect, qreal dy);

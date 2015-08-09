@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 		cIcPrinter::Gds * gd = new cIcPrinter::Gds(library);
 		gd->print(d);
 
-	if(argc == 5){
+	if(argc == 4){
 		QApplication app(argc, argv);
 		cIcGui::Window window;
 		window.loadDesign(d);

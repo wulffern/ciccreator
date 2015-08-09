@@ -28,8 +28,11 @@
 
 namespace cIcPrinter{
     using namespace cIcCore;
-    class DesignPrinter : public QObject{
-    private:
+
+  class DesignPrinter : public QObject{
+
+  public:
+
 
 
     protected:
@@ -37,59 +40,27 @@ namespace cIcPrinter{
         QString filename;
         QFile  file;
 
-//        ofstream  stream;
-
     public:
-
-        DesignPrinter(QString filename){
-            this->filename = filename;
-        }
-
+        DesignPrinter(QString filename);
+        ~DesignPrinter();
         char * toChar(QString str);
-
-
-        virtual ~DesignPrinter(){
-
-        }
-
-
-        virtual void add(QString & str){
-            QTextStream s(&file);
-            s << str;
-        }
-
-
-        virtual void add(int i){
-            QTextStream s(&file);
-            s << i;
-//            if(this->stream.is_open()){
-//                this->stream << i;
-//            }
-        }
-
-
+        bool isEmpty(Cell * c);
         void print(Design * o);
 
         virtual void openFile(QString file);
         virtual void closeFile();
+        virtual void printCell(Cell * c);
 
-        bool isEmpty(Cell * c);
+        virtual void startCell(Cell * cell) {};
+        virtual void endCell() {};
+        virtual void printPort(Port *) {} ;
+        virtual void printRect(Rect * rect) {};
+        virtual void printReference(Cell *c) {};
 
-        virtual void startCell(Cell * cell);
-        virtual void endCell() = 0;
         virtual void startLib(QString name);
         virtual void endLib();
-//      virtual void endFile()  = 0;
-        //     virtual void printInstance(Instance & inst)  = 0;
-        //     virtual void printInitLib(string name) = 0;
-        //    virtual void printEndLib() = 0;
-        //   virtual void printInitCell(Cell & cell) = 0;
-        //   virtual void printEndCell() = 0;
         //   virtual void printText(Text & text) = 0;
-        //  virtual void printPin(Pin & pin) = 0;
-        virtual void printRect(Rect * rect) = 0;
-        virtual void printCell(Cell * c);
-        virtual void printReference(Cell *c);
+
 
 
 

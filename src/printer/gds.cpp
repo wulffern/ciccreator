@@ -23,71 +23,88 @@ namespace cIcPrinter{
 
   Gds::Gds(QString filename):DesignPrinter(filename){
 
-          }
+  }
 
-    void Gds::startLib(QString name){
-        openFile(name + ".gds");
-        gds_create_lib( fd, this->toChar(name), 0.001 /* um per bit */ );
-    }
+  void Gds::startLib(QString name){
+    openFile(name + ".gds");
+    gds_create_lib( fd, this->toChar(name), 0.001 /* um per bit */ );
+  }
 
-    void Gds::endLib(){
-        gds_write_endlib( fd );
-        closeFile();
-    }
-
-
-    void Gds::printReference(Cell * o){
-        if(this->isEmpty(o)){return ;}
-		char * name = this->toChar(o->name());
-         gds_write_sref( fd );                    // contains an instance of...
-         gds_write_sname( fd, name );
-
-         ///TODO: Implement rotations
-//              gds_write_angle( fd, 0.0 );             // and tilted at some weird angle
-          x[0] =  o->x();
-          y[0] = o->y();
-          gds_write_xy( fd, x, y, 1 );             // at these coordinates (database units)
-          gds_write_endel( fd );                   // end of element
-    }
-
-    void Gds::printRect(Rect * o){
-
-		gds_write_boundary( fd );       // write just the token
-           gds_write_layer( fd, Rules::getRules()->layerToNumber(o->layer()) );       // layer 0, for example
-           gds_write_datatype( fd, Rules::getRules()->layerToDataType(o->layer()) );    // datatype 1, for example
-
-         x[0] = o->x1();  y[0] = o->y1();       // signed four-byte integers
-         x[1] = o->x2();  y[1] = o->y1();
-         x[2] = o->x2();  y[2] = o->y2();       // in this example 1 integer unit = 1 nm
-         x[3] = o->x1();  y[3] = o->y2();
-         x[4] = o->x1();  y[4] = o->y1();       // required repetition of first point (yup, that's stupid)
-
-         gds_write_xy( fd, x, y, 5 );    // polygon, four vertices, first vertex repeated => 5 points
-         gds_write_endel( fd );          // end of element
-    };
+  void Gds::endLib(){
+    gds_write_endlib( fd );
+    closeFile();
+  }
 
 
-    void Gds::startCell(Cell *cell){
+  void Gds::printPort(Port * p){
 
-        gds_write_bgnstr( fd );
-        gds_write_strname( fd, this->toChar(cell->name()));
-                //- draw PR boundary
-                this->printRect(cell);
-		
-    }
+    gds_write_text( fd );
+    gds_write_layer( fd, Rules::getRules()->layerToDataType(p->layer()) );
+    gds_write_texttype( fd, 0 );
+    gds_write_presentation( fd, 0, 1, 1 );  // fd, font, hp, vp
+    gds_write_width( fd, 500 );
+    gds_write_strans( fd, 0, 0, 0 );        // fd, reflect, abs_angle, abs_mag
+    x[0] = p->x1();
+    y[0] = p->y1();
+    gds_write_xy( fd, x, y, 1 );
+    gds_write_string( fd, this->toChar(p->name()) );
 
-    void Gds::endCell(){
-      gds_write_endstr( fd );                  // end of structure (cell)
-    }
+    gds_write_endel( fd );
+
+  }
+
+  void Gds::printReference(Cell * o){
+    if(this->isEmpty(o)){return ;}
+    char * name = this->toChar(o->name());
+    gds_write_sref( fd );                    // contains an instance of...
+    gds_write_sname( fd, name );
+
+    ///TODO: Implement rotations
+    //              gds_write_angle( fd, 0.0 );             // and tilted at some weird angle
+    x[0] =  o->x();
+    y[0] = o->y();
+    gds_write_xy( fd, x, y, 1 );             // at these coordinates (database units)
+    gds_write_endel( fd );                   // end of element
+  }
+
+  void Gds::printRect(Rect * o){
+
+    gds_write_boundary( fd );       // write just the token
+    gds_write_layer( fd, Rules::getRules()->layerToNumber(o->layer()) );       // layer 0, for example
+    gds_write_datatype( fd, Rules::getRules()->layerToDataType(o->layer()) );    // datatype 1, for example
+
+    x[0] = o->x1();  y[0] = o->y1();       // signed four-byte integers
+    x[1] = o->x2();  y[1] = o->y1();
+    x[2] = o->x2();  y[2] = o->y2();       // in this example 1 integer unit = 1 nm
+    x[3] = o->x1();  y[3] = o->y2();
+    x[4] = o->x1();  y[4] = o->y1();       // required repetition of first point (yup, that's stupid)
+
+    gds_write_xy( fd, x, y, 5 );    // polygon, four vertices, first vertex repeated => 5 points
+    gds_write_endel( fd );          // end of element
+  };
 
 
-    void Gds::openFile(QString file){
-        fd = open( this->toChar(file), O_CREAT | O_TRUNC | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH );
-    }
+  void Gds::startCell(Cell *cell){
 
-    void Gds::closeFile(){
+    gds_write_bgnstr( fd );
+    gds_write_strname( fd, this->toChar(cell->name()));
+    //- draw PR boundary
+    this->printRect(cell);
 
-        close( fd );
-    }
+  }
+
+  void Gds::endCell(){
+    gds_write_endstr( fd );                  // end of structure (cell)
+  }
+
+
+  void Gds::openFile(QString file){
+    fd = open( this->toChar(file), O_CREAT | O_TRUNC | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH );
+  }
+
+  void Gds::closeFile(){
+
+    close( fd );
+  }
 
 };

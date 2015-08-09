@@ -123,7 +123,18 @@ namespace cIcGui{
         if(r->isInstance()){
             Instance *  inst= (Instance *) r;
             this->drawCell(inst->x(),inst->y(),inst->cell(), painter);
-          }else{
+          }else if(r->isPort()){
+            if(c == this->c){
+            Port * p = (Port *) r;
+            QFont font=painter.font() ;
+             font.setPointSize ( 1000 );
+             //font.setWeight(QFont::DemiBold);
+             painter.setFont(font);
+            painter.drawText(p->x1(),p->y1(),p->name());
+              }
+
+          }
+          else{
             Layer *l = rules->getLayer(r->layer());
             if(!l->visible){
                 continue;

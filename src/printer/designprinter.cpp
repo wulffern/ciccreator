@@ -23,6 +23,14 @@
 namespace cIcPrinter{
 
 
+DesignPrinter::DesignPrinter(QString filename){
+            this->filename = filename;
+        }
+
+DesignPrinter::~DesignPrinter(){
+
+}
+
   char *  DesignPrinter::toChar(QString str){
     char* cstr;
     std::string fname = str.toStdString();
@@ -32,13 +40,6 @@ namespace cIcPrinter{
   }
 
 
-
-  void DesignPrinter::startCell(Cell * o){
-  }
-
-  void DesignPrinter::printReference(Cell * o){
-
-  }
 
   void DesignPrinter::openFile(QString filename){
     file.setFileName(filename);
@@ -74,6 +75,9 @@ namespace cIcPrinter{
             Instance * inst = (Instance*)child;
             if(inst->name() == ""){continue;}
             this->printReference((Instance*)child);
+          }else if(child->isPort()){
+            Port * p = (Port *) child;
+            this->printPort(p);
           }else{
             this->printRect(child);
           }

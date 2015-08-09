@@ -16,6 +16,7 @@ public:
   virtual void endCell();
   virtual void printRect(Rect *rect);
   virtual void printReference(Cell *c);
+  virtual void printPort(Port *);
 
 
 protected:
