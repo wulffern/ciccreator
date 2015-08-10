@@ -364,38 +364,48 @@ gds_bindump( BYTE x )            // dump one byte in binary format
 
 void gds_write_float(int fd, float x ){
 
-  int isNegative = 0;
-  float real = x;
+	int isNegative;
+	int i;
+	float r;
+	unsigned char exponent,b;
+
+	float G_epsilon;
+	G_epsilon = 0.000001;
+	
+  isNegative = 0;
+  r = x;
 
   if(x < 0.0){
       isNegative = 1;
-      real = 0 - x;
+      r = 0 - x;
     }
 
-  uint8_t exponent = 0;
-  while(real >= 1.0){
+  exponent = 0;
+  while(r >= 1.0){
       exponent++;
-      real = (real/16.0);
+      r = (r/16.0);
     }
-  if(real != 0){
-      while(real < 0.0625){
+  if(r != 0){
+      while(r < 0.0625){
           exponent--;
-          real = (real*16.0);
+          r = (r*16.0);
         }
     }
 
   if(isNegative){exponent += 192;}
   else {exponent += 64;}
   write( fd, &exponent, 1 );
+  
+  printf("real before start %f\n",r);
 
-  float G_epsilon = 0.000001;
 
-  uint8_t b;
-  for(int i=1;i<=7;i++){
-      if(real>=0){b = (real*256.0) + G_epsilon;}
-      else {b = (real*256.0) - G_epsilon;}
+  for(i=1;i<=7;i++){
+      if(r>=0){b = (int) (r*256.0) + G_epsilon;}
+      else {b = (int) (r*256.0) - G_epsilon;}
       write(fd,&b,1);
-      real = real*256 - (b + 0.0);
+	  printf("%f \n",r);
+	  gds_bindump(b);
+      r = r*256.0 - (b + 0.0);
     }
 }
 
@@ -2184,6 +2194,10 @@ gds_write_units( int fd, float dbu_uu, float dbu_m )
   short int
       count,
       token;
+  int i;
+
+  BYTE db_units[] = { 0x3e, 0x41, 0x89, 0x37, 0x4b, 0xc6, 0xa7, 0xf0};
+  BYTE user_units[] = { 0x39, 0x44, 0xb8, 0x2f, 0xa0, 0x9b, 0x5a, 0x54};
 
   count = 20;
   gds_swap2bytes( (BYTE *) &count );
@@ -2191,8 +2205,17 @@ gds_write_units( int fd, float dbu_uu, float dbu_m )
   token = 0x0305;                 // UNITS
   gds_swap2bytes( (BYTE *) &token );
   write( fd, &token, 2 );
-  gds_write_float( fd, dbu_uu );
-  gds_write_float( fd, dbu_m );
+
+//Hardcoding db units and gds units, float conversion gives arhitmetic error
+
+  for(i=0;i<8;i++){
+	  write(fd, &(db_units[i]), 1);
+  }
+  for(i=0;i<8;i++){
+	  write(fd, &(user_units[i]), 1);
+  }
+//  gds_write_float( fd, dbu_uu );
+//  gds_write_float( fd, dbu_m );
 
 }  // write_units
 

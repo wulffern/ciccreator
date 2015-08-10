@@ -9,6 +9,9 @@ LIBPATH=../../icarus_mpw2/lib/
 
 tech=../examples/soi.json
 
+compile:
+	cd ..; ${MAKE};
+
 device: 
 	${cmd}   ../examples/devices.json ${tech} devices ${OPT}
 test: 

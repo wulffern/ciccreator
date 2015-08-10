@@ -240,7 +240,6 @@ namespace cIcCore {
                             cxoffset = xspace_/2.0;
                         }
                     case 'c':
-                        //TODO: Get next layer based on current
                         lay = this->rules->getNextLayer(layer);
                         cr = new Rect();
                         cr->setLayer(lay);
@@ -256,12 +255,11 @@ namespace cIcCore {
                         break;
                     case 'K':
                         if(this->mirrorPatternString()){
-                            cxoffset = -xspace_ - xspace_/2.0;
+                            cxoffset = -xspace_ - xspace_/2;
                         }else{
-                            cxoffset = xspace_/2.0;
+                            cxoffset = xspace_/2;
                         }
                     case 'k':
-                        //TODO: Get next layer based on current
                         lay = this->rules->getNextLayer(layer);
                         cr = new Rect();
                         cr->setLayer(lay);
@@ -273,7 +271,7 @@ namespace cIcCore {
                         if(this->mirrorPatternString()){cxoffset -= cs/2 - cw/2;}
 
                         cr->moveCenter(xs -cxoffset + xspace_/2.0, ys + yspace_/2.0);
-                        cr1->moveCenter(cr->centerX() - cs - cw/2.0,cr->centerY());
+                        cr1->moveCenter(cr->centerX() - cs - cw,cr->centerY());
                         this->add(cr);
                         this->add(cr1);
                         break;

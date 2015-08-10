@@ -50,7 +50,6 @@ namespace cIcPrinter{
     gds_write_string( fd, this->toChar(p->name()) );
     gds_write_endel( fd );
 
-    qWarning() << "printing port " << p->name();
 
   }
 
