@@ -23,6 +23,18 @@ namespace cIcCore{
 
   Rules * Rules::myRules_;
 
+	Rules::Rules(){
+		gamma_ = 50;
+		grid_ = 5;
+		spiceunit_ = 1e-6;
+		
+	}
+
+	double Rules::spiceUnit(){
+		return spiceunit_;
+	}
+	
+	
   void Rules::loadRules(QString filename){
     QString val;
     QFile file;
@@ -90,11 +102,17 @@ namespace cIcCore{
     return lay;
   }
 
+	
+
   void Rules::setRules(QJsonObject job){
 
     QJsonObject tech = job["technology"].toObject();
-    gamma_ = tech["gamma"].toInt();
-    grid_ = tech["grid"].toInt();
+	if(tech.contains("gamma"))
+	   gamma_ = tech["gamma"].toInt();
+	if(tech.contains("grid"))
+		grid_ = tech["grid"].toInt();
+	if(tech.contains("spiceunit"))
+		spiceunit_ = tech["spiceunit"].toDouble();
     QJsonObject devices = tech["devices"].toObject();
     foreach(QString key, devices.keys()){
         devices_[key] = new Device();

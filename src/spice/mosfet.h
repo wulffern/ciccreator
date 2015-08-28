@@ -45,10 +45,13 @@ namespace cIcSpice{
       cIcCore::Rules * rules = cIcCore::Rules::getRules();
       cIcCore::Device * mtype = rules->getDevice(this->deviceName());
 
+	  double su = rules->spiceUnit();
+	  
+
       if(mtype){
-            ts << "M" << instance << " " << nodes.join(' ') <<  " " << mtype->name << " w=" << width << " l=" << length << " nf=" << numberOfFingers << " M=" << multiplier;
+            ts << "M" << instance << " " << nodes.join(' ') <<  " " << mtype->name << " w=" << width*su << " l=" << length*su << " nf=" << numberOfFingers << " M=" << multiplier;
         }else{
-                ts << "M" << instance << " " << nodes.join(' ') <<  " " << this->deviceName() << " w=" << width << " l=" << length << " nf=" << numberOfFingers << " M=" << multiplier;
+                ts << "M" << instance << " " << nodes.join(' ') <<  " " << this->deviceName() << " w=" << width*su << " l=" << length*su << " nf=" << numberOfFingers << " M=" << multiplier;
         }
 
     return s;

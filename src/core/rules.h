@@ -1,5 +1,5 @@
 //====================================================================
-//        Copyright (c) 2015 Carsten Wulff Software, Norway 
+//        Copyright (c) 2015 Carsten Wulff Software, Norway
 // ===================================================================
 // Created       : wulff at 2015-4-6
 // ===================================================================
@@ -30,55 +30,56 @@
 
 namespace cIcCore{
 
-	class Device{
-	public:
-	  QString name;
-	  QStringList ports;
+    class Device{
+    public:
+        QString name;
+        QStringList ports;
 
-	};
+    };
 
-	class Rules: public QObject
-	{
+    class Rules: public QObject
+    {
 
-	    Q_OBJECT
+        Q_OBJECT
 
-	public:
-	  Rules(){}
+    public:
+        Rules();
 
-	  ~Rules(){}
-	  Rules(const Rules&){}
+        ~Rules(){}
+        Rules(const Rules&){}
 
-	  static void loadRules(QString path);
+        static void loadRules(QString path);
 
-	  static Rules* getRules(){return myRules_;}
+        static Rules* getRules(){return myRules_;}
 
-	  Device * getDevice(QString dev);
-	  qreal get(QString layer, QString rule);
-	  bool hasRule(QString layer, QString rule);
-	  QString layerToColor(QString	name);
-	  int layerToNumber(QString name);
-	  int layerToDataType(QString name);
-	  int gamma(){return gamma_;}
-	  int grid(){return grid_;}
-	  void setRules(QJsonObject job);
-	  Layer * getLayer(QString string);
-	  QMap<QString,Layer *> layers(){ return layers_;}
-	  QString getNextLayer(QString lay);
-	  double toMicron(int val);
+        Device * getDevice(QString dev);
+        qreal get(QString layer, QString rule);
+        bool hasRule(QString layer, QString rule);
+		double  spiceUnit();
+        QString layerToColor(QString    name);
+        int layerToNumber(QString name);
+        int layerToDataType(QString name);
+        int gamma(){return gamma_;}
+        int grid(){return grid_;}
+        void setRules(QJsonObject job);
+        Layer * getLayer(QString string);
+        QMap<QString,Layer *> layers(){ return layers_;}
+        QString getNextLayer(QString lay);
+        double toMicron(int val);
 
-        private:
+    private:
         static Rules * myRules_;
-          QMap<QString,Layer *> layers_;
-          QHash<QString, QHash<QString,qreal> >  rules_;
-          QMap<QString,Device* > devices_;
-          int gamma_;
-          int grid_;
+        QMap<QString,Layer *> layers_;
+        QHash<QString, QHash<QString,qreal> >  rules_;
+        QMap<QString,Device* > devices_;
+        int gamma_;
+        int grid_;
+		double spiceunit_;
 
-        };
+    };
 
 
 
 }
 
 #endif // RULES_H
-
