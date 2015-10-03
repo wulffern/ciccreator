@@ -19,14 +19,6 @@
 
 #include "core/cell.h"
 
-//  sub children{ return (shift)->property("children",(shift))};
-//  sub name{ return (shift)->property("name",(shift));}
-//  sub parent{ return (shift)->property("parent",(shift));}
-//  sub hasPR{ return (shift)->property("hasPR",(shift));}
-//  sub mirror{ return (shift)->property("mirror",(shift));}
-//  sub mirror_line{ return (shift)->property("mirror_line",(shift));}
-//  sub schObject{ return (shift)->property("schObject",(shift));}
-//#  sub isLibraryCell{ return (shift)->property("isLibraryCell",(shift));}
 namespace cIcCore{
 
     QMap<QString,Cell*> Cell::_allcells;

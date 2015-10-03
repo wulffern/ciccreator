@@ -35,4 +35,30 @@ namespace cIcSpice{
 
 
 
+		QString SpiceObject::name(){return _name;}
+		QString SpiceObject::setName(QString val){ _name = val; return _name;}
+
+		QStringList SpiceObject::spiceStr(){return _spice_str;}
+		QStringList SpiceObject::setSpiceStr(QStringList val){ _spice_str = val; return _spice_str;}
+
+		QStringList SpiceObject::nodes(){return _nodes;}
+		QStringList SpiceObject::setNodes(QStringList val){ _nodes = val; return _nodes;}
+
+		QMap<QString,QString> SpiceObject::properties(){
+		  return _properties;
+		}
+
+
+		QString SpiceObject::spiceType(){return spiceType_;}
+		QString SpiceObject::deviceName(){return deviceName_;}
+		void SpiceObject::setDeviceName(QString name){deviceName_ = name;}
+
+
+		 QString SpiceObject::toSpice( QString instance, QStringList nodes){ QString s; QTextStream ts(&s); ts << instance << " " << nodes.join(' ') ; return s;}
+
+
+		int SpiceObject::lineNumber(){return _line_number;}
+		int SpiceObject::setLineNumber(int val){ _line_number = val; return _line_number;}
+	
+
 }

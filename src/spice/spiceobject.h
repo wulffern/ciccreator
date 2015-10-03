@@ -42,30 +42,21 @@ namespace cIcSpice{
 		SpiceObject(const SpiceObject&);
 		~SpiceObject();
 
-		QString name(){return _name;}
-		QString setName(QString val){ _name = val; return _name;}
+		QString name();		QString setName(QString val);
+		
+		int lineNumber(); int setLineNumber(int val);
+		
+		QStringList spiceStr();		QStringList setSpiceStr(QStringList val);
 
-		QStringList spiceStr(){return _spice_str;}
-		QStringList setSpiceStr(QStringList val){ _spice_str = val; return _spice_str;}
+		QStringList nodes();		QStringList setNodes(QStringList val);
 
-		QStringList nodes(){return _nodes;}
-		QStringList setNodes(QStringList val){ _nodes = val; return _nodes;}
+		QMap<QString,QString> properties();
 
-		QMap<QString,QString> properties(){
-		  return _properties;
-		}
+		QString spiceType();
 
+		QString deviceName();		void setDeviceName(QString name);
 
-		QString spiceType(){return spiceType_;}
-		QString deviceName(){return deviceName_;}
-		void setDeviceName(QString name){deviceName_ = name;}
-
-
-		virtual QString toSpice( QString instance, QStringList nodes){ QString s; QTextStream ts(&s); ts << instance << " " << nodes.join(' ') ; return s;}
-
-
-		int lineNumber(){return _line_number;}
-		int setLineNumber(int val){ _line_number = val; return _line_number;}
+		virtual QString toSpice( QString instance, QStringList nodes);
 
 	protected:
 		QString spiceType_;

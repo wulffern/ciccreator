@@ -49,6 +49,9 @@
 #include "core/cell.h"
 #include "core/instance.h"
 #include "core/port.h"
+#include <QPainter>
+#include <QPaintEvent>
+
 
 QT_BEGIN_NAMESPACE
 class QPaintEvent;

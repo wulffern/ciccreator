@@ -62,15 +62,6 @@ namespace cIcCore{
     return c;
   }
 
-  QString Instance::toSpice(){
-    //    this->
-  }
 
-  //Cell * Instance::addInstance(QString cell){
-  //     Cell * c = Cell::getInstance(cell);
-  //     this->_instances.append(c);
-  //     connect(c,SIGNAL(updated()),this,SLOT(updateBoundingRect()));
-  //     return c;
-  //}
 
 }

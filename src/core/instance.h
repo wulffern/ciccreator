@@ -37,7 +37,6 @@ namespace cIcCore{
     virtual Rect calcBoundingRect();
     // Cell * addInstance(QString cell);
     static Instance * getInstance(QString cell);
-    QString toSpice();
     cIcSpice::SubcktInstance *subcktInstance(){return ckt_inst_;}
     void setSubcktInstance(cIcSpice::SubcktInstance *inst);
 
