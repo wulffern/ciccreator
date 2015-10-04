@@ -47,7 +47,32 @@ namespace cIcSpice{
         int multiplier;
 
 
+
     };
+
+//	  double su = rules->spiceUnit();
+	  
+
+//      if(mtype){
+//            ts << "M" << instance << " " << nodes.join(' ') <<  " " << mtype->name << " w=" << width*su << " l=" << length*su << " nf=" << numberOfFingers << " M=" << multiplier;
+//        }else{
+//                ts << "M" << instance << " " << nodes.join(' ') <<  " " << this->deviceName() << " w=" << width*su << " l=" << length*su << " nf=" << numberOfFingers << " M=" << multiplier;
+//        }
+
+//    return s;
+//    }
+
+
+//    int numberOfFingers;
+//    double drainWidth;
+//    double sourceWidth;
+//    double width;
+//    double length;
+//    int multiplier;
+
+
+//  };
+
 
 }
 

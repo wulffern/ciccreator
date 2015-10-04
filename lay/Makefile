@@ -12,8 +12,13 @@ tech=../examples/soi.json
 compile:
 	cd ..; ${MAKE};
 
-device: 
-	${cmd}   ../examples/devices.json ${tech} devices ${OPT}
+FILE=devices
+
+json: 
+	${cmd}   ../examples/${FILE}.json ${tech} ${FILE} ${OPT}
+	cat ${FILE}.spi | perl -pe 'if(m/^\s*M\d+/ig){s/\n//ig;$$_ = $$_ . " p_la=0 \n";}' > ${FILE}_tmp.spi;
+	rm ${FILE}.spi;
+	mv ${FILE}_tmp.spi ${FILE}.spi
 
 drc:
 	-rm calibre/${CELL}_drc.svrf
