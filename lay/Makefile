@@ -20,6 +20,12 @@ json:
 	rm ${FILE}.spi;
 	mv ${FILE}_tmp.spi ${FILE}.spi
 
+sar:
+	${cmd}   ../../cnano/examples/SAR_LPWR_ST28N/SAR_LPWR_ST28N.json ${tech} SAR_LPWR_ST28N ${OPT}
+	cat SAR_LPWR_ST28N.spi | perl -pe 'if(m/^\s*M\d+/ig){s/\n//ig;$$_ = $$_ . " p_la=0 \n";}' > SAR_LPWR_ST28N_tmp.spi;
+	rm SAR_LPWR_ST28N.spi;
+	mv SAR_LPWR_ST28N_tmp.spi SAR_LPWR_ST28N.spi
+
 drc:
 	-rm calibre/${CELL}_drc.svrf
 	-rm calibre/${CELL}_drc.log
