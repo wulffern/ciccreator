@@ -22,16 +22,16 @@ namespace cIcCore{
 
     LayoutCell::LayoutCell()
     {
-
+		useHalfHeight = false;
     }
 
     LayoutCell::LayoutCell(const LayoutCell&){
-
+		useHalfHeight = false;
     }
 
     LayoutCell::~LayoutCell()
     {
-
+		useHalfHeight = false;
     }
 
     void LayoutCell::setYoffsetHalf(QJsonValue obj){
@@ -62,7 +62,7 @@ namespace cIcCore{
             if(useHalfHeight){
                 y += inst->height()/2;
               }else{
-                  y += inst->height();
+				y += inst->height();
               }
 
         }
