@@ -7,7 +7,7 @@ GDS=${CELL}.gds
 SPI=${CELL}.spi
 LIBPATH=../../icarus_mpw2/lib/
 
-tech=../examples/soi.json
+tech=../examples/tech.json
 
 compile:
 	cd ..; ${MAKE};
@@ -16,12 +16,9 @@ FILE=devices
 
 json: 
 	${cmd}   ../examples/${FILE}.json ${tech} ${FILE} ${OPT}
-	cat ${FILE}.spi | perl -pe 'if(m/^\s*M\d+/ig){s/\n//ig;$$_ = $$_ . " p_la=0 \n";}' > ${FILE}_tmp.spi;
-	rm ${FILE}.spi;
-	mv ${FILE}_tmp.spi ${FILE}.spi
 
 sar:
-	${cmd}   ../../cnano/examples/SAR_LPWR_ST28N/SAR_LPWR_ST28N.json ${tech} SAR_LPWR_ST28N ${OPT}
+	${cmd}   ../../cnano/examples/SAR_LPWR_ST28N/SAR_LPWR_ST28N.json ../../cnano/examples/soi.json SAR_LPWR_ST28N ${OPT}
 	cat SAR_LPWR_ST28N.spi | perl -pe 'if(m/^\s*M\d+/ig){s/\n//ig;$$_ = $$_ . " p_la=0 \n";}' > SAR_LPWR_ST28N_tmp.spi;
 	rm SAR_LPWR_ST28N.spi;
 	mv SAR_LPWR_ST28N_tmp.spi SAR_LPWR_ST28N.spi
@@ -31,9 +28,7 @@ drc:
 	-rm calibre/${CELL}_drc.log
 	cat ${LIBPATH}/calibre/calibre.cell.drc | perl -pe 's#gdsii/myCell.gds#${GDS}#ig' | perl -pe 's/myCell/${CELL}/ig' > calibre/${CELL}_drc.svrf
 	calibre -drc -hier -nowait calibre/${CELL}_drc.svrf > calibre/${CELL}_drc.log
-
 	-cat Cdrc/${CELL}.drc.summary | grep RULECHECK | grep -v "= 0" | grep -v "NOT EXECUTED" | grep -v "STATISTICS"| egrep -v '^\s+'
-
 
 
 lvsl:
