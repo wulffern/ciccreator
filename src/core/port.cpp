@@ -17,7 +17,6 @@
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //====================================================================
 
-
 #include "core/port.h"
 
 
@@ -31,29 +30,25 @@ namespace cIcCore{
     }
 
 	Port::Port(QString name){
-      name_ = name;
-    }
+	  name_ = name;
+	  childport_ = 0;
+	}
 
     QString Port::name(){return name_;}
-    void Port::setName(QString name){name_ = name;}
-    void Port::add(Rect * r ){
 
-      if(rectangles_.count() == 0){
+	void Port::setName(QString name){name_ = name;}
+	
+	void Port::setChild(Port * p,Rect * parent){
+		childport_ = p;
+		parent_ = parent;
+		this->set(p);
+
+	}
+
+    void Port::set(Rect * r ){
           Layer * l = rules->getLayer(r->layer());
           this->setRect(l->pin,r->x1(),r->y1(),r->width(),r->height());
-        }
-
-      rectangles_.append(r);
     }
-
-    Rect * Port::get(){
-      if(rectangles_.count()> 0){
-          return rectangles_[0];
-        }
-      return 0;
-    }
-
-
 }
 
 

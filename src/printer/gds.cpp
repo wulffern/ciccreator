@@ -63,7 +63,7 @@ namespace cIcPrinter{
     ///TODO: Implement rotations
     //              gds_write_angle( fd, 0.0 );             // and tilted at some weird angle
     x[0] =  toNano(o->x());
-				   y[0] = toNano(o->y());
+	y[0] = toNano(o->y());
     gds_write_xy( fd, x, y, 1 );             // at these coordinates (database units)
     gds_write_endel( fd );                   // end of element
   }

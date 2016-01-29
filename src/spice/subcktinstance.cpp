@@ -37,8 +37,6 @@ namespace cIcSpice{
 
     }
 
-
-
     void SubcktInstance::parse(QString buffer,int line_number){
 
         this->setLineNumber(line_number);
@@ -49,7 +47,7 @@ namespace cIcSpice{
         QRegularExpressionMatchIterator it= re_params.globalMatch(buffer);
         while (it.hasNext()) {
             QRegularExpressionMatch m_params = it.next();
-             this->properties()[m_params.captured(1)] = m_params.captured(2);
+            this->properties()[m_params.captured(1)] = m_params.captured(2);
         }
 
 
@@ -67,17 +65,17 @@ namespace cIcSpice{
 
         QRegularExpressionMatch m_group = re_group.match(this->name());
         if(m_group.hasMatch()){
-          this->_group_name = m_group.captured(1);
-          this->_group_tag = m_group.captured(2);
-          }
+            this->_group_name = m_group.captured(1);
+            this->_group_tag = m_group.captured(2);
+        }
 
         //Last element should be subckt name
         this->_subckt_name = nodes.last();
         nodes.removeLast();
 
+
         //The rest should be nodes
         this->setNodes(nodes);
-
     }
 
 }

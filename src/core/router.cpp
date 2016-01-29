@@ -18,3 +18,46 @@
 //====================================================================
 
 #include "router.h"
+
+namespace cIcCore{
+
+	Router::Router(QString net, QString layer, QString options){
+		_net = net;
+		_layer = layer;
+		_options = options;
+		_sortDirection = TOP_RIGHT;
+		_offset = NO_OFFSET;
+		_track = 0;
+		_cuts = 2;
+		_vcuts = 1;
+		_antenna = false;
+		
+
+	}
+
+	Router::Router(const Router&){
+
+	}
+
+	Router::~Router(){
+
+	}
+
+	void Router::addStartCuts(){
+
+	}
+
+	void Router::addEndCuts(){
+
+	}
+
+	void Router::addCuts(){
+
+	}
+
+	void Router::route(){
+
+	}
+	
+	
+}

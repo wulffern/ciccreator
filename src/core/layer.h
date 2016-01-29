@@ -1,5 +1,5 @@
 //====================================================================
-//        Copyright (c) 2015 Carsten Wulff Software, Norway 
+//        Copyright (c) 2015 Carsten Wulff Software, Norway
 // ===================================================================
 // Created       : wulff at 2015-8-20
 // ===================================================================
@@ -7,12 +7,12 @@
 //   it under the terms of the GNU General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
-// 
+//
 //   This program is distributed in the hope that it will be useful,
 //   but WITHOUT ANY WARRANTY; without even the implied warranty of
 //   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //   GNU General Public License for more details.
-// 
+//
 //   You should have received a copy of the GNU General Public License
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //====================================================================
@@ -26,30 +26,56 @@
 
 namespace cIcCore{
 
-  class Layer
-  {
+    /*!
+	 Defines a layer, data for this object is usually loaded from the "layers" section in the technology file
+     */
+    class Layer
+    {
     public:
-      QString name;
-      int number;
-      int datatype;
-      enum MATERIAL_TYPE {diffusion, poly, metal, cut, metalres,other,marker,implant};
-      MATERIAL_TYPE material;
-      QString previous;
-      QString next;
-      QString pin;
-      QString color;
-      bool nofill;
-      bool visible;
 
-      Layer();
-      QPixmap icon();
-  private:
+        //!Name of layer, for example "M1"
+        QString name;
 
-      QImage icon(int size);
-      void drawColorIcon(QPainter & p, QColor color, const QImage & alpha);
-      QImage drawColorIconProof(QColor color, const QImage & alpha) ;
-  };
+        //!GDS layer number
+        int number;
+
+        //!GDS layer datatype
+        int datatype;
+
+
+        enum MATERIAL_TYPE {diffusion, poly, metal, cut, metalres,other,marker,implant};
+
+        //!Type of material
+        MATERIAL_TYPE material;
+
+        //!Previous layer in routing stack, i.e CO for M1
+        QString previous;
+
+        //!Next layer in routing stack, i.e VIA1 for M1
+        QString next;
+
+        //!Name of pin layer for this layer, i.e. M1_pin
+        QString pin;
+
+        //!Color of this layer to use in GUI, QColor names can be used
+        QString color;
+
+        //!Fill rectangle of this layer in GUI
+        bool nofill;
+
+        //!Whether this layer is visible in GUI
+        bool visible;
+
+        Layer();
+
+        //!Makes a small icon of this layer that can be used in GUI
+        QPixmap icon();
+
+    private:
+        QImage icon(int size);
+        void drawColorIcon(QPainter & p, QColor color, const QImage & alpha);
+        QImage drawColorIconProof(QColor color, const QImage & alpha) ;
+    };
 
 }
 #endif // LAYER_H
-

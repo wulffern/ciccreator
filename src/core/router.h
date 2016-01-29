@@ -24,24 +24,24 @@
 #include "cell.h"
 #include "instance.h"
 
-namspace cIcCore{
+namespace cIcCore{
 
 	enum SortDirection {TOP_RIGHT, TOP_LEFT, BOTTOM_RIGHT, BOTTOM_LEFT};
-	enum Offset {END_LOW, END_HIGH, START_LOW, START_HIGH};
-	enum Cut { NO_START_CUT, NO_END_CUT, CENTER_CUT}
-	enum RouteType { LEFT, RIGHT, LEFT_DOWN_LEFT_UP, STRAIGHT
+	enum Offset {END_LOW, END_HIGH, START_LOW, START_HIGH,NO_OFFSET};
+	enum Cut { NO_START_CUT, NO_END_CUT, CENTER_CUT};
+	enum RouteType { LEFT, RIGHT, LEFT_DOWN_LEFT_UP, STRAIGHT};
 	
 	class Router : public Cell
 	{
 		Q_OBJECT
 
 	public:
-		Router();
+		Router(QString net, QString layer, QString options);
 		Router(const Router&);
 		~Router();
 
 		virtual void addStartCuts();
-		virtual void addEndCuts();
+		virtual void addEndCuts(); 
 		virtual void addCuts();
 		virtual void route();
 		
@@ -49,8 +49,7 @@ namspace cIcCore{
 	protected:
 		QString _layer;
 		QString _net;
-
-		SortDirections _sortDirections;
+		SortDirection _sortDirection;
 		Offset _offset;
 		int _track;
 		int _cuts;
@@ -61,7 +60,7 @@ namspace cIcCore{
 		QList<Rect*> _end_rects; 
 
 
-	}
+	};
 
 }
 

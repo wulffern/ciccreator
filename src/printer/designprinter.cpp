@@ -77,6 +77,12 @@ DesignPrinter::~DesignPrinter(){
             this->printReference((Instance*)child);
           }else if(child->isPort()){
             Port * p = (Port *) child;
+
+           if(c->name() == "TIEH_CV"){
+                qWarning() << "break";
+             }
+
+
             this->printPort(p);
           }else{
             this->printRect(child);

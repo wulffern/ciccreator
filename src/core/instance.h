@@ -21,6 +21,8 @@
 
 #include <QObject>
 #include "cell.h"
+#include "port.h"
+#include "spice/spiceobject.h"
 
 namespace cIcCore{
 
@@ -45,8 +47,6 @@ namespace cIcCore{
     cIcSpice::SubcktInstance * ckt_inst_;
 
   };
-
-
 
 }
 

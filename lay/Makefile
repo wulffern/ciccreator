@@ -1,3 +1,21 @@
+######################################################################
+##        Copyright (c) 2016 Carsten Wulff Software, Norway 
+## ###################################################################
+## Created       : wulff at 2016-1-29
+## ###################################################################
+##   This program is free software: you can redistribute it and/or modify
+##   it under the terms of the GNU General Public License as published by
+##   the Free Software Foundation, either version 3 of the License, or
+##   (at your option) any later version.
+## 
+##   This program is distributed in the hope that it will be useful,
+##   but WITHOUT ANY WARRANTY; without even the implied warranty of
+##   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##   GNU General Public License for more details.
+## 
+##   You should have received a copy of the GNU General Public License
+##   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+######################################################################
 
 OPT=
 cmd=time ../bin/cic
@@ -9,6 +27,9 @@ LIBPATH=../../icarus_mpw2/lib/
 
 tech=../examples/tech.json
 
+
+all: compile json
+
 compile:
 	cd ..; ${MAKE};
 
@@ -16,6 +37,11 @@ FILE=devices
 
 json: 
 	${cmd}   ../examples/${FILE}.json ${tech} ${FILE} ${OPT}
+
+
+#--------------------------------------------------------------------
+# Sections below are used for testing of ADC compile, which is not public (yet)
+#--------------------------------------------------------------------
 
 sar:
 	${cmd}   ../../cnano/examples/SAR_LPWR_ST28N/SAR_LPWR_ST28N.json ../../cnano/examples/soi.json SAR_LPWR_ST28N ${OPT}

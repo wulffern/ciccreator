@@ -20,12 +20,12 @@
 
 namespace cIcCore{
 
-    LayoutCell::LayoutCell()
+    LayoutCell::LayoutCell(): Cell()
     {
 		useHalfHeight = false;
     }
 
-    LayoutCell::LayoutCell(const LayoutCell&){
+    LayoutCell::LayoutCell(const LayoutCell& cell): Cell(cell){
 		useHalfHeight = false;
     }
 
@@ -37,6 +37,36 @@ namespace cIcCore{
     void LayoutCell::setYoffsetHalf(QJsonValue obj){
           useHalfHeight = true;
     }
+
+	void LayoutCell::addDirectedRoute(QJsonArray obj){
+
+		if(obj.size() < 3){
+			qDebug() << "Error: addDirectedRoute must contain at least three elements\n";
+			return;
+		}
+
+		QString layer = obj[0].toString();
+		QString net = obj[1].toString();
+		QString route = obj[2].toString();
+		QString startRegex;
+		QString routeType;
+		QString endRegex;
+		QRegularExpression re("^([^-\|<>]*)([-\|<>]+)([^-\|<>]*)$");
+		QRegularExpressionMatch m_route = re.match(route);
+		if(m_route.hasMatch()){
+			startRegex = m_route.captured(1);
+			routeType = m_route.captured(2);
+			endRegex = m_route.captured(3);
+		}else{
+			qDebug() << "Error: Could not parse route command '" << route << "'\n";
+			return;			
+		}
+		
+		QString options = "";
+		if(obj.size() > 3){
+			options = obj[3].toString();
+		}
+	}
 
     void LayoutCell::place(){
 
@@ -53,16 +83,18 @@ namespace cIcCore{
             }
             prev_group = group;
 
+
+
+			//The chain of events is important here, ports get defined in the setSubckInstance
             Instance * inst = Instance::getInstance(ckt_inst->subcktName());
             inst->setSubcktInstance(ckt_inst);
-
             this->add(inst);
             inst->moveTo(x,y);
             prev_width = inst->width();
             if(useHalfHeight){
                 y += inst->height()/2;
               }else{
-				y += inst->height();
+                y += inst->height();
               }
 
         }
@@ -70,5 +102,41 @@ namespace cIcCore{
         this->updateBoundingRect();
 
     }
+
+	void LayoutCell::addAllPorts(){
+
+		QStringList nodes = _subckt->nodes();
+
+		//QMap<QString,Port*> porthash;
+		//QMap<QString,Instance*> instancehash;
+		foreach(Rect* child, children()){
+		    if(!(child->isInstance())){ continue;}
+		    Instance * inst = (Instance *) child;
+		    foreach(Port * p, inst->ports()){
+			if(p == NULL){continue;}
+			if(!nodes.contains(p->name())){continue;}
+			if(_ports.contains(p->name())){continue;}
+			Port * pi = new Port(p->name());
+			pi->setChild(p,inst);
+
+			this->add(pi);
+		      }
+
+		}
+
+
+	//	foreach(QString s,nodes){
+	//		if(_ports.contains(s))
+				//continue;
+
+	//		Port* p = new Port(s);
+	//		if(porthash.contains(s)){
+	//		    p->addChild(porthash[s],instancehash[s]);
+	//		    this->add(p);
+	//		}
+	//	}
+
+
+	}
 
 }

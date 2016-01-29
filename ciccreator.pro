@@ -24,6 +24,7 @@
   QT += core widgets
 
 
+
   unix:!mac{
   QMAKE_LIBDIR += ~/qt5_4/lib  ~/qt5_4/plugins/platforms
   }
@@ -32,13 +33,21 @@
   CONFIG += qt console debug
 
   mac {
-  CONFIG -= app_bundle
+    CONFIG -= app_bundle
+	CFLAGS="-fprofile-arcs -ftest-coverage"
+	CXXFLAGS="-fprofile-arcs -ftest-coverage"
+	LDFLAGS="-fprofile-arcs -ftest-coverage --coverage"
   }
 
   TEMPLATE = app
 
   osx:DESTDIR = bin/darwin
   linux:DESTDIR = bin/linux
+
+
+#- Add coverage information
+  QMAKE_CFLAGS += $$(CFLAGS) --coverage
+  QMAKE_LFLAGS += $$(LDFLAGS) --coverage
 
   TARGET = cic
 
@@ -73,7 +82,8 @@
   external/libgds_dist/libgds.h \
   src/core/layer.h \
   src/printer/spice.h \
-  src/core/port.h
+  src/core/port.h \
+  src/core/router.h
 
   SOURCES +=         src/printer/gds.cpp \
   src/core/rules.cpp \
@@ -83,6 +93,7 @@
   src/core/patterntransistor.cpp \
   src/core/patterncapacitor.cpp \
   src/core/design.cpp \
+  src/core/router.cpp \
   src/printer/designprinter.cpp \
   src/printer/svg.cpp \
   src/spice/spiceparser.cpp \

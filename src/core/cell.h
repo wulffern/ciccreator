@@ -22,11 +22,20 @@
 
 #include <QObject>
 #include "rect.h"
+#include "port.h"
 #include <QPainterPath>
 #include "spice/subckt.h"
 
 namespace cIcCore{
 
+	/*!
+	  Base class for all cells, usually inherited to provide specialization.
+	  The methods of this class is called in the following order when a cell is created:
+	  place();
+	  route();
+	  paint();
+	  
+	 */
     class Cell: public Rect
     {
         Q_OBJECT
@@ -36,39 +45,78 @@ namespace cIcCore{
         Cell();
         Cell(const Cell&);
         ~Cell();
+
+		//! Find the first rectangle in this cell that uses layer
         Rect * getRect(QString layer);
+
+		//! Add a rectangle to the cell, hooks updated() of the child to updateBoundingRect
         void add(Rect* rect);
+
+		//! Move this cell, and all children by dx and dy
         void translate(int dx, int dy);
+
+		//! Mirror this cell, and all children around ax
         void mirrorX(int ax);
+
+		//! Mirror this cell, and all children around ay
         void mirrorY(int ay);
+
+		//! Move this cell, and all children to ax and ay
         void moveTo(int ax, int ay);
+
+		//! Center this cell, and all children on ax and ay
         Q_INVOKABLE void moveCenter(int ax, int ay);
+
+		//! Mirror this cell, and all children around horizontal center point (basically flip horizontal)
         Q_INVOKABLE void mirrorCenterX();
 
-
-
+		//! Calculate the extent of this cell. Should be overriden by children
         virtual Rect  calcBoundingRect();
+
+		//! Convert cell to a human readable format, useful for debug
         QString toString();
+
+		//! Name of this cell
         QString name(){return _name;}
         QString setName(QString val){ _name = val; return _name;}
-        //bool isEmpty(){return _is_empty;}
 
+		//! Get the port linked to net name (name)
+        Port * getPort(QString name);
+
+		//! Get all ports on this cell
+        QList<Port *>  ports();
+
+		//! Spice subcircuit object
         cIcSpice::Subckt * subckt(){return _subckt;}
         cIcSpice::Subckt * setSubckt(cIcSpice::Subckt * val){ _subckt = val; return _subckt;}
 
+		// TODO: Why do I have both spiceObject and subckt?
+		virtual cIcSpice::SpiceObject * spiceObject(){return spiceObject_;}
+        virtual void setSpiceObject(cIcSpice::SpiceObject* si){spiceObject_ =  si;}
+		
+		//! Get list of all children
         QList<Rect*> children(){return _children;}
 
-        virtual cIcSpice::SpiceObject * spiceObject(){return spiceObject_;}
-        virtual void setSpiceObject(cIcSpice::SpiceObject* si){spiceObject_ =  si;}
+
+		//! Place children
         virtual void place();
+
+		//! Route children
         virtual void route();
+
+		//! Paint children, useful with a method after route
         virtual void paint();
+
+		//! Automatically add remaing ports
         virtual void addAllPorts();
 
+		//! Check if this cell contains a cell with name cell
         static bool hasCell(QString cell){
             return Cell::_allcells.contains(cell);
         }
 
+		//! Get a named cell, returns empty cell if it does not exist, so you should check
+		//! that the cell exists in this cell first
         static Cell* getCell(QString cell){
             if(Cell::_allcells.contains(cell)){
                 return Cell::_allcells[cell];
@@ -78,6 +126,7 @@ namespace cIcCore{
             }
         }
 
+			//! Get a list of all cells in this design
         static QList<Cell*> getAllCells(){
 			QList<Cell*> cells;
 			foreach(Cell * cell,_allcells){
@@ -86,11 +135,13 @@ namespace cIcCore{
             return cells;
         }
 
+			//! Add a cell to the list of all cells 
         static Cell* addCell(QString cell,Cell * c){
             Cell::_allcells[cell] = c;
             return c;
         }
 
+			//! Add a cell, and use the cell->name() as key
         static Cell* addCell(Cell *c){
             Cell::_allcells[c->name()] = c;
             return c;
@@ -98,14 +149,29 @@ namespace cIcCore{
 
 
     protected:
-        static QMap<QString,Cell*> _allcells;
+			//! List of all cells
+			static QMap<QString,Cell*> _allcells;
+
+			//! Ports in this cell
+		QMap<QString,Port*> _ports;
+
+			//! SPICE subcircuit related to this cell
         cIcSpice::Subckt * _subckt;
+
+			//! Find bottom left rectangle in the cell
         Rect* getBottomLeftRect();
+			//! Find top left rectangle in the cell
         Rect* getTopLeftRect();
+
+			//TODO: Why do I have both spiceObject_ and subckt?
+			//! SPICE object 
         cIcSpice::SpiceObject * spiceObject_;
+
+			//! Children of this cell
         QList<Rect*> _children;
 
     private:
+			//! Cell name
         QString _name;
         bool _has_pr;
 

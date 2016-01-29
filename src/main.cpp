@@ -1,5 +1,5 @@
 //====================================================================
-//        Copyright (c) 2015 Carsten Wulff Software, Norway 
+//        Copyright (c) 2015 Carsten Wulff Software, Norway
 // ===================================================================
 // Created       : wulff at 2015-4-19
 // ===================================================================
@@ -7,12 +7,12 @@
 //   it under the terms of the GNU General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
-// 
+//
 //   This program is distributed in the hope that it will be useful,
 //   but WITHOUT ANY WARRANTY; without even the implied warranty of
 //   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //   GNU General Public License for more details.
-// 
+//
 //   You should have received a copy of the GNU General Public License
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //====================================================================
@@ -31,52 +31,55 @@
 
 int main(int argc, char *argv[])
 {
-	
-	if(argc >=  3){
 
-		QString file = argv[1];
-		QString rules = argv[2];
-		QString library = argv[3];
+    if(argc >=  3){
 
-		if(library == ""){
-		    QRegularExpression re("/?([^\/]+)\.json");
-		    QRegularExpressionMatch m = re.match(file);
-		    library = m.captured(1);
-		  }
+        QString file = argv[1];
+        QString rules = argv[2];
+        QString library = argv[3];
 
-		//Load rules
-		cIcCore::Rules::loadRules(rules);
+        if(library == ""){
+            QRegularExpression re("/?([^\/]+)\.json");
+            QRegularExpressionMatch m = re.match(file);
+            library = m.captured(1);
+        }
 
-		//Load design
-		cIcCore::Design * d = new cIcCore::Design();
-		d->read(file);
+        //Load rules
+        cIcCore::Rules::loadRules(rules);
 
-//		cIcPrinter::Svg * pr = new cIcPrinter::Svg("test");
-//		pr->print(d);
+        //Load design, this is where the magic happens
+        cIcCore::Design * d = new cIcCore::Design();
+        d->read(file);
 
-		cIcPrinter::Spice * spice = new cIcPrinter::Spice(library);
-		spice->print(d);
+        //Print SVG file
+        cIcPrinter::Svg * pr = new cIcPrinter::Svg("test");
+        pr->print(d);
+
+        //Print SPICE file
+        cIcPrinter::Spice * spice = new cIcPrinter::Spice(library);
+        spice->print(d);
+
+        //Write GDS
+        cIcCore::ConsoleOutput console;
+        console.comment("Writing GDS");
+        cIcPrinter::Gds * gd = new cIcPrinter::Gds(library);
+        gd->print(d);
+
+		//Open GUI
+        if(argc == 5){
+            QApplication app(argc, argv);
+            cIcGui::Window window;
+            window.loadDesign(d);
+            window.show();
+            return app.exec();
+        }
 
 
-		cIcCore::ConsoleOutput console;
-		console.comment("Writing GDS");
-		cIcPrinter::Gds * gd = new cIcPrinter::Gds(library);
-		gd->print(d);
+    }else{
+        qWarning() << "Wrong number of arguments " << argc;
+    }
 
-	if(argc == 5){
-		QApplication app(argc, argv);
-		cIcGui::Window window;
-		window.loadDesign(d);
-		window.show();
-		return app.exec();
-	  }
-		
 
-	}else{
-	   qWarning() << "Wrong number of arguments " << argc;
-	  }
 
-		
 
-  
 }

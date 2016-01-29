@@ -22,31 +22,46 @@
 namespace cIcCore{
 
     QMap<QString,Cell*> Cell::_allcells;
-
+	
     Cell::Cell(): Rect(){
-      spiceObject_ = 0;
+       spiceObject_ = NULL;
     }
 
     Cell::Cell(const Cell&){
-spiceObject_ = 0;
+        spiceObject_ = NULL;
     }
 
     Cell::~Cell() {
 
     }
 
-
-
     void Cell::mirrorCenterX(){
       this->mirrorX(this->centerX());
     }
 
     void Cell::paint(){
-//    qDebug() << "Painting Cell";
+
     }
     void Cell::route(){}
     void Cell::place(){}
-    void Cell::addAllPorts(){}
+
+
+	//-------------------------------------------------------------
+	// Port functions
+	//-------------------------------------------------------------
+	void Cell::addAllPorts(){}
+    QList<Port*> Cell::ports(){
+        return  _ports.values();
+    }
+	Port * Cell::getPort(QString name){
+
+		Port * p = NULL;
+		if(_ports.contains(name)){
+			p = _ports[name];
+		}
+
+		return p;
+	}
 
     Rect* Cell::getRect(QString layer){
         foreach (Rect* child, _children){
@@ -60,6 +75,9 @@ spiceObject_ = 0;
 
 
 
+	//-------------------------------------------------------------
+	// Children handling
+	//-------------------------------------------------------------
     void Cell::add(Rect* child){
 
         if ( child == 0){
@@ -68,6 +86,10 @@ spiceObject_ = 0;
         }
 
         if (child && !_children.contains(child)) {
+			if(child->isPort()){
+				Port* p = (Port*) child;
+				_ports[p->name()] = p;
+			}
             child->parent(this);
             this->_children.append(child);
             connect(child,SIGNAL(updated()),this, SLOT(updateBoundingRect()));
@@ -76,21 +98,13 @@ spiceObject_ = 0;
         this->updateBoundingRect();
     }
 
-
-
     void Cell::translate(int dx, int dy) {
-
         Rect::translate(dx,dy);
-
         foreach(Rect* child, _children) {
-            //if( strcmp(child->metaObject()->className(),"IcEnclosingRect") == 0){
-            //    continue;
-            //  }
             child->translate(dx,dy);
         }
-        emit updated();
-
         this->updateBoundingRect();
+        emit updated();
     }
 
     void Cell::mirrorX(int ax) {
@@ -104,9 +118,6 @@ spiceObject_ = 0;
         }
 
         foreach(Rect * child, _children) {
-            //  if( strcmp(child->metaObject()->className(),"IcEnclosingRect") == 0){
-            //      continue;
-            //    }
             child->mirrorX(ax);
         }
         this->updateBoundingRect();
@@ -125,9 +136,6 @@ spiceObject_ = 0;
         }
 
         foreach(Rect* child, _children) {
-            //if( strcmp(child->metaObject()->className(),"IcEnclosingRect") == 0){
-            //    continue;
-            //  }
             child->mirrorY(ay);
         }
         this->updateBoundingRect();
@@ -157,18 +165,16 @@ spiceObject_ = 0;
         this->moveTo(xpos,ypos);
     }
 
-
+	
+    //-------------------------------------------------------------
+	// Bounding rectangle functions
+	//-------------------------------------------------------------
     void Cell::updateBoundingRect(){
-        //Rect r;
         Rect r = this->calcBoundingRect();
         this->setRect(r);
-        // qDebug() << r;
-
     }
 
     Rect Cell::calcBoundingRect(){
-
-
         int x1  = std::numeric_limits<int>::max();
         int y1  = std::numeric_limits<int>::max();
         int x2  = -std::numeric_limits<int>::max();
@@ -254,7 +260,4 @@ spiceObject_ = 0;
 
       return topLeft;
     }
-
-
-
 }

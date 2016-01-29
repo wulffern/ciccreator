@@ -30,7 +30,6 @@ namespace cIcSpice{
 	class SpiceObject: public QObject
 	{
 
-
 		Q_OBJECT
 		Q_PROPERTY(QString name READ name WRITE setName)
 		Q_PROPERTY(QStringList spiceStr READ spiceStr WRITE setSpiceStr)

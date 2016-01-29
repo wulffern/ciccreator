@@ -144,9 +144,16 @@ namespace cIcGui{
             Port * p = (Port *) r;
             QFont font=painter.font() ;
              font.setPointSize ( 1000 );
+             Layer *l = rules->getLayer(p->layer());
+             if(!l->visible){
+                 continue;
+               }
+             QColor color(l->color);
+             color.setAlpha(150);
+             painter.setPen(QPen(color,Qt::SolidLine));
              //font.setWeight(QFont::DemiBold);
              painter.setFont(font);
-            painter.drawText(p->x1(),p->y1(),p->name());
+            painter.drawText(p->x1(),p->y1()+p->height(),p->name());
               }
 
           }

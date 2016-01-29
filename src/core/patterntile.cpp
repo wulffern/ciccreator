@@ -219,7 +219,7 @@ namespace cIcCore {
                     prev_rect_ = rect;
 
                     if(p){
-                        p->add(rect);
+                        p->set(rect);
                         this->add(p);
                     }
 

@@ -20,14 +20,14 @@
 
 namespace cIcCore{
 
-  Instance::Instance()
+  Instance::Instance():Cell()
   {
-
+    _cell = 0;
   }
 
-  Instance::Instance(const Instance&)
+  Instance::Instance(const Instance& inst): Cell(inst)
   {
-
+    _cell = 0;
   }
 
 
@@ -37,7 +37,47 @@ namespace cIcCore{
   }
 
   void Instance::setSubcktInstance(cIcSpice::SubcktInstance *inst){
-    ckt_inst_ = inst;
+	  ckt_inst_ = inst;
+	  
+	  _ports.clear();
+	  cIcSpice::Subckt* ckt = cIcSpice::Subckt::getInstanceSubckt(inst);
+
+	  //Add ports, but don't proceed if the subcircuit cannot be found
+	  QStringList cktNodes;
+	  Cell* cell = this->cell();
+
+	  if(cell == NULL){ qWarning() << "Error: Could find cell" << inst->subcktName(); return;}
+
+	  cIcSpice::SpiceObject * sobj = NULL;
+	  if(cell){ sobj= cell->spiceObject();}
+
+	  if(ckt){
+	      cktNodes = ckt->nodes();
+	    }else if(sobj){
+	      cktNodes = sobj->nodes();
+	    }else{
+		 qWarning() << "Subckt " << inst->subcktName() << " not found";
+	     return;
+	    }
+
+	  QStringList instNodes = inst->nodes();
+	  
+	  if(instNodes.count() != cktNodes.count()){
+	      qWarning() << "Error: different number of nodes for " << inst->name() << "(" << instNodes.count() << ")" << " and " << inst->subcktName() << "(" << cktNodes.count() << ")";
+
+	    }
+
+
+	  for(int i=0;i<cktNodes.count();i++){
+		  QString instNode = instNodes[i];
+		  QString cktNode= cktNodes[i];
+		  Port * instPort = new Port(instNode);
+		  Port * cellPort = cell->getPort(cktNode);
+		  if(cellPort){
+		    instPort->setChild(cellPort,this);
+		    this->add(instPort);
+	    }
+	  }
   }
 
   Rect Instance::calcBoundingRect(){

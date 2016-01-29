@@ -23,10 +23,15 @@
 #include <QObject>
 #include <QList>
 #include <QString>
+#include <QtCore>
 #include "core/rect.h"
 
 
 namespace cIcCore{
+
+	/*!
+	  Port is a net name attached to a rectangle
+	 */
   class Port: public Rect
   {
     Q_OBJECT
@@ -36,17 +41,25 @@ namespace cIcCore{
 	  Port();
 	  ~Port();
 	  Port(QString name);
+
+	  //! Net name
 	  QString name();
 	  void setName(QString name);
-	  void add(Rect * r );
-	  Rect * get();
+
+	  //! Link a port to a port on a child, and to an instance
+	  void setChild(Port * p,Rect * parent);
+	  void set(Rect * r );
 
   protected:
-    QString name_;
-    QList<Rect *> rectangles_;
+	  QString name_;
 
+	  //! Parent, does this rectangle belong to any particular instance
+	  Rect * parent_;
 
+	  //! Link to a child port, provides connectivity through a hierarchy
+	  Port * childport_;
 
+	  
   };
 
 }
