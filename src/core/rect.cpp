@@ -89,12 +89,12 @@ namespace cIcCore{
 
 
     Rect* Rect::getCopy(){
-        return new Rect(_layer, x() , y(), width(), height() );
+        return new Rect(_layer, x1() , y1(), width(), height() );
     }
 	
 
-    Rect* Rect::getCopy(QString layer){
-        return new Rect(layer, x(), y(), width(), height() );
+    Rect* Rect::getCopy(const QString layer){
+        return new Rect(layer, x1(), y1(), width(), height() );
     }
 
     int Rect::snap(int x){
@@ -105,7 +105,7 @@ namespace cIcCore{
 
 
     Rect* Rect::adjustedOnce(int xp1){
-        Rect* rect = new Rect(layer(),x() - xp1, y() - xp1, width() + 2*xp1, height() + 2*xp1);
+        Rect* rect = new Rect(layer(),x1() - xp1, y1() - xp1, width() + 2*xp1, height() + 2*xp1);
         return rect;
     }
 

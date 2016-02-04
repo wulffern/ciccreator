@@ -65,10 +65,10 @@ namespace cIcCore{
         void comment(QString str);
 
 		//List of conversions between ciccreator object names and cnano (Perl version) object names
-        QHash<QString,QString> cellTranslator;
+	QMap<QString,QString> cellTranslator;
 
 		//List of conversion between ciccreator method names and cnano method names
-        QHash<QString,QString> nameTranslator;
+	QMap<QString,QString> nameTranslator;
 
 		//Search through JSON and find all parents
         void findAllParents(QList<QJsonObject > *reverse_parents,QString inh);

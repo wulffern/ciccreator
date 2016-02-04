@@ -67,8 +67,8 @@ namespace cIcCore {
 
     }
 
-    QHash<QString,QVariant> PatternTile::initFillCoordinates(){
-        QHash<QString,QVariant> qh;
+    QMap<QString,QVariant> PatternTile::initFillCoordinates(){
+        QMap<QString,QVariant> qh;
         return qh;
     }
 
@@ -83,7 +83,7 @@ namespace cIcCore {
         this->yspace_ = this->rules->get("ROUTE","verticalgrid");
 
 
-        QHash<QString,QVariant> data = this->initFillCoordinates();
+        QMap<QString,QVariant> data = this->initFillCoordinates();
 
         //TODO: implement copyRows function
 
@@ -132,8 +132,8 @@ namespace cIcCore {
             strs.append(str);
         }
 
-
         layers_[layer] = strs;
+        layerNames_.append(layer);
 
         this->endFillCoordinate(data);
 
@@ -146,10 +146,9 @@ namespace cIcCore {
             this->minPolyLength_ = this->rules->get("PO","mingatelength");
         }
 
-
-        int minpoly = this->minPolyLength();
         currentHeight_ = yspace_;
-        foreach(QString layer, layers_.keys()){
+        foreach(QString layer, layerNames_){
+
             QList<QString> strs = layers_[layer];
             for(int y=0;y <= ymax_;y++){
                 currentHeight_ = yspace_;
@@ -179,8 +178,15 @@ namespace cIcCore {
                     case 'D':
                     case 'S':
                     case 'G':
-                        p = new Port(c);
-                        //Create ports
+                        p = this->getPort(QString(c));
+                        if(!p){
+                            p = new Port(c);
+
+                          }
+                        this->add(p);
+
+
+
                     case 'x':
                     case 'X':
                     case 'K':
@@ -206,6 +212,12 @@ namespace cIcCore {
                         break;
                     }
 
+                    //Adjustment to get poly transistors correct
+                    if(c =='G' && layer == "PO"){
+                        rect->setRect(xs,ys,xspace_,this->minPolyLength());
+                        rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
+                      }
+
                     if(prev_rect_ && prev_rect_->abutsLeft(rect)){
                         prev_rect_->setRight(rect->x2());
                         delete(rect);
@@ -219,8 +231,10 @@ namespace cIcCore {
                     prev_rect_ = rect;
 
                     if(p){
+
                         p->set(rect);
-                        this->add(p);
+                         qDebug() << p->toString();
+
                     }
 
                     int cxoffset = 0;
@@ -276,11 +290,6 @@ namespace cIcCore {
                         this->add(cr1);
                         break;
                     }
-
-
-
-
-
                 }
             }
 
@@ -304,11 +313,11 @@ namespace cIcCore {
         QList<Rect*> columnrects;
 
 
-        QHash<int,QHash<int,Rect*> >  rects = rectangles_[layer];
+        QMap<int,QMap<int,Rect*> >  rects = rectangles_[layer];
         for(int y=0;y<=ymax_;y++){
 
             if(!rects.contains(y)){ continue;}
-            QHash<int,Rect *> row = rects[y];
+            QMap<int,Rect *> row = rects[y];
             QList<Rect*> rowrects;
 
             for(int x=0;x<=xmax_;x++){
@@ -335,7 +344,7 @@ namespace cIcCore {
             foreach(Rect * r, rowrects){
                 bool foundRect = false;
                 foreach(Rect* ry,columnrects){
-                    if(ry->y2() == r->y1() && ry->x() == r->x1()){
+                    if(ry->y2() == r->y1() && ry->x1() == r->x1()){
                         ry->setTop(r->y2());
                         foundRect = true;
 

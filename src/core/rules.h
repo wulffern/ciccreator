@@ -52,6 +52,10 @@ namespace cIcCore{
 
         static Rules* getRules(){return myRules_;}
 
+        QList<Layer*> getConnectStack(QString layer1, QString layer2);
+
+
+
         Device * getDevice(QString dev);
         qreal get(QString layer, QString rule);
         bool hasRule(QString layer, QString rule);
@@ -64,13 +68,15 @@ namespace cIcCore{
         void setRules(QJsonObject job);
         Layer * getLayer(QString string);
         QMap<QString,Layer *> layers(){ return layers_;}
+        bool isLayerBeforeLayer(QString layer1, QString layer2);
         QString getNextLayer(QString lay);
+        QString getPreviousLayer(QString lay);
         double toMicron(int val);
 
     private:
         static Rules * myRules_;
         QMap<QString,Layer *> layers_;
-        QHash<QString, QHash<QString,qreal> >  rules_;
+        QMap<QString, QMap<QString,qreal> >  rules_;
         QMap<QString,Device* > devices_;
         int gamma_;
         int grid_;

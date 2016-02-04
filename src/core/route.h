@@ -17,49 +17,54 @@
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //====================================================================
 
-#ifndef CIC_CORE_ROUTER_H
-#define CIC_CORE_ROUTER_H
+#ifndef CIC_CORE_ROUTE_H
+#define CIC_CORE_ROUTE_H
 
 #include <QObject>
 #include "cell.h"
 #include "instance.h"
+#include "cut.h"
+
 
 namespace cIcCore{
 
-	enum SortDirection {TOP_RIGHT, TOP_LEFT, BOTTOM_RIGHT, BOTTOM_LEFT};
-	enum Offset {END_LOW, END_HIGH, START_LOW, START_HIGH,NO_OFFSET};
-	enum Cut { NO_START_CUT, NO_END_CUT, CENTER_CUT};
-	enum RouteType { LEFT, RIGHT, LEFT_DOWN_LEFT_UP, STRAIGHT};
+	enum SortDirection {SORT_RIGHT, SORT_LEFT, SORT_BOTTOM, SORT_TOP};
+	enum Offset {LOW, HIGH,NO_OFFSET};
+	enum CutProperty { NO_START_CUT, NO_END_CUT, CENTER_CUT};
+	enum RouteType { LEFT, RIGHT, LEFT_DOWN_LEFT_UP, STRAIGHT,VERTICAL,ROUTE_UNKNOWN};
 	
-	class Router : public Cell
+	class Route : public Cell
 	{
 		Q_OBJECT
 
 	public:
-		Router(QString net, QString layer, QString options);
-		Router(const Router&);
-		~Router();
+		Route(QString net, QString layer, QList<Rect*> start, QList<Rect*> stop, QString options, QString routeType);
+		Route(const Route&);
+		~Route();
 
 		virtual void addStartCuts();
 		virtual void addEndCuts(); 
-		virtual void addCuts();
+		virtual void addCuts(QList<Rect*>);
 		virtual void route();
 		
 
 	protected:
-		QString _layer;
-		QString _net;
-		SortDirection _sortDirection;
-		Offset _offset;
-		int _track;
-		int _cuts;
-		int _vcuts;
-		bool _antenna;
-		QString _options;
-		QList<Rect*> _start_rects;
-		QList<Rect*> _end_rects; 
+		QString routeLayer_;
+		RouteType routeType_;
+		QString net_;
+		SortDirection sortDirection_;
+		Offset startOffset_;
+		Offset stopOffset_;
+		int track_;
+		int cuts_;
+		int vcuts_;
+		bool antenna_;
+		QString options_;
+		QList<Rect*> start_rects_;
+		QList<Rect*> stop_rects_;
 
-
+		void routeStraight();
+		void routeLeft();
 	};
 
 }

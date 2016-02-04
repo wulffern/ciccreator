@@ -34,9 +34,9 @@
 
   mac {
     CONFIG -= app_bundle
-	CFLAGS="-fprofile-arcs -ftest-coverage"
-	CXXFLAGS="-fprofile-arcs -ftest-coverage"
-	LDFLAGS="-fprofile-arcs -ftest-coverage --coverage"
+#	QMAKE_CFLAGS=-Weverything
+#	QMAKE_CXXFLAGS= -Weverything
+#	QMAKE_LFLAGS=
   }
 
   TEMPLATE = app
@@ -83,7 +83,8 @@
   src/core/layer.h \
   src/printer/spice.h \
   src/core/port.h \
-  src/core/router.h
+    src/core/route.h \
+    src/core/cut.h
 
   SOURCES +=         src/printer/gds.cpp \
   src/core/rules.cpp \
@@ -93,7 +94,6 @@
   src/core/patterntransistor.cpp \
   src/core/patterncapacitor.cpp \
   src/core/design.cpp \
-  src/core/router.cpp \
   src/printer/designprinter.cpp \
   src/printer/svg.cpp \
   src/spice/spiceparser.cpp \
@@ -110,4 +110,6 @@
   src/printer/spice.cpp \
   src/core/port.cpp\
   src/spice/mosfet.cpp\
-  src/main.cpp
+  src/main.cpp \
+    src/core/route.cpp \
+    src/core/cut.cpp

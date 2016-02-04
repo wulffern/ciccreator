@@ -55,15 +55,20 @@ int main(int argc, char *argv[])
         cIcPrinter::Svg * pr = new cIcPrinter::Svg("test");
         pr->print(d);
 
+		delete(pr);
         //Print SPICE file
         cIcPrinter::Spice * spice = new cIcPrinter::Spice(library);
         spice->print(d);
+
+		delete(spice);
 
         //Write GDS
         cIcCore::ConsoleOutput console;
         console.comment("Writing GDS");
         cIcPrinter::Gds * gd = new cIcPrinter::Gds(library);
         gd->print(d);
+
+		delete(gd);
 
 		//Open GUI
         if(argc == 5){

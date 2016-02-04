@@ -62,33 +62,38 @@ DesignPrinter::~DesignPrinter(){
     return false;
   }
 
+  void DesignPrinter::printChildren(QList<Rect*> children){
+    foreach(Rect * child,children){
+        if(!child){continue;}
+
+        if(child->isInstance()){
+            Instance * inst = (Instance*)child;
+            if(inst->name() == ""){continue;}
+
+            this->printReference((Instance*)child);
+          }else if(child->isPort()){
+            Port * p = (Port *) child;
+            this->printPort(p);
+          }else if (child->isCell()){
+            Cell * c = (Cell * ) child;
+            this->printChildren(c->children());
+
+          }else{
+            this->printRect(child);
+          }
+
+      }
+
+  }
+
   void DesignPrinter::printCell(Cell * c){
 
     if(this->isEmpty(c)){return ;}
 
     this->startCell(c);
 
-    foreach(Rect * child, c->children()){
-        if(!child){continue;}
+    this->printChildren(c->children());
 
-        if(child->isInstance()){
-            Instance * inst = (Instance*)child;
-            if(inst->name() == ""){continue;}
-            this->printReference((Instance*)child);
-          }else if(child->isPort()){
-            Port * p = (Port *) child;
-
-           if(c->name() == "TIEH_CV"){
-                qWarning() << "break";
-             }
-
-
-            this->printPort(p);
-          }else{
-            this->printRect(child);
-          }
-
-      }
 
     this->endCell();
   }

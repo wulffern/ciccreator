@@ -1,3 +1,4 @@
+
 //====================================================================
 //        Copyright (c) 2015 Carsten Wulff Software, Norway 
 // ===================================================================
@@ -22,16 +23,18 @@
 
 namespace cIcCore{
 	Port::Port(){
-
+	  name_ = "";
+	  childport_ = 0;
+	  routeLayer_ = 0;
     }
 
 	Port::~Port(){
-
     }
 
 	Port::Port(QString name){
 	  name_ = name;
 	  childport_ = 0;
+	  routeLayer_ = 0;
 	}
 
     QString Port::name(){return name_;}
@@ -45,10 +48,54 @@ namespace cIcCore{
 
 	}
 
+        QString Port::childName(){
+          if(childport_){
+              return childport_->name();
+            }else{
+              return QString("");
+            }
+
+        }
+
     void Port::set(Rect * r ){
+      if(!r){return;};
           Layer * l = rules->getLayer(r->layer());
-          this->setRect(l->pin,r->x1(),r->y1(),r->width(),r->height());
+          routeLayer_ = l;
+          alternates_rectangles_.append(r);
+          this->setLayer(l->name);
+          rect_ = r;
+          connect(r,SIGNAL(updated()),this, SLOT(updateRect()));
+          this->setRect(r->layer(),r->x1(),r->y1(),r->width(),r->height());
+
+//           qDebug() << r->toString();
     }
+
+    void Port::updateRect(){
+        this->setRect(rect_->x1(),rect_->y1(),rect_->width(),rect_->height());
+    }
+
+	Rect * Port::get(){
+		Rect* r = 0;
+		if(routeLayer_){
+		    QString layer = routeLayer_->name;
+			r = this->getCopy(layer);
+		}
+		return r;
+	}
+
+	Rect * Port::get(QString layer){
+	  foreach(Rect* r,alternates_rectangles_){
+	      if(r->layer() == layer){
+		  return r->getCopy();
+		}
+	    }
+	  return NULL;
+	}
+
+	void Port::add(Rect *r){
+	alternates_rectangles_.append(r);
+
+	}
 }
 
 

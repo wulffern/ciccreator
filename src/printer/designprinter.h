@@ -33,8 +33,6 @@ namespace cIcPrinter{
 
   public:
 
-
-
     protected:
         Cell * current_cell;
         QString filename;
@@ -56,6 +54,7 @@ namespace cIcPrinter{
         virtual void printPort(Port *) {} ;
         virtual void printRect(Rect * rect) {};
         virtual void printReference(Cell *c) {};
+        virtual void printChildren(QList<Rect*> children);
 
         virtual void startLib(QString name);
         virtual void endLib();

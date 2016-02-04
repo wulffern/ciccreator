@@ -71,11 +71,11 @@ namespace cIcCore{
     Q_INVOKABLE void addEnclosureByRectangle(QJsonArray ar);
     Q_INVOKABLE void addEnclosuresByRectangle(QJsonArray ar);
 
-    virtual QHash<QString,QVariant> initFillCoordinates();
-    virtual void onFillCoordinate(QChar c, QString layer, int x, int y, QHash<QString,QVariant> &data){
+    virtual QMap<QString,QVariant> initFillCoordinates();
+    virtual void onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data){
     }
 
-    virtual void endFillCoordinate(QHash<QString,QVariant> &data){
+    virtual void endFillCoordinate(QMap<QString,QVariant> &data){
     }
 
     void paint();
@@ -104,7 +104,7 @@ namespace cIcCore{
 
 
   protected:
-     QHash<QString,QHash<int,QHash<int,QChar> > > rectangle_strings_;
+     QMap<QString,QMap<int,QMap<int,QChar> > > rectangle_strings_;
     int mirrorPatternString_;
     int minPolyLength_;
     int currentHeight_;
@@ -116,11 +116,12 @@ namespace cIcCore{
     int yspace_;
     QList<Enclosure*> enclosures_;
      QList<EnclosureRectangle*> enclosures_by_rect_;
-    QHash<QString,QList<QString> > layers_;
+    QMap<QString,QList<QString> > layers_;
+    QList<QString> layerNames_;
     qreal widthoffset_;
     qreal heightoffset_;
     QList<CopyColumn> copyColumn_;
-    QHash<QString,QHash<int,QHash<int,Rect*> > > rectangles_;
+    QMap<QString,QMap<int,QMap<int,Rect*> > > rectangles_;
     Rect * prev_rect_;
 
     QList<Rect*> findPatternRects(QString layer);

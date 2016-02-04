@@ -27,7 +27,7 @@
 #include "spice/subckt.h"
 
 namespace cIcCore{
-
+	
 	/*!
 	  Base class for all cells, usually inherited to provide specialization.
 	  The methods of this class is called in the following order when a cell is created:
@@ -71,7 +71,8 @@ namespace cIcCore{
         Q_INVOKABLE void mirrorCenterX();
 
 		//! Calculate the extent of this cell. Should be overriden by children
-        virtual Rect  calcBoundingRect();
+	virtual Rect calcBoundingRect();
+	virtual Rect calcBoundingRect(QList<Rect*> children);
 
 		//! Convert cell to a human readable format, useful for debug
         QString toString();
@@ -82,9 +83,10 @@ namespace cIcCore{
 
 		//! Get the port linked to net name (name)
         Port * getPort(QString name);
+        Port * getCellPort(QString name);
 
 		//! Get all ports on this cell
-        QList<Port *>  ports();
+	QList<Port *>  ports();
 
 		//! Spice subcircuit object
         cIcSpice::Subckt * subckt(){return _subckt;}
@@ -141,19 +143,21 @@ namespace cIcCore{
             return c;
         }
 
-			//! Add a cell, and use the cell->name() as key
+                        //! Add a cell, and use the cell->name() as key
         static Cell* addCell(Cell *c){
             Cell::_allcells[c->name()] = c;
             return c;
         }
 
+        //! Find all rectangles by regular expression
+        virtual QList<Rect *> findRectanglesByRegex(QString regex,QString layer);
 
     protected:
 			//! List of all cells
 			static QMap<QString,Cell*> _allcells;
 
 			//! Ports in this cell
-		QMap<QString,Port*> _ports;
+		QMap<QString,Port*> ports_;
 
 			//! SPICE subcircuit related to this cell
         cIcSpice::Subckt * _subckt;
@@ -170,9 +174,13 @@ namespace cIcCore{
 			//! Children of this cell
         QList<Rect*> _children;
 
+    protected:
+        QString instanceName_;
+
     private:
 			//! Cell name
         QString _name;
+
         bool _has_pr;
 
     signals:

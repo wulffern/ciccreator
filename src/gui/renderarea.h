@@ -76,6 +76,7 @@ public:
     QSize minimumSizeHint() const Q_DECL_OVERRIDE;
     QSize sizeHint() const Q_DECL_OVERRIDE;
 
+    void paintChildren(Cell* c, QPainter &painter);
 public slots:
     void zoomIn();
     void zoomOut();

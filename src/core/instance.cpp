@@ -23,11 +23,13 @@ namespace cIcCore{
   Instance::Instance():Cell()
   {
     _cell = 0;
+    ckt_inst_ = 0;
   }
 
   Instance::Instance(const Instance& inst): Cell(inst)
   {
     _cell = 0;
+     ckt_inst_ = 0;
   }
 
 
@@ -36,10 +38,28 @@ namespace cIcCore{
 
   }
 
+	QList<Rect*> Instance::findRectanglesByRegex(QString regex,QString layer){
+		QList<Rect*> rects;
+		Cell * c = this->cell();
+
+		//qWarning() << "Search instance " << this->instanceName();
+		if(c){
+			QList<Rect*> child_rects = c->findRectanglesByRegex(regex,layer);
+			foreach(Rect * r, child_rects){
+				r->translate(this->x1(),this->y1());
+				rects.append(r);
+			}
+		}
+		
+		return rects;
+	}
+
   void Instance::setSubcktInstance(cIcSpice::SubcktInstance *inst){
 	  ckt_inst_ = inst;
 	  
-	  _ports.clear();
+	  instanceName_ = inst->name();
+
+	  ports_.clear();
 	  cIcSpice::Subckt* ckt = cIcSpice::Subckt::getInstanceSubckt(inst);
 
 	  //Add ports, but don't proceed if the subcircuit cannot be found
@@ -83,7 +103,7 @@ namespace cIcCore{
   Rect Instance::calcBoundingRect(){
     Rect r = this->_cell->calcBoundingRect();
     //		r.moveTo(this->x1()+r.x1(), this->y1() + r.y1());
-    r.moveTo(this->x(), this->y());
+    r.moveTo(this->x1(), this->y1());
 
     return r;
   }
@@ -100,6 +120,22 @@ namespace cIcCore{
         c->updateBoundingRect();
       }
     return c;
+  }
+
+  QString Instance::toString(){
+    QString str;
+    str.append(this->name());
+    str.append(" ");
+    str.append(Rect::toString());
+    str.append("\n {\n");
+    if(this->cell()){
+    str.append(this->cell()->toString());
+
+      }else{
+       str.append(" Empty cell");
+      }
+    str.append(" }");
+    return str;
   }
 
 

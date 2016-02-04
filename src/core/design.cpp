@@ -92,6 +92,14 @@ namespace cIcCore{
                 this->createCell(c);
                 //               }
             }
+
+            //Import all cuts, and put them on top
+            foreach(Cut* cut,Cut::getCuts()){
+                Cell::addCell(cut);
+                this->add(cut);
+                _cell_names.insert(0,cut->name());
+              }
+
         }else{
             qWarning() << "Could not find 'cells' array in json file\n";
         }
@@ -254,12 +262,12 @@ namespace cIcCore{
 
 
         //Make a hash of the existing methods
-        QHash<QString,QMetaMethod> methods;
+        QMap<QString,QMetaMethod> methods;
         for(int i =0;i<mobj->methodCount();i++){
             QMetaMethod  m = mobj->method(i);
             methods[m.name()] = m;
         }
-        QHash<QString,QMetaProperty> properties;
+        QMap<QString,QMetaProperty> properties;
         for(int i =0;i<mobj->propertyCount();i++){
             QMetaProperty  p = c->metaObject()->property(i);
             properties[p.name()] = p;

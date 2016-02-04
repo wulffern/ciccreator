@@ -50,13 +50,21 @@ namespace cIcCore{
 		QString route = obj[2].toString();
 		QString startRegex;
 		QString routeType;
-		QString endRegex;
-		QRegularExpression re("^([^-\|<>]*)([-\|<>]+)([^-\|<>]*)$");
+		QString stopRegex;
+		QList<Rect*> start;
+		QList<Rect*> stop;
+
+		//Decode route
+		QRegularExpression re("^([^-\\|<>]*)([-\\|<>]+)([^-\\|<>]*)$");
 		QRegularExpressionMatch m_route = re.match(route);
 		if(m_route.hasMatch()){
 			startRegex = m_route.captured(1);
 			routeType = m_route.captured(2);
-			endRegex = m_route.captured(3);
+			stopRegex = m_route.captured(3);
+			
+		start = this->findRectanglesByRegex(startRegex,layer);
+		stop = this->findRectanglesByRegex(stopRegex,layer);
+			
 		}else{
 			qDebug() << "Error: Could not parse route command '" << route << "'\n";
 			return;			
@@ -65,6 +73,15 @@ namespace cIcCore{
 		QString options = "";
 		if(obj.size() > 3){
 			options = obj[3].toString();
+		}
+
+		if(start.count() > 0 && stop.count() > 0){
+
+		    //qDebug() << layer << net << route << options;
+			Route * r = new Route(net,layer,start,stop,options,routeType);
+			r->setPoint1(this->x1(),this->y1());
+			routes_.append(r);
+		      this->add(r);
 		}
 	}
 
@@ -82,8 +99,6 @@ namespace cIcCore{
                 x = x + prev_width;
             }
             prev_group = group;
-
-
 
 			//The chain of events is important here, ports get defined in the setSubckInstance
             Instance * inst = Instance::getInstance(ckt_inst->subcktName());
@@ -103,6 +118,17 @@ namespace cIcCore{
 
     }
 
+    void LayoutCell::route(){
+
+	foreach(Route *route, routes_){
+	    route->route();
+	     // foreach(Rect* r, route->children()){
+	//		this->add(r);
+	//	}
+	 }
+
+    }
+
 	void LayoutCell::addAllPorts(){
 
 		QStringList nodes = _subckt->nodes();
@@ -115,13 +141,12 @@ namespace cIcCore{
 		    foreach(Port * p, inst->ports()){
 			if(p == NULL){continue;}
 			if(!nodes.contains(p->name())){continue;}
-			if(_ports.contains(p->name())){continue;}
+			if(ports_.contains(p->name())){continue;}
 			Port * pi = new Port(p->name());
 			pi->setChild(p,inst);
 
 			this->add(pi);
 		      }
-
 		}
 
 

@@ -81,8 +81,6 @@ namespace cIcCore{
   }
 
   Layer * Rules::getLayer(QString name){
-
-
     if(this->layers_.contains(name)){
 
         Layer * l = this->layers_[name];
@@ -92,6 +90,54 @@ namespace cIcCore{
       }
   }
 
+  bool Rules::isLayerBeforeLayer(QString layer1, QString layer2){
+      QString previousLayer  = this->getPreviousLayer(layer2);
+
+      if(previousLayer== ""){
+        return false;
+        }if(previousLayer == layer1){
+          return true;
+        }else{
+          return this->isLayerBeforeLayer(layer1,previousLayer);
+
+        }
+  }
+
+  QList<Layer *> Rules::getConnectStack(QString layer1, QString layer2){
+
+    QList<Layer*> stack;
+    QString start;
+    QString stop;
+
+    if(this->isLayerBeforeLayer(layer1,layer2)){
+        start = layer1;
+        stop = layer2;
+    }else if(this->isLayerBeforeLayer(layer2,layer1)){
+        start = layer2;
+        stop = layer1;
+
+      }else{
+        qDebug() << "No connect rules that tie " << layer1 << " to " << layer2;
+        return stack;
+    }
+
+    QString current = start;
+    int counter = 100;
+    while(current != stop){
+        stack.append(this->getLayer(current));
+         current = this->getNextLayer(current);
+         counter--;
+         if(counter < 0){
+             break;
+
+           }
+   }
+        stack.append(this->getLayer(stop));
+
+
+  return stack;
+   }
+
 
   QString Rules::getNextLayer(QString lay){
     if(layers_.contains(lay)){
@@ -99,7 +145,16 @@ namespace cIcCore{
       }else{
         qWarning() << "Error: Could not find next layer for " << lay;
       }
-    return lay;
+    return "";
+  }
+
+  QString Rules::getPreviousLayer(QString lay){
+    if(layers_.contains(lay)){
+          return layers_[lay]->previous;
+      }else{
+        qWarning() << "Error: Could not find next layer for " << lay;
+      }
+    return "";
   }
 
 	
@@ -191,7 +246,7 @@ namespace cIcCore{
             qreal v = vral[name].toDouble();
             this->rules_[layer][name] = v;
             //  if(this->rules_.contains(layer)){
-            //	QHash<QString,qreal> rl = this->rules_[name];
+            //	QMap<QString,qreal> rl = this->rules_[name];
             //	rl[name] = v;
             // }
 
@@ -218,10 +273,10 @@ namespace cIcCore{
     qreal v = 0;
 
     if(rules_.contains(layer)){
-        QHash<QString,qreal> lay =  rules_[layer];
+        QMap<QString,qreal> lay =  rules_[layer];
 
         if(!lay.contains(rule)){
-            qDebug() << "Could not find rule "<< rule ;
+            qDebug() << "Could not find rule "<< layer << rule ;
           }else{
             //		   qDebug() << "rules" << rule;
             v = lay[rule]*gamma_;

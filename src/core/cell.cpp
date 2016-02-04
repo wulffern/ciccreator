@@ -22,13 +22,15 @@
 namespace cIcCore{
 
     QMap<QString,Cell*> Cell::_allcells;
-	
+
     Cell::Cell(): Rect(){
-       spiceObject_ = NULL;
+        spiceObject_ = NULL;
+        _subckt = NULL;
     }
 
     Cell::Cell(const Cell&){
         spiceObject_ = NULL;
+         _subckt = NULL;
     }
 
     Cell::~Cell() {
@@ -36,7 +38,7 @@ namespace cIcCore{
     }
 
     void Cell::mirrorCenterX(){
-      this->mirrorX(this->centerX());
+        this->mirrorX(this->centerX());
     }
 
     void Cell::paint(){
@@ -45,23 +47,76 @@ namespace cIcCore{
     void Cell::route(){}
     void Cell::place(){}
 
+    QList<Rect*> Cell::findRectanglesByRegex(QString regex,QString layer){
+        QStringList re_s = regex.split(",",QString::SkipEmptyParts);
+        QList<Rect*> rects;
+        foreach(QString s,re_s){
+            if(s.contains(":")){
+                QStringList str_tok = s.split(":",QString::SkipEmptyParts);
+                QString instname = str_tok[0];
+                str_tok.pop_front();
+                QString path = str_tok.join(":");
+                //Search children
+                QRegularExpression re_inst(instname);
+                foreach(Rect * child, children()){
+                    if(child->isInstance()){
+                        Cell * inst = (Cell*) child;
+                        QRegularExpressionMatch m_inst = re_inst.match(inst->instanceName_);
+                        if(m_inst.hasMatch()){
 
-	//-------------------------------------------------------------
-	// Port functions
-	//-------------------------------------------------------------
-	void Cell::addAllPorts(){}
-    QList<Port*> Cell::ports(){
-        return  _ports.values();
+                            QList<Rect*> child_rects = inst->findRectanglesByRegex(path,layer);
+                            foreach(Rect * r, child_rects){
+                                rects.append((r));
+                            }
+                        }
+
+                    }
+                }
+            }else{
+                //Search ports
+                foreach(Port * p, ports_){
+                    QString childname = p->childName();
+                    if(childname.isEmpty()){
+                        childname = p->name();
+                    }
+					
+                    QRegularExpression re(s);
+                    QRegularExpressionMatch m_port = re.match(childname);
+                    if(m_port.hasMatch()){
+                        Rect * r= p->get(layer);
+                        if(!r){
+                            r = p->get();
+                          }
+                        if(r){
+//                            qWarning() << "Found port " << p->name();
+                            rects.append(r);
+                        }
+                    }
+
+                }
+            }
+
+        }
+
+        return rects;
     }
-	Port * Cell::getPort(QString name){
 
-		Port * p = NULL;
-		if(_ports.contains(name)){
-			p = _ports[name];
-		}
+    //-------------------------------------------------------------
+    // Port functions
+    //-------------------------------------------------------------
+    void Cell::addAllPorts(){}
+    QList<Port*> Cell::ports(){
+        return  ports_.values();
+    }
+    Port * Cell::getPort(QString name){
 
-		return p;
-	}
+        Port * p = NULL;
+        if(ports_.contains(name)){
+            p = ports_[name];
+        }
+
+        return p;
+    }
 
     Rect* Cell::getRect(QString layer){
         foreach (Rect* child, _children){
@@ -75,9 +130,9 @@ namespace cIcCore{
 
 
 
-	//-------------------------------------------------------------
-	// Children handling
-	//-------------------------------------------------------------
+    //-------------------------------------------------------------
+    // Children handling
+    //-------------------------------------------------------------
     void Cell::add(Rect* child){
 
         if ( child == 0){
@@ -86,10 +141,16 @@ namespace cIcCore{
         }
 
         if (child && !_children.contains(child)) {
-			if(child->isPort()){
-				Port* p = (Port*) child;
-				_ports[p->name()] = p;
-			}
+            if(child->isPort()){
+                Port* p = (Port*) child;
+                QString childname = p->childName();
+                if(childname.isEmpty()){
+                  ports_[p->name()] = p;
+                 }else{
+                    ports_[childname] = p;
+
+                  }
+            }
             child->parent(this);
             this->_children.append(child);
             connect(child,SIGNAL(updated()),this, SLOT(updateBoundingRect()));
@@ -143,9 +204,9 @@ namespace cIcCore{
     }
 
     void Cell::moveTo(int ax, int ay) {
-		int x1 = this->x1();
-		int y1 = this->y1();
-		Rect::moveTo(ax,ay);
+        int x1 = this->x1();
+        int y1 = this->y1();
+        Rect::moveTo(ax,ay);
         foreach(Rect* child, _children) {
             child->translate( ax - x1, ay -  y1);
         }
@@ -165,53 +226,62 @@ namespace cIcCore{
         this->moveTo(xpos,ypos);
     }
 
-	
+
     //-------------------------------------------------------------
-	// Bounding rectangle functions
-	//-------------------------------------------------------------
+    // Bounding rectangle functions
+    //-------------------------------------------------------------
     void Cell::updateBoundingRect(){
         Rect r = this->calcBoundingRect();
         this->setRect(r);
     }
 
+     Rect Cell::calcBoundingRect(QList<Rect*> children){
+       int x1  = std::numeric_limits<int>::max();
+       int y1  = std::numeric_limits<int>::max();
+       int x2  = -std::numeric_limits<int>::max();
+       int y2  =  -std::numeric_limits<int>::max();
+
+       foreach(Rect* cr, children) {
+
+           int cx1 = cr->x1();
+           int cx2 = cr->x2();
+           int cy1 = cr->y1();
+           int cy2 = cr->y2();
+
+           if (cx1 < x1) {
+               x1 = cx1;
+           }
+
+           if (cy1 < y1) {
+               y1 = cy1;
+           }
+           if (cx2 > x2) {
+               x2 = cx2;
+           }
+           if (cy2 > y2) {
+               y2 = cy2;
+
+           }
+       }
+       Rect r;
+
+       r.setPoint1(x1,y1);
+       r.setPoint2(x2,y2);
+
+       return r;
+
+
+     }
+
     Rect Cell::calcBoundingRect(){
-        int x1  = std::numeric_limits<int>::max();
-        int y1  = std::numeric_limits<int>::max();
-        int x2  = -std::numeric_limits<int>::max();
-        int y2  =  -std::numeric_limits<int>::max();
-
-        foreach(Rect* cr, this->_children) {
-
-            int cx1 = cr->x1();
-            int cx2 = cr->x2();
-            int cy1 = cr->y1();
-            int cy2 = cr->y2();
-
-            if (cx1 < x1) {
-                x1 = cx1;
-            }
-
-            if (cy1 < y1) {
-                y1 = cy1;
-            }
-            if (cx2 > x2) {
-                x2 = cx2;
-            }
-            if (cy2 > y2) {
-                y2 = cy2;
-
-            }
-        }
-        Rect r;
-
-        r.setPoint1(x1,y1);
-        r.setPoint2(x2,y2);
-
-        return r;
+      return this->calcBoundingRect(this->children());
     }
 
     QString Cell::toString(){
         QString str;
+        str.append(" ");
+        str.append(this->name());
+        str.append(" ");
         str.append(Rect::toString());
         str.append("\n {\n");
         QString strpar = this->metaObject()->className();
@@ -226,38 +296,38 @@ namespace cIcCore{
     }
 
     Rect* Cell::getBottomLeftRect(){
-      int xmin = std::numeric_limits<int>::max();
-      int ymin = std::numeric_limits<int>::max();
-      Rect * bottomLeft;
-      foreach(Rect * r, this->_children){
-        if(r->x1() < xmin && r->y1() < ymin){
-            if(bottomLeft){
-                delete(bottomLeft);
-              }
-            xmin = r->x();
-            ymin = r->y();
-            bottomLeft = new Rect(r);
-          }
+        int xmin = std::numeric_limits<int>::max();
+        int ymin = std::numeric_limits<int>::max();
+        Rect * bottomLeft;
+        foreach(Rect * r, this->_children){
+            if(r->x1() < xmin && r->y1() < ymin){
+                if(bottomLeft){
+                    delete(bottomLeft);
+                }
+                xmin = r->x1();
+                ymin = r->y1();
+                bottomLeft = new Rect(r);
+            }
         }
 
-      return bottomLeft;
+        return bottomLeft;
     }
 
     Rect* Cell::getTopLeftRect(){
-      int xmin = std::numeric_limits<int>::max();
-      int ymax = -std::numeric_limits<int>::max();
-      Rect * topLeft;
-      foreach(Rect * r, this->_children){
-        if(r->x1() < xmin && r->y2() > ymax){
-            if(topLeft){
-                delete(topLeft);
-              }
-            xmin = r->x();
-            ymax = r->y2();
-           topLeft = new Rect(r);
-          }
+        int xmin = std::numeric_limits<int>::max();
+        int ymax = -std::numeric_limits<int>::max();
+        Rect * topLeft;
+        foreach(Rect * r, this->_children){
+            if(r->x1() < xmin && r->y2() > ymax){
+                if(topLeft){
+                    delete(topLeft);
+                }
+                xmin = r->x1();
+                ymax = r->y2();
+                topLeft = new Rect(r);
+            }
         }
 
-      return topLeft;
+        return topLeft;
     }
 }

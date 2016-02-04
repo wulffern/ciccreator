@@ -100,20 +100,14 @@ namespace cIcGui{
         float yscale = ((float)rect.height())/((float)r.height());
         float scale = xscale > yscale ? yscale : xscale;
         _zoom = scale;
-        xc = -r.x();
-        yc = -r.y();
+        xc = -r.x1();
+        yc = -r.y1();
         first = false;
       }
 
     transformPainter(painter);
     drawShape(painter);
     painter.restore();
-    // painter.setWindow(c->x(),c->y(),c->width(),c->height());
-
-
-
-
-
   }
 
   void RenderArea::drawCoordinates(QPainter &painter)
@@ -128,17 +122,12 @@ namespace cIcGui{
 
 
 
-  void RenderArea::drawCell(int x, int y, Cell * c, QPainter &painter){
-
-    painter.translate(x,y);
-
-    painter.setPen(QPen(QColor("black"),10));
-    painter.setBrush(QBrush(Qt::NoBrush));
-    painter.drawRect(c->x(),c->y(),c->width(),c->height());
+  void RenderArea::paintChildren(Cell* c, QPainter &painter)
+  {
     foreach(Rect * r, c->children()){
         if(r->isInstance()){
             Instance *  inst= (Instance *) r;
-            this->drawCell(inst->x(),inst->y(),inst->cell(), painter);
+            this->drawCell(inst->x1(),inst->y1(),inst->cell(), painter);
           }else if(r->isPort()){
             if(c == this->c){
             Port * p = (Port *) r;
@@ -156,6 +145,9 @@ namespace cIcGui{
             painter.drawText(p->x1(),p->y1()+p->height(),p->name());
               }
 
+          }else if(r->isCell()){
+            Cell * childcell = (Cell*)r;
+            this->paintChildren(childcell,painter);
           }
           else{
             Layer *l = rules->getLayer(r->layer());
@@ -183,10 +175,20 @@ namespace cIcGui{
                 painter.setBrush(QBrush(color,bstyle));
               }
             //setPen(r,painter);
-            painter.drawRect(r->x(),r->y(),r->width(),r->height());
+            painter.drawRect(r->x1(),r->y1(),r->width(),r->height());
           }
 
       }
+  }
+
+  void RenderArea::drawCell(int x, int y, Cell * c, QPainter &painter){
+
+    painter.translate(x,y);
+
+    painter.setPen(QPen(QColor("black"),10));
+    painter.setBrush(QBrush(Qt::NoBrush));
+    painter.drawRect(c->x1(),c->y1(),c->width(),c->height());
+    this->paintChildren(c, painter);
     painter.translate(-x,-y);
     QRectF r = painter.window();
     //  this->resize(r.width(),r.height());
@@ -199,7 +201,7 @@ namespace cIcGui{
 
     if(this->c != 0){
 
-        this->drawCell(-this->c->x(),0,this->c,painter);
+        this->drawCell(-this->c->x1(),0,this->c,painter);
       }
 
     //painter.fillPath(shape, Qt::blue);

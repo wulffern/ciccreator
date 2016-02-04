@@ -38,7 +38,7 @@ namespace cIcPrinter{
 
   void Gds::printPort(Port * p){
 
-	  this->printRect(p);
+    this->printRect(p);
     gds_write_text( fd );
     gds_write_layer( fd, Rules::getRules()->layerToNumber(p->layer()) );
     gds_write_texttype( fd, Rules::getRules()->layerToDataType(p->layer()) );
@@ -62,8 +62,8 @@ namespace cIcPrinter{
 
     ///TODO: Implement rotations
     //              gds_write_angle( fd, 0.0 );             // and tilted at some weird angle
-    x[0] =  toNano(o->x());
-	y[0] = toNano(o->y());
+    x[0] =  toNano(o->x1());
+	y[0] = toNano(o->y1());
     gds_write_xy( fd, x, y, 1 );             // at these coordinates (database units)
     gds_write_endel( fd );                   // end of element
   }

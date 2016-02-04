@@ -31,8 +31,8 @@ namespace cIcCore{
 
   }
 
-  QHash<QString,QVariant> PatternTransistor::initFillCoordinates(){
-      QHash<QString,QVariant> data;
+  QMap<QString,QVariant> PatternTransistor::initFillCoordinates(){
+      QMap<QString,QVariant> data;
       data["isTransistor"] = false;
       data["wmin"] = std::numeric_limits<int>::max();
       data["wmax"] = -std::numeric_limits<int>::max();
@@ -42,7 +42,7 @@ namespace cIcCore{
       return data;
   }
 
-  void PatternTransistor::onFillCoordinate(QChar c, QString layer, int x, int y, QHash<QString,QVariant> &data){
+  void PatternTransistor::onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data){
 
     if(layer == "PO" && rectangle_strings_.contains("OD") && rectangle_strings_["OD"].contains(x)
        && rectangle_strings_["OD"][x].contains(y) ){
@@ -73,7 +73,7 @@ namespace cIcCore{
   }
 
 
-  void PatternTransistor::endFillCoordinate(QHash<QString,QVariant> &data){
+  void PatternTransistor::endFillCoordinate(QMap<QString,QVariant> &data){
     if(data["isTransistor"].toBool()){
 
         int width = (data["wmax"].toInt() - data["wmin"].toInt() + 1)*this->xspace_;

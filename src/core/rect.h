@@ -3,7 +3,7 @@
 // ===================================================================
 // Created       : wulff at 2015-1-26
 // ===================================================================
-//  This program is free software: you can redistribute it and/or modify
+//  Th program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
@@ -32,10 +32,7 @@ namespace cIcCore{
 
         Q_OBJECT
 
-
     public:
-
-		
         Rect();
         Rect(const Rect&);
 		~Rect();
@@ -68,8 +65,8 @@ namespace cIcCore{
         int centerX();        //! x1 + (x2 - x1)/2
         int centerY();        //! y1 + (y2 - y1)/2
         bool empty();         //! Is this rectangle empty, x1=x2=y1=y2
-        int x(){return x1_;}  //! x1
-        int y(){return y1_;}  //! y1
+//        int x(){return x1_;}  //! x1
+//        int y(){return y1_;}  //! y1
         int x1(){return x1_;} 
         int y1(){return y1_;}
         int x2(){return x2_;}
@@ -106,7 +103,41 @@ namespace cIcCore{
 
 		//! Check if this is an cIcCore::Instance object
         bool isInstance(){
-            if(strcmp(this->metaObject()->className(),"cIcCore::Instance") == 0){
+          if(strcmp(this->metaObject()->className(),"cIcCore::Instance") == 0){
+              return true;
+            }else if(this->inherits("cIcCore::Instance")){
+          //
+                return true;
+            }
+            return false;
+        }
+
+        //! Check if this is a cIcCore::Rect object
+        bool isRoute(){
+          if(strcmp(this->metaObject()->className(),"cIcCore::Route") == 0){
+              return true;
+            }else if(this->inherits("cIcCore::Route")){
+              return true;
+            }
+            return false;
+        }
+
+        //! Check if this is a cIcCore::Rect object
+        bool isCut(){
+          if(strcmp(this->metaObject()->className(),"cIcCore::Cut") == 0){
+              return true;
+            }else if(this->inherits("cIcCore::Cut")){
+               return true;
+            }
+            return false;
+        }
+
+        //! Check if this is a cIcCore::Rect object
+        bool isCell(){
+          if(strcmp(this->metaObject()->className(),"cIcCore::Cell") == 0){
+
+              return true;
+            }else  if(this->inherits("cIcCore::Cell")){
                 return true;
             }
             return false;
@@ -179,7 +210,7 @@ namespace cIcCore{
         void setWidth(int width);
 
 		//! Set height, moves y2
-        void setHeight(int height);
+		      void setHeight(int height);
 
 		//! Set coordinates based on rect
         void setRect(Rect rect){
@@ -208,19 +239,19 @@ namespace cIcCore{
 
     inline int Rect::left(){ return x1_;}
     inline int Rect::right(){ return x2_;}
-    inline int Rect::top(){ return y2_;}
-    inline int Rect::bottom(){ return y1_;}
+     inline int Rect::top(){ return y2_;}
+	inline int Rect::bottom(){ return y1_;}
     inline int Rect::width(){ return x2_ - x1_;}
     inline int Rect::height(){ return y2_ - y1_;}
 
-    inline int Rect::centerX(){ return left() + width()/2.0;}
-    inline int Rect::centerY(){ return bottom() + height()/2.0;}
+    inline int Rect::centerX(){ return x1_ + width()/2.0;}
+    inline int Rect::centerY(){ return y1_ + height()/2.0;}
 
 
-    inline void Rect::setLeft(int left){ x1_ = left;emit updated();}
-    inline void Rect::setRight(int right){ x2_ = right; emit updated();}
-    inline void Rect::setTop(int top){ y2_ = top; emit updated() ;}
-    inline void Rect::setBottom(int bottom){ y1_ = bottom; emit updated();}
+     inline void Rect::setLeft(int left){ x1_ = left;emit updated();}
+     inline void Rect::setRight(int right){ x2_ = right; emit updated();}
+     inline void Rect::setTop(int top){ y2_ = top; emit updated() ;}
+     inline void Rect::setBottom(int bottom){ y1_ = bottom; emit updated();}
     inline void Rect::setHeight(int height){ y2_ = y1_ + height; emit updated();}
     inline void Rect::setWidth(int width){ x2_ = x1_ + width; emit updated();}
 

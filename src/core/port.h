@@ -24,7 +24,7 @@
 #include <QList>
 #include <QString>
 #include <QtCore>
-#include "core/rect.h"
+#include "rect.h"
 
 
 namespace cIcCore{
@@ -49,9 +49,17 @@ namespace cIcCore{
 	  //! Link a port to a port on a child, and to an instance
 	  void setChild(Port * p,Rect * parent);
 	  void set(Rect * r );
+	  Rect* get();
+	  Rect* get(QString layer);
+	  void add(Rect* r);
+	  QString childName();
+
 
   protected:
 	  QString name_;
+
+	  Layer * routeLayer_;
+	  Rect* rect_;
 
 	  //! Parent, does this rectangle belong to any particular instance
 	  Rect * parent_;
@@ -59,6 +67,10 @@ namespace cIcCore{
 	  //! Link to a child port, provides connectivity through a hierarchy
 	  Port * childport_;
 
+	  QList<Rect*> alternates_rectangles_;
+
+  public slots:
+        void updateRect();
 	  
   };
 

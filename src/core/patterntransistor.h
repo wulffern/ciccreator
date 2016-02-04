@@ -40,9 +40,9 @@ public:
     QString mosType(){return mos_->deviceName();}
     void setMosType(QString mosType){mos_->setDeviceName( mosType); }
 
-    virtual QHash<QString,QVariant>  initFillCoordinates();
-    virtual void onFillCoordinate(QChar c, QString layer, int x, int y, QHash<QString,QVariant> &data);
-    virtual void endFillCoordinate(QHash<QString, QVariant> &data);
+    virtual QMap<QString,QVariant>  initFillCoordinates();
+    virtual void onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data);
+    virtual void endFillCoordinate(QMap<QString, QVariant> &data);
 
 private:
     Mosfet * mos_;

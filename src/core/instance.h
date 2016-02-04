@@ -36,15 +36,21 @@ namespace cIcCore{
     Instance(const Instance&);
     ~Instance();
     Cell * cell(){return _cell;}
+	  QString instanceName(){return instanceName_;}
     virtual Rect calcBoundingRect();
-    // Cell * addInstance(QString cell);
+	  // Cell * addInstance(QString cell);
     static Instance * getInstance(QString cell);
+    void setCell(Cell*cell){_cell = cell;}
     cIcSpice::SubcktInstance *subcktInstance(){return ckt_inst_;}
     void setSubcktInstance(cIcSpice::SubcktInstance *inst);
 
+    QList<Rect*> findRectanglesByRegex(QString regex,QString layer);
+    QString toString();
+	  
   private:
     Cell * _cell;
     cIcSpice::SubcktInstance * ckt_inst_;
+
 
   };
 

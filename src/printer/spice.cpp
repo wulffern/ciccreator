@@ -34,6 +34,7 @@ namespace cIcPrinter{
   void Spice::startCell(Cell * cell){
 
     if(!cell){return;}
+    if(cell->isCut()){return;};
     cIcSpice::Subckt * ckt = cell->subckt();
 
     if(!ckt){return;}
