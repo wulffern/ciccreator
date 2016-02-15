@@ -185,8 +185,6 @@ namespace cIcCore {
                           }
                         this->add(p);
 
-
-
                     case 'x':
                     case 'X':
                     case 'K':
@@ -233,9 +231,9 @@ namespace cIcCore {
                     if(p){
 
                         p->set(rect);
-                         qDebug() << p->toString();
-
                     }
+
+					this->paintRect(rect,c,x,y);
 
                     int cxoffset = 0;
 
@@ -292,11 +290,8 @@ namespace cIcCore {
                     }
                 }
             }
-
-
         }
         this->updateBoundingRect();
-
         this->paintEnclosures();
 
     }
