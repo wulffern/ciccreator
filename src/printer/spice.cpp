@@ -51,7 +51,6 @@ namespace cIcPrinter{
       }else{
         SpiceObject * so = cell->spiceObject();
         if(so){
-
             ts << ".SUBCKT " << cell->name() << " " << so->nodes().join(' ')  << "\n";
             ts << so->toSpice("1", so->nodes()) << "\n";
           }else{
@@ -95,7 +94,11 @@ namespace cIcPrinter{
     if(si){
 //        ts << so->toSpice(si->name(), si->nodes()) << "\n";
 //      }else{
-        ts << si->name() << " " << si->nodes().join(' ') << " " << si->subcktName() << "\n";
+		QString instname = si->name();
+		if(instname.startsWith("M")){
+			instname = "X" + instname;
+		}
+        ts << instname << " " << si->nodes().join(' ') << " " << si->subcktName() << "\n";
 
       }
   }

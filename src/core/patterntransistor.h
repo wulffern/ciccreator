@@ -43,7 +43,7 @@ public:
     virtual QMap<QString,QVariant>  initFillCoordinates();
     virtual void onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data);
     virtual void endFillCoordinate(QMap<QString, QVariant> &data);
-
+	virtual void paintRect(Rect *r, QChar c,int x,int y);
 private:
     Mosfet * mos_;
 };

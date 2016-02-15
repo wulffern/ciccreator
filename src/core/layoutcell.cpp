@@ -153,7 +153,12 @@ namespace cIcCore{
             r_avdd.setBottom(this->bottom());
             r_avdd.setWidth(ravdd->width());
             r_avdd.setLayer("M4");
-            this->add(new Rect(r_avdd));
+			Rect * r = new Rect(r_avdd);
+            this->add(r);
+			if(ports_.contains("AVDD")){
+				Port * p = ports_["AVDD"];
+				p->set(r);
+			}
         }
 
         QList<Rect*> avss = this->findRectanglesByRegex("AVSS","M1");
@@ -167,8 +172,12 @@ namespace cIcCore{
             r_avss.setBottom(this->bottom());
             r_avss.setWidth(ravss->width());
             r_avss.setLayer("M4");
-
-            this->add(new Rect(r_avss));
+			Rect * r = new Rect(r_avss);
+            this->add(r);
+			if(ports_.contains("AVSS")){
+				Port * p = ports_["AVSS"];
+				p->set(r);
+			}
         }
 
 

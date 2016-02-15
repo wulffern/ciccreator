@@ -75,6 +75,7 @@ namespace cIcCore{
         else if(routeType == "-|--"){routeType_ = LEFT;}
         else if(routeType == "--|-"){routeType_ = RIGHT;}
         else if(routeType == "-"){routeType_ = STRAIGHT;}
+		else if(routeType == "->"){routeType_ = STRAIGHT;}
         else if(routeType == "||"){routeType_ = VERTICAL;}
         else{
             routeType_ = ROUTE_UNKNOWN;
@@ -119,7 +120,9 @@ namespace cIcCore{
                 inst->moveTo(r->x1(),r->y1());
                 this->add(inst);
                 r->setWidth(inst->width());
-            }
+            }else{
+				this->add(r);
+			}
         }
     }
 
@@ -191,12 +194,22 @@ namespace cIcCore{
 	      qWarning() << "Can't route straight ";
 	       return;
 	     }
+	   
 	   int count = start_rects_.count();
-
 	   for(int x = 0;x < count;x++){
 	    Rect *r1 = start_rects_[x];
 	    Rect* r2 = stop_rects_[x];
-	    Rect * r = new Rect(routeLayer_, r1->x1(),r1->y1(),r2->x2() - r1->x1(),r1->height());
+
+		//Use the lowest rectangle to route
+		int height = r1->height();
+		if(r1->height() > r2->height()){
+			height = r2->height();
+		}
+
+		int center = r1->centerY();
+		
+		
+	    Rect * r = new Rect(routeLayer_, r1->x1(),center - height/2.0,r2->x2() - r1->x1(),height);
 	    this->add(r);
 	     }
 		
