@@ -196,13 +196,14 @@ namespace cIcCore{
             this->runAllParentMethods("afterRoute",c,reverse_parents);
             this->runAllMethods("afterRoute",c,jobj);
 
+            c->addAllPorts();
             //Paint
             this->runAllParentMethods("beforePaint",c,reverse_parents);
             this->runAllMethods("beforePaint",c,jobj);
             c->paint();
             this->runAllParentMethods("afterPaint",c,reverse_parents);
             this->runAllMethods("afterPaint",c,jobj);
-            c->addAllPorts();
+
 
             this->add(c);
             Cell::addCell(c);

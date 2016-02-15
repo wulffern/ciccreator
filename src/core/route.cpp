@@ -117,8 +117,6 @@ namespace cIcCore{
                 inst->moveTo(r->x1(),r->y1());
                 this->add(inst);
                 r->setWidth(inst->width());
-                //r->setRect(inst);
-                // qDebug() << inst->toString();
             }
         }
     }

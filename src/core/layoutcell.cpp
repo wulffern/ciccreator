@@ -38,6 +38,10 @@ namespace cIcCore{
           useHalfHeight = true;
     }
 
+    void LayoutCell::noPowerRoute(QJsonValue obj){
+      noPowerRoute_ = true;
+    }
+
 	void LayoutCell::addDirectedRoute(QJsonArray obj){
 
 		if(obj.size() < 3){
@@ -122,10 +126,50 @@ namespace cIcCore{
 
 	foreach(Route *route, routes_){
 	    route->route();
-	     // foreach(Rect* r, route->children()){
-	//		this->add(r);
-	//	}
 	 }
+
+
+
+    }
+
+    void LayoutCell::paint(){
+      if(!noPowerRoute_){
+        this->routePower();
+        }
+
+    }
+
+    void LayoutCell::routePower(){
+
+     // qWarning() << "searching power nets";
+      QList<Rect*> avss = this->findRectanglesByRegex("AVSS","M1");
+      QList<Rect*> avdd = this->findRectanglesByRegex("AVDD","M1");
+      QList<Rect*> empty;
+//      qWarning() << "Found AVSS" << avss.length() << " Found AVDD" << avdd.length();
+
+      Route * ravdd = new Route("AVDD","M4",avdd,empty,"","-|-");
+      ravdd->addStartCuts();
+      this->add(ravdd);
+      Rect r_avdd =  this->calcBoundingRect(avdd);
+      r_avdd.setTop(this->top());
+      r_avdd.setBottom(this->bottom());
+      r_avdd.setWidth(ravdd->width());
+      r_avdd.setLayer("M4");
+
+      Route * ravss = new Route("AVDD","M4",avss,empty,"","-|-");
+      ravss->addStartCuts();
+      this->add(ravss);
+
+      Rect r_avss =  this->calcBoundingRect(avss);
+      r_avss.setTop(this->top());
+      r_avss.setBottom(this->bottom());
+      r_avss.setWidth(ravss->width());
+      r_avss.setLayer("M4");
+
+
+      this->add(new Rect(r_avdd));
+      this->add(new Rect(r_avss));
+
 
     }
 
@@ -133,8 +177,6 @@ namespace cIcCore{
 
 		QStringList nodes = _subckt->nodes();
 
-		//QMap<QString,Port*> porthash;
-		//QMap<QString,Instance*> instancehash;
 		foreach(Rect* child, children()){
 		    if(!(child->isInstance())){ continue;}
 		    Instance * inst = (Instance *) child;
@@ -142,24 +184,15 @@ namespace cIcCore{
 			if(p == NULL){continue;}
 			if(!nodes.contains(p->name())){continue;}
 			if(ports_.contains(p->name())){continue;}
+			if(p->name().contains(QRegularExpression("AVSS|AVDD")) && p->childName() == "B"){continue;}
 			Port * pi = new Port(p->name());
 			pi->setChild(p,inst);
-
 			this->add(pi);
 		      }
 		}
 
 
-	//	foreach(QString s,nodes){
-	//		if(_ports.contains(s))
-				//continue;
 
-	//		Port* p = new Port(s);
-	//		if(porthash.contains(s)){
-	//		    p->addChild(porthash[s],instancehash[s]);
-	//		    this->add(p);
-	//		}
-	//	}
 
 
 	}

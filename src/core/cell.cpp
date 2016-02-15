@@ -56,6 +56,7 @@ namespace cIcCore{
                 QString instname = str_tok[0];
                 str_tok.pop_front();
                 QString path = str_tok.join(":");
+
                 //Search children
                 QRegularExpression re_inst(instname);
                 foreach(Rect * child, children()){
@@ -74,12 +75,14 @@ namespace cIcCore{
                 }
             }else{
                 //Search ports
+                 qWarning() << "Searching ports";
                 foreach(Port * p, ports_){
                     QString childname = p->childName();
                     if(childname.isEmpty()){
                         childname = p->name();
                     }
 					
+		    qWarning() << s << childname;
                     QRegularExpression re(s);
                     QRegularExpressionMatch m_port = re.match(childname);
                     if(m_port.hasMatch()){
@@ -88,7 +91,6 @@ namespace cIcCore{
                             r = p->get();
                           }
                         if(r){
-//                            qWarning() << "Found port " << p->name();
                             rects.append(r);
                         }
                     }

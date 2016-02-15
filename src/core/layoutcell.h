@@ -37,17 +37,19 @@ namespace cIcCore{
         ~LayoutCell() ;
 
         Q_INVOKABLE void setYoffsetHalf(QJsonValue obj);
-
+        Q_INVOKABLE void noPowerRoute(QJsonValue obj);
         Q_INVOKABLE void addDirectedRoute(QJsonArray obj);
 
         virtual void place();
         virtual void route();
-
         virtual  void addAllPorts();
+        virtual void routePower();
+        virtual void paint();
 
     private:
-        bool useHalfHeight;
+        bool useHalfHeight = false;
         QList<Route*> routes_;
+        bool noPowerRoute_ = false;
 
     };
 
