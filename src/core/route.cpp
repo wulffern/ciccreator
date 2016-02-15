@@ -54,8 +54,10 @@ namespace cIcCore{
 
         //- Track
         QRegularExpressionMatch * m = 0;
-        if(options.contains(QRegularExpression("track(\\d+)"),m) && m->hasMatch()){
-            track_ = m->captured(0).toInt();
+        if(options.contains(QRegularExpression("track(\\d+)"),m)){
+              //if(m && m->has)
+            //TODO: Fix trac capture
+            //track_ = m->captured(0).toInt();
         }
 
         //- Cuts
