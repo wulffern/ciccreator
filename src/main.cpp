@@ -52,10 +52,10 @@ int main(int argc, char *argv[])
         d->read(file);
 
         //Print SVG file
-        cIcPrinter::Svg * pr = new cIcPrinter::Svg("test");
-        pr->print(d);
+//        cIcPrinter::Svg * pr = new cIcPrinter::Svg("test");
+//        pr->print(d);
 
-		delete(pr);
+//		delete(pr);
         //Print SPICE file
         cIcPrinter::Spice * spice = new cIcPrinter::Spice(library);
         spice->print(d);

@@ -17,6 +17,9 @@
 ##   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ######################################################################
 
+#  /Users/wulff/pro/ciccreator/examples/devices.json   /Users/wulff/pro/ciccreator/examples/tech.json devices -v
+#   /Users/wulff/pro/cnano/examples/SAR_LPWR_ST28N/SAR_LPWR_ST28N.json   /Users/wulff/pro/cnano/examples/soi.json SAR_LPWR_ST28N -v	
+
 
 CMD=time ../bin/cic
 

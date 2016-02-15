@@ -40,6 +40,8 @@ namespace cIcCore{
     QString Port::name(){return name_;}
 
 	void Port::setName(QString name){name_ = name;}
+
+	QString Port::pinLayer(){return routeLayer_->pin;}
 	
 	void Port::setChild(Port * p,Rect * parent){
 		childport_ = p;

@@ -45,7 +45,8 @@ namespace cIcCore{
 	  //! Net name
 	  QString name();
 	  void setName(QString name);
-
+	  QString pinLayer();
+	  
 	  //! Link a port to a port on a child, and to an instance
 	  void setChild(Port * p,Rect * parent);
 	  void set(Rect * r );

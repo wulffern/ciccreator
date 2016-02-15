@@ -38,18 +38,21 @@ namespace cIcPrinter{
 
   void Gds::printPort(Port * p){
 
-    this->printRect(p);
+	  Rect * r = new Rect(p);
+	  r->setLayer(p->pinLayer());
+    this->printRect(r);
     gds_write_text( fd );
-    gds_write_layer( fd, Rules::getRules()->layerToNumber(p->layer()) );
-    gds_write_texttype( fd, Rules::getRules()->layerToDataType(p->layer()) );
+    gds_write_layer( fd, Rules::getRules()->layerToNumber(r->layer()) );
+    gds_write_texttype( fd, Rules::getRules()->layerToDataType(r->layer()) );
     gds_write_presentation( fd, 0, 1, 0 );  // fd, font, hp, vp
     gds_write_width( fd, 1 );
     gds_write_strans( fd, 0, 0, 1 );        // fd, reflect, abs_angle, abs_mag
-    x[0] = toNano(p->x1());
-    y[0] = toNano(p->y1());
+    x[0] = toNano(r->x1());
+    y[0] = toNano(r->y1());
     gds_write_xy( fd, x, y, 1 );
     gds_write_string( fd, this->toChar(p->name()) );
     gds_write_endel( fd );
+	delete(r);
 
 
   }

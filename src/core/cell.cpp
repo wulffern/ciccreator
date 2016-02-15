@@ -75,14 +75,12 @@ namespace cIcCore{
                 }
             }else{
                 //Search ports
-                 qWarning() << "Searching ports";
                 foreach(Port * p, ports_){
                     QString childname = p->childName();
                     if(childname.isEmpty()){
                         childname = p->name();
                     }
 					
-		    qWarning() << s << childname;
                     QRegularExpression re(s);
                     QRegularExpressionMatch m_port = re.match(childname);
                     if(m_port.hasMatch()){

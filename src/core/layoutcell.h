@@ -47,9 +47,9 @@ namespace cIcCore{
         virtual void paint();
 
     private:
-        bool useHalfHeight = false;
+        bool useHalfHeight;
         QList<Route*> routes_;
-        bool noPowerRoute_ = false;
+        bool noPowerRoute_;
 
     };
 
