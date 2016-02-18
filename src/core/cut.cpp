@@ -91,8 +91,23 @@ Cut::~Cut()
 
   }
 
-Instance * Cut::getInstance(QString layer1, QString layer2, int horizontal_cuts, int vertical_cuts){
+  QList<Rect*> Cut::getCutsForRects(QString layer1, QList<Rect*> rects, int horizontal_cuts,int vertical_cuts){
 
+      QList<Rect*> cuts;
+        foreach(Rect *r, rects){
+            if(r == NULL){continue;}
+            if(layer1 != r->layer()){
+                Instance * inst= Cut::getInstance(layer1,r->layer(),horizontal_cuts,vertical_cuts);
+                inst->moveTo(r->x1(),r->y1());
+                cuts.append(inst);
+              }
+        }
+        return cuts;
+    }
+
+
+
+Instance * Cut::getInstance(QString layer1, QString layer2, int horizontal_cuts, int vertical_cuts){
 
   Instance *instance = 0;
   QString tag1 =   Cut::makeName(layer1,layer2,horizontal_cuts,vertical_cuts);

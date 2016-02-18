@@ -38,13 +38,13 @@ namespace cIcCore{
 
   }
 
-	QList<Rect*> Instance::findRectanglesByRegex(QString regex,QString layer){
+	QList<Rect*> Instance::findRectanglesByRegex(QString regex,QString layer,QString filterChildPortName, int level){
 		QList<Rect*> rects;
 		Cell * c = this->cell();
 
 		//qWarning() << "Search instance " << this->instanceName();
 		if(c){
-			QList<Rect*> child_rects = c->findRectanglesByRegex(regex,layer);
+			QList<Rect*> child_rects = c->findRectanglesByRegex(regex,layer,filterChildPortName,level);
 			foreach(Rect * r, child_rects){
 				r->translate(this->x1(),this->y1());
 				rects.append(r);

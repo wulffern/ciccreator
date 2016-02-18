@@ -44,7 +44,7 @@ namespace cIcCore{
     cIcSpice::SubcktInstance *subcktInstance(){return ckt_inst_;}
     void setSubcktInstance(cIcSpice::SubcktInstance *inst);
 
-    QList<Rect*> findRectanglesByRegex(QString regex,QString layer);
+	  QList<Rect*> findRectanglesByRegex(QString regex,QString layer,QString filterChildPortName,int level);
     QString toString();
 	  
   private:

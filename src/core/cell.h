@@ -51,6 +51,7 @@ namespace cIcCore{
 
 		//! Add a rectangle to the cell, hooks updated() of the child to updateBoundingRect
         void add(Rect* rect);
+        void add(QList<Rect*> rects);
 
 		//! Move this cell, and all children by dx and dy
         void translate(int dx, int dy);
@@ -72,7 +73,7 @@ namespace cIcCore{
 
 		//! Calculate the extent of this cell. Should be overriden by children
 	virtual Rect calcBoundingRect();
-	virtual Rect calcBoundingRect(QList<Rect*> children);
+	static Rect calcBoundingRect(QList<Rect*> children);
 
 		//! Convert cell to a human readable format, useful for debug
         QString toString();
@@ -150,10 +151,12 @@ namespace cIcCore{
         }
 
         //! Find all rectangles by regular expression
-        virtual QList<Rect *> findRectanglesByRegex(QString regex,QString layer);
+		virtual QList<Rect *> findRectanglesByRegex(QString regex,QString layer){return this->findRectanglesByRegex(regex,layer,"",0);}
+		virtual QList<Rect *> findRectanglesByRegex(QString regex,QString layer,QString filterChildPortName){return this->findRectanglesByRegex(regex,layer,filterChildPortName,0);}
+        virtual QList<Rect *> findRectanglesByRegex(QString regex,QString layer,QString filterChildPortName,int level);
 
     protected:
-			//! List of all cells
+                        //! List of all cells
 			static QMap<QString,Cell*> _allcells;
 
 			//! Ports in this cell

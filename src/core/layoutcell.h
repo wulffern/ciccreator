@@ -47,6 +47,7 @@ namespace cIcCore{
         virtual void routePower();
         virtual void paint();
 
+        void addPowerRoute(QString net);
     private:
         bool useHalfHeight;
         QList<Route*> routes_;

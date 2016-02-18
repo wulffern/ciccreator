@@ -30,7 +30,7 @@ namespace cIcCore{
 
     Cell::Cell(const Cell&){
         spiceObject_ = NULL;
-         _subckt = NULL;
+        _subckt = NULL;
     }
 
     Cell::~Cell() {
@@ -47,7 +47,12 @@ namespace cIcCore{
     void Cell::route(){}
     void Cell::place(){}
 
-    QList<Rect*> Cell::findRectanglesByRegex(QString regex,QString layer){
+    QList<Rect*> Cell::findRectanglesByRegex(QString regex,QString layer,QString filterChildPortName,int level){
+
+
+//        qDebug() << this->name();
+
+        //If the regex contains : then search child ports, if it does not, then search local ports
         QStringList re_s = regex.split(",",QString::SkipEmptyParts);
         QList<Rect*> rects;
         foreach(QString s,re_s){
@@ -57,42 +62,69 @@ namespace cIcCore{
                 str_tok.pop_front();
                 QString path = str_tok.join(":");
 
-                //Search children
+                //Find and match instance
                 QRegularExpression re_inst(instname);
                 foreach(Rect * child, children()){
                     if(child->isInstance()){
                         Cell * inst = (Cell*) child;
                         QRegularExpressionMatch m_inst = re_inst.match(inst->instanceName_);
-                        if(m_inst.hasMatch()){
-
-                            QList<Rect*> child_rects = inst->findRectanglesByRegex(path,layer);
+                        if(m_inst.hasMatch()){	
+                            QList<Rect*> child_rects = inst->findRectanglesByRegex(path,layer, filterChildPortName, level + 1);
                             foreach(Rect * r, child_rects){
                                 rects.append((r));
                             }
                         }
-
                     }
                 }
             }else{
+
+                if(level==0){
+                    //Find and match instance port
+                    foreach(Rect * child, children()){
+                        if(child->isInstance()){
+                            Cell * inst = (Cell*) child;
+
+                  //qDebug() << inst->name();
+                            foreach(Port *p, inst->ports()){
+//                            qDebug() << "Portname "  << p->name() << regex ;
+                                QRegularExpression re(regex);
+                                QRegularExpressionMatch m_port = re.match(p->name());
+                                QRegularExpression rechild(filterChildPortName);
+                                QRegularExpressionMatch m_child = rechild.match(p->childName());
+                                if(m_port.hasMatch() && !m_child.hasMatch()){
+                                    Rect * r= p->get(layer);
+                                    if(!r){
+                                        r = p->get();
+                                    }
+                                      r->translate(inst->x1(),inst->y1());
+                                    if(r){
+                                    rects.append(r);
+                                    }
+                                }
+
+
+                            }
+
+                        }
+                    }
+                }
+
+
                 //Search ports
                 foreach(Port * p, ports_){
-                    QString childname = p->childName();
-                    if(childname.isEmpty()){
-                        childname = p->name();
-                    }
-					
+//                    qDebug() << "Portname "  << p->name() << p->childName() << regex ;
+                    //Match name on top level
                     QRegularExpression re(s);
-                    QRegularExpressionMatch m_port = re.match(childname);
+                    QRegularExpressionMatch m_port = re.match(p->name());
                     if(m_port.hasMatch()){
                         Rect * r= p->get(layer);
                         if(!r){
                             r = p->get();
-                          }
+                        }
                         if(r){
                             rects.append(r);
                         }
                     }
-
                 }
             }
 
@@ -133,6 +165,12 @@ namespace cIcCore{
     //-------------------------------------------------------------
     // Children handling
     //-------------------------------------------------------------
+      void Cell::add(QList<Rect*> children){
+        foreach(Rect * r, children){
+            this->add(r);
+          }
+      }
+
     void Cell::add(Rect* child){
 
         if ( child == 0){
@@ -145,11 +183,11 @@ namespace cIcCore{
                 Port* p = (Port*) child;
                 QString childname = p->childName();
                 if(childname.isEmpty()){
-                  ports_[p->name()] = p;
-                 }else{
+                    ports_[p->name()] = p;
+                }else{
                     ports_[childname] = p;
 
-                  }
+                }
             }
             child->parent(this);
             this->_children.append(child);
@@ -235,46 +273,51 @@ namespace cIcCore{
         this->setRect(r);
     }
 
-     Rect Cell::calcBoundingRect(QList<Rect*> children){
-       int x1  = std::numeric_limits<int>::max();
-       int y1  = std::numeric_limits<int>::max();
-       int x2  = -std::numeric_limits<int>::max();
-       int y2  =  -std::numeric_limits<int>::max();
+    Rect Cell::calcBoundingRect(QList<Rect*> children){
+        int x1  = std::numeric_limits<int>::max();
+        int y1  = std::numeric_limits<int>::max();
+        int x2  = -std::numeric_limits<int>::max();
+        int y2  =  -std::numeric_limits<int>::max();
 
-       foreach(Rect* cr, children) {
-
-           int cx1 = cr->x1();
-           int cx2 = cr->x2();
-           int cy1 = cr->y1();
-           int cy2 = cr->y2();
-
-           if (cx1 < x1) {
-               x1 = cx1;
-           }
-
-           if (cy1 < y1) {
-               y1 = cy1;
-           }
-           if (cx2 > x2) {
-               x2 = cx2;
-           }
-           if (cy2 > y2) {
-               y2 = cy2;
-
-           }
-       }
-       Rect r;
-
-       r.setPoint1(x1,y1);
-       r.setPoint2(x2,y2);
-
-       return r;
+        if(children.count() == 0){
+            x1 = y1 = x2 = y2 = 0;
+          }
 
 
-     }
+        foreach(Rect* cr, children) {
+
+            int cx1 = cr->x1();
+            int cx2 = cr->x2();
+            int cy1 = cr->y1();
+            int cy2 = cr->y2();
+
+            if (cx1 < x1) {
+                x1 = cx1;
+            }
+
+            if (cy1 < y1) {
+                y1 = cy1;
+            }
+            if (cx2 > x2) {
+                x2 = cx2;
+            }
+            if (cy2 > y2) {
+                y2 = cy2;
+
+            }
+        }
+        Rect r;
+
+        r.setPoint1(x1,y1);
+        r.setPoint2(x2,y2);
+
+        return r;
+
+
+    }
 
     Rect Cell::calcBoundingRect(){
-      return this->calcBoundingRect(this->children());
+        return this->calcBoundingRect(this->children());
     }
 
     QString Cell::toString(){

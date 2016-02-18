@@ -88,39 +88,39 @@ namespace cIcCore{
             r->setPoint1(this->x1(),this->y1());
             routes_.append(r);
             this->add(r);
-          }
+        }
     }
 
     void LayoutCell::addPortOnRect(QJsonArray obj)
     {
-      if(obj.size() < 2){
-          qDebug() << "Error: addPortsOnRect must contain at least two elements\n";
-          return;
-      }
-
-      QString port = obj[0].toString();
-      QString layer = obj[1].toString();
-      QString path = port;
-
-      if(obj.size() == 3){
-        path = obj[2].toString();
+        if(obj.size() < 2){
+            qDebug() << "Error: addPortsOnRect must contain at least two elements\n";
+            return;
         }
 
-      QList<Rect*> rects = this->findRectanglesByRegex(path,layer);
-      if( rects.count() == 0){
-          qDebug()<< "Could not find port " << port << "on rect " << path << " in layer " << layer;
+        QString port = obj[0].toString();
+        QString layer = obj[1].toString();
+        QString path = port;
+
+        if(obj.size() == 3){
+            path = obj[2].toString();
+        }
+
+        QList<Rect*> rects = this->findRectanglesByRegex(path,layer);
+        if( rects.count() == 0){
+            qDebug()<< "Could not find port " << port << "on rect " << path << " in layer " << layer;
         }else{
-          Rect * r = rects[0];
-          if(r->layer() != layer){
-             qDebug()<< "Could not find port " << port << "on rect " << path << " in layer " << layer;
+            Rect * r = rects[0];
+            if(r->layer() != layer){
+                qDebug()<< "Could not find port " << port << "on rect " << path << " in layer " << layer;
             }else{
-              if(ports_.contains(port)){
-                  Port *p = ports_[port];
-                  p->set(r);
+                if(ports_.contains(port)){
+                    Port *p = ports_[port];
+                    p->set(r);
                 }else{
-                  Port * p = new Port(port);
-                  p->set(r);
-                  this->add(p);
+                    Port * p = new Port(port);
+                    p->set(r);
+                    this->add(p);
 
 
                 }
@@ -180,44 +180,47 @@ namespace cIcCore{
 
     }
 
+    void LayoutCell::addPowerRoute(QString net)
+    {
+      QList<Rect*> rects = this->findRectanglesByRegex(net,"M1","^(B|G)$");
+      if(rects.length() > 0){
+          QList<Rect*>  cuts = Cut::getCutsForRects("M4",rects,2,1);
+          Rect * rp = NULL;
+          if(cuts.count() > 0){
+          Rect r=  Cell::calcBoundingRect(cuts);
+          r.setTop(this->top());
+          r.setBottom(this->bottom());
+          r.setLayer("M4");
+          this->add(cuts);
+
+            rp = new Rect(r);
+            }else{
+              Rect r=  Cell::calcBoundingRect(rects);
+              r.setTop(this->top());
+              r.setBottom(this->bottom());
+              r.setLayer("M4");
+              rp = new Rect(r);
+            }
+          if(rp){
+          this->add(rp);
+          if(ports_.contains(net)){
+              Port * p = ports_[net];
+               p->set(rp);
+          }
+            }
+
+      }
+    }
+
     void LayoutCell::routePower(){
         QList<Rect*> empty;
-        QList<Rect*> avdd = this->findRectanglesByRegex("AVDD","M1");
-        if(avdd.length() > 0){
-            Route * ravdd = new Route("AVDD","M4",avdd,empty,"","-|-");
-            ravdd->addStartCuts();
-            this->add(ravdd);
-            Rect r_avdd =  this->calcBoundingRect(avdd);
-            r_avdd.setTop(this->top());
-            r_avdd.setBottom(this->bottom());
-            r_avdd.setWidth(ravdd->width());
-            r_avdd.setLayer("M4");
-			Rect * r = new Rect(r_avdd);
-            this->add(r);
-			if(ports_.contains("AVDD")){
-				Port * p = ports_["AVDD"];
-				p->set(r);
-			}
-        }
 
-        QList<Rect*> avss = this->findRectanglesByRegex("AVSS","M1");
-        if(avss.length() > 0){
-            Route * ravss = new Route("AVDD","M4",avss,empty,"","-|-");
-            ravss->addStartCuts();
-            this->add(ravss);
 
-            Rect r_avss =  this->calcBoundingRect(avss);
-            r_avss.setTop(this->top());
-            r_avss.setBottom(this->bottom());
-            r_avss.setWidth(ravss->width());
-            r_avss.setLayer("M4");
-			Rect * r = new Rect(r_avss);
-            this->add(r);
-			if(ports_.contains("AVSS")){
-				Port * p = ports_["AVSS"];
-				p->set(r);
-			}
-        }
+        this->addPowerRoute("AVDD");
+        this->addPowerRoute("AVSS");
+
+
+
 
 
     }

@@ -16,6 +16,8 @@ public:
   static Instance * getInstance(QString layer1, QString layer2, int horizontal_cuts, int vertical_cuts);
   ~Cut();
 
+  static QList<Rect*> getCutsForRects(QString layer1, QList<Rect*>, int horizontal_cuts,int vertical_cuts);
+
   static QList<Cut*> getCuts();
 
   protected:
