@@ -88,7 +88,46 @@ namespace cIcCore{
             r->setPoint1(this->x1(),this->y1());
             routes_.append(r);
             this->add(r);
+          }
+    }
+
+    void LayoutCell::addPortOnRect(QJsonArray obj)
+    {
+      if(obj.size() < 2){
+          qDebug() << "Error: addPortsOnRect must contain at least two elements\n";
+          return;
+      }
+
+      QString port = obj[0].toString();
+      QString layer = obj[1].toString();
+      QString path = port;
+
+      if(obj.size() == 3){
+        path = obj[2].toString();
         }
+
+      QList<Rect*> rects = this->findRectanglesByRegex(path,layer);
+      if( rects.count() == 0){
+          qDebug()<< "Could not find port " << port << "on rect " << path << " in layer " << layer;
+        }else{
+          Rect * r = rects[0];
+          if(r->layer() != layer){
+             qDebug()<< "Could not find port " << port << "on rect " << path << " in layer " << layer;
+            }else{
+              if(ports_.contains(port)){
+                  Port *p = ports_[port];
+                  p->set(r);
+                }else{
+                  Port * p = new Port(port);
+                  p->set(r);
+                  this->add(p);
+
+
+                }
+            }
+        }
+
+
     }
 
     void LayoutCell::place(){

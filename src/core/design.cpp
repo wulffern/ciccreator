@@ -318,7 +318,13 @@ namespace cIcCore{
                 console->commentSetProperty(c_name,theme, p.name());
 
             }else{
+                //Ignore symbol commands, they only apply to skill
+                //Ignore rows command, not necessary in this version
+                //Ignore composite command, it is no longer required
+                //Ignore description and comment
+                if(key != "symbol" && key != "rows" && key != "composite" && key != "comment" && key != "description"){
                 console->errorMethodNotFound(c_name,theme, key);
+                  }
             }
         }
 

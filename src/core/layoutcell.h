@@ -39,6 +39,7 @@ namespace cIcCore{
         Q_INVOKABLE void setYoffsetHalf(QJsonValue obj);
         Q_INVOKABLE void noPowerRoute(QJsonValue obj);
         Q_INVOKABLE void addDirectedRoute(QJsonArray obj);
+        Q_INVOKABLE void addPortOnRect(QJsonArray obj);
 
         virtual void place();
         virtual void route();
