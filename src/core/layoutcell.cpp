@@ -117,11 +117,13 @@ namespace cIcCore{
           excludeInstances = obj[5].toString();
         }
 
-      QList<Rect*> rects = this->findRectanglesByNode(regex,layer,"",excludeInstances);
+//      qDebug() << options << cuts << excludeInstances;
+
+      QList<Rect*> rects = this->findRectanglesByNode(regex,"",excludeInstances);
       if(rects.count() > 0){
         QList<Rect*> empty;
           Route * r = new Route(regex,layer,empty,rects,options,routeType);
-                 this->add(r);
+          this->add(r);
         }
 
 
@@ -219,7 +221,7 @@ namespace cIcCore{
 
     }
 
-    QList<Rect *> LayoutCell::findRectanglesByNode(QString node, QString layer, QString filterChild, QString filterInstance)
+    QList<Rect *> LayoutCell::findRectanglesByNode(QString node,  QString filterChild, QString matchInstance)
     {
       QList<Rect *> rects;
       foreach(Rect * r, this->children()){
@@ -227,8 +229,8 @@ namespace cIcCore{
           Instance * i = (Instance *)r;
           if(i == NULL){continue;}
 
-          if(filterInstance != "" && i->name().contains(QRegularExpression(filterInstance))){continue;}
-          QList<Rect* > childRects = i->findRectanglesByNode(node,layer, filterChild);
+          if(matchInstance != "" && !i->name().contains(QRegularExpression(matchInstance))){continue;}
+          QList<Rect* > childRects = i->findRectanglesByNode(node, filterChild);
           foreach(Rect *r, childRects){
               rects.append(r);
             }
@@ -238,9 +240,25 @@ namespace cIcCore{
 
     }
 
-    void LayoutCell::addPowerRoute(QString net)
+    void LayoutCell::addPowerRoute(QString net,QString excludeInstances)
     {
-      QList<Rect*> rects  = this->findRectanglesByNode(net,"","^(B|G)$", "");
+      QList<Rect*> foundrects  = this->findRectanglesByNode(net,"^(B|G)$", "");
+
+      QList<Rect*> rects;
+      foreach(Rect * r, foundrects){
+            Rect * parent  = r->parent();
+            if(parent && parent->isCell() ){
+                Cell *c = (Cell*) parent;
+                QString name = c->name();
+                if(excludeInstances == "" || !name.contains(QRegularExpression(excludeInstances))){
+                  rects.append(r);
+                 }
+              }else{
+                rects.append(r);
+              }
+
+        }
+
       if(rects.length() > 0){
           QList<Rect*>  cuts = Cut::getCutsForRects("M4",rects,2,1);
           Rect * rp = NULL;
@@ -266,14 +284,12 @@ namespace cIcCore{
                p->set(rp);
           }
             }
-
       }
     }
 
     void LayoutCell::routePower(){
-        this->addPowerRoute("AVDD");
-        this->addPowerRoute("AVSS");
-
+        this->addPowerRoute("AVDD","NCH");
+        this->addPowerRoute("AVSS","PCH");
     }
 
     void LayoutCell::addAllPorts(){
@@ -282,7 +298,7 @@ namespace cIcCore{
         QString filterInstance = "";
         foreach(QString node,nodes){
           if(ports_.contains(node)) continue;
-          QList<Rect*> rects = this->findRectanglesByNode(node,"",filterChild,filterInstance);
+          QList<Rect*> rects = this->findRectanglesByNode(node,filterChild,filterInstance);
           if(rects.count() > 0){
               Port * p = new Port(node);
               p->set(rects[0]);

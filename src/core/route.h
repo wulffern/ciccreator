@@ -46,7 +46,9 @@ namespace cIcCore{
 		virtual void addEndCuts(); 
 		virtual void addCuts(QList<Rect*>);
 		virtual void route();
-		
+
+		void addVertical(int x, int width, QString layer);
+		void applyOffset(int width, Rect* start, Offset offset);
 
 	protected:
 		QString routeLayer_;
@@ -65,6 +67,8 @@ namespace cIcCore{
 
 		void routeStraight();
 		void routeLeft();
+		void routeRight();
+		void routeVertical();
 	};
 
 }

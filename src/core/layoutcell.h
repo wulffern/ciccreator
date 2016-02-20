@@ -48,9 +48,9 @@ namespace cIcCore{
         virtual void routePower();
         virtual void paint();
 
-        virtual QList<Rect*> findRectanglesByNode(QString node, QString layer, QString filterChild,QString filterInstance);
+        virtual QList<Rect*> findRectanglesByNode(QString node, QString filterChild,QString filterInstance);
 
-        void addPowerRoute(QString net);
+        void addPowerRoute(QString net,QString excludeInstances);
     private:
         bool useHalfHeight;
 

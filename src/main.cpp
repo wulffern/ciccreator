@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 
         //Print SVG file
 //        cIcPrinter::Svg * pr = new cIcPrinter::Svg("test");
-//        pr->print(d);
+ //       pr->print(d);
 
 //		delete(pr);
         //Print SPICE file

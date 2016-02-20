@@ -169,7 +169,7 @@ namespace cIcCore{
 		//! Check if a rectangle is exactly to the bottom of of this rectangle
         bool abutsBottom(Rect *);
 
-		//!Get the parent rectangle of this
+                //!Get the rectangle of this
         Rect * parent(Rect* rect = 0);
 		
 

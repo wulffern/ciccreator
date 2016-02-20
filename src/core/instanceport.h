@@ -1,5 +1,5 @@
 #ifndef CIC_CORE_INSTANCEPORT_H
-#define CIC_COREINSTANCEPORT_H
+#define CIC_CORE_INSTANCEPORT_H
 
 #include <QObject>
 #include <QList>

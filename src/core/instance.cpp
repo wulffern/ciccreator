@@ -55,7 +55,7 @@ namespace cIcCore{
 		return rects;
   }
 
-  QList<Rect *> Instance::findRectanglesByNode(QString node,QString layer, QString filterChild)
+  QList<Rect *> Instance::findRectanglesByNode(QString node, QString filterChild)
   {
     QList<Rect *> rects;
     foreach(Rect * r,this->children()){
@@ -66,14 +66,14 @@ namespace cIcCore{
         InstancePort * pi = (InstancePort*) p;
         if(pi== NULL) continue;
 
-        if(pi->name().contains(QRegularExpression(node)) && !pi->childName().contains(QRegularExpression(filterChild))){
-            Rect * r;
-            if(layer == ""){
-                r = pi->get();
-              }else{
-                r = pi->get(layer);
+        if(pi->name().contains(QRegularExpression(node)) &&
+           (filterChild == "" || !pi->childName().contains(QRegularExpression(filterChild)))){
+            Rect * r = pi->get();
+
+            if(r){
+                   r->parent(this);
+                rects.append(r);
               }
-            if(r)   rects.append(r);
           }
 
       }
