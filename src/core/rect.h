@@ -55,6 +55,11 @@ namespace cIcCore{
 		//!Get the cIcCore::Rules object
 		Rules * getRules(){return rules;}
 
+		static QList<Rect*> sortLeftOnTop(QList<Rect*> rects);
+		static QList<Rect*> sortRightOnTop(QList<Rect*> rects);
+		static QList<Rect*> sortBottomOnTop(QList<Rect*> rects);
+		static QList<Rect*> sortTopOnTop(QList<Rect*> rects);
+
 
         int left();           //! x1
         int right();          //! x2
@@ -147,7 +152,9 @@ namespace cIcCore{
         bool isPort(){
             if(strcmp(this->metaObject()->className(),"cIcCore::Port") == 0){
                 return true;
-            }
+            }else if(this->inherits("cIcCore::Port")){
+                return true;
+              }
             return false;
 
         }

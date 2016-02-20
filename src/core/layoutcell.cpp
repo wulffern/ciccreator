@@ -85,10 +85,46 @@ namespace cIcCore{
 
             //qDebug() << layer << net << route << options;
             Route * r = new Route(net,layer,start,stop,options,routeType);
-            r->setPoint1(this->x1(),this->y1());
-            routes_.append(r);
+           // r->setPoint1(this->x1(),this->y1());
+           // routes_.append(r);
             this->add(r);
+          }
+    }
+
+    void LayoutCell::addConnectivityRoute(QJsonArray obj)
+    {
+
+      if(obj.size() < 3){
+          qDebug() << "Error: addDirectedRoute must contain at least three elements\n";
+          return;
+      }
+
+      //TODO add support for name-match and cuts (optiont 4 and 5)
+      QString layer = obj[0].toString();
+      QString regex = obj[1].toString();
+      QString routeType = obj[2].toString();
+      QString options = "";
+      QString cuts = "";
+      QString excludeInstances = "";
+      if(obj.size() > 3){
+          options = obj[3].toString();
+      }
+
+      if(obj.size() > 4){
+          cuts = obj[4].toString();
         }
+      if(obj.size() > 5){
+          excludeInstances = obj[5].toString();
+        }
+
+      QList<Rect*> rects = this->findRectanglesByNode(regex,layer,"",excludeInstances);
+      if(rects.count() > 0){
+        QList<Rect*> empty;
+          Route * r = new Route(regex,layer,empty,rects,options,routeType);
+                 this->add(r);
+        }
+
+
     }
 
     void LayoutCell::addPortOnRect(QJsonArray obj)
@@ -108,7 +144,7 @@ namespace cIcCore{
 
         QList<Rect*> rects = this->findRectanglesByRegex(path,layer);
         if( rects.count() == 0){
-            qDebug()<< "Could not find port " << port << "on rect " << path << " in layer " << layer;
+            qDebug()<< "Could not find port " << port << "on path " << path << " in layer " << layer;
         }else{
             Rect * r = rects[0];
             if(r->layer() != layer){
@@ -165,8 +201,11 @@ namespace cIcCore{
 
     void LayoutCell::route(){
 
-        foreach(Route *route, routes_){
-            route->route();
+        foreach(Rect *r, routes_){
+            if(r->isRoute()){
+                Route * route = (Route *) r;
+                route->route();
+              }
         }
 
 
@@ -180,9 +219,28 @@ namespace cIcCore{
 
     }
 
+    QList<Rect *> LayoutCell::findRectanglesByNode(QString node, QString layer, QString filterChild, QString filterInstance)
+    {
+      QList<Rect *> rects;
+      foreach(Rect * r, this->children()){
+          if(!r->isInstance()) continue;
+          Instance * i = (Instance *)r;
+          if(i == NULL){continue;}
+
+          if(filterInstance != "" && i->name().contains(QRegularExpression(filterInstance))){continue;}
+          QList<Rect* > childRects = i->findRectanglesByNode(node,layer, filterChild);
+          foreach(Rect *r, childRects){
+              rects.append(r);
+            }
+
+        }
+      return rects;
+
+    }
+
     void LayoutCell::addPowerRoute(QString net)
     {
-      QList<Rect*> rects = this->findRectanglesByRegex(net,"M1","^(B|G)$");
+      QList<Rect*> rects  = this->findRectanglesByNode(net,"","^(B|G)$", "");
       if(rects.length() > 0){
           QList<Rect*>  cuts = Cut::getCutsForRects("M4",rects,2,1);
           Rect * rp = NULL;
@@ -213,39 +271,24 @@ namespace cIcCore{
     }
 
     void LayoutCell::routePower(){
-        QList<Rect*> empty;
-
-
         this->addPowerRoute("AVDD");
         this->addPowerRoute("AVSS");
-
-
-
-
 
     }
 
     void LayoutCell::addAllPorts(){
-
         QStringList nodes = _subckt->nodes();
-
-        foreach(Rect* child, children()){
-            if(!(child->isInstance())){ continue;}
-            Instance * inst = (Instance *) child;
-            foreach(Port * p, inst->ports()){
-                if(p == NULL){continue;}
-                if(!nodes.contains(p->name())){continue;}
-                if(ports_.contains(p->name())){continue;}
-                if(p->name().contains(QRegularExpression("AVSS|AVDD")) && p->childName() == "B"){continue;}
-                Port * pi = new Port(p->name());
-                pi->setChild(p,inst);
-                this->add(pi);
+        QString filterChild = "^B$";
+        QString filterInstance = "";
+        foreach(QString node,nodes){
+          if(ports_.contains(node)) continue;
+          QList<Rect*> rects = this->findRectanglesByNode(node,"",filterChild,filterInstance);
+          if(rects.count() > 0){
+              Port * p = new Port(node);
+              p->set(rects[0]);
+              this->add(p);
             }
         }
-
-
-
-
 
     }
 

@@ -24,7 +24,6 @@
 namespace cIcCore{
 	Port::Port(){
 	  name_ = "";
-	  childport_ = 0;
 	  routeLayer_ = 0;
     }
 
@@ -33,7 +32,6 @@ namespace cIcCore{
 
 	Port::Port(QString name){
 	  name_ = name;
-	  childport_ = 0;
 	  routeLayer_ = 0;
 	}
 
@@ -41,23 +39,18 @@ namespace cIcCore{
 
 	void Port::setName(QString name){name_ = name;}
 
-	QString Port::pinLayer(){return routeLayer_->pin;}
+	QString Port::pinLayer(){if(routeLayer_){return routeLayer_->pin;}else{return "";}}
 	
-	void Port::setChild(Port * p,Rect * parent){
-		childport_ = p;
-		parent_ = parent;
-		this->set(p);
+//	void Port::setChild(Port * p){
+//		childport_ = p;
+//		parent_ = parent;
+//		Rect * r = p->getCopy();
+//		r->translate(parent->x1(),parent->y1());
+//		this->set(r);
 
-	}
+//        }
 
-        QString Port::childName(){
-          if(childport_){
-              return childport_->name();
-            }else{
-              return QString("");
-            }
 
-        }
 
     void Port::set(Rect * r ){
       if(!r){return;};
@@ -65,8 +58,8 @@ namespace cIcCore{
           routeLayer_ = l;
           alternates_rectangles_.append(r);
           this->setLayer(l->name);
-          rect_ = r;
-          connect(r,SIGNAL(updated()),this, SLOT(updateRect()));
+          rect_ = r->getCopy();
+          //connect(r,SIGNAL(updated()),this, SLOT(updateRect()));
           this->setRect(r->layer(),r->x1(),r->y1(),r->width(),r->height());
 
 //           qDebug() << r->toString();
@@ -78,9 +71,10 @@ namespace cIcCore{
 
 	Rect * Port::get(){
 		Rect* r = 0;
+
 		if(routeLayer_){
 		    QString layer = routeLayer_->name;
-			r = this->getCopy(layer);
+		  r = this->getCopy(layer);
 		}
 		return r;
 	}
@@ -95,9 +89,11 @@ namespace cIcCore{
 	}
 
 	void Port::add(Rect *r){
-	alternates_rectangles_.append(r);
+	  alternates_rectangles_.append(r);
 
 	}
+
+
 }
 
 

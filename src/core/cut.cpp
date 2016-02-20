@@ -98,8 +98,10 @@ Cut::~Cut()
             if(r == NULL){continue;}
             if(layer1 != r->layer()){
                 Instance * inst= Cut::getInstance(layer1,r->layer(),horizontal_cuts,vertical_cuts);
+                if(inst){
                 inst->moveTo(r->x1(),r->y1());
                 cuts.append(inst);
+                  }
               }
         }
         return cuts;

@@ -24,6 +24,7 @@ namespace cIcCore{
   {
     _cell = 0;
     ckt_inst_ = 0;
+
   }
 
   Instance::Instance(const Instance& inst): Cell(inst)
@@ -38,13 +39,13 @@ namespace cIcCore{
 
   }
 
-	QList<Rect*> Instance::findRectanglesByRegex(QString regex,QString layer,QString filterChildPortName, int level){
+  QList<Rect*> Instance::findRectanglesByRegex(QString regex,QString layer){
 		QList<Rect*> rects;
 		Cell * c = this->cell();
 
 		//qWarning() << "Search instance " << this->instanceName();
 		if(c){
-			QList<Rect*> child_rects = c->findRectanglesByRegex(regex,layer,filterChildPortName,level);
+			QList<Rect*> child_rects = c->findRectanglesByRegex(regex,layer);
 			foreach(Rect * r, child_rects){
 				r->translate(this->x1(),this->y1());
 				rects.append(r);
@@ -52,7 +53,33 @@ namespace cIcCore{
 		}
 		
 		return rects;
-	}
+  }
+
+  QList<Rect *> Instance::findRectanglesByNode(QString node,QString layer, QString filterChild)
+  {
+    QList<Rect *> rects;
+    foreach(Rect * r,this->children()){
+
+        if(! r->isPort()) continue;
+        Port * p = (Port *) r;
+        if(! p->isInstancePort()) continue;
+        InstancePort * pi = (InstancePort*) p;
+        if(pi== NULL) continue;
+
+        if(pi->name().contains(QRegularExpression(node)) && !pi->childName().contains(QRegularExpression(filterChild))){
+            Rect * r;
+            if(layer == ""){
+                r = pi->get();
+              }else{
+                r = pi->get(layer);
+              }
+            if(r)   rects.append(r);
+          }
+
+      }
+    return rects;
+
+  }
 
   void Instance::setSubcktInstance(cIcSpice::SubcktInstance *inst){
 	  ckt_inst_ = inst;
@@ -91,12 +118,13 @@ namespace cIcCore{
 	  for(int i=0;i<cktNodes.count();i++){
 		  QString instNode = instNodes[i];
 		  QString cktNode= cktNodes[i];
-		  Port * instPort = new Port(instNode);
 		  Port * cellPort = cell->getPort(cktNode);
 		  if(cellPort){
-		    instPort->setChild(cellPort,this);
-		    this->add(instPort);
-	    }
+		   //   instancePorts_[instNode] = cellPort;
+	//	   //   qDebug() << " Ports " << instNode;
+		   InstancePort * instPort = new InstancePort(instNode,cellPort,this);
+		   this->add(instPort);
+		  }
 	  }
   }
 

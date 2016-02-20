@@ -75,7 +75,81 @@ namespace cIcCore{
     //----------------------------------------------------------------------
 
 
-	QString Rect::layer(){  return _layer;}
+    QString Rect::layer(){  return _layer;}
+
+    QList<Rect *> Rect::sortLeftOnTop(QList<Rect *> rects)
+    {
+      if(rects.count() < 2){return rects;}
+      int index = 0;
+      int count = 0;
+      int x = std::numeric_limits<int>::max();
+      foreach(Rect *r, rects){
+          if(r->x1() < x){
+              index = count;
+            }
+          count++;
+        }
+
+      Rect * a = rects[0];
+      rects[0] = rects[index];
+      rects[index]  = a;
+      return rects;
+    }
+
+    QList<Rect *> Rect::sortRightOnTop(QList<Rect *> rects)
+    {
+      if(rects.count() < 2){return rects;}
+      int index = 0;
+      int count = 0;
+      int x = -std::numeric_limits<int>::max();
+      foreach(Rect *r, rects){
+          if(r->x2() > x){
+              index = count;
+            }
+          count++;
+        }
+      Rect * a = rects[0];
+      rects[0] = rects[index];
+      rects[index]  = a;
+      return rects;
+    }
+
+    QList<Rect *> Rect::sortBottomOnTop(QList<Rect *> rects)
+    {
+      if(rects.count() < 2){return rects;}
+      int index = 0;
+      int count = 0;
+      int y = std::numeric_limits<int>::max();
+      foreach(Rect *r, rects){
+          if(r->y1() < y){
+              index = count;
+            }
+          count++;
+        }
+      Rect * a = rects[0];
+      rects[0] = rects[index];
+      rects[index]  = a;
+      return rects;
+    }
+
+    QList<Rect *> Rect::sortTopOnTop(QList<Rect *> rects)
+    {
+      if(rects.count() < 2){return rects;}
+      int index = 0;
+      int count = 0;
+      int y = -std::numeric_limits<int>::max();
+      foreach(Rect *r, rects){
+          if(r->x2() > y){
+              index = count;
+            }
+          count++;
+        }
+
+      Rect * a = rects[0];
+      rects[0] = rects[index];
+      rects[index]  = a;
+      return rects;
+    }
 
     void Rect::setLayer(QString layer){  _layer  = layer;}
 

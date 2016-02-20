@@ -133,7 +133,7 @@ namespace cIcGui{
             Port * p = (Port *) r;
             QFont font=painter.font() ;
              font.setPointSize ( 1000 );
-             Layer *l = rules->getLayer(p->layer());
+             Layer *l = rules->getLayer(p->pinLayer());
              if(!l->visible){
                  continue;
                }
@@ -183,6 +183,7 @@ namespace cIcGui{
 
   void RenderArea::drawCell(int x, int y, Cell * c, QPainter &painter){
 
+    if(c==NULL){return;}
     painter.translate(x,y);
 
     painter.setPen(QPen(QColor("black"),10));

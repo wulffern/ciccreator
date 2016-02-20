@@ -84,7 +84,8 @@
   src/printer/spice.h \
   src/core/port.h \
     src/core/route.h \
-    src/core/cut.h
+    src/core/cut.h \
+    src/core/instanceport.h
 
   SOURCES +=         src/printer/gds.cpp \
   src/core/rules.cpp \
@@ -112,4 +113,5 @@
   src/spice/mosfet.cpp\
   src/main.cpp \
     src/core/route.cpp \
-    src/core/cut.cpp
+    src/core/cut.cpp \
+    src/core/instanceport.cpp

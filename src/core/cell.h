@@ -23,6 +23,7 @@
 #include <QObject>
 #include "rect.h"
 #include "port.h"
+#include "instanceport.h"
 #include <QPainterPath>
 #include "spice/subckt.h"
 
@@ -151,11 +152,12 @@ namespace cIcCore{
         }
 
         //! Find all rectangles by regular expression
-		virtual QList<Rect *> findRectanglesByRegex(QString regex,QString layer){return this->findRectanglesByRegex(regex,layer,"",0);}
-		virtual QList<Rect *> findRectanglesByRegex(QString regex,QString layer,QString filterChildPortName){return this->findRectanglesByRegex(regex,layer,filterChildPortName,0);}
-        virtual QList<Rect *> findRectanglesByRegex(QString regex,QString layer,QString filterChildPortName,int level);
+                //virtual QList<Rect *> findRectanglesByRegex(QString regex,QString layer){return this->findRectanglesByRegex(regex,layer,"",0);}
+                //virtual QList<Rect *> findRectanglesByRegex(QString regex,QString layer,QString filterChildPortName){return this->findRectanglesByRegex(regex,layer,filterChildPortName,0);}
+        virtual QList<Rect *> findRectanglesByRegex(QString regex,QString layer);
 
     protected:
+        QList<Rect*> routes_;
                         //! List of all cells
 			static QMap<QString,Cell*> _allcells;
 

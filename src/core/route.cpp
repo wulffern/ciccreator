@@ -39,10 +39,31 @@ namespace cIcCore{
         if(options.contains(QRegularExpression("antenna"))){ startOffset_ = HIGH ;}
 
         //- Sort direction
-        if(options.contains(QRegularExpression("onTopR"))){ sortDirection_ = SORT_RIGHT ;}
-        else if(options.contains(QRegularExpression("onTopL"))){ sortDirection_ = SORT_LEFT; }
-        else if(options.contains(QRegularExpression("onTopB"))){ sortDirection_ = SORT_BOTTOM; }
-        else if(options.contains(QRegularExpression("onTopT"))){ sortDirection_ = SORT_TOP; }
+        if(options.contains(QRegularExpression("onTopR"))){
+            start_rects_ = Rect::sortRightOnTop(start_rects_);
+            stop_rects_ = Rect::sortRightOnTop(stop_rects_);
+        }
+        else if(options.contains(QRegularExpression("onTopL"))){
+            start_rects_ = Rect::sortLeftOnTop(start_rects_);
+            stop_rects_ = Rect::sortLeftOnTop(stop_rects_);
+        }
+        else if(options.contains(QRegularExpression("onTopB"))){
+            start_rects_ = Rect::sortBottomOnTop(start_rects_);
+            stop_rects_ = Rect::sortBottomOnTop(stop_rects_);
+        }
+        else if(options.contains(QRegularExpression("onTopT"))){
+            start_rects_ = Rect::sortTopOnTop(start_rects_);
+            stop_rects_ = Rect::sortTopOnTop(stop_rects_);
+        }
+
+        if(start_rects_.count() == 0 && stop_rects_.count() > 0){
+            Rect * r = stop_rects_[0];
+            stop_rects_.removeFirst();
+            start_rects_.append(r);
+          }
+
+
+
 
         //- Start offset
         if(options.contains(QRegularExpression("offsethigh(,|\\s+|$)"))){ startOffset_ = HIGH ;}
@@ -61,13 +82,15 @@ namespace cIcCore{
         }
 
         //- Cuts
-        if(options.contains(QRegularExpression("(\\d+)cuts"),m) && m->hasMatch()){
-            cuts_ = m->captured(0).toInt();
+        if(options.contains(QRegularExpression("(\\d+)cuts"),m) ){
+           // cuts_ = m->captured(0).toInt();
+           //TODO: Fix cuts
         }
 
         //- Vertical cuts
-        if(options.contains(QRegularExpression("(\\d+)vcuts"),m) && m->hasMatch()){
-            vcuts_ = m->captured(0).toInt();
+        if(options.contains(QRegularExpression("(\\d+)vcuts"),m) ){
+           // vcuts_ = m->captured(0).toInt();
+            //TODO: fix vcuts_;
         }
 
 
@@ -147,6 +170,8 @@ namespace cIcCore{
 		case VERTICAL:
 			
 			break;
+	  default:
+		break;
 
         }
 

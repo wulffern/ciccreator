@@ -39,6 +39,7 @@ namespace cIcCore{
         Q_INVOKABLE void setYoffsetHalf(QJsonValue obj);
         Q_INVOKABLE void noPowerRoute(QJsonValue obj);
         Q_INVOKABLE void addDirectedRoute(QJsonArray obj);
+         Q_INVOKABLE void addConnectivityRoute(QJsonArray obj);
         Q_INVOKABLE void addPortOnRect(QJsonArray obj);
 
         virtual void place();
@@ -47,10 +48,12 @@ namespace cIcCore{
         virtual void routePower();
         virtual void paint();
 
+        virtual QList<Rect*> findRectanglesByNode(QString node, QString layer, QString filterChild,QString filterInstance);
+
         void addPowerRoute(QString net);
     private:
         bool useHalfHeight;
-        QList<Route*> routes_;
+
         bool noPowerRoute_;
 
     };

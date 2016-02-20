@@ -47,7 +47,7 @@ namespace cIcCore{
     void Cell::route(){}
     void Cell::place(){}
 
-    QList<Rect*> Cell::findRectanglesByRegex(QString regex,QString layer,QString filterChildPortName,int level){
+    QList<Rect*> Cell::findRectanglesByRegex(QString regex,QString layer){
 
 
 //        qDebug() << this->name();
@@ -69,7 +69,7 @@ namespace cIcCore{
                         Cell * inst = (Cell*) child;
                         QRegularExpressionMatch m_inst = re_inst.match(inst->instanceName_);
                         if(m_inst.hasMatch()){	
-                            QList<Rect*> child_rects = inst->findRectanglesByRegex(path,layer, filterChildPortName, level + 1);
+                            QList<Rect*> child_rects = inst->findRectanglesByRegex(path,layer);
                             foreach(Rect * r, child_rects){
                                 rects.append((r));
                             }
@@ -78,36 +78,36 @@ namespace cIcCore{
                 }
             }else{
 
-                if(level==0){
-                    //Find and match instance port
-                    foreach(Rect * child, children()){
-                        if(child->isInstance()){
-                            Cell * inst = (Cell*) child;
+//                if(level==0){
+//                    //Find and match instance port
+//                    foreach(Rect * child, children()){
+//                        if(child->isInstance()){
+//                            Cell * inst = (Cell*) child;
 
-                  //qDebug() << inst->name();
-                            foreach(Port *p, inst->ports()){
-//                            qDebug() << "Portname "  << p->name() << regex ;
-                                QRegularExpression re(regex);
-                                QRegularExpressionMatch m_port = re.match(p->name());
-                                QRegularExpression rechild(filterChildPortName);
-                                QRegularExpressionMatch m_child = rechild.match(p->childName());
-                                if(m_port.hasMatch() && !m_child.hasMatch()){
-                                    Rect * r= p->get(layer);
-                                    if(!r){
-                                        r = p->get();
-                                    }
-                                      r->translate(inst->x1(),inst->y1());
-                                    if(r){
-                                    rects.append(r);
-                                    }
-                                }
+//                  //qDebug() << inst->name();
+//                            foreach(Port *p, inst->ports()){
+//                                if(!p->isInstancePort()){continue;}
+//                                InstancePort * pi = (InstancePort *) p;
+//                                QRegularExpression re(regex);
+//                                QRegularExpressionMatch m_port = re.match(pi->name());
+//                                QRegularExpression rechild(filterChildPortName);
+//                                QRegularExpressionMatch m_child = rechild.match(pi->childName());
+//                                if(m_port.hasMatch() && (!m_child.hasMatch() || filterChildPortName == 0)){
+//                                    Rect * r= pi->get(layer);
+//                                    if(!r){
+//                                        r = pi->get();
+//                                    }
+//                                    if(r){
+//                                    rects.append(r);
+//                                    }
+//                                }
 
 
-                            }
+//                            }
 
-                        }
-                    }
-                }
+//                        }
+//                    }
+//                }
 
 
                 //Search ports
@@ -181,14 +181,11 @@ namespace cIcCore{
         if (child && !_children.contains(child)) {
             if(child->isPort()){
                 Port* p = (Port*) child;
-                QString childname = p->childName();
-                if(childname.isEmpty()){
                     ports_[p->name()] = p;
-                }else{
-                    ports_[childname] = p;
-
-                }
             }
+           if(child->isRoute()){
+                routes_.append(child);
+           }
             child->parent(this);
             this->_children.append(child);
             connect(child,SIGNAL(updated()),this, SLOT(updateBoundingRect()));
