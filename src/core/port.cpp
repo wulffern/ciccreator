@@ -58,8 +58,8 @@ namespace cIcCore{
           routeLayer_ = l;
           alternates_rectangles_.append(r);
           this->setLayer(l->name);
-          rect_ = r->getCopy();
-          //connect(r,SIGNAL(updated()),this, SLOT(updateRect()));
+          rect_ = r;
+          connect(r,SIGNAL(updated()),this, SLOT(updateRect()));
           this->setRect(r->layer(),r->x1(),r->y1(),r->width(),r->height());
 
 //           qDebug() << r->toString();

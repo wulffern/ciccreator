@@ -20,6 +20,7 @@
 #ifndef CIC_CORE_RECT_H
 #define CIC_CORE_RECT_H
 
+#include <limits>
 #include <QObject>
 #include <QRectF>
 #include <QDebug>

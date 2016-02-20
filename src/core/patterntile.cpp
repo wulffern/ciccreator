@@ -167,8 +167,16 @@ namespace cIcCore {
                     int xs = translateX(x);
                     int ys = translateY(y);
 
-                    if(c == 'X' or c == 'x'){
-                        currentHeight_ = yspace_;
+					//- Set height
+					if(layer == "PO"){
+						currentHeight_ = this->rules->get(layer,"width");
+					}else if( c== 'x'){
+						currentHeight_ = yspace_;
+					}
+					
+					
+                    if(c == 'X'){
+						currentHeight_ = yspace_;
                     }
 
                     switch(c.unicode()){
@@ -184,7 +192,6 @@ namespace cIcCore {
 
                           }
                         this->add(p);
-
                     case 'x':
                     case 'X':
                     case 'K':
@@ -229,7 +236,6 @@ namespace cIcCore {
                     prev_rect_ = rect;
 
                     if(p){
-
                         p->set(rect);
                     }
 
