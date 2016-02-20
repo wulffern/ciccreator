@@ -139,7 +139,7 @@ namespace cIcCore{
                 Instance * inst= Cut::getInstance(routeLayer_,r->layer(),this->cuts_,this->vcuts_);
                 inst->moveTo(r->x1(),r->y1());
                 this->add(inst);
-                r->setWidth(inst->width());
+                //r->setWidth(inst->width());
             }else{
 				this->add(r);
 			}
