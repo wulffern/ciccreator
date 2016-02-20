@@ -137,12 +137,13 @@ namespace cIcCore{
         foreach(Rect *r, rects){
             if(routeLayer_ != r->layer()){
                 Instance * inst= Cut::getInstance(routeLayer_,r->layer(),this->cuts_,this->vcuts_);
-                inst->moveTo(r->x1(),r->y1());
+                inst->moveTo(r->centerX() - inst->width()/2.0,r->y1());
                 this->add(inst);
-                //r->setWidth(inst->width());
+                r->setWidth(inst->width());
+                r->moveTo(inst->x1(),inst->y1());
             }else{
-				this->add(r);
-			}
+              this->add(r);
+          }
         }
     }
 
