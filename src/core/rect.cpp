@@ -248,7 +248,30 @@ namespace cIcCore{
 
 
     QString Rect::toString(){
-        return QString("%6: layer=%1 X=%2 Y=%3 W=%4 H=%5").arg(layer()).arg(left()).arg(bottom()).arg(width()).arg(height()).arg(this->metaObject()->className());
+      return QString("%6: layer=%1 X=%2 Y=%3 W=%4 H=%5").arg(layer()).arg(left()).arg(bottom()).arg(width()).arg(height()).arg(this->metaObject()->className());
+    }
+
+    Rect *Rect::getHorizontalRectangleFromTo(QString layer, int x1, int x2, int y, int height)
+    {
+      Rect *r;
+      if(x1 > x2){
+          r = new Rect(layer,x2,y,x1-x2,height);
+        }else{
+          r = new Rect(layer,x1,y,x2-x1,height);
+        }
+        return r;
+    }
+
+    Rect *Rect::getVerticalRectangleFromTo(QString layer, int x, int y1, int y2, int width)
+    {
+      Rect *r;
+      if(y1 > y2){
+          r = new Rect(layer,x,y2,width,y1-y2);
+        }else{
+          r = new Rect(layer,x,y1,width,y2-y1);
+        }
+        return r;
+
     }
 
 }

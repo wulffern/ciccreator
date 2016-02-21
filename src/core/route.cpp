@@ -59,7 +59,7 @@ namespace cIcCore{
             Rect * r = stop_rects_[0];
             stop_rects_.removeFirst();
             start_rects_.append(r);
-          }
+        }
 
 
         //- Start offset
@@ -73,20 +73,20 @@ namespace cIcCore{
         //- Track
         QRegularExpressionMatch * m = 0;
         if(options.contains(QRegularExpression("track(\\d+)"),m)){
-              //if(m && m->has)
+            //if(m && m->has)
             //TODO: Fix trac capture
             //track_ = m->captured(0).toInt();
         }
 
         //- Cuts
         if(options.contains(QRegularExpression("(\\d+)cuts"),m) ){
-           // cuts_ = m->captured(0).toInt();
-           //TODO: Fix cuts
+            // cuts_ = m->captured(0).toInt();
+            //TODO: Fix cuts
         }
 
         //- Vertical cuts
         if(options.contains(QRegularExpression("(\\d+)vcuts"),m) ){
-           // vcuts_ = m->captured(0).toInt();
+            // vcuts_ = m->captured(0).toInt();
             //TODO: fix vcuts_;
         }
 
@@ -95,12 +95,14 @@ namespace cIcCore{
         if(routeType == "-|--"){routeType_ = LEFT;}
         else if(routeType == "--|-"){routeType_ = RIGHT;}
         else if(routeType == "-"){routeType_ = STRAIGHT;}
+        else if(routeType == "-|"){routeType_ = U_RIGHT;}
+        else if(routeType == "|-"){routeType_ = U_LEFT;}
         else if(routeType == "->"){routeType_ = STRAIGHT;}
         else if(routeType == "||"){routeType_ = VERTICAL;}
         else{
             routeType_ = ROUTE_UNKNOWN;
             qDebug() << "Unknown route" << routeType << net << layer << options;
-          }
+        }
 
         //- Route
         if(options.contains(QRegularExpression("leftdownleftup"))){
@@ -133,40 +135,34 @@ namespace cIcCore{
         if(routeLayer_ == "PO"){
             return;
         }
+        QList<Rect*>  cuts = Cut::getCutsForRects(routeLayer_,rects,cuts_,vcuts_);
+        this->add(cuts);
 
-        foreach(Rect *r, rects){
-            if(routeLayer_ != r->layer()){
-                Instance * inst= Cut::getInstance(routeLayer_,r->layer(),this->cuts_,this->vcuts_);
-                inst->moveTo(r->centerX() - inst->width()/2.0,r->y1());
-                this->add(inst);
-                r->setWidth(inst->width());
-                r->moveTo(inst->x1(),inst->y1());
-            }else{
-              this->add(r);
-          }
-        }
     }
 
     void Route::route(){
         this->addStartCuts();
         this->addEndCuts();
         switch(routeType_){
-          case LEFT:
-            this->routeLeft();
+        case LEFT:
+            this->routeOne();
             break;
-          case RIGHT:
-            this->routeRight();
+        case RIGHT:
+            this->routeOne();
             break;
-          case LEFT_DOWN_LEFT_UP:
+        case LEFT_DOWN_LEFT_UP:
             break;
-          case STRAIGHT:
+        case STRAIGHT:
             this->routeStraight();
             break;
-          case VERTICAL:
+        case VERTICAL:
             this->routeVertical();
             break;
-          default:
-                break;
+        case U_RIGHT:
+            this->routeU();
+            break;
+        default:
+            break;
 
         }
 
@@ -174,95 +170,44 @@ namespace cIcCore{
 
     void Route::applyOffset(int width, Rect* rect,Offset offset)
     {
-      switch(offset){
+        switch(offset){
         case HIGH:
-          rect->translate(0,-width);
-          break;
+            rect->translate(0,-width);
+            break;
         case LOW:
-          rect->translate(0,width);
-          break;
+            rect->translate(0,width);
+            break;
 
         }
     }
 
-    void Route::routeRight(){
-      Rules * rules = Rules::getRules();
+    void Route::routeOne(){
       int width = rules->get(routeLayer_,"width");
       int space = rules->get(routeLayer_,"space");
 
       Rect start_bound = this->calcBoundingRect(start_rects_);
 
       int hgrid = this->rules->get("ROUTE","horizontalgrid");
-      start_bound.adjust(-space - width +  -hgrid*track_,0,0,0);
 
-      //- Extend left rectangles
-      foreach(Rect *r, start_rects_){
-          Rect * start = new Rect(routeLayer_,start_bound.left(),r->y1(),r->x1() - start_bound.left() ,width);
-          if(start){
-              this->applyOffset(width, start,startOffset_);
-              this->add(start);
-            }
+      int x = 0;
+      if(routeType_ == RIGHT){
+          x = start_bound.left() - space - width - hgrid*track_;
+      }else if(routeType_ ==LEFT){
+          x = start_bound.right() + space + width + hgrid*track_;
+      }else{
+
       }
 
-      //- Extend right rectangles
-            foreach(Rect *r, stop_rects_){
-                Rect * stop ;
-                if(r->x1() > start_bound.left()){
-                   stop =  new Rect(routeLayer_,start_bound.left(),r->y1(), r->x1()-start_bound.left() ,width);
-                  }else{
-                    stop = new Rect(routeLayer_,r->x1(),r->y1(),start_bound.left() - r->x1(),width);
-                  }
-                if(stop){
-                    this->applyOffset(width, stop,stopOffset_);
-                    this->add(stop);
-                  }
-            }
+      this->addHorizontalTo(x,start_rects_,startOffset_);
+      this->addHorizontalTo(x,stop_rects_,stopOffset_);
+      this->updateBoundingRect();
+      this->addVertical(x);
 
-    this->updateBoundingRect();
-    this->addVertical(start_bound.left(),width,routeLayer_);
     }
 
+    void Route::addVertical(int x){
 
-    void Route::routeLeft(){
-      Rules * rules = Rules::getRules();
       int width = rules->get(routeLayer_,"width");
-      int space = rules->get(routeLayer_,"space");
-
-      Rect start_bound = this->calcBoundingRect(start_rects_);
-      Rect stop_bound = this->calcBoundingRect(stop_rects_);
-
-      int hgrid = this->rules->get("ROUTE","horizontalgrid");
-      start_bound.adjust(0,0,space +  hgrid*track_,0);
-
-      //- Extend left rectangles
-      foreach(Rect *r, start_rects_){
-          Rect * start = new Rect(routeLayer_,r->x1(),r->y1(),start_bound.right() - r->x1(),width);
-          if(start){
-              this->applyOffset(width, start,startOffset_);
-              this->add(start);
-            }
-      }
-
-      //- Extend right rectangles
-            foreach(Rect *r, stop_rects_){
-                Rect * stop ;
-                if(r->x1() > start_bound.right()){
-                   stop =  new Rect(routeLayer_,start_bound.right(),r->y1(), r->x1()-start_bound.right() ,width);
-                  }else{
-                    stop = new Rect(routeLayer_,r->x1(),r->y1(),start_bound.right() - r->x1(),width);
-                  }
-                if(stop){
-                    this->applyOffset(width, stop,stopOffset_);
-                    this->add(stop);
-                  }
-            }
-
-    this->updateBoundingRect();
-    this->addVertical(start_bound.right(),width,routeLayer_);
-    }
-
-    void Route::addVertical(int x, int width, QString layer){
-
         if(this->options_.contains(QRegularExpression("novert"))) return;
         if(this->options_.contains(QRegularExpression("antenna"))){
 //            QString next = t
@@ -285,17 +230,19 @@ namespace cIcCore{
 
 //            $self->addChild($r);
 //            $self->portrect($r);
-          }else{
+        }else{
 
-             Rect * r = new Rect(layer,x,this->y1(),width,this->height());
-             this->add(r);
-          }
-      }
+            Rect * r = Rect::getVerticalRectangleFromTo(routeLayer_,x,this->y1(),this->y2(),width);
+            if(r){
+            this->add(r);
+              }
+        }
+    }
 
 
     void Route::routeVertical(){
 
-      if( !(start_rects_.count() > 0 && stop_rects_.count() > 0)) return;
+        if( !(start_rects_.count() > 0 && stop_rects_.count() > 0)) return;
 
         Rect start_bound = Cell::calcBoundingRect(start_rects_);
         Rect stop_bound = Cell::calcBoundingRect(stop_rects_);
@@ -310,35 +257,66 @@ namespace cIcCore{
         this->add(r);
 
 
-        }
+    }
 
     void Route::routeStraight(){
-	   if(start_rects_.count() != stop_rects_.count()){
-	      qWarning() << "Can't route straight ";
-	       return;
-	     }
-	   
-	   int count = start_rects_.count();
-	   for(int x = 0;x < count;x++){
-	    Rect *r1 = start_rects_[x];
-	    Rect* r2 = stop_rects_[x];
+        if(start_rects_.count() != stop_rects_.count()){
+            qWarning() << "Can't route straight ";
+            return;
+        }
 
-		//Use the lowest rectangle to route
-		int height = r1->height();
-		if(r1->height() > r2->height()){
-			height = r2->height();
-		}
+        int count = start_rects_.count();
+        for(int x = 0;x < count;x++){
+            Rect *r1 = start_rects_[x];
+            Rect* r2 = stop_rects_[x];
 
-		int center = r1->centerY();
-		
-		
-	    Rect * r = new Rect(routeLayer_, r1->x1(),center - height/2.0,r2->x2() - r1->x1(),height);
-	    this->add(r);
-	     }
-		
+            //Use the lowest rectangle to route
+            int height = r1->height();
+            if(r1->height() > r2->height()){
+                height = r2->height();
+            }
+
+            int center = r1->centerY();
+            Rect * r = new Rect(routeLayer_, r1->x1(),center - height/2.0,r2->x2() - r1->x1(),height);
+            this->add(r);
+        }
+
+    }
+
+    void Route::routeU(){
+        int width = rules->get(routeLayer_,"width");
+        int space = rules->get(routeLayer_,"space");
+
+	QList<Rect*> allrect = start_rects_ + stop_rects_;
+	Rect all_bound = Cell::calcBoundingRect(allrect);
+
+	int x = 0;
+	if(routeType_ == U_RIGHT){
+	  x = all_bound.right() + space*track_ + space;
+	  }else if(routeType_ = U_LEFT){
+	    x = all_bound.left()- space*track_  - space - width;
+	  }else{
+	     qDebug() << "Unknown U route " << routeType_;
+	  }
+	  this->addHorizontalTo(x,start_rects_,startOffset_);
+	  this->addHorizontalTo(x,stop_rects_,stopOffset_);
+	  this->updateBoundingRect();
+	  this->addVertical(x);
+    }
+
+	void Route::addHorizontalTo(int x, QList<Rect*> rects,Offset offset){
+		int width = rules->get(routeLayer_,"width");
+
+        foreach(Rect *r, rects){
+            Rect * rect  = Rect::getHorizontalRectangleFromTo(routeLayer_,r->centerX(),x,r->y1(),width);
+            if(rect){
+                this->applyOffset(width, rect,offset);
+                this->add(rect);
+            }
+        }
 	}
 
-	
+
 
 
 }

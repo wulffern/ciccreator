@@ -37,6 +37,9 @@ namespace cIcCore{
 	{
 		Q_OBJECT
 
+	  void routeU();
+	  void addHorizontalTo(int x, QList<Rect *> rects, Offset offset);
+	  void routeOne();
 	public:
 		Route(QString net, QString layer, QList<Rect*> start, QList<Rect*> stop, QString options, QString routeType);
 		Route(const Route&);
@@ -47,7 +50,7 @@ namespace cIcCore{
 		virtual void addCuts(QList<Rect*>);
 		virtual void route();
 
-		void addVertical(int x, int width, QString layer);
+		void addVertical(int x);
 		void applyOffset(int width, Rect* start, Offset offset);
 
 	protected:

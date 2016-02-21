@@ -180,6 +180,10 @@ namespace cIcCore{
         QString toString();
 
 
+        static Rect* getHorizontalRectangleFromTo(QString layer, int x1, int x2, int y, int height);
+        static Rect* getVerticalRectangleFromTo(QString layer, int x, int y1, int y2,  int width);
+
+
 
     protected:
         Rules* rules;

@@ -100,14 +100,20 @@ Cut::~Cut()
                 Instance * inst= Cut::getInstance(layer1,r->layer(),horizontal_cuts,vertical_cuts);
                 if(inst){
                 inst->moveTo(r->x1(),r->y1());
-                cuts.append(inst);
+
+                //--- Center rectangles, might have unintended consequences
+                //inst->moveTo(r->centerX() - inst->width()/2.0,r->y1());
+                //r->moveTo(inst->x1(),inst->y1());
+                //---
+
+                r ->setWidth(inst->width());
+
+                  cuts.append(inst);
                   }
               }
         }
         return cuts;
     }
-
-
 
 Instance * Cut::getInstance(QString layer1, QString layer2, int horizontal_cuts, int vertical_cuts){
 
