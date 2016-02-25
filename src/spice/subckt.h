@@ -43,14 +43,17 @@ namespace cIcSpice{
 
         static Subckt* getInstanceSubckt(SubcktInstance*);
         void parse(QList<QString> buffer, int line);
-        QMap<QString,SubcktInstance*> instances(){return _instances;}
+        QList<SubcktInstance*> instances(){ return _instances;}
+
 
 
     protected:
         static QMap<QString,Subckt*> _allsubckt;
 
     private:
-        QMap<QString,SubcktInstance*> _instances;
+        QHash<QString,int> _inst_index;
+        QList<SubcktInstance*> _instances;
+
 		
     };
 

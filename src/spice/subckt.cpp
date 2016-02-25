@@ -92,10 +92,12 @@ namespace cIcSpice{
 
             SubcktInstance * inst = new SubcktInstance();
             inst->parse(line,instance_line_number);
-            if(this->_instances.contains(inst->name())){
+            if(this->_inst_index.contains(inst->name())){
                 qWarning() << "Error: " << this->name() << " already contains an " << inst->name();
             }
-            this->_instances[inst->name()] = inst;
+            this->_instances.append(inst);
+            this->_inst_index[inst->name()] = this->_instances.count() -1;
+        //    this->_instances[inst->name()] = inst;
             instance_line_number++;
         }
 

@@ -101,7 +101,7 @@ namespace cIcCore{
         else if(routeType == "||"){routeType_ = VERTICAL;}
         else{
             routeType_ = ROUTE_UNKNOWN;
-            qDebug() << "Unknown route" << routeType << net << layer << options;
+         //   qDebug() << "Unknown route" << routeType << net << layer << options;
         }
 
         //- Route
@@ -161,7 +161,11 @@ namespace cIcCore{
         case U_RIGHT:
             this->routeU();
             break;
+          case U_LEFT:
+            this->routeU();
+            break;
         default:
+             qDebug() << "Unknown route" << routeType_ << this->net_ << this->routeLayer_ << this->options_;
             break;
 
         }
@@ -293,7 +297,7 @@ namespace cIcCore{
 	int x = 0;
 	if(routeType_ == U_RIGHT){
 	  x = all_bound.right() + space*track_ + space;
-	  }else if(routeType_ = U_LEFT){
+	  }else if(routeType_ == U_LEFT){
 	    x = all_bound.left()- space*track_  - space - width;
 	  }else{
 	     qDebug() << "Unknown U route " << routeType_;
