@@ -2071,7 +2071,7 @@ gds_write_xy( int fd, int *x, int *y, int n )
 
   static int i, xx, yy;
 
-  //if ( n > 200  ) WARNING( "OVER 200 VERTICIES" );
+
   if ( n > 8200 ) BAILOUT( "WAY TOO MANY VERTICIES" );
 
   count = 4 + 8 * n;

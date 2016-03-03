@@ -49,9 +49,6 @@ namespace cIcCore{
 
     QList<Rect*> Cell::findRectanglesByRegex(QString regex,QString layer){
 
-
-//        qDebug() << this->name();
-
         //If the regex contains : then search child ports, if it does not, then search local ports
         QStringList re_s = regex.split(",",QString::SkipEmptyParts);
         QList<Rect*> rects;
@@ -68,7 +65,7 @@ namespace cIcCore{
                     if(child->isInstance()){
                         Cell * inst = (Cell*) child;
                         QRegularExpressionMatch m_inst = re_inst.match(inst->instanceName_);
-                        if(m_inst.hasMatch()){	
+                        if(m_inst.hasMatch()){
                             QList<Rect*> child_rects = inst->findRectanglesByRegex(path,layer);
                             foreach(Rect * r, child_rects){
                                 rects.append((r));
@@ -78,45 +75,24 @@ namespace cIcCore{
                 }
             }else{
 
-//                if(level==0){
-//                    //Find and match instance port
-//                    foreach(Rect * child, children()){
-//                        if(child->isInstance()){
-//                            Cell * inst = (Cell*) child;
-
-//                  //qDebug() << inst->name();
-//                            foreach(Port *p, inst->ports()){
-//                                if(!p->isInstancePort()){continue;}
-//                                InstancePort * pi = (InstancePort *) p;
-//                                QRegularExpression re(regex);
-//                                QRegularExpressionMatch m_port = re.match(pi->name());
-//                                QRegularExpression rechild(filterChildPortName);
-//                                QRegularExpressionMatch m_child = rechild.match(pi->childName());
-//                                if(m_port.hasMatch() && (!m_child.hasMatch() || filterChildPortName == 0)){
-//                                    Rect * r= pi->get(layer);
-//                                    if(!r){
-//                                        r = pi->get();
-//                                    }
-//                                    if(r){
-//                                    rects.append(r);
-//                                    }
-//                                }
-
-
-//                            }
-
-//                        }
-//                    }
-//                }
-
-
                 //Search ports
                 foreach(Port * p, ports_){
-//                    qDebug() << "Portname "  << p->name() << p->childName() << regex ;
-                    //Match name on top level
-                    QRegularExpression re(s);
-                    QRegularExpressionMatch m_port = re.match(p->name());
-                    if(m_port.hasMatch()){
+                    bool hasMatch = false;
+                    if(0){
+                        //Match name on top level
+                        QRegularExpression re(s);
+                        QRegularExpressionMatch m_port = re.match(p->name());
+                        if(m_port.hasMatch()){
+                            hasMatch = true;
+                        }
+                    }else{
+                        if(p->name() == s){
+                            hasMatch = true;
+                        }
+                    }
+
+
+                    if(hasMatch){
                         Rect * r= p->get(layer);
                         if(!r){
                             r = p->get();
@@ -125,6 +101,7 @@ namespace cIcCore{
                             rects.append(r);
                         }
                     }
+
                 }
             }
 
@@ -165,11 +142,11 @@ namespace cIcCore{
     //-------------------------------------------------------------
     // Children handling
     //-------------------------------------------------------------
-      void Cell::add(QList<Rect*> children){
+    void Cell::add(QList<Rect*> children){
         foreach(Rect * r, children){
             this->add(r);
-          }
-      }
+        }
+    }
 
     void Cell::add(Rect* child){
 
@@ -181,11 +158,11 @@ namespace cIcCore{
         if (child && !_children.contains(child)) {
             if(child->isPort()){
                 Port* p = (Port*) child;
-                    ports_[p->name()] = p;
+                ports_[p->name()] = p;
             }
-           if(child->isRoute()){
+            if(child->isRoute()){
                 routes_.append(child);
-           }
+            }
             child->parent(this);
             this->_children.append(child);
             connect(child,SIGNAL(updated()),this, SLOT(updateBoundingRect()));
@@ -278,7 +255,7 @@ namespace cIcCore{
 
         if(children.count() == 0){
             x1 = y1 = x2 = y2 = 0;
-          }
+        }
 
 
         foreach(Rect* cr, children) {

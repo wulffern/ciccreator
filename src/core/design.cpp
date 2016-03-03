@@ -22,18 +22,19 @@
 namespace cIcCore{
 
     Design::Design(){
-
-		//Need to register celltypes for reflection later on
+        //Need to register celltypes for reflection later on
         qRegisterMetaType<cIcCore::Cell>("cIcCore::Cell");
         qRegisterMetaType<cIcCore::LayoutCell>("cIcCore::LayoutCell");
         qRegisterMetaType<cIcCore::PatternTile>("cIcCore::PatternTile");
         qRegisterMetaType<cIcCore::PatternTransistor>("cIcCore::PatternTransistor");
         qRegisterMetaType<cIcCore::PatternCapacitor>("cIcCore::PatternCapacitor");
         qRegisterMetaType<cIcCore::LayoutCell>("cIcCore::LayoutCell");
+        qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
         cellTranslator["Gds::GdsPatternTransistor"] = "cIcCore::PatternTransistor";
         cellTranslator["Gds::GdsPatternCapacitor"] = "cIcCore::PatternCapacitor";
         cellTranslator["Gds::GdsPatternCapacitorGnd"] = "cIcCore::PatternCapacitor";
         cellTranslator["Layout::LayoutDigitalCell"] = "cIcCore::LayoutCell";
+       cellTranslator["Layout::LayoutRotateCell"] = "cIcCore::LayoutRotateCell";
         nameTranslator["type"] = "mosType";
         console = new ConsoleOutput();
 
@@ -85,12 +86,8 @@ namespace cIcCore{
                 QJsonObject c = value.toObject();
                 QJsonValue name = c["name"];
                 _cells[name.toString()] = c;
-
-                //                QJsonValue v = c["class"];
-                //Class name is defined
-                //               if(v.isString()){
                 this->createCell(c);
-                //               }
+
             }
 
             //Import all cuts, and put them on top
@@ -106,16 +103,76 @@ namespace cIcCore{
 
     }
 
-	    void Design::createCell(QJsonObject jobj){
+        Subckt * Design::getSpiceSubckt(QJsonObject jobj, QList<QJsonObject>* reverse_parents, QString name)
+        {
+           cIcSpice::Subckt * ckt = _spice_parser.getSubckt(name);
+          if(ckt == NULL && jobj.contains("spice")){
+               QJsonArray ar = jobj["spice"].toArray();
+              QStringList strlist;
+               foreach(QJsonValue v,ar){
+                   strlist.append(v.toString());
+                 }
+               _spice_parser.parseSubckt(0,strlist);
+                ckt = _spice_parser.getSubckt(name);
+           }
+
+
+          if(ckt == NULL){ //Try to find a parent with a subckt
+              int count = reverse_parents->count();
+              for(int i=0;i<count; i++){
+                  QJsonObject parent  = reverse_parents->at(i);
+                  cIcSpice::Subckt * ckt_parent = _spice_parser.getSubckt(parent["name"].toString());
+                  if(ckt_parent == NULL) continue;
+                  if(jobj.contains("spiceRegex")){
+                       QJsonArray jarr = jobj["spiceRegex"].toArray();
+                       foreach(QJsonValue rval, jarr){
+                           QJsonArray reg_arr = rval.toArray();
+                            QString from = reg_arr[0].toString();
+                            QString to = reg_arr[1].toString();
+                            QStringList strlist = ckt_parent->spiceStr();
+                            strlist.replaceInStrings(parent["name"].toString(),name);
+                            strlist.replaceInStrings(QRegularExpression(from),to);
+                            _spice_parser.parseSubckt(0,strlist);
+                             ckt = _spice_parser.getSubckt(name);
+                         }
+
+                     }else{
+                       ckt = ckt_parent;
+                     }
+                  if(ckt){
+                    break;
+                  }
+              }
+
+            }
+
+
+
+
+          if(ckt == NULL){
+              ckt = new cIcSpice::Subckt();
+              //cerr << "Error: Could not find any subckt to match " << name.toStdString() << ", skipping\n";
+
+          }
+
+          return ckt;
+        }
+
+        void Design::createCell(QJsonObject jobj){
+
 
         QString cl  = jobj["class"].toString();
+        QString name = jobj["name"].toString();
+        if(name == "") return;
+
+        //- Find all parents
         QList<QJsonObject> * reverse_parents = new QList<QJsonObject>();
         if(jobj.contains("inherit")){
             QJsonValue inh = jobj["inherit"];
             this->findAllParents(reverse_parents,inh.toString());
         }
 
-        //    #- Inherit class type from parent
+        //- Inherit class type from parent
         if (jobj.contains("class")  && reverse_parents->count() > 0) {
             int count = reverse_parents->count();
             for(int i=0;i<count; i++){
@@ -127,8 +184,7 @@ namespace cIcCore{
             }
         }
 
-        //    my @parents = reverse(@reverse_parents);
-
+        //- Find cells we want to leach
         if( jobj.contains("leech") ){
             QString leech = jobj["leech"].toString();
             if( _cells.contains(leech) ){
@@ -137,26 +193,20 @@ namespace cIcCore{
 
         }
 
-        //    #Inherit, but don't find older parents
-        //    my @leech = split(",",$c->{leech});
-        //    foreach my $leech (@leech) {
-        //      my $cell = $self->{knowncells}->{$leech};
-        //      if ($cell) {
-        //        push(@parents,$cell);
-        //      }
-        //    }
+        //- Get subckt
+        cIcSpice::Subckt* ckt = getSpiceSubckt(jobj, reverse_parents, name);
 
 
-
-        if (cl == "" ) {
-            cl = "cIcCore::Cell";
-        }
-
-
-
-        //Translate the class name if it exists in the translator
+        //- Translate the class name if it exists in the translator
         if(cellTranslator.contains(cl)){
             cl = cellTranslator[cl];
+        }else{
+            cerr << "Error(design.cpp): Unknown class " << cl.toStdString() << " for " << name.toStdString() <<  "\n";
+          }
+
+        //- Set default class name
+        if (cl == "" ) {
+            cl = "cIcCore::LayoutCell";
         }
 
         //Make the object, let's see how that works in Qt
@@ -165,7 +215,6 @@ namespace cIcCore{
             void* vp = QMetaType::create(id);
 
             Cell * c  = static_cast<Cell*>(vp);
-            QString name = jobj["name"].toString();
             c->setName(name);
             console->increaseIndent();
             console->commentStartClass(name);
@@ -173,23 +222,22 @@ namespace cIcCore{
             this->runAllParentMethods("afterNew",c,reverse_parents);
             this->runAllMethods("afterNew",c,jobj);
 
-            //Run instancemethods
+            //- Run instancemethods
             this->runParentsIfObjectCanMethods(c,reverse_parents);
             this->runIfObjectCanMethods(c,jobj);
 
-            //TODO: Add spice parsing before place
-            cIcSpice::Subckt * ckt = _spice_parser.getSubckt(name);
-            c->setSubckt(ckt);
-            //TODO: How will I separate out instances from cells that should be printed to bottom?
+            if(ckt){
+                 c->setSubckt(ckt);
+              }
 
-            //Place
+            //- Place
             this->runAllParentMethods("beforePlace",c,reverse_parents);
             this->runAllMethods("beforePlace",c,jobj);
             c->place();
             this->runAllParentMethods("afterPlace",c,reverse_parents);
             this->runAllMethods("afterPlace",c,jobj);
 
-            //Route
+            //- Route
             this->runAllParentMethods("beforeRoute",c,reverse_parents);
             this->runAllMethods("beforeRoute",c,jobj);
             c->route();
@@ -197,23 +245,19 @@ namespace cIcCore{
             this->runAllMethods("afterRoute",c,jobj);
 
             c->addAllPorts();
-            //Paint
+
+            //- Paint
             this->runAllParentMethods("beforePaint",c,reverse_parents);
             this->runAllMethods("beforePaint",c,jobj);
             c->paint();
             this->runAllParentMethods("afterPaint",c,reverse_parents);
             this->runAllMethods("afterPaint",c,jobj);
 
-
             this->add(c);
             Cell::addCell(c);
             _cell_names.append(c->name());
             console->decreaseIndent();
-
-        }else{
-
         }
-
     }
 
 	/*
@@ -257,6 +301,19 @@ namespace cIcCore{
 
     }
 
+    void Design::runMethod(QJsonValue v, QMetaMethod m, Cell* c)
+    {
+      if(v.isArray()){
+          QJsonArray ar1 = v.toArray();
+          m.invoke(c,Qt::DirectConnection, Q_ARG(QJsonArray, ar1));
+      }else if(v.isObject()){
+          QJsonObject ar1 = v.toObject();
+          m.invoke(c,Qt::DirectConnection, Q_ARG(QJsonObject, ar1));
+      }else if(v.isString()){
+          m.invoke(c,Qt::DirectConnection,Q_ARG(QString, v.toString()));
+        }
+    }
+
     void Design::runIfObjectCanMethods(Cell * c, QJsonObject jobj, QString theme){
 
         const QMetaObject * mobj = c->metaObject();
@@ -291,24 +348,18 @@ namespace cIcCore{
             }
 
             if(methods.contains(method_key)){
-                QMetaMethod m = methods[method_key];
-                QJsonArray arg = jobj[key].toArray();
-                m.invoke(c,Qt::DirectConnection, Q_ARG(QJsonArray, arg));
-                console->commentInvokeMethod(c_name,theme, m.name());
+                QMetaMethod method = methods[method_key];
+                QJsonValue value = jobj[method_key];
+                this->runMethod(value, method, c);
+                console->commentInvokeMethod(c_name,theme, method.name());
             }else if(method_key.endsWith("s")  && methods.contains(method_key.left(key.length()-1))){
 
                 console->commentInvokeMethod(c_name,theme, method_key);
                 //Iterate over array if function exists without the "s" at the end
-                QMetaMethod m = methods[method_key.left(key.length()-1)];
+                QMetaMethod method = methods[method_key.left(key.length()-1)];
                 QJsonArray arg = jobj[key].toArray();
-                foreach(QJsonValue v, arg){
-                    if(v.isArray()){
-                        QJsonArray ar1 = v.toArray();
-                        m.invoke(c,Qt::DirectConnection, Q_ARG(QJsonArray, ar1));
-                    }else if(v.isObject()){
-                        QJsonObject ar1 = v.toObject();
-                        m.invoke(c,Qt::DirectConnection, Q_ARG(QJsonObject, ar1));
-                    }
+                foreach(QJsonValue value, arg){
+                    this->runMethod(value, method, c);
                 }
 
             }else if(properties.contains(method_key)){

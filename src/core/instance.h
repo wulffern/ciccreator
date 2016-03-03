@@ -23,6 +23,7 @@
 #include "cell.h"
 #include "port.h"
 #include "spice/spiceobject.h"
+#include <iostream>
 
 namespace cIcCore{
 
@@ -38,6 +39,9 @@ namespace cIcCore{
     Cell * cell(){return _cell;}
 	  QString instanceName(){return instanceName_;}
     virtual Rect calcBoundingRect();
+
+          QString angle(){return angle_;}
+          void setAngle(QString angle){angle_ = angle;}
 	  // Cell * addInstance(QString cell);
     static Instance * getInstance(QString cell);
     void setCell(Cell*cell){_cell = cell;}
@@ -52,6 +56,7 @@ namespace cIcCore{
     Cell * _cell;
     cIcSpice::SubcktInstance * ckt_inst_;
     QMap<QString,Port*> instancePorts_;
+    QString angle_;
 
 
   };

@@ -36,8 +36,8 @@ namespace cIcSpice{
     QString SpiceObject::name(){return _name;}
     QString SpiceObject::setName(QString val){ _name = val; return _name;}
 
-    QStringList SpiceObject::spiceStr(){return _spice_str;}
-    QStringList SpiceObject::setSpiceStr(QStringList val){ _spice_str = val; return _spice_str;}
+    QList<QString> SpiceObject::spiceStr(){return _spice_str;}
+    QList<QString> SpiceObject::setSpiceStr(QList<QString> val){ _spice_str = val; return _spice_str;}
 
     QStringList SpiceObject::nodes(){return _nodes;}
     QStringList SpiceObject::setNodes(QStringList val){ _nodes = val; return _nodes;}

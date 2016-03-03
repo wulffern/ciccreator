@@ -21,10 +21,22 @@
 
 namespace cIcCore{
 
-    Route::Route(QString net, QString layer, QList<Rect*> start, QList<Rect*> stop, QString options,QString routeType){
+  int Route::getIntegerFromMatch(QString regex, QString options, int defaultValue)
+  {
+    int match =defaultValue;
+    QRegularExpression re(regex);
+    QRegularExpressionMatch m =  re.match(options);
+    if(m.hasMatch()){
+      match = m.captured(1).toInt();
+    }
+    return match;
+  }
+
+  Route::Route(QString net, QString layer, QList<Rect*> start, QList<Rect*> stop, QString options,QString routeType){
         net_ = net;
         routeLayer_ = layer;
         routeType_ = ROUTE_UNKNOWN;
+        route_ = routeType;
         options_ = options;
         sortDirection_ = SORT_RIGHT;
         startOffset_ = NO_OFFSET;
@@ -70,27 +82,9 @@ namespace cIcCore{
         if(options.contains(QRegularExpression("offsethighend"))){ stopOffset_ = HIGH ;}
         else if(options.contains(QRegularExpression("offsetlowend"))){ stopOffset_ = LOW ;}
 
-        //- Track
-        QRegularExpressionMatch * m = 0;
-        if(options.contains(QRegularExpression("track(\\d+)"),m)){
-            //if(m && m->has)
-            //TODO: Fix trac capture
-            //track_ = m->captured(0).toInt();
-        }
-
-        //- Cuts
-        if(options.contains(QRegularExpression("(\\d+)cuts"),m) ){
-            // cuts_ = m->captured(0).toInt();
-            //TODO: Fix cuts
-        }
-
-        //- Vertical cuts
-        if(options.contains(QRegularExpression("(\\d+)vcuts"),m) ){
-            // vcuts_ = m->captured(0).toInt();
-            //TODO: fix vcuts_;
-        }
-
-
+        track_  = getIntegerFromMatch("track(\\d+)", options,0);
+        cuts_  = getIntegerFromMatch("(\\d+)cuts", options,2);
+        vcuts_  = getIntegerFromMatch("(\\d+)vcuts", options,1);
 
         if(routeType == "-|--"){routeType_ = LEFT;}
         else if(routeType == "--|-"){routeType_ = RIGHT;}
@@ -101,7 +95,6 @@ namespace cIcCore{
         else if(routeType == "||"){routeType_ = VERTICAL;}
         else{
             routeType_ = ROUTE_UNKNOWN;
-         //   qDebug() << "Unknown route" << routeType << net << layer << options;
         }
 
         //- Route
@@ -161,11 +154,11 @@ namespace cIcCore{
         case U_RIGHT:
             this->routeU();
             break;
-          case U_LEFT:
+        case U_LEFT:
             this->routeU();
             break;
         default:
-             qDebug() << "Unknown route" << routeType_ << this->net_ << this->routeLayer_ << this->options_;
+            cerr << "Error(route.cpp): Unknown route routeType=" << route_.toStdString() << " net=" << net_.toStdString() << " layer=" << routeLayer_.toStdString() << " options="<< options_.toStdString() << "\n";
             break;
 
         }
@@ -176,42 +169,41 @@ namespace cIcCore{
     {
         switch(offset){
         case HIGH:
-            rect->translate(0,-width);
+            rect->translate(0,+width);
             break;
         case LOW:
-            rect->translate(0,width);
+            rect->translate(0,-width);
+            break;
+        case NO_OFFSET:
             break;
 
         }
     }
 
     void Route::routeOne(){
-      int width = rules->get(routeLayer_,"width");
-      int space = rules->get(routeLayer_,"space");
+        int width = rules->get(routeLayer_,"width");
+        int space = rules->get(routeLayer_,"space");
 
-      Rect start_bound = this->calcBoundingRect(start_rects_);
+        Rect start_bound = this->calcBoundingRect(start_rects_);
+        int hgrid = this->rules->get("ROUTE","horizontalgrid");
 
-      int hgrid = this->rules->get("ROUTE","horizontalgrid");
+        int x = 0;
+        if(routeType_ == RIGHT){
+            x = start_bound.left() - space - width - hgrid*track_;
+        }else if(routeType_ ==LEFT){
+            x = start_bound.right() + space + hgrid*track_;
+        }else{
 
-      int x = 0;
-      if(routeType_ == RIGHT){
-          x = start_bound.left() - space - width - hgrid*track_;
-      }else if(routeType_ ==LEFT){
-          x = start_bound.right() + space + hgrid*track_;
-      }else{
-
-      }
-
-      this->addHorizontalTo(x,start_rects_,startOffset_);
-      this->addHorizontalTo(x,stop_rects_,stopOffset_);
-      this->updateBoundingRect();
-      this->addVertical(x);
-
+        }
+        this->addHorizontalTo(x,start_rects_,startOffset_);
+        this->addHorizontalTo(x,stop_rects_,stopOffset_);
+        this->updateBoundingRect();
+        this->addVertical(x);
     }
 
     void Route::addVertical(int x){
 
-      int width = rules->get(routeLayer_,"width");
+        int width = rules->get(routeLayer_,"width");
         if(this->options_.contains(QRegularExpression("novert"))) return;
         if(this->options_.contains(QRegularExpression("antenna"))){
 //            QString next = t
@@ -238,8 +230,8 @@ namespace cIcCore{
 
             Rect * r = Rect::getVerticalRectangleFromTo(routeLayer_,x,this->y1(),this->y2(),width);
             if(r){
-            this->add(r);
-              }
+                this->add(r);
+            }
         }
     }
 
@@ -291,25 +283,27 @@ namespace cIcCore{
         int width = rules->get(routeLayer_,"width");
         int space = rules->get(routeLayer_,"space");
 
-	QList<Rect*> allrect = start_rects_ + stop_rects_;
-	Rect all_bound = Cell::calcBoundingRect(allrect);
+		int hgrid = this->rules->get("ROUTE","horizontalgrid");
+		
+        QList<Rect*> allrect = start_rects_ + stop_rects_;
+        Rect all_bound = Cell::calcBoundingRect(allrect);
 
-	int x = 0;
-	if(routeType_ == U_RIGHT){
-	  x = all_bound.right() + space*track_ + space;
-	  }else if(routeType_ == U_LEFT){
-	    x = all_bound.left()- space*track_  - space - width;
-	  }else{
-	     qDebug() << "Unknown U route " << routeType_;
-	  }
-	  this->addHorizontalTo(x,start_rects_,startOffset_);
-	  this->addHorizontalTo(x,stop_rects_,stopOffset_);
-	  this->updateBoundingRect();
-	  this->addVertical(x);
+        int x = 0;
+        if(routeType_ == U_RIGHT){
+            x = all_bound.right() + hgrid * track_ + space;
+        }else if(routeType_ == U_LEFT){
+            x = all_bound.left()- hgrid * track_  - space - width;
+        }else{
+			cerr << "Error(route.cpp): Unknown U route " << routeType_ << "\n";
+        }
+        this->addHorizontalTo(x,start_rects_,startOffset_);
+        this->addHorizontalTo(x,stop_rects_,stopOffset_);
+        this->updateBoundingRect();
+        this->addVertical(x);
     }
 
-	void Route::addHorizontalTo(int x, QList<Rect*> rects,Offset offset){
-		int width = rules->get(routeLayer_,"width");
+    void Route::addHorizontalTo(int x, QList<Rect*> rects,Offset offset){
+        int width = rules->get(routeLayer_,"width");
 
         foreach(Rect *r, rects){
             Rect * rect  = Rect::getHorizontalRectangleFromTo(routeLayer_,r->centerX(),x,r->y1(),width);
@@ -318,7 +312,7 @@ namespace cIcCore{
                 this->add(rect);
             }
         }
-	}
+    }
 
 
 

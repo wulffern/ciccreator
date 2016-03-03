@@ -99,7 +99,6 @@ namespace cIcCore{
           return;
       }
 
-      //TODO add support for name-match and cuts (optiont 4 and 5)
       QString layer = obj[0].toString();
       QString regex = obj[1].toString();
       QString routeType = obj[2].toString();
@@ -116,8 +115,6 @@ namespace cIcCore{
       if(obj.size() > 5){
           excludeInstances = obj[5].toString();
         }
-
-//      qDebug() << options << cuts << excludeInstances;
 
       QList<Rect*> rects = this->findRectanglesByNode(regex,"",excludeInstances);
       if(rects.count() > 0){

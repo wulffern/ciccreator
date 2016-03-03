@@ -177,6 +177,27 @@ namespace cIcCore{
         return _x;
     }
 
+    void Rect::rotate(int i)  {
+        Point p1(x1_,y1_);
+        Point p2(x2_,y2_);
+        p1.rotate(0,0,i);
+        p2.rotate(0,0,i);
+
+      if(p2.x < p1.x){
+          p1.x = p2.swapX(p1.x);
+        }
+
+      if(p2.y < p1.y){
+          p1.y = p2.swapY(p1.y);
+        }
+
+      x1_ = p1.x;
+      x2_ = p2.x;
+      y1_ = p1.y;
+      y2_ = p2.y;
+        emit updated();
+    }
+
 
     Rect* Rect::adjustedOnce(int xp1){
         Rect* rect = new Rect(layer(),x1() - xp1, y1() - xp1, width() + 2*xp1, height() + 2*xp1);

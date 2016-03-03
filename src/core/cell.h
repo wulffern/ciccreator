@@ -152,8 +152,6 @@ namespace cIcCore{
         }
 
         //! Find all rectangles by regular expression
-                //virtual QList<Rect *> findRectanglesByRegex(QString regex,QString layer){return this->findRectanglesByRegex(regex,layer,"",0);}
-                //virtual QList<Rect *> findRectanglesByRegex(QString regex,QString layer,QString filterChildPortName){return this->findRectanglesByRegex(regex,layer,filterChildPortName,0);}
         virtual QList<Rect *> findRectanglesByRegex(QString regex,QString layer);
 
     protected:

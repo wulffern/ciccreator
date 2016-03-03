@@ -25,6 +25,9 @@
 #include <QRectF>
 #include <QDebug>
 #include "core/rules.h"
+#include <iostream>
+#include "point.h"
+using namespace std;
 
 namespace cIcCore{
 
@@ -183,6 +186,7 @@ namespace cIcCore{
         static Rect* getHorizontalRectangleFromTo(QString layer, int x1, int x2, int y, int height);
         static Rect* getVerticalRectangleFromTo(QString layer, int x, int y1, int y2,  int width);
 
+        void rotate(int i);
 
 
     protected:

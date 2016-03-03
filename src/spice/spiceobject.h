@@ -45,7 +45,7 @@ namespace cIcSpice{
 		
 		int lineNumber(); int setLineNumber(int val);
 		
-		QStringList spiceStr();		QStringList setSpiceStr(QStringList val);
+		QList<QString> spiceStr();		QList<QString> setSpiceStr(QList<QString>  val);
 
 		QStringList nodes();		QStringList setNodes(QStringList val);
 
@@ -60,11 +60,10 @@ namespace cIcSpice{
 	protected:
 		QString spiceType_;
 		QString deviceName_;
-
+		QList<QString> _spice_str;
 	private:
 		QString _name;
 		QMap<QString,QString> _properties;
-		QStringList _spice_str;
 		QStringList _nodes;
 		QList<SpiceObject*> _children;
 		int _line_number;

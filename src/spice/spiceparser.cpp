@@ -34,7 +34,17 @@ namespace cIcSpice{
 
     }
 
-	void SpiceParser::parseFile(QString filename){
+
+
+
+    void SpiceParser::parseSubckt(int line_number, QList<QString> subckt_buffer)
+    {
+      Subckt * ckt = new Subckt();
+      ckt->parse(subckt_buffer,line_number);
+      this->_subckt[ckt->name()] = ckt;
+    }
+
+    void SpiceParser::parseFile(QString filename){
 
 		QFile file;
 		file.setFileName(filename);
@@ -83,9 +93,7 @@ namespace cIcSpice{
 			  QRegularExpressionMatch m_end = re_subckt_end.match(line);
 			  if(m_end.hasMatch()){
 			      isSubckt = false;
-			      Subckt * ckt = new Subckt();
-			      ckt->parse(subckt_buffer,line_number);
-			      this->_subckt[ckt->name()] = ckt;
+			      parseSubckt(line_number, subckt_buffer);
 			    }
 		       }
 		       file.close();

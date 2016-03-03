@@ -1,0 +1,39 @@
+#include "layoutrotatecell.h"
+
+namespace cIcCore{
+LayoutRotateCell::LayoutRotateCell()
+{
+
+}
+
+LayoutRotateCell::~LayoutRotateCell()
+{
+
+}
+
+void LayoutRotateCell::rotateAngle(QString s)
+{
+  rotateAngle_ = s;
+  this->noPowerRoute(0);
+
+
+}
+
+void LayoutRotateCell::place(){
+
+    foreach(cIcSpice::SubcktInstance * ckt_inst,_subckt->instances()){
+        //The chain of events is important here, ports get defined in the setSubckInstance
+        Instance * inst = Instance::getInstance(ckt_inst->subcktName());
+        inst->setSubcktInstance(ckt_inst);
+        inst->setAngle(rotateAngle_);
+        this->add(inst);
+        if(rotateAngle_ == "R90"){
+          this->moveTo(-inst->x1(),0);
+        }
+    }
+    this->updateBoundingRect();
+
+}
+
+}
+

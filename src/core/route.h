@@ -24,6 +24,7 @@
 #include "cell.h"
 #include "instance.h"
 #include "cut.h"
+#include <iostream>
 
 
 namespace cIcCore{
@@ -53,9 +54,12 @@ namespace cIcCore{
 		void addVertical(int x);
 		void applyOffset(int width, Rect* start, Offset offset);
 
+		void hasMatch(QString options);
+		int getIntegerFromMatch(QString regex,QString options, int defaultValue);
 	protected:
 		QString routeLayer_;
 		RouteType routeType_;
+		QString route_;
 		QString net_;
 		SortDirection sortDirection_;
 		Offset startOffset_;

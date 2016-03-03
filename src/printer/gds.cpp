@@ -52,21 +52,36 @@ namespace cIcPrinter{
     gds_write_xy( fd, x, y, 1 );
     gds_write_string( fd, this->toChar(p->name()) );
     gds_write_endel( fd );
-	delete(r);
+   delete(r);
 
 
   }
 
   void Gds::printReference(Cell * o){
     if(this->isEmpty(o)){return ;}
+    if(!o->isInstance()){return;}
+
+    Instance * inst = (Instance *) o;
+
     char * name = this->toChar(o->name());
     gds_write_sref( fd );                    // contains an instance of...
     gds_write_sname( fd, name );
 
     ///TODO: Implement rotations
-    //              gds_write_angle( fd, 0.0 );             // and tilted at some weird angle
+    if(inst->angle() == "R90"){
+        gds_write_angle( fd, 90.0 );
+      }else if(inst->angle() == "R180"){
+        gds_write_angle( fd, 180.0 );
+      }else if(inst->angle() == "R270"){
+        gds_write_angle( fd, 270.0 );
+      }else if(inst->angle() == "MX"){
+
+      }else if(inst->angle() == "MY"){
+
+      }
+    //                          // and tilted at some weird angle
     x[0] =  toNano(o->x1());
-	y[0] = toNano(o->y1());
+    y[0] = toNano(o->y1());
     gds_write_xy( fd, x, y, 1 );             // at these coordinates (database units)
     gds_write_endel( fd );                   // end of element
   }

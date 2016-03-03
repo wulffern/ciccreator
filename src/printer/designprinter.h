@@ -49,7 +49,7 @@ namespace cIcPrinter{
         virtual void closeFile();
         virtual void printCell(Cell * c);
 
-        virtual void startCell(Cell * cell) {};
+        virtual void startCell(Cell * cell){};
         virtual void endCell() {};
         virtual void printPort(Port *) {} ;
         virtual void printRect(Rect * rect) {};

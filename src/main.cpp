@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
         QString library = argv[3];
 
         if(library == ""){
-            QRegularExpression re("/?([^\/]+)\.json");
+            QRegularExpression re("/?([^\\/]+)\\.json");
             QRegularExpressionMatch m = re.match(file);
             library = m.captured(1);
         }
@@ -76,6 +76,7 @@ int main(int argc, char *argv[])
             cIcGui::Window window;
             window.loadDesign(d);
             window.show();
+
             return app.exec();
         }
 

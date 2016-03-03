@@ -31,7 +31,11 @@
 #include "core/patterntransistor.h"
 #include "core/patterncapacitor.h"
 #include "core/layoutcell.h"
+#include "core/layoutrotatecell.h"
 #include "spice/spiceparser.h"
+#include <exception>
+#include <iostream>
+
 namespace cIcCore{
 
     class Design: public Cell
@@ -47,6 +51,8 @@ namespace cIcCore{
 		//List of cells in the design
         QList<QString> cellNames(){return _cell_names;}
 
+        cIcSpice::Subckt * getSpiceSubckt(QJsonObject jobj, QList<QJsonObject>* reverse_parents, QString name);
+        void runMethod(QJsonValue v, QMetaMethod m, Cell* c);
     private:
 
 		//Check if an object (c) can run methods defined in object (jobj)

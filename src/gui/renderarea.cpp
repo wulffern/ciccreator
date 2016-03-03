@@ -55,15 +55,15 @@ namespace cIcGui{
 
   QSize RenderArea::minimumSizeHint() const
   {
-    return QSize(800 , 600);
+    return QSize(1000 , 800);
   }
 
 
 
   QSize RenderArea::sizeHint() const
   {
-    int w = 800;
-    int h = 600;
+    int w = 1000;
+    int h = 800;
     if(!this->c->empty()){
         int w1 = this->c->width()*1.25 * _zoom + 200;
         int h1 = this->c->height()*1.25 * _zoom + 400;
@@ -127,7 +127,24 @@ namespace cIcGui{
     foreach(Rect * r, c->children()){
         if(r->isInstance()){
             Instance *  inst= (Instance *) r;
+
+            QTransform old_trans = painter.transform();
+            QTransform trans;
+            //qDebug() << inst->angle();
+            if(inst->angle() == "R90"){
+                  trans.rotate(90);
+              }else if(inst->angle() == "R180"){
+                  trans.rotate(180);
+              }else if(inst->angle() == "R270"){
+                  trans.rotate(270);
+              }else if(inst->angle() == "MX"){
+                  trans.scale(-1,1);
+              }else if(inst->angle() == "MY"){
+                  trans.scale(1,-1);
+              }
+            painter.setTransform(trans,true);
             this->drawCell(inst->x1(),inst->y1(),inst->cell(), painter);
+            painter.setTransform(old_trans,false);
           }else if(r->isPort()){
             if(c == this->c){
             Port * p = (Port *) r;
@@ -140,9 +157,8 @@ namespace cIcGui{
              QColor color(l->color);
              color.setAlpha(150);
              painter.setPen(QPen(color,Qt::SolidLine));
-             //font.setWeight(QFont::DemiBold);
              painter.setFont(font);
-            painter.drawText(p->x1(),p->y1()+p->height(),p->name());
+             painter.drawText(p->x1(),p->y1()+p->height(),p->name());
               }
 
           }else if(r->isCell()){

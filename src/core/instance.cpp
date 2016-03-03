@@ -36,14 +36,14 @@ namespace cIcCore{
 
   Instance::~Instance()
   {
+    delete(ckt_inst_);
+    delete(_cell);
 
   }
 
   QList<Rect*> Instance::findRectanglesByRegex(QString regex,QString layer){
 		QList<Rect*> rects;
 		Cell * c = this->cell();
-
-		//qWarning() << "Search instance " << this->instanceName();
 		if(c){
 			QList<Rect*> child_rects = c->findRectanglesByRegex(regex,layer);
 			foreach(Rect * r, child_rects){
@@ -51,7 +51,6 @@ namespace cIcCore{
 				rects.append(r);
 			}
 		}
-		
 		return rects;
   }
 
@@ -71,7 +70,7 @@ namespace cIcCore{
             Rect * r = pi->get();
 
             if(r){
-                   r->parent(this);
+                r->parent(this);
                 rects.append(r);
               }
           }
@@ -82,6 +81,7 @@ namespace cIcCore{
   }
 
   void Instance::setSubcktInstance(cIcSpice::SubcktInstance *inst){
+
 	  ckt_inst_ = inst;
 	  
 	  instanceName_ = inst->name();
@@ -103,7 +103,7 @@ namespace cIcCore{
 	    }else if(sobj){
 	      cktNodes = sobj->nodes();
 	    }else{
-		 qWarning() << "Subckt " << inst->subcktName() << " not found";
+		 //qWarning() << "Subckt " << inst->subcktName() << " not found";
 	     return;
 	    }
 
@@ -115,6 +115,13 @@ namespace cIcCore{
 	    }
 
 
+	  if(cktNodes.count() != instNodes.count()){
+
+	      cerr << "Error(instance.cpp): Instance nodes (" << instNodes.count() << ") do not match subckt nodes (" << cktNodes.count() <<") for " << this->name().toStdString() << "\n";
+	      return;
+	    }
+
+	  //- Make ports;
 	  for(int i=0;i<cktNodes.count();i++){
 		  QString instNode = instNodes[i];
 		  QString cktNode= cktNodes[i];
@@ -130,8 +137,11 @@ namespace cIcCore{
 
   Rect Instance::calcBoundingRect(){
     Rect r = this->_cell->calcBoundingRect();
-    //		r.moveTo(this->x1()+r.x1(), this->y1() + r.y1());
     r.moveTo(this->x1(), this->y1());
+
+    if(this->angle() == "R90"){
+        r.rotate(90);
+    }
 
     return r;
   }
@@ -146,6 +156,11 @@ namespace cIcCore{
         Rect r = c->_cell->calcBoundingRect();
         c->setLayer("PR");
         c->updateBoundingRect();
+      }else{
+        c->_cell = new Cell();
+        c->setName("");
+        c->updateBoundingRect();
+
       }
     return c;
   }

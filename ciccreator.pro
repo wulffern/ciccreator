@@ -85,7 +85,9 @@
   src/core/port.h \
     src/core/route.h \
     src/core/cut.h \
-    src/core/instanceport.h
+    src/core/instanceport.h \
+    src/core/layoutrotatecell.h \
+    src/core/point.h
 
   SOURCES +=         src/printer/gds.cpp \
   src/core/rules.cpp \
@@ -114,4 +116,6 @@
   src/main.cpp \
     src/core/route.cpp \
     src/core/cut.cpp \
-    src/core/instanceport.cpp
+    src/core/instanceport.cpp \
+    src/core/layoutrotatecell.cpp \
+    src/core/point.cpp

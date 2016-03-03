@@ -46,9 +46,8 @@ namespace cIcSpice{
         return ckt;
     }
 
-
     void Subckt::parse(QList<QString> subckt_buffer,int line){
-
+        _spice_str = subckt_buffer;
         this->setLineNumber(line);
         //Get first subckt line, and remove last subckt line (.ends)
         QString firstLine = subckt_buffer.first();
@@ -64,14 +63,7 @@ namespace cIcSpice{
             qWarning() << "Could not parse subcktname on line" << this->lineNumber() << ": " << firstLine;
         }
 
-
-
         _allsubckt[this->name()] = this;
-
-        //TODO: figure something out to make ports, should probably be an object, maybe with storage for rectangles, and connections
-        // to instances. Things not connected to port should be added as an wire object.
-
-
 
         //TOOD: I assume there are no parameters on subckt
         firstLine = firstLine.trimmed();
@@ -97,10 +89,7 @@ namespace cIcSpice{
             }
             this->_instances.append(inst);
             this->_inst_index[inst->name()] = this->_instances.count() -1;
-        //    this->_instances[inst->name()] = inst;
             instance_line_number++;
         }
-
     }
-
 }

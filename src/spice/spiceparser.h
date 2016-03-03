@@ -50,10 +50,11 @@ namespace cIcSpice{
 			if(_subckt.contains(name)){
 				return _subckt[name];
 			}else{
-				return new Subckt;
+				return NULL;
 			}
 		}
 
+		void parseSubckt(int line_number, QList<QString> subckt_buffer);
 	private:
 		QMap<QString, Subckt* > _subckt;
 

@@ -65,11 +65,9 @@ DesignPrinter::~DesignPrinter(){
   void DesignPrinter::printChildren(QList<Rect*> children){
     foreach(Rect * child,children){
         if(!child){continue;}
-
         if(child->isInstance()){
             Instance * inst = (Instance*)child;
             if(inst->name() == ""){continue;}
-
             this->printReference((Instance*)child);
           }else if(child->isPort()){
             Port * p = (Port *) child;
