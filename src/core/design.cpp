@@ -303,6 +303,8 @@ namespace cIcCore{
 
     void Design::runMethod(QJsonValue v, QMetaMethod m, Cell* c)
     {
+
+
       if(v.isArray()){
           QJsonArray ar1 = v.toArray();
           m.invoke(c,Qt::DirectConnection, Q_ARG(QJsonArray, ar1));
@@ -347,9 +349,10 @@ namespace cIcCore{
                 method_key = nameTranslator[key];
             }
 
-            if(methods.contains(method_key)){
+            if(methods.contains(method_key) && jobj.contains(method_key)){
                 QMetaMethod method = methods[method_key];
                 QJsonValue value = jobj[method_key];
+
                 this->runMethod(value, method, c);
                 console->commentInvokeMethod(c_name,theme, method.name());
             }else if(method_key.endsWith("s")  && methods.contains(method_key.left(key.length()-1))){
