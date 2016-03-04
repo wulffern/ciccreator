@@ -48,6 +48,7 @@ namespace cIcCore{
 			QList<Rect*> child_rects = c->findRectanglesByRegex(regex,layer);
 			foreach(Rect * r, child_rects){
 				r->translate(this->x1(),this->y1());
+
 				rects.append(r);
 			}
 		}

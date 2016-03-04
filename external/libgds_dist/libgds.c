@@ -366,46 +366,50 @@ void gds_write_float(int fd, float x ){
 
 	int isNegative;
 	int i;
-	float r;
+	float real;
 	unsigned char exponent,b;
 
 	float G_epsilon;
+
+//	gds_write_pos(fd);
+	
+	b =0;
 	G_epsilon = 0.000001;
 	
   isNegative = 0;
-  r = x;
+  x = x;
 
   if(x < 0.0){
       isNegative = 1;
-      r = 0 - x;
+      x = 0 - x;
     }
 
   exponent = 0;
-  while(r >= 1.0){
+  while(x >= 1.0){
       exponent++;
-      r = (r/16.0);
+      x = (x/16.0);
     }
-  if(r != 0){
-      while(r < 0.0625){
+  if(x != 0){
+      while(x < 0.0625){
           exponent--;
-          r = (r*16.0);
+          x = ( x * 16.0);
         }
     }
 
   if(isNegative){exponent += 192;}
   else {exponent += 64;}
   write( fd, &exponent, 1 );
-  
-  printf("real before start %f\n",r);
-
-
+//  printf("0: ");
+//  gds_bindump(exponent);
+//  printf("\n");
   for(i=1;i<=7;i++){
-      if(r>=0){b = (int) (r*256.0) + G_epsilon;}
-      else {b = (int) (r*256.0) - G_epsilon;}
+      if(x>=0){b = (int) (x*256.0) + G_epsilon;}
+      else {b = (int) (x*256.0) - G_epsilon;}
       write(fd,&b,1);
-	  printf("%f \n",r);
-	  gds_bindump(b);
-      r = r*256.0 - (b + 0.0);
+//	  printf("%i: ",i);
+//	  gds_bindump(b);
+//	    printf("\n");
+      x = x*256.0 - (b + 0.0);
     }
 }
 
@@ -479,14 +483,14 @@ gds_write_float1( int fd, float x )
 
     }
 
-  // printf( "\n" );
+  //printf( "\n" );
   for ( i=0; i<8; i++ )
     {
       by = stupid[i];
       write( fd, &by, 1 );
-      //         gds_bindump( by );
+	  //             gds_bindump( by );
     }
-  // printf( "\n" ); fflush( stdout );
+//   printf( "\n" ); fflush( stdout );
 
 
 } // write_float
@@ -2281,11 +2285,20 @@ gds_read_angle( int fd, int count, struct gds_itemtype **ci, BOOL verbose )
 /*------------------------------------------------------------------------------------------*/
 
 void
+gds_write_pos(int fd){
+  long pos = lseek(fd, 0, SEEK_CUR);
+  printf("pos is %#08x %i bytes\n", pos,pos);
+}
+
+void
 gds_write_angle( int fd, float angle )
 {
   static int
       count,
       token;
+
+  //long pos;
+//  pos = ftell(fd);
 
   count = 12;
   gds_swap2bytes( (BYTE *) &count );
@@ -2294,6 +2307,7 @@ gds_write_angle( int fd, float angle )
   gds_swap2bytes( (BYTE *) &token );
   write( fd, &token, 2 );
   gds_write_float( fd, angle );
+
 
 }  // write_angle
 

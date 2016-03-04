@@ -305,14 +305,17 @@ namespace cIcCore{
     {
 
 
+//		qDebug() << m
+
+		
       if(v.isArray()){
           QJsonArray ar1 = v.toArray();
           m.invoke(c,Qt::DirectConnection, Q_ARG(QJsonArray, ar1));
       }else if(v.isObject()){
           QJsonObject ar1 = v.toObject();
           m.invoke(c,Qt::DirectConnection, Q_ARG(QJsonObject, ar1));
-      }else if(v.isString()){
-          m.invoke(c,Qt::DirectConnection,Q_ARG(QString, v.toString()));
+      }else{
+          m.invoke(c,Qt::DirectConnection,Q_ARG(QJsonValue, v));
         }
     }
 
@@ -341,6 +344,7 @@ namespace cIcCore{
         //Search throught the json file and find methods that can be run
         QRegularExpression re("^new|inherit|leech|class|name|before.*|after.*|comment");
 
+
         foreach( QString key, jobj.keys()){
             if(re.match(key).hasMatch()){ continue;}
 
@@ -350,11 +354,16 @@ namespace cIcCore{
             }
 
             if(methods.contains(method_key) && jobj.contains(method_key)){
-                QMetaMethod method = methods[method_key];
-                QJsonValue value = jobj[method_key];
 
-                this->runMethod(value, method, c);
+
+
+				QMetaMethod method = methods[method_key];
+
+                QJsonValue value = jobj[method_key];
                 console->commentInvokeMethod(c_name,theme, method.name());
+				
+                this->runMethod(value, method, c);
+
             }else if(method_key.endsWith("s")  && methods.contains(method_key.left(key.length()-1))){
 
                 console->commentInvokeMethod(c_name,theme, method_key);
