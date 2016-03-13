@@ -37,6 +37,7 @@ xcode:
 compile:
 	${MAKE} -f qmake.make
 
+
 clean:
 	${MAKE} -f qmake.make clean
 
@@ -48,10 +49,16 @@ TECHFILE=${EXAMPLE}/tech.json
 devices:
 	cd lay; ${CMD} ${JSONFILE} ${TECHFILE} ${LIBNAME} ${OPT}
 
-
 doxygen:
 	doxygen
 
 coverage:
 	lcov --capture --directory . --output-file coverage/converage.info
 	genhtml coverage/converage.info --output-directory coverage/
+
+
+sar:
+	cd lay; make sar
+
+gui:
+	bin/cic-gui examples/tech.json lay/SAR_LPWR_ST28N.json

@@ -28,10 +28,8 @@ LIBPATH=../../icarus_mpw2/lib/
 tech=../examples/tech.json
 
 
-all: compile json
+all:json
 
-compile:
-	cd ..; ${MAKE};
 
 FILE=devices
 
