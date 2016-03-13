@@ -1,4 +1,3 @@
-#include "cicgui.h"
 #include "window.h"
 #include <QApplication>
 

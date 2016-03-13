@@ -37,13 +37,11 @@ QT += core widgets
 
 
 SOURCES += src/main.cpp\
-src/cicgui.cpp \
 src/renderarea.cpp\
 src/window.cpp
 
 
-HEADERS  += src/cicgui.h\
-src/renderarea.h \
+HEADERS  += src/renderarea.h \
 src/window.h 
 
 #FORMS    += cicgui.ui
