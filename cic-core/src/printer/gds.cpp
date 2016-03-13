@@ -47,6 +47,7 @@ namespace cIcPrinter{
     gds_write_presentation( fd, 0, 1, 0 );  // fd, font, hp, vp
     gds_write_width( fd, 1 );
     gds_write_strans( fd, 0, 0, 1 );        // fd, reflect, abs_angle, abs_mag
+	gds_write_mag(fd,0.1);
     x[0] = toNano(r->x1());
     y[0] = toNano(r->y1());
     gds_write_xy( fd, x, y, 1 );
@@ -67,18 +68,19 @@ namespace cIcPrinter{
     gds_write_sref( fd );                    // contains an instance of...
     gds_write_sname( fd, name );
 
+
     ///TODO: Implement rotations
     if(inst->angle() == "R90"){
-        gds_write_angle( fd, 90.0 );
-      }else if(inst->angle() == "R180"){
+		gds_write_strans( fd, 0, 1, 0 );        // fd, reflect, abs_angle, abs_mag
+		gds_write_angle( fd, (float) 90 );
+	}else if(inst->angle() == "R180"){
+		gds_write_strans( fd, 0, 1, 0 );        // fd, reflect, abs_angle, abs_mag
         gds_write_angle( fd, 180.0 );
-      }else if(inst->angle() == "R270"){
+	}else if(inst->angle() == "R270"){
+		gds_write_strans( fd, 0, 1, 0 );        // fd, reflect, abs_angle, abs_mag
         gds_write_angle( fd, 270.0 );
-      }else if(inst->angle() == "MX"){
+	}
 
-      }else if(inst->angle() == "MY"){
-
-      }
     //                          // and tilted at some weird angle
     x[0] =  toNano(o->x1());
     y[0] = toNano(o->y1());
