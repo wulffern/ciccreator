@@ -41,16 +41,6 @@ namespace cIcCore{
 
 	QString Port::pinLayer(){if(routeLayer_){return routeLayer_->pin;}else{return "";}}
 	
-//	void Port::setChild(Port * p){
-//		childport_ = p;
-//		parent_ = parent;
-//		Rect * r = p->getCopy();
-//		r->translate(parent->x1(),parent->y1());
-//		this->set(r);
-
-//        }
-
-
 
     void Port::set(Rect * r ){
       if(!r){return;};
@@ -74,7 +64,7 @@ namespace cIcCore{
 
 		if(routeLayer_){
 		    QString layer = routeLayer_->name;
-		  r = this->getCopy(layer);
+			r = this->getCopy(layer);
 		}
 		return r;
 	}

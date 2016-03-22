@@ -147,7 +147,7 @@ namespace cIcCore{
         }else{
             Rect * r = rects[0];
             if(r->layer() != layer){
-                qDebug()<< "Could not find port " << port << "on rect " << path << " in layer " << layer;
+                qDebug()<< "Layer " << r->layer() << " is different from " << port << "on rect " << path << " in layer " << layer;
             }else{
                 if(ports_.contains(port)){
                     Port *p = ports_[port];

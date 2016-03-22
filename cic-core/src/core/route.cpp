@@ -190,9 +190,9 @@ namespace cIcCore{
 
         int x = 0;
         if(routeType_ == RIGHT){
-            x = start_bound.left() - space - width - hgrid*track_;
+            x = start_bound.left() - space - width - hgrid*track_ - space;
         }else if(routeType_ ==LEFT){
-            x = start_bound.right() + space + hgrid*track_;
+            x = start_bound.right() + space + hgrid*track_  + space;
         }else{
 
         }

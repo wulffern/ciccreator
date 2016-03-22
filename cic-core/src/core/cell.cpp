@@ -58,7 +58,7 @@ namespace cIcCore{
                 QString instname = str_tok[0];
                 str_tok.pop_front();
                 QString path = str_tok.join(":");
-
+				
                 //Find and match instance
                 QRegularExpression re_inst(instname);
                 foreach(Rect * child, children()){
@@ -68,13 +68,12 @@ namespace cIcCore{
                         if(m_inst.hasMatch()){
                             QList<Rect*> child_rects = inst->findRectanglesByRegex(path,layer);
                             foreach(Rect * r, child_rects){
-                                rects.append((r));
+                                rects.append(r);
                             }
                         }
                     }
                 }
             }else{
-
                 //Search ports
                 foreach(Port * p, ports_){
                     bool hasMatch = false;
@@ -96,7 +95,9 @@ namespace cIcCore{
                         Rect * r= p->get(layer);
                         if(!r){
                             r = p->get();
+							r->setLayer(layer);
                         }
+
                         if(r){
                             rects.append(r);
                         }

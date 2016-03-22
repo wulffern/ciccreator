@@ -55,9 +55,15 @@
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../lib/darwin/release/ -lcic
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../lib/darwin/debug/ -lcic
-else:unix: LIBS += -L$$PWD/../lib/darwin/ -lcic
+else:unix: LIBS += -L$$PWD/../lib/linux/ -lcic
+
 
 mac:PRE_TARGETDEPS += ../lib/darwin/libcic$${LIBSUFFIX}.a
+mac:INCLUDEPATH += $$PWD/../lib/darwin
+                   mac:DEPENDPATH += $$PWD/../lib/darwin
 
-INCLUDEPATH += $$PWD/../lib/darwin
-DEPENDPATH += $$PWD/../lib/darwin
+                   
+                   linux:PRE_TARGETDEPS += ../lib/linux/libcic$${LIBSUFFIX}.a
+linux:INCLUDEPATH += $$PWD/../lib/linux
+                   linux:DEPENDPATH += $$PWD/../lib/linux
+
