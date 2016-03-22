@@ -48,7 +48,8 @@ src/window.h
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../lib/darwin/release/ -lcic
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../lib/darwin/debug/ -lcic
-else:unix: LIBS += -L$$PWD/../lib/linux/ -lcic
+else:linux: LIBS += -L$$PWD/../lib/linux/ -lcic
+else:mac: LIBS += -L$$PWD/../lib/darwin/ -lcic
 
 mac:PRE_TARGETDEPS += ../lib/darwin/libcic$${LIBSUFFIX}.a
 mac:INCLUDEPATH += $$PWD/../lib/darwin

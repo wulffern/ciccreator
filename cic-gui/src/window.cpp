@@ -127,6 +127,7 @@ namespace cIcGui{
 		    loadFile(filename);
 		    listCells->setCurrentRow(index);
 		    this->shapeSelected(index);
+//			originalRenderArea->setZoom(zoom->sliderPosition()/100.0/Rules::getRules()->gamma());
 			//QModelIndex modelIndex = listCells->rootIndex(); // u have to find the model index of the first item here
 			//listCells->setCurrentIndex(modelIndex);
 		    //shapeSelected(index);

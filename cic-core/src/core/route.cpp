@@ -53,7 +53,7 @@ namespace cIcCore{
 
         //- Sort direction
         if(options.contains(QRegularExpression("onTopR"))){
-            start_rects_ = Rect::sortRightOnTop(start_rects_);
+			start_rects_ = Rect::sortRightOnTop(start_rects_);
             stop_rects_ = Rect::sortRightOnTop(stop_rects_);
         }
         else if(options.contains(QRegularExpression("onTopB"))){
@@ -65,7 +65,7 @@ namespace cIcCore{
             stop_rects_ = Rect::sortTopOnTop(stop_rects_);
         }else{
             start_rects_ = Rect::sortLeftOnTop(start_rects_);
-            stop_rects_ = Rect::sortLeftOnTop(stop_rects_);
+			stop_rects_ = Rect::sortLeftOnTop(stop_rects_);
         }
 
         if(start_rects_.count() == 0 && stop_rects_.count() > 0){
@@ -143,8 +143,6 @@ namespace cIcCore{
             break;
         case RIGHT:
             this->routeOne();
-            break;
-        case LEFT_DOWN_LEFT_UP:
             break;
         case STRAIGHT:
             this->routeStraight();

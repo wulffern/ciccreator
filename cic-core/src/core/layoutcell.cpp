@@ -142,6 +142,7 @@ namespace cIcCore{
         }
 
         QList<Rect*> rects = this->findRectanglesByRegex(path,layer);
+		this->findRectangles(rects,path,layer);
         if( rects.count() == 0){
             qDebug()<< "Could not find port " << port << "on path " << path << " in layer " << layer;
         }else{

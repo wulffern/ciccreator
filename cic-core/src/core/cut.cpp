@@ -45,7 +45,8 @@ Cut::Cut(QString layer1, QString layer2, int horizontal_cuts, int vertical_cuts)
               r_height = enclosure*2 + cut_height*horizontal_cuts + cut_space*(horizontal_cuts - 1);
             }
 
-        Rect * r = new Rect(l->name,0,0,r_width,r_height);
+
+	        Rect * r = new Rect(l->name,0,0,r_width,r_height);
         this->add(r);
 
          }else if(l->material == Layer::cut){
@@ -106,7 +107,7 @@ Cut::~Cut()
                 //r->moveTo(inst->x1(),inst->y1());
                 //---
 
-                r ->setWidth(inst->width());
+                r->setWidth(inst->width());
 
                   cuts.append(inst);
                   }

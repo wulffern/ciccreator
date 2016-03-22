@@ -47,6 +47,28 @@ namespace cIcCore{
     void Cell::route(){}
     void Cell::place(){}
 
+	void Cell::findRectangles(QList<Rect*> &rects, QString name, QString layer){
+		foreach(Rect* child, children()){
+			if(child == NULL) continue;
+			if(child->isInstance()){
+				Cell * inst = (Cell *) child;
+				if(inst == NULL) continue;
+				foreach(Port *p, inst->ports()){
+					if(p->name() == name){
+						Rect *r = p->get(layer);
+						if(r==NULL)
+							r = p->get();
+						if(r){
+							r->setLayer(layer);
+							rects.append(r);
+						}
+					}
+				}
+			}
+		}
+		
+	}
+
     QList<Rect*> Cell::findRectanglesByRegex(QString regex,QString layer){
 
         //If the regex contains : then search child ports, if it does not, then search local ports

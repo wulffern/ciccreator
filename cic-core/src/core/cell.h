@@ -153,7 +153,7 @@ namespace cIcCore{
 
         //! Find all rectangles by regular expression
         virtual QList<Rect *> findRectanglesByRegex(QString regex,QString layer);
-
+		virtual void findRectangles(QList<Rect*> &rects,QString name,QString layer);
 
         QJsonObject toJson();
         void fromJson(QJsonObject o);
