@@ -5,13 +5,17 @@ A few years ago I started playing with the thought of generating a SAR ADC with 
 - Qt 5.4
 
 #Compile
- qmake; make
+Install > Qt5.4 (i.e http://download.qt.io/archive/qt/5.4/5.4.2/qt-opensource-linux-x64-5.4.2.run), and edit bashrc.config to point to your Qt5.4 path, then
+
+    source bashrc.config
+    make
 
 #Test
-cd lay/; make
+    cd lay
+    make
 
+#Viewing
+Open GDSII file or open built in viewer
 
+    ../bin/cic-gui ../examples/tech.json devices.json 
 
-
-##Disclamer
-This tool is not functional yet. I do have a Perl based tool which works, but that's not publicly available. The Perl tool is slow, however, and I've started the redesign of the tool in C++, which should speed it up. I have very few development hours available, so it might take some time before this tool works :-)
