@@ -65,6 +65,7 @@ namespace cIcCore{
 		Offset startOffset_;
 		Offset stopOffset_;
 		int track_;
+		bool hasTrack_;
 		int cuts_;
 		int vcuts_;
 		bool antenna_;

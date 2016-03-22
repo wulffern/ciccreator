@@ -45,6 +45,7 @@ namespace cIcCore{
         cuts_ = 2;
         vcuts_ = 1;
         antenna_ = false;
+		hasTrack_= false;
         start_rects_ = start;
         stop_rects_ = stop;
 		this->setName(net);
@@ -83,8 +84,13 @@ namespace cIcCore{
         if(options.contains(QRegularExpression("offsethighend"))){ stopOffset_ = HIGH ;}
         else if(options.contains(QRegularExpression("offsetlowend"))){ stopOffset_ = LOW ;}
 
+		if(options.contains(QRegularExpression("track(\\d+)")))
+			hasTrack_ = true;
+		
         track_  = getIntegerFromMatch("track(\\d+)", options,0);
+		
         cuts_  = getIntegerFromMatch("(\\d+)cuts", options,2);
+
         vcuts_  = getIntegerFromMatch("(\\d+)vcuts", options,1);
 
         if(routeType == "-|--"){routeType_ = LEFT;}
@@ -188,9 +194,14 @@ namespace cIcCore{
 
         int x = 0;
         if(routeType_ == RIGHT){
-            x = start_bound.left() - space - width - hgrid*track_ - space;
+            x = start_bound.left() - space - width;
+			if(hasTrack_)
+				x = x - hgrid*track_ - space;
+			
         }else if(routeType_ ==LEFT){
-            x = start_bound.right() + space + hgrid*track_  + space;
+            x = start_bound.right() + space;
+			if(hasTrack_)
+				x = x + hgrid*track_ + space;
         }else{
 
         }
@@ -289,9 +300,15 @@ namespace cIcCore{
 
         int x = 0;
         if(routeType_ == U_RIGHT){
-            x = all_bound.right() + hgrid * track_ + space;
+            x = all_bound.right() +space;
+			if(hasTrack_)
+				x = x + hgrid*track_ + space;
+
         }else if(routeType_ == U_LEFT){
-            x = all_bound.left()- hgrid * track_  - space - width;
+            x = all_bound.left() - space - width;
+			if(hasTrack_)
+				x = x - hgrid*track_ - space;
+
         }else{
 			cerr << "Error(route.cpp): Unknown U route " << routeType_ << "\n";
         }
