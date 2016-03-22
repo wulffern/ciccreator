@@ -24,6 +24,7 @@
 #include "cell.h"
 #include "instance.h"
 #include "route.h"
+#include "graph.h"
 
 namespace cIcCore{
 
@@ -39,7 +40,7 @@ namespace cIcCore{
         Q_INVOKABLE void setYoffsetHalf(QJsonValue obj);
         Q_INVOKABLE void noPowerRoute(QJsonValue obj);
         Q_INVOKABLE void addDirectedRoute(QJsonArray obj);
-         Q_INVOKABLE void addConnectivityRoute(QJsonArray obj);
+		Q_INVOKABLE void addConnectivityRoute(QJsonArray obj);
         Q_INVOKABLE void addPortOnRect(QJsonArray obj);
 
         virtual void place();
@@ -56,9 +57,12 @@ namespace cIcCore{
         void addPowerRoute(QString net,QString excludeInstances);
     private:
         bool useHalfHeight;
+		QHash<QString,Graph*> nodeGraph_;
 
         bool noPowerRoute_;
 
+		void addToNodeGraph(Instance * inst);
+		
     };
 
 }

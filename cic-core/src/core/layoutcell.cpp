@@ -116,12 +116,21 @@ namespace cIcCore{
           excludeInstances = obj[5].toString();
         }
 
-      QList<Rect*> rects = this->findRectanglesByNode(regex,"",excludeInstances);
-      if(rects.count() > 0){
-        QList<Rect*> empty;
-          Route * r = new Route(regex,layer,empty,rects,options,routeType);
-          this->add(r);
-        }
+	  foreach(QString node, nodeGraph_.keys()){
+		  if(!node.contains(QRegularExpression(regex))) continue;
+
+		  Graph * g = nodeGraph_[node];
+		  QList<Rect*>  rects = g->getRectangles(excludeInstances,layer);
+
+		  if(rects.count() == 0){
+			  qDebug() << "Could not find rectangles on " << node << regex << rects.count() << "\n";
+		  }
+		  if(rects.count() > 0){
+			  QList<Rect*> empty;
+			  Route * r = new Route(regex,layer,empty,rects,options,routeType);
+			  this->add(r);
+		  }
+	  }
 
 
     }
@@ -186,18 +195,39 @@ namespace cIcCore{
             inst->setSubcktInstance(ckt_inst);
             this->add(inst);
             inst->moveTo(x,y);
+			this->addToNodeGraph(inst);
             prev_width = inst->width();
             if(useHalfHeight){
                 y += inst->height()/2;
             }else{
                 y += inst->height();
             }
+			
 
         }
 
         this->updateBoundingRect();
 
     }
+
+	void LayoutCell::addToNodeGraph(Instance * inst){
+
+		if(inst == NULL) return;
+		
+		foreach(Port * p, inst->ports()){
+			if(p == NULL) continue;
+
+			if(nodeGraph_.contains(p->name())){
+				nodeGraph_[p->name()]->append(p);
+			}else{
+				Graph *g = new Graph();
+				g->name = p->name();
+				g->append(p);
+				nodeGraph_[p->name()] = g;
+			}
+		}
+		
+	}
 
     void LayoutCell::route(){
 

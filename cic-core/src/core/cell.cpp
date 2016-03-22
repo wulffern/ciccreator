@@ -59,7 +59,7 @@ namespace cIcCore{
 						if(r==NULL)
 							r = p->get();
 						if(r){
-							r->setLayer(layer);
+//							r->setLayer(layer);
 							rects.append(r);
 						}
 					}
@@ -117,7 +117,7 @@ namespace cIcCore{
                         Rect * r= p->get(layer);
                         if(!r){
                             r = p->get();
-							r->setLayer(layer);
+//							r->setLayer(layer);
                         }
 
                         if(r){

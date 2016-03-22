@@ -53,6 +53,7 @@
   # Input
   HEADERS +=  src/core/rules.h  \
   src/core/rect.h \
+  src/core/graph.h \
   src/core/cell.h \
   src/core/instance.h \
   src/core/layoutcell.h \
@@ -78,6 +79,7 @@
     src/core/instanceport.h \
     src/core/layoutrotatecell.h \
     src/core/point.h
+
 
   SOURCES +=         src/printer/gds.cpp \
   src/core/rules.cpp \
