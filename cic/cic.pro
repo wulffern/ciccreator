@@ -19,11 +19,6 @@
 
   QT += core
 
-  unix:!mac{
-          QMAKE_LIBDIR += ~/qt5_4/lib  ~/qt5_4/plugins/platforms
-  }
-
-
   CONFIG += qt console debug
 
   mac {
