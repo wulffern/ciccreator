@@ -47,6 +47,7 @@
   # Input
   HEADERS +=  src/core/rules.h  \
   src/core/rect.h \
+    src/printer/minecraft.h \
   src/core/graph.h \
   src/core/cell.h \
   src/core/instance.h \
@@ -79,6 +80,7 @@
   src/core/rules.cpp \
   src/core/rect.cpp \
   src/core/cell.cpp   \
+  src/printer/minecraft.cpp \
   src/core/patterntile.cpp \
   src/core/patterntransistor.cpp \
   src/core/patterncapacitor.cpp \

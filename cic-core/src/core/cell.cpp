@@ -52,7 +52,7 @@ namespace cIcCore{
 			if(child == NULL) continue;
 			if(child->isInstance()){
 				Cell * inst = (Cell *) child;
-				if(inst == NULL) continue;
+								if(inst == NULL) continue;
 				foreach(Port *p, inst->ports()){
 					if(p->name() == name){
 						Rect *r = p->get(layer);
