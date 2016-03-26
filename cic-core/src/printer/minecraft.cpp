@@ -26,7 +26,14 @@ namespace cIcPrinter{
     }
 
     int Minecraft::toMine(int angstrom){
-		return angstrom/Rules::getRules()->gamma()/5
+
+		double x = angstrom;
+		double xo = angstrom/Rules::getRules()->gamma()/10;
+		if(x != 0 && abs(xo) > 0 && abs(xo) < 1){
+			xo = xo/abs(xo);
+		}
+		
+		return xo;
 			;}
 
     void Minecraft::printReference(Cell * o){
@@ -52,11 +59,6 @@ namespace cIcPrinter{
         }else{
             ts << ".fwd(" << y << ")";
         }
-
-//		Cell * c = i->cell();
-//		if(c){
-//			this->printChildren(c->children());
-//		}
 
 		ts << "." << o->name() << "()";
 		      ts <<  ".move('r" << lcount << "');\n";

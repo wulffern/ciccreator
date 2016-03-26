@@ -42,14 +42,17 @@ namespace cIcSpice{
         this->setLineNumber(line_number);
         this->spiceStr().append(buffer);
 
+//		cout << buffer.toStdString() << "\n";
         //Remove parameters
         QRegularExpression re_params("\\s+(\\S+)\\s*=\\s*(\\S+)");
         QRegularExpressionMatchIterator it= re_params.globalMatch(buffer);
         while (it.hasNext()) {
-            QRegularExpressionMatch m_params = it.next();
-            this->properties()[m_params.captured(1)] = m_params.captured(2);
-        }
 
+            QRegularExpressionMatch m_params = it.next();
+//			cout << m_params.captured(1).toStdString() << " " << m_params.captured(2).toStdString() <<"\n";
+           _properties[m_params.captured(1)] = m_params.captured(2);
+        }
+		
 
         buffer.replace(re_params,"");
 

@@ -63,7 +63,7 @@
         }
     },
     "rules" : {
-        "ROUTE": { "horizontalgrid": 20, "verticalgrid" : 20 },
+        "ROUTE": { "horizontalgrid": 18, "verticalgrid" : 18 },
         "CELL" : { "space" : 40, "digitalspace" : 0 },
         "PP"   : { "enclosure" : 24, "ODencOpposite" : 24},
         "NP"   : { "enclosure" : 24, "ODencOpposite" : 24},

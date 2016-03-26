@@ -195,6 +195,7 @@ namespace cIcCore {
                     case 'x':
                     case 'X':
                     case 'K':
+					case 'k':
                     case 'C':
                     case 'Q':
                     case 'r':
@@ -277,6 +278,7 @@ namespace cIcCore {
                         }else{
                             cxoffset = xspace_/2;
                         }
+					
                     case 'k':
                         lay = this->rules->getNextLayer(layer);
                         cr = new Rect();

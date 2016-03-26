@@ -23,10 +23,10 @@
 
 #include <QtCore>
 #include "spiceobject.h"
-
+#include <iostream>
 
 namespace cIcSpice{
-
+	using namespace std;
 	class SubcktInstance: public SpiceObject
 	{
 		Q_OBJECT

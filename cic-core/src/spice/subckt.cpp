@@ -39,7 +39,7 @@ namespace cIcSpice{
     }
 
     Subckt* Subckt::getInstanceSubckt(SubcktInstance* inst){
-		Subckt * ckt = NULL;
+        Subckt * ckt = NULL;
         if(_allsubckt.contains(inst->subcktName())){
             ckt = _allsubckt[inst->subcktName()];
         }
@@ -89,6 +89,25 @@ namespace cIcSpice{
             }
             this->_instances.append(inst);
             this->_inst_index[inst->name()] = this->_instances.count() -1;
+			
+            if(inst->properties().contains("M")){
+				int count  = inst->properties()["M"].toInt();
+				for(int i=1;i<count;i++){
+					SubcktInstance * inst_mult = new SubcktInstance();
+					inst_mult->parse(line,instance_line_number);
+					
+					inst_mult->setName(inst->name() + count);
+					if(this->_inst_index.contains(inst_mult->name())){
+						qWarning() << "Error: " << this->name() << " already contains an " << inst_mult->name();
+					}
+					this->_instances.append(inst_mult);
+					this->_inst_index[inst_mult->name()] = this->_instances.count() -1;
+				}
+			}
+
+			 
+
+
             instance_line_number++;
         }
     }

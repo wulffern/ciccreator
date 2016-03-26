@@ -24,10 +24,11 @@
 #include <QObject>
 #include <QString>
 #include "printer/designprinter.h"
+#include <cmath>
 
 namespace cIcPrinter{
     using namespace cIcCore;
-
+	using namespace std;
     class Minecraft : public DesignPrinter{
 
     public:
@@ -38,12 +39,15 @@ namespace cIcPrinter{
 			block_map["M2"] = "'35:4'";
 			block_map["M3"] = "'35:3'";
 			block_map["M4"] = "'35:9'";
+			block_map["M5"] = "'35:6'";
+			block_map["M6"] = "'35:8'";
 			block_map["OD"] = "'35:5'";
 			block_map["CO"] = "'41'";
 			block_map["VIA1"] = "'35:11'";
 			block_map["VIA2"] = "'35:4'";
 			block_map["VIA3"] = "'35:3'";
-			block_map["VIA4"] = "'35:9'";
+			block_map["VIA4"] = "'35:6'";
+			block_map["VIA5"] = "'35:8'";
 			height_map.append("OD");
 			height_map.append("PO");
 			height_map.append("CO");
@@ -55,6 +59,10 @@ namespace cIcPrinter{
 			height_map.append("VIA3");
 			height_map.append("M4");
 			height_map.append("VIA4");
+			height_map.append("M5");
+			height_map.append("VIA5");
+			height_map.append("M6");
+			height_map.append("VIA6");
 			cellname = "";
 			count = 0;
         }

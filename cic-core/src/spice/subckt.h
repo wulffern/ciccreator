@@ -27,9 +27,10 @@
 #include "subcktinstance.h"
 #include <QString>
 #include <QMap>
+#include <iostream>
 
 namespace cIcSpice{
-
+	using namespace std;
     class Subckt: public SpiceObject
     {
         Q_OBJECT
