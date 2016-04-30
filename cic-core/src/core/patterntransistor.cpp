@@ -57,7 +57,6 @@ namespace cIcCore{
 			    Port *p = new Port("G");
 				p->set(r);
 				this->add(p);
-				qDebug() << r->toString();				
 			}
 
 

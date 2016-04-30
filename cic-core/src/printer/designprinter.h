@@ -49,11 +49,11 @@ namespace cIcPrinter{
         virtual void closeFile();
         virtual void printCell(Cell * c);
 
-        virtual void startCell(Cell * cell){};
+        virtual void startCell(Cell * ){};
         virtual void endCell() {};
         virtual void printPort(Port *) {} ;
-        virtual void printRect(Rect * rect) {};
-        virtual void printReference(Cell *c) {};
+        virtual void printRect(Rect * ) {};
+        virtual void printReference(Cell *) {};
         virtual void printChildren(QList<Rect*> children);
 
         virtual void startLib(QString name);

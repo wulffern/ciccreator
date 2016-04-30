@@ -119,15 +119,7 @@ namespace cIcGui{
     painter.restore();
   }
 
-  void RenderArea::drawCoordinates(QPainter &painter)
-  {
 
-  }
-
-  void RenderArea::drawOutline(QPainter &painter)
-  {
-
-  }
 
 
 

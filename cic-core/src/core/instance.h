@@ -52,6 +52,8 @@ namespace cIcCore{
    QList<Rect*> findRectanglesByNode(QString node, QString filterChild);
     QString toString();
 
+	Rect* getRect(QString layer);
+
     virtual QJsonObject toJson();
     void fromJson(QJsonObject o);
     void setCell(QString cell);

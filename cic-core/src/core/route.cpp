@@ -183,6 +183,11 @@ namespace cIcCore{
             break;
 
         }
+
+		this->updateBoundingRect();
+
+		Rect r = this->calcBoundingRect();
+		
     }
 
     void Route::routeOne(){

@@ -17,6 +17,8 @@
 ##   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ######################################################################
 
+QMAKE_CFLAGS += $$(CFLAGS) --coverage -g
+
 TEMPLATE=subdirs
   CONFIG += ordered
   SUBDIRS = cic-core \

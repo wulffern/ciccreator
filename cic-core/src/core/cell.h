@@ -151,9 +151,12 @@ namespace cIcCore{
             return c;
         }
 
+		
+
         //! Find all rectangles by regular expression
         virtual QList<Rect *> findRectanglesByRegex(QString regex,QString layer);
 		virtual void findRectangles(QList<Rect*> &rects,QString name,QString layer);
+		virtual QList<Rect *> findAllRectangles(QString regex, QString layer);
 
         QJsonObject toJson();
         void fromJson(QJsonObject o);
@@ -166,6 +169,9 @@ namespace cIcCore{
 
 			//! Ports in this cell
 		QMap<QString,Port*> ports_;
+
+		//! Named Rects in this cell
+		QMap<QString,Rect*> named_rects_;
 
 			//! SPICE subcircuit related to this cell
         cIcSpice::Subckt * _subckt;

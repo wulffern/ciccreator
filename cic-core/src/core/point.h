@@ -65,7 +65,6 @@ public:
     }
 
     int swapY(int y2){
-      int yy = y;
       y = y2;
       return y;
     }
