@@ -25,6 +25,7 @@
 #include <QTextStream>
 #include "core/design.h"
 #include <string.h>
+#include "core/text.h"
 
 namespace cIcPrinter{
     using namespace cIcCore;
@@ -52,6 +53,7 @@ namespace cIcPrinter{
         virtual void startCell(Cell * ){};
         virtual void endCell() {};
         virtual void printPort(Port *) {} ;
+	    virtual void printText(Text *) {} ;
         virtual void printRect(Rect * ) {};
         virtual void printReference(Cell *) {};
         virtual void printChildren(QList<Rect*> children);

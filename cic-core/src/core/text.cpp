@@ -32,6 +32,7 @@ namespace cIcCore{
 
 	Text::Text(QString name){
 	  name_ = name;
+	  	  this->setLayer("TXT");
 	}
 
     QString Text::name(){return name_;}

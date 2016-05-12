@@ -163,6 +163,18 @@ namespace cIcCore{
 
         }
 
+				//! Check if this is a cIcCore::Port object
+		bool isText(){
+			if(strcmp(this->metaObject()->className(),"cIcCore::Text") == 0){
+                return true;
+            }else if(this->inherits("cIcCore::Text")){
+                return true;
+              }
+            return false;
+
+        }
+
+		
 		//! Check if a rectangle is exactly to the left of of this rectangle
         bool abutsLeft(Rect * r);
 		//! Check if a rectangle is exactly to the right of of this rectangle

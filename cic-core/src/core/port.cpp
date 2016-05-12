@@ -52,7 +52,6 @@ namespace cIcCore{
           connect(r,SIGNAL(updated()),this, SLOT(updateRect()));
           this->setRect(r->layer(),r->x1(),r->y1(),r->width(),r->height());
 
-//           qDebug() << r->toString();
     }
 
     void Port::updateRect(){

@@ -35,7 +35,7 @@ namespace cIcCore{
 		}
 
 
-		QList<Rect*> getRectangles(QString excludeInstances,QString layer){
+		QList<Rect*> getRectangles(QString excludeInstances,QString includeInstances, QString layer){
 			QList<Rect*> rects;
 			foreach(Port *p, ports){
 				Rect * r = p->parent();
@@ -45,7 +45,9 @@ namespace cIcCore{
 				
 				QString instanceName = i->instanceName();
 
-				if(excludeInstances != "" && instanceName.contains(QRegularExpression(excludeInstances))) continue;
+				if(excludeInstances != "" && (instanceName.contains(QRegularExpression(excludeInstances))
+											  || i->name().contains(QRegularExpression(excludeInstances)) )) continue;
+				if(includeInstances != "" && !i->name().contains(QRegularExpression(includeInstances))) continue;
 				Rect * rp = p->get(layer);
 				if(rp == NULL) rp = p->get();
 				if(rp != NULL) rects.append(rp);

@@ -107,6 +107,7 @@ namespace cIcCore{
         QString options = "";
         QString cuts = "";
         QString excludeInstances = "";
+		QString includeInstances = "";
         if(obj.size() > 3){
             options = obj[3].toString();
         }
@@ -115,14 +116,14 @@ namespace cIcCore{
             cuts = obj[4].toString();
         }
         if(obj.size() > 5){
-            excludeInstances = obj[5].toString();
+            includeInstances = obj[5].toString();
         }
 
         foreach(QString node, nodeGraph_.keys()){
             if(!node.contains(QRegularExpression(regex))) continue;
 
             Graph * g = nodeGraph_[node];
-            QList<Rect*>  rects = g->getRectangles(excludeInstances,layer);
+            QList<Rect*>  rects = g->getRectangles(excludeInstances,includeInstances,layer);
 
             if(rects.count() == 0){
                 qDebug() << "Could not find rectangles on " << node << regex << rects.count() << "\n";
@@ -189,7 +190,7 @@ namespace cIcCore{
         int hcuts = obj[3].toInt();
         int vcuts =  obj[4].toInt();
 
-        int offset = (obj.size() > 5) ? obj[5].toInt() : 0;
+        double offset = (obj.size() > 5) ? obj[5].toDouble() : 0;
         QString name = (obj.size() > 6) ? obj[6].toString() : "";
 
 
@@ -205,7 +206,6 @@ namespace cIcCore{
 
             if(name != ""){
                 Rect * p = inst->getRect(stoplayer);
-
 
                 if(p != 0) named_rects_[name] = p;
                 else qDebug() << "Error: Unknown rect " << name;
@@ -234,8 +234,8 @@ namespace cIcCore{
         QString path = obj[3].toString();
         int vcuts = obj[4].toInt();
         int hcuts =  obj[5].toInt();
-        int xoffset = obj[6].toInt();
-        int yoffset = obj[7].toInt();
+        double xoffset = obj[6].toDouble();
+        double yoffset = obj[7].toDouble();
 		QString name = (obj.size() > 8) ? obj[8].toString() : "";
 
         QList<Rect*> rects = this->findAllRectangles(path,startlayer);
@@ -243,6 +243,7 @@ namespace cIcCore{
         foreach(Rect* r, rects){
             if(r == 0) continue;
             Instance * inst= Cut::getInstance(startlayer,stoplayer,hcuts,vcuts);
+			qDebug() << "Y-offset" << yoffset << obj[7] << "\n";
             inst->moveTo(r->x2() + xoffset*inst->width(),r->centerY() + yoffset*inst->height());
 
             Rect * r = inst->getRect(stoplayer);

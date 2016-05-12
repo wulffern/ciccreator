@@ -72,6 +72,9 @@ DesignPrinter::~DesignPrinter(){
           }else if(child->isPort()){
             Port * p = (Port *) child;
             this->printPort(p);
+		}else if(child->isText()){
+            Text * p = (Text *) child;
+            this->printText(p);
           }else if (child->isCell()){
             Cell * c = (Cell * ) child;
             this->printChildren(c->children());
