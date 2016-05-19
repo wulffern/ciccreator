@@ -56,6 +56,7 @@
   src/core/patterntransistor.h \
   src/spice/spiceobject.h \
   src/spice/mosfet.h \
+  src/spice/capacitor.h \
   src/core/patterncapacitor.h \
   src/core/design.h \
   src/printer/gds.h \
@@ -100,6 +101,7 @@
   src/printer/spice.cpp \
   src/core/port.cpp\
   src/spice/mosfet.cpp\
+  src/spice/capacitor.cpp \
     src/core/route.cpp \
     src/core/cut.cpp \
     src/core/instanceport.cpp \

@@ -20,28 +20,46 @@
 #include "core/patterncapacitor.h"
 
 namespace cIcCore{
-  PatternCapacitor::PatternCapacitor()
-  {
 
-  }
+    PatternCapacitor::PatternCapacitor()
+    {
+        cap_ = new Capacitor();
+        this->spiceObject_ = cap_;
 
-  PatternCapacitor::~PatternCapacitor()
-  {
+    }
 
-  }
+    PatternCapacitor::~PatternCapacitor()
+    {
 
-	void PatternCapacitor::paintRect(Rect* r, QChar c  ,int x , int y ){
+    }
 
-	  if(c != 'r' || r == 0) return;
+    void PatternCapacitor::paintRect(Rect* r, QChar c  ,int x , int y ){
 
-	  Layer* l = this->rules->getLayer(r->layer());
-	  QString res = l->res;
-	  if(res == "") return; //Return if resistor layer is undefined
-	  
-	  Rect * rc = new Rect(res,translateX(x),translateY(y),xspace_,currentHeight_);
-	  this->add(rc);
-	  
-	  
-  }
+        if(c != 'r' || r == 0) return;
+
+        Layer* l = this->rules->getLayer(r->layer());
+        QString res = l->res;
+        if(res == "") return; //Return if resistor layer is undefined
+
+        Rect * rc = new Rect(res,translateX(x),translateY(y),xspace_,currentHeight_);
+        this->add(rc);
+    }
+
+
+    PatternCapacitorGnd::PatternCapacitorGnd()
+    {
+        cap_ = new Capacitor();
+		QStringList n ;
+		n << "A" << "B" << "D" ;
+		cap_->setNodes(n);
+        this->spiceObject_ = cap_;
+
+    }
+
+    PatternCapacitorGnd::~PatternCapacitorGnd()
+    {
+
+    }
+
+
 }
-

@@ -1,7 +1,7 @@
 //====================================================================
-//        Copyright (c) 2015 Carsten Wulff Software, Norway
+//        Copyright (c) 2016 Carsten Wulff Software, Norway
 // ===================================================================
-// Created       : wulff at 2015-04-03
+// Created       : wulff at 2016-5-19
 // ===================================================================
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -18,46 +18,44 @@
 //====================================================================
 
 
-#ifndef CIC_CORE_PATTERNCAPACITOR_H
-#define CIC_CORE_PATTERNCAPACITOR_H
-
-#include <QObject>
-#include "cell.h"
-#include "patterntile.h"
 #include "spice/capacitor.h"
+namespace cIcSpice{
+
+    Capacitor::Capacitor(){
+        this->deviceName_ = "mres";
+        this->spiceType_ = "X";
+        QStringList n;
+        n << "A" << "B";
+        this->setNodes(n);
+    }
+
+    Capacitor::Capacitor(const Capacitor& cap){
+
+    }
+
+    Capacitor::~Capacitor(){
+
+    }
 
 
+    QString Capacitor::toSpice( QString instance, QStringList nodes){
+        QString s;
+        QTextStream ts(&s);
 
-namespace cIcCore{
+        cIcCore::Rules * rules = cIcCore::Rules::getRules();
+        cIcCore::Device * mtype = rules->getDevice(this->deviceName());
 
-    using namespace cIcSpice;
 
-    class PatternCapacitor : public PatternTile
-    {
-        Q_OBJECT
+		for(int i=0;i< nodes.count();i++){
+			QString node = nodes[i];
 
-    public:
-        virtual void paintRect(Rect*, QChar ,int , int );
-        PatternCapacitor();
-        ~PatternCapacitor();
+			ts << "X" << instance << i << " " << node << " NC" << i << " " << mtype->name << "\n";
 
-    protected:
-        Capacitor * cap_;
-    };
+		}
 
-	class PatternCapacitorGnd : public PatternCapacitor
-    {
-        Q_OBJECT
+		qDebug() << s;
+		
+        return s;
+    }
 
-    public:
-
-        PatternCapacitorGnd();
-        ~PatternCapacitorGnd();
-
-    };
 }
-
-Q_DECLARE_METATYPE(cIcCore::PatternCapacitor)
-Q_DECLARE_METATYPE(cIcCore::PatternCapacitorGnd)
-
-#endif // PATTERNCAPACITOR_H

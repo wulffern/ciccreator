@@ -246,19 +246,19 @@ namespace cIcCore{
 			qDebug() << "Y-offset" << yoffset << obj[7] << "\n";
             inst->moveTo(r->x2() + xoffset*inst->width(),r->centerY() + yoffset*inst->height());
 
-            Rect * r = inst->getRect(stoplayer);
+            Rect * rstop = inst->getRect(stoplayer);
 
             if(name != ""){
-                if(r != 0) named_rects_[name] = r;
+                if(r != 0) named_rects_[name] = rstop;
                 else qDebug() << "Error: Unknown rect " << name;
 
             }
             if(ports_.contains(port)){
                 Port *p = ports_[port];
-                p->set(r);
+                p->set(rstop);
             }else{
                 Port * p = new Port(port);
-                p->set(r);
+                p->set(rstop);
                 this->add(p);
             }
 			this->add(inst);

@@ -62,10 +62,12 @@ namespace cIcSpice{
 		QString deviceName_;
 		QList<QString> _spice_str;
 		QMap<QString,QString> _properties;
+		QStringList _nodes;
+
 	private:
+
 		QString _name;
 
-		QStringList _nodes;
 		QList<SpiceObject*> _children;
 		int _line_number;
 

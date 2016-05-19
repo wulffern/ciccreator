@@ -28,11 +28,12 @@ namespace cIcCore{
         qRegisterMetaType<cIcCore::PatternTile>("cIcCore::PatternTile");
         qRegisterMetaType<cIcCore::PatternTransistor>("cIcCore::PatternTransistor");
         qRegisterMetaType<cIcCore::PatternCapacitor>("cIcCore::PatternCapacitor");
+		qRegisterMetaType<cIcCore::PatternCapacitorGnd>("cIcCore::PatternCapacitorGnd");
         qRegisterMetaType<cIcCore::LayoutCell>("cIcCore::LayoutCell");
         qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
         cellTranslator["Gds::GdsPatternTransistor"] = "cIcCore::PatternTransistor";
         cellTranslator["Gds::GdsPatternCapacitor"] = "cIcCore::PatternCapacitor";
-        cellTranslator["Gds::GdsPatternCapacitorGnd"] = "cIcCore::PatternCapacitor";
+        cellTranslator["Gds::GdsPatternCapacitorGnd"] = "cIcCore::PatternCapacitorGnd";
         cellTranslator["Layout::LayoutDigitalCell"] = "cIcCore::LayoutCell";
         cellTranslator["Layout::LayoutRotateCell"] = "cIcCore::LayoutRotateCell";
         nameTranslator["type"] = "mosType";
