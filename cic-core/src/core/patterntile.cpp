@@ -32,6 +32,9 @@ namespace cIcCore {
         widthoffset_ = 0;
         heightoffset_ = 0;
         mirrorPatternString_ = 0;
+        verticalGrid_ = 0;
+        horizontalGrid_ = 0;
+
         prev_rect_  = 0;
     }
 
@@ -74,9 +77,8 @@ namespace cIcCore {
 
 
 
-
-
     void PatternTile::fillCoordinatesFromString(QJsonArray ar){
+
 
         //Load rules
         this->xspace_ = this->rules->get("ROUTE","horizontalgrid");
@@ -86,7 +88,6 @@ namespace cIcCore {
         QMap<QString,QVariant> data = this->initFillCoordinates();
 
         //TODO: implement copyRows function
-
         QString layer = ar[0].toString();
         ar.pop_front();
 
@@ -140,6 +141,15 @@ namespace cIcCore {
     }
 
     void PatternTile::paint(){
+
+        if(horizontalGrid_ != 0){
+            this->xspace_ = horizontalGrid_;
+        }
+
+        if(verticalGrid_ != 0){
+            this->xspace_ = verticalGrid_;
+        }
+
 
 
         if( this->minPolyLength_ == 0 ){
@@ -195,7 +205,7 @@ namespace cIcCore {
                     case 'x':
                     case 'X':
                     case 'K':
-					case 'k':
+                    case 'k':
                     case 'C':
                     case 'Q':
                     case 'r':
@@ -251,7 +261,7 @@ namespace cIcCore {
                     QString lay;
                     Rect *cr;
                     Rect *cr1;
-					//Make cuts
+                    //Make cuts
                     switch(c.unicode()){
                     case 'C':
                         if(this->mirrorPatternString()){
@@ -279,7 +289,7 @@ namespace cIcCore {
                         }else{
                             cxoffset = xspace_/2;
                         }
-					
+
                     case 'k':
                         lay = this->rules->getNextLayer(layer);
                         cr = new Rect();
@@ -298,7 +308,7 @@ namespace cIcCore {
                         break;
                     }
 
-					this->paintRect(rect,c,x,y);
+                    this->paintRect(rect,c,x,y);
 
                 }
             }
