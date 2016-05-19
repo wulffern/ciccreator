@@ -56,6 +56,10 @@ namespace cIcCore{
 		//!Name of GDS layer
 		QString layer();
 
+		//!Net name of this net
+		QString net(){return net_;}
+		void setNet(QString net){net_ = net;}
+
 		//!Get the cIcCore::Rules object
 		Rules * getRules(){return rules;}
 
@@ -193,7 +197,7 @@ namespace cIcCore{
 
 		//! Convert a rectangle to a string that can be printed to console, useful for debug
         QString toString();
-
+		
 
         static Rect* getHorizontalRectangleFromTo(QString layer, int x1, int x2, int y, int height);
         static Rect* getVerticalRectangleFromTo(QString layer, int x, int y1, int y2,  int width);
@@ -209,7 +213,8 @@ namespace cIcCore{
 
     private:
         QString _layer;
-
+		QString net_;
+		
         Rect* _parent;
         int x1_;
         int y1_;

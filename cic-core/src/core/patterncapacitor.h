@@ -31,6 +31,7 @@ class PatternCapacitor : public PatternTile
   Q_OBJECT
 
 public:
+	virtual void paintRect(Rect*, QChar ,int , int );
     PatternCapacitor();
     ~PatternCapacitor();
 };

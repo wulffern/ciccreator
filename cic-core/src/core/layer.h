@@ -56,6 +56,9 @@ namespace cIcCore{
 
         //!Name of pin layer for this layer, i.e. M1_pin
         QString pin;
+		
+		//!Name of resistor layer for this layer, i.e. M1_res
+        QString res;
 
         //!Color of this layer to use in GUI, QColor names can be used
         QString color;

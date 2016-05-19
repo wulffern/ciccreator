@@ -229,6 +229,9 @@ namespace cIcCore{
         if(lay.contains("pin")){
             ln->pin = lay["pin"].toString();
           }
+		if(lay.contains("res")){
+            ln->pin = lay["res"].toString();
+          }
         if(lay.contains("color")){
             ln->color = lay["color"].toString();
           }

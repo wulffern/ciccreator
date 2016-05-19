@@ -28,6 +28,7 @@ namespace cIcCore{
         previous = "CO";
         next = "VIA1";
         pin = "M1_pin";
+		res = "M1_res";
         color = "";
         nofill = false;
         visible = true;
