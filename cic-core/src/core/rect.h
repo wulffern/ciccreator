@@ -56,6 +56,10 @@ namespace cIcCore{
 		//!Name of GDS layer
 		QString layer();
 
+		//!Net name of this net
+		QString net(){return net_;}
+		void setNet(QString net){net_ = net;}
+
 		//!Get the cIcCore::Rules object
 		Rules * getRules(){return rules;}
 
@@ -163,6 +167,18 @@ namespace cIcCore{
 
         }
 
+				//! Check if this is a cIcCore::Port object
+		bool isText(){
+			if(strcmp(this->metaObject()->className(),"cIcCore::Text") == 0){
+                return true;
+            }else if(this->inherits("cIcCore::Text")){
+                return true;
+              }
+            return false;
+
+        }
+
+		
 		//! Check if a rectangle is exactly to the left of of this rectangle
         bool abutsLeft(Rect * r);
 		//! Check if a rectangle is exactly to the right of of this rectangle
@@ -181,7 +197,7 @@ namespace cIcCore{
 
 		//! Convert a rectangle to a string that can be printed to console, useful for debug
         QString toString();
-
+		
 
         static Rect* getHorizontalRectangleFromTo(QString layer, int x1, int x2, int y, int height);
         static Rect* getVerticalRectangleFromTo(QString layer, int x, int y1, int y2,  int width);
@@ -197,7 +213,8 @@ namespace cIcCore{
 
     private:
         QString _layer;
-
+		QString net_;
+		
         Rect* _parent;
         int x1_;
         int y1_;

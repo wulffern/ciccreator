@@ -167,18 +167,19 @@ namespace cIcCore {
                     int xs = translateX(x);
                     int ys = translateY(y);
 
-					//- Set height
-					if(layer == "PO"){
-						currentHeight_ = this->rules->get(layer,"width");
-					}else if( c== 'x'){
-						currentHeight_ = yspace_;
-					}
-					
-					
-                    if(c == 'X'){
-						currentHeight_ = yspace_;
+                    //- Set height
+                    if(layer == "PO"){
+                        currentHeight_ = this->rules->get(layer,"width");
+                    }else if( c== 'x'){
+                        currentHeight_ = yspace_;
                     }
 
+
+                    if(c == 'X'){
+                        currentHeight_ = yspace_;
+                    }
+
+                    //Make rectangle
                     switch(c.unicode()){
                         //Create ports
                     case 'B':
@@ -189,8 +190,7 @@ namespace cIcCore {
                         p = this->getPort(QString(c));
                         if(!p){
                             p = new Port(c);
-
-                          }
+                        }
                         this->add(p);
                     case 'x':
                     case 'X':
@@ -222,7 +222,7 @@ namespace cIcCore {
                     if(c =='G' && layer == "PO"){
                         rect->setRect(xs,ys,xspace_,this->minPolyLength());
                         rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
-                      }
+                    }
 
                     if(prev_rect_ && prev_rect_->abutsLeft(rect)){
                         prev_rect_->setRight(rect->x2());
@@ -240,7 +240,7 @@ namespace cIcCore {
                         p->set(rect);
                     }
 
-					this->paintRect(rect,c,x,y);
+
 
                     int cxoffset = 0;
 
@@ -251,6 +251,7 @@ namespace cIcCore {
                     QString lay;
                     Rect *cr;
                     Rect *cr1;
+					//Make cuts
                     switch(c.unicode()){
                     case 'C':
                         if(this->mirrorPatternString()){
@@ -296,6 +297,9 @@ namespace cIcCore {
                         this->add(cr1);
                         break;
                     }
+
+					this->paintRect(rect,c,x,y);
+
                 }
             }
         }
@@ -494,12 +498,12 @@ namespace cIcCore {
                     enc = this->rules->get(lay,"enclosure");
                 }
 
-					int opposide_enc = enc;
-					if(this->rules->hasRule(lay,e->layer + "encOpposite")){
-						opposide_enc = this->rules->get(lay,e->layer + "encOpposite");
-					}
-					
-					r->adjust(-opposide_enc,-enc, opposide_enc, enc);
+                int opposide_enc = enc;
+                if(this->rules->hasRule(lay,e->layer + "encOpposite")){
+                    opposide_enc = this->rules->get(lay,e->layer + "encOpposite");
+                }
+
+                r->adjust(-opposide_enc,-enc, opposide_enc, enc);
 
             }
         }

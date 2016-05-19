@@ -24,6 +24,7 @@
 #include "cell.h"
 #include "instance.h"
 #include "cut.h"
+#include "text.h"
 #include <iostream>
 
 

@@ -1,7 +1,7 @@
 //====================================================================
 //        Copyright (c) 2015 Carsten Wulff Software, Norway 
 // ===================================================================
-// Created       : wulff at 2015-04-03
+// Created       : wulff at 2015-8-20
 // ===================================================================
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -17,26 +17,45 @@
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //====================================================================
 
-
-#ifndef CIC_CORE_PATTERNCAPACITOR_H
-#define CIC_CORE_PATTERNCAPACITOR_H
+#ifndef CIC_CORE_TEXT
+#define CIC_CORE_TEXT
 
 #include <QObject>
-#include "cell.h"
-#include "patterntile.h"
+#include <QString>
+#include <QtCore>
+#include "rect.h"
 
 namespace cIcCore{
-class PatternCapacitor : public PatternTile
-{
-  Q_OBJECT
 
-public:
-	virtual void paintRect(Rect*, QChar ,int , int );
-    PatternCapacitor();
-    ~PatternCapacitor();
-};
+	/*!
+	  Text is just a text
+	 */
+  class Text: public Rect
+  {
+    Q_OBJECT
+
+  public:
+
+	  Text();
+	  ~Text();
+	  Text(QString name);
+
+	  //! Net name
+	  QString name();
+	  void setName(QString name);
+	  
+	  virtual QJsonObject toJson();
+	  virtual void fromJson(QJsonObject o);
+
+  protected:
+	  QString name_;	  
+  };
+
+
+
 }
 
-Q_DECLARE_METATYPE(cIcCore::PatternCapacitor)
+Q_DECLARE_METATYPE(cIcCore::Text)
 
-#endif // PATTERNCAPACITOR_H
+#endif // Text
+

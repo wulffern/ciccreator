@@ -41,6 +41,18 @@ namespace cIcCore{
 
   }
 
+	Rect* Instance::getRect(QString layer){
+		Rect * r = 0;
+		if(this->cell()){
+			r = this->cell()->getRect(layer);
+			if(r){
+				r = r->getCopy();
+				r->translate(this->x1(),this->y1());
+			}
+		}
+		return r;
+	}
+
   QList<Rect*> Instance::findRectanglesByRegex(QString regex,QString layer){
 		QList<Rect*> rects;
 		Cell * c = this->cell();

@@ -41,10 +41,10 @@ Cut::Cut(QString layer1, QString layer2, int horizontal_cuts, int vertical_cuts)
               r_width = encOpposite*2 + cut_width*horizontal_cuts + cut_space*(horizontal_cuts - 1);
               r_height = enclosure*2 + cut_height*vertical_cuts + cut_space*(vertical_cuts - 1);
             }else{
-              r_width = encOpposite*2 + cut_width*vertical_cuts + cut_space*(vertical_cuts - 1);
-              r_height = enclosure*2 + cut_height*horizontal_cuts + cut_space*(horizontal_cuts - 1);
-            }
+			  r_width = enclosure*2 + cut_width*horizontal_cuts + cut_space*(horizontal_cuts - 1);
+              r_height = encOpposite*2 + cut_height*vertical_cuts + cut_space*(vertical_cuts - 1);
 
+            }
 
 	        Rect * r = new Rect(l->name,0,0,r_width,r_height);
         this->add(r);

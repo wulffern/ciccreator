@@ -47,27 +47,43 @@ namespace cIcCore{
     void Cell::route(){}
     void Cell::place(){}
 
-	void Cell::findRectangles(QList<Rect*> &rects, QString name, QString layer){
-		foreach(Rect* child, children()){
-			if(child == NULL) continue;
-			if(child->isInstance()){
-				Cell * inst = (Cell *) child;
-								if(inst == NULL) continue;
-				foreach(Port *p, inst->ports()){
-					if(p->name() == name){
-						Rect *r = p->get(layer);
-						if(r==NULL)
-							r = p->get();
-						if(r){
-//							r->setLayer(layer);
-							rects.append(r);
-						}
-					}
-				}
-			}
-		}
-		
+	QList<Rect*> Cell::findAllRectangles(QString regex,QString layer){
+		QList<Rect*> rects = findRectanglesByRegex(regex, layer);
+		findRectangles(rects,regex,layer);
+		return rects;
 	}
+
+    void Cell::findRectangles(QList<Rect*> &rects, QString name, QString layer){
+
+        //Search instance ports
+        foreach(Rect* child, children()){
+            if(child == NULL) continue;
+            if(child->isInstance()){
+                Cell * inst = (Cell *) child;
+                if(inst == NULL) continue;
+                foreach(Port *p, inst->ports()){
+                    if(p->name() == name){
+                        Rect *r = p->get(layer);
+                        if(r==NULL)
+                            r = p->get();
+                        if(r){
+                            rects.append(r);
+                        }
+                    }
+                }
+            }
+        }
+
+        //Search custom ports
+        foreach(QString rect_name,named_rects_.keys()){
+            if(rect_name == name){
+                qDebug() << rect_name << "\n";
+                rects.append(named_rects_[rect_name]);
+            }
+        }
+
+
+    }
 
     QList<Rect*> Cell::findRectanglesByRegex(QString regex,QString layer){
 
@@ -80,7 +96,7 @@ namespace cIcCore{
                 QString instname = str_tok[0];
                 str_tok.pop_front();
                 QString path = str_tok.join(":");
-				
+
                 //Find and match instance
                 QRegularExpression re_inst(instname);
                 foreach(Rect * child, children()){
@@ -96,6 +112,9 @@ namespace cIcCore{
                     }
                 }
             }else{
+
+
+
                 //Search ports
                 foreach(Port * p, ports_){
                     bool hasMatch = false;
@@ -117,7 +136,7 @@ namespace cIcCore{
                         Rect * r= p->get(layer);
                         if(!r){
                             r = p->get();
-//							r->setLayer(layer);
+//                          r->setLayer(layer);
                         }
 
                         if(r){
@@ -372,26 +391,26 @@ namespace cIcCore{
     }
 
     void Cell::fromJson(QJsonObject o){
-          Rect::fromJson(o);
-      this->setName(o["name"].toString());
-      _has_pr = o["has_pr"].toBool();
-      //QJsonArray ar = o["children"].toArray();
+        Rect::fromJson(o);
+        this->setName(o["name"].toString());
+        _has_pr = o["has_pr"].toBool();
+        //QJsonArray ar = o["children"].toArray();
 
-     }
+    }
 
     QJsonObject Cell::toJson(){
-      QJsonObject o;
-      o["class"] =  this->metaObject()->className();
-      o["name"] = this->name();
-      o["has_pr"] = this->_has_pr;
-      QJsonArray ar;
+        QJsonObject o;
+        o["class"] =  this->metaObject()->className();
+        o["name"] = this->name();
+        o["has_pr"] = this->_has_pr;
+        QJsonArray ar;
 
-      foreach(Rect * r, children()){
-          QJsonObject child = r->toJson();
-          ar.append(child);
+        foreach(Rect * r, children()){
+            QJsonObject child = r->toJson();
+            ar.append(child);
         }
-      o["children"] = ar;
-      return o;
+        o["children"] = ar;
+        return o;
     }
 
 }

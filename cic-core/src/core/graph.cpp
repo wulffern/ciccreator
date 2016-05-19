@@ -17,49 +17,5 @@
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //====================================================================
 
-#ifndef CIC_CORE_GRAPH_H
-#define CIC_CORE_GRAPH_H
+#include "graph.h"
 
-#include "instance.h"
-
-namespace cIcCore{
-
-	class Graph{
-
-
-	public:
-		QList<Port*> ports;
-		QString name;
-		void append(Port * p){
-			ports.append(p);
-		}
-
-
-		QList<Rect*> getRectangles(QString excludeInstances,QString includeInstances, QString layer){
-			QList<Rect*> rects;
-			foreach(Port *p, ports){
-				Rect * r = p->parent();
-				if(r == NULL) continue;
-				if(!r->isInstance()) continue;
-				Instance *i = (Instance *) r;
-				
-				QString instanceName = i->instanceName();
-
-				if(excludeInstances != "" && (instanceName.contains(QRegularExpression(excludeInstances))
-											  || i->name().contains(QRegularExpression(excludeInstances)) )) continue;
-				if(includeInstances != "" && !i->name().contains(QRegularExpression(includeInstances))) continue;
-				Rect * rp = p->get(layer);
-				if(rp == NULL) rp = p->get();
-				if(rp != NULL) rects.append(rp);
-			}
-			return rects;
-		}
-
-	
-
-			
-	};
-
-};
-
-#endif

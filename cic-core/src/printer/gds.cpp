@@ -58,6 +58,23 @@ namespace cIcPrinter{
 
   }
 
+	void Gds::printText(Text * p){
+		
+		gds_write_text( fd );
+		gds_write_layer( fd, Rules::getRules()->layerToNumber(p->layer()) );
+		gds_write_texttype( fd, Rules::getRules()->layerToDataType(p->layer()) );
+		gds_write_presentation( fd, 0, 1, 0 );  // fd, font, hp, vp
+		gds_write_width( fd, 1 );
+		gds_write_strans( fd, 0, 0, 1 );        // fd, reflect, abs_angle, abs_mag
+		gds_write_mag(fd,0.1);
+		x[0] = toNano(p->x1());
+		y[0] = toNano(p->y1());
+		gds_write_xy( fd, x, y, 1 );
+		gds_write_string( fd, this->toChar(p->name()) );
+		gds_write_endel( fd );
+  }
+
+	
   void Gds::printReference(Cell * o){
     if(this->isEmpty(o)){return ;}
     if(!o->isInstance()){return;}

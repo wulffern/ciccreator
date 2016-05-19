@@ -87,8 +87,17 @@ protected:
 
 //! [2]
 private:
-    void drawCoordinates(QPainter &painter);
-    void drawOutline(QPainter &painter);
+  // void RenderArea::drawCoordinates(QPainter)
+  // {
+
+  // }
+
+  // void RenderArea::drawOutline(QPainter)
+  // {
+
+  // }
+  // 	void drawCoordinates(QPainter &painter);
+  // 	 void drawOutline(QPainter &painter);
     void drawShape(QPainter &painter);
     void transformPainter(QPainter &painter);
     void drawCell(int x, int y, Cell * c, QPainter &painter);

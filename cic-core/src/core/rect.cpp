@@ -167,12 +167,16 @@ namespace cIcCore{
 
 
     Rect* Rect::getCopy(){
-        return new Rect(_layer, x1() , y1(), width(), height() );
+        Rect* r =  new Rect(_layer, x1() , y1(), width(), height() );
+		r->setNet(this->net());
+		return r;
     }
 	
 
     Rect* Rect::getCopy(const QString layer){
-        return new Rect(layer, x1(), y1(), width(), height() );
+		Rect * r = new Rect(layer, x1(), y1(), width(), height() );
+		r->setNet(this->net());
+		return r;
     }
 
     int Rect::snap(int x){

@@ -32,7 +32,7 @@
   linux:DESTDIR = ../lib/linux
 
   #- Add coverage information
-  QMAKE_CFLAGS += $$(CFLAGS) --coverage
+  QMAKE_CFLAGS += $$(CFLAGS) --coverage 
   QMAKE_LFLAGS += $$(LDFLAGS) --coverage
 
   TARGET = cic
@@ -73,6 +73,7 @@
     src/core/cut.h \
     src/core/instanceport.h \
     src/core/layoutrotatecell.h \
+    src/core/text.h \
     src/core/point.h
 
 
@@ -103,4 +104,5 @@
     src/core/cut.cpp \
     src/core/instanceport.cpp \
     src/core/layoutrotatecell.cpp \
+    src/core/text.cpp \
     src/core/point.cpp

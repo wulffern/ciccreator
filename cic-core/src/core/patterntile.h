@@ -72,10 +72,10 @@ namespace cIcCore{
     Q_INVOKABLE void addEnclosuresByRectangle(QJsonArray ar);
 
     virtual QMap<QString,QVariant> initFillCoordinates();
-    virtual void onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data){};
+	  virtual void onFillCoordinate(QChar , QString , int , int , QMap<QString,QVariant> &){};
 
-    virtual void endFillCoordinate(QMap<QString,QVariant> &data){};
-    virtual void paintRect(Rect *r, QChar c,int x, int y){};
+    virtual void endFillCoordinate(QMap<QString,QVariant> &){};
+    virtual void paintRect(Rect*, QChar ,int , int ){};
 
     void paint();
 

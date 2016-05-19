@@ -50,6 +50,7 @@ namespace cIcCore{
         stop_rects_ = stop;
 		this->setName(net);
 
+
         if(options.contains(QRegularExpression("antenna"))){ startOffset_ = HIGH ;}
 
         //- Sort direction
@@ -168,6 +169,11 @@ namespace cIcCore{
 
         }
 
+//		this->updateBoundingRect();
+//		Text *t = new Text(this->name());
+//		t->moveTo(this->x1(), this->y1());
+//		this->add(t);
+
     }
 
     void Route::applyOffset(int width, Rect* rect,Offset offset)
@@ -183,6 +189,11 @@ namespace cIcCore{
             break;
 
         }
+
+		this->updateBoundingRect();
+
+		Rect r = this->calcBoundingRect();
+		
     }
 
     void Route::routeOne(){

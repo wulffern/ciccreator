@@ -29,5 +29,19 @@ namespace cIcCore{
   {
 
   }
+
+	void PatternCapacitor::paintRect(Rect* r, QChar c  ,int x , int y ){
+
+	  if(c != 'r' || r == 0) return;
+
+	  Layer* l = this->rules->getLayer(r->layer());
+	  QString res = l->res;
+	  if(res == "") return; //Return if resistor layer is undefined
+	  
+	  Rect * rc = new Rect(res,translateX(x),translateY(y),xspace_,currentHeight_);
+	  this->add(rc);
+	  
+	  
+  }
 }
 

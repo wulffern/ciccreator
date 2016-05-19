@@ -42,6 +42,8 @@ namespace cIcCore{
         Q_INVOKABLE void addDirectedRoute(QJsonArray obj);
 		Q_INVOKABLE void addConnectivityRoute(QJsonArray obj);
         Q_INVOKABLE void addPortOnRect(QJsonArray obj);
+		Q_INVOKABLE void addVia(QJsonArray obj);
+		Q_INVOKABLE void addPortVia(QJsonArray obj);
 
         virtual void place();
         virtual void route();
