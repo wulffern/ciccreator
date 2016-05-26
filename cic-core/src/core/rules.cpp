@@ -134,6 +134,7 @@ namespace cIcCore{
          if(counter < 0){
              break;
 
+
            }
    }
         stack.append(this->getLayer(stop));
@@ -230,7 +231,8 @@ namespace cIcCore{
             ln->pin = lay["pin"].toString();
           }
 		if(lay.contains("res")){
-            ln->pin = lay["res"].toString();
+            ln->res = lay["res"].toString();
+
           }
         if(lay.contains("color")){
             ln->color = lay["color"].toString();

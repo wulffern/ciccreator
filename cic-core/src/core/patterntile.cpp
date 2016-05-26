@@ -147,10 +147,8 @@ namespace cIcCore {
         }
 
         if(verticalGrid_ != 0){
-            this->xspace_ = verticalGrid_;
+            this->yspace_ = verticalGrid_;
         }
-
-
 
         if( this->minPolyLength_ == 0 ){
             this->minPolyLength_ = this->rules->get("PO","mingatelength");
@@ -284,25 +282,45 @@ namespace cIcCore {
 
                         break;
                     case 'K':
-                        if(this->mirrorPatternString()){
-                            cxoffset = -xspace_ - xspace_/2;
-                        }else{
-                            cxoffset = xspace_/2;
-                        }
-
+					case 'Q':
                     case 'k':
-                        lay = this->rules->getNextLayer(layer);
-                        cr = new Rect();
+						lay = this->rules->getNextLayer(layer);
+						cr = new Rect();
+
                         cr->setLayer(lay);
                         cw = this->rules->get(lay,"width");
                         ch = this->rules->get(lay,"height");
                         cs = this->rules->get(lay,"space");
                         cr->setRect(xs,ys,cw,ch);
-                        cr1 = cr->getCopy();
-                        if(this->mirrorPatternString()){cxoffset -= cs/2 - cw/2;}
+						cxoffset = xspace_/2.0;
 
-                        cr->moveCenter(xs -cxoffset + xspace_/2.0, ys + yspace_/2.0);
-                        cr1->moveCenter(cr->centerX() - cs - cw,cr->centerY());
+						if(c == 'K'){
+						if(this->mirrorPatternString()){
+                            cxoffset = xspace_ ;
+                        }else{
+                            cxoffset = 0;
+                        }
+						}
+						
+						if(c == 'Q'){
+							if (this->mirrorPatternString()) {
+								cxoffset = -xspace_/2.0;
+							} else {
+								cxoffset = xspace_/2 +cs/2 + cr->width()/2;
+
+							}
+						}
+						
+
+                        cr1 = cr->getCopy();
+//                        if(this->mirrorPatternString()){cxoffset -= cs/2 - cw/2;}
+
+                        cr->moveCenter(xs + cxoffset, ys + yspace_/2.0);
+						if(this->mirrorPatternString()){
+								cr1->moveCenter(cr->centerX() + cs + cw,cr->centerY());
+							}else{
+								cr1->moveCenter(cr->centerX() - cs - cw,cr->centerY());
+							}
                         this->add(cr);
                         this->add(cr1);
                         break;

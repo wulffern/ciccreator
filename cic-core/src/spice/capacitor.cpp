@@ -49,7 +49,8 @@ namespace cIcSpice{
 		for(int i=0;i< nodes.count();i++){
 			QString node = nodes[i];
 
-			ts << "X" << instance << i << " " << node << " NC" << i << " " << mtype->name << "\n";
+			ts << "R" << instance << i << " " << node << " NC" << i << " " << mtype->name << "\n";
+
 
 		}
 

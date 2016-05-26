@@ -216,9 +216,6 @@ namespace cIcCore{
 
         }
 
-
-
-
     }
 
     void LayoutCell::addPortVia(QJsonArray obj)
