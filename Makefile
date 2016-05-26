@@ -41,14 +41,6 @@ compile:
 clean:
 	${MAKE} -f qmake.make clean
 
-#- Run the program with the example json file
-EXAMPLE=../examples
-LIBNAME=devices
-JSONFILE=${EXAMPLE}/${LIBNAME}.json
-TECHFILE=${EXAMPLE}/tech.json
-devices:
-	cd lay; ${CMD} ${JSONFILE} ${TECHFILE} ${LIBNAME} ${OPT}
-
 doxygen:
 	doxygen
 
@@ -57,8 +49,17 @@ coverage:
 	genhtml coverage/converage.info --output-directory coverage/
 
 
+#- Run the program with the example json file
+EXAMPLE=../examples
+LIBNAME=devices
+JSONFILE=${EXAMPLE}/${LIBNAME}.json
+TECHFILE=${EXAMPLE}/tech.json
+
+devices:
+	cd lay; ${CMD} ${JSONFILE} ${TECHFILE} ${LIBNAME} ${OPT}
+
 sar:
 	cd lay; make sar
 
-gui:
-	bin/cic-gui examples/tech.json lay/SAR_LPWR_ST28N.json
+view:
+	cd lay; ../bin/cic-gui ${TECHFILE} ${LIBNAME}.json &

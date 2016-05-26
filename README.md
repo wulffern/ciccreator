@@ -13,9 +13,9 @@ Install > Qt5.4 (i.e http://download.qt.io/archive/qt/5.4/5.4.2/qt-opensource-li
 #Test
     cd lay
     make
+	make devices
 
 #Viewing
 Open GDSII file or open built in viewer
-
-    ../bin/cic-gui ../examples/tech.json devices.json 
+	make view
 
