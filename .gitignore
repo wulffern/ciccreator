@@ -1,7 +1,10 @@
-#*
+*#
+*~
+bin
 lay
 build
 moc_*
+qmake.make
 *.o
 .DS_Store
 .qmake.*
