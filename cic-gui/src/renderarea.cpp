@@ -153,7 +153,9 @@ namespace cIcGui{
             if(c == this->c){
             Port * p = (Port *) r;
             QFont font=painter.font() ;
-             font.setPointSize ( 1000 );
+			font.setFamily("Arial");
+
+             font.setPointSize (500 );
              Layer *l = rules->getLayer(p->pinLayer());
              if(!l->visible){
                  continue;

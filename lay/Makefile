@@ -47,6 +47,12 @@ sar:
 	rm SAR_LPWR_ST28N.spi;
 	mv SAR_LPWR_ST28N_tmp.spi SAR_LPWR_ST28N.spi
 
+devices:
+	${cmd}   ../examples/devices.json ../../cnano/examples/soi.json DEVICES ${OPT}
+	cat DEVICES.spi | perl -pe 'if(m/^\s*M\d+/ig){s/\n//ig;$$_ = $$_ . " p_la=0 \n";}' > DEVICES_tmp.spi;
+	rm DEVICES.spi;
+	mv DEVICES_tmp.spi DEVICES.spi
+
 drc:
 	-rm calibre/${CELL}_drc.svrf
 	-rm calibre/${CELL}_drc.log
