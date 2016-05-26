@@ -150,7 +150,6 @@ namespace cIcCore {
             this->yspace_ = verticalGrid_;
         }
 
-
         if( this->minPolyLength_ == 0 ){
             this->minPolyLength_ = this->rules->get("PO","mingatelength");
         }
@@ -292,6 +291,7 @@ namespace cIcCore {
                         ch = this->rules->get(lay,"height");
                         cs = this->rules->get(lay,"space");
                         cr->setRect(xs,ys,cw,ch);
+
 
 						cxoffset = xspace_/2.0;
 

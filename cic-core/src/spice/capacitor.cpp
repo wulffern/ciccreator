@@ -51,6 +51,7 @@ namespace cIcSpice{
 
 			ts << "R" << instance << i << " " << node << " NC" << i << " " << mtype->name << "\n";
 
+
 		}
 
 		qDebug() << s;

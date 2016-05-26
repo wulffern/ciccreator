@@ -231,6 +231,7 @@ namespace cIcCore{
           }
 		if(lay.contains("res")){
             ln->res = lay["res"].toString();
+
           }
         if(lay.contains("color")){
             ln->color = lay["color"].toString();
