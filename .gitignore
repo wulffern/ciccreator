@@ -1,6 +1,8 @@
 *#
 *~
+.#*
 bin
+*.autosave
 lay
 build
 moc_*

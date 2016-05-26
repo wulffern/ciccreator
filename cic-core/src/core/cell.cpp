@@ -77,7 +77,6 @@ namespace cIcCore{
         //Search custom ports
         foreach(QString rect_name,named_rects_.keys()){
             if(rect_name == name){
-                qDebug() << rect_name << "\n";
                 rects.append(named_rects_[rect_name]);
             }
         }

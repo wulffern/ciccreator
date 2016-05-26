@@ -44,9 +44,10 @@ namespace cIcCore{
         noPowerRoute_ = true;
     }
 
+
     void LayoutCell::addDirectedRoute(QJsonArray obj){
 
-        if(obj.size() < 3){
+		 if(obj.size() < 3){
             qDebug() << "Error: addDirectedRoute must contain at least three elements\n";
             return;
         }
@@ -54,7 +55,14 @@ namespace cIcCore{
         QString layer = obj[0].toString();
         QString net = obj[1].toString();
         QString route = obj[2].toString();
-        QString startRegex;
+
+        QString options = "";
+        if(obj.size() > 3){
+            options = obj[3].toString();
+        }
+		
+
+		QString startRegex;
         QString routeType;
         QString stopRegex;
         QList<Rect*> start;
@@ -76,17 +84,10 @@ namespace cIcCore{
             return;
         }
 
-        QString options = "";
-        if(obj.size() > 3){
-            options = obj[3].toString();
-        }
-
         if(start.count() > 0 && stop.count() > 0){
 
 
             Route * r = new Route(net,layer,start,stop,options,routeType);
-            // r->setPoint1(this->x1(),this->y1());
-            // routes_.append(r);
             this->add(r);
         }else{
             qDebug() << "Error: Route did not work [" << layer << net << route << options << "] stop="<< stop.count() << " start=" <<start.count();
@@ -107,7 +108,7 @@ namespace cIcCore{
         QString options = "";
         QString cuts = "";
         QString excludeInstances = "";
-		QString includeInstances = "";
+        QString includeInstances = "";
         if(obj.size() > 3){
             options = obj[3].toString();
         }
@@ -179,8 +180,8 @@ namespace cIcCore{
 
     void LayoutCell::addVia(QJsonArray obj)
     {
-        if(obj.size() < 5){
-            qDebug() << "Error: addVia must contain at least five elements\n";
+        if(obj.size() < 4){
+            qDebug() << "Error: addVia must contain at least four elements\n";
             return;
         }
 
@@ -188,12 +189,10 @@ namespace cIcCore{
         QString stoplayer = obj[1].toString();
         QString path = obj[2].toString();
         int hcuts = obj[3].toInt();
-        int vcuts =  obj[4].toInt();
+        int vcuts =  (obj.size() > 4) ? obj[4].toInt() : 1;
 
         double offset = (obj.size() > 5) ? obj[5].toDouble() : 0;
         QString name = (obj.size() > 6) ? obj[6].toString() : "";
-
-
 
         QList<Rect*> rects = this->findAllRectangles(path,startlayer);
 
@@ -202,7 +201,6 @@ namespace cIcCore{
             if(r == 0) continue;
             Instance * inst= Cut::getInstance(startlayer,stoplayer,hcuts,vcuts);
             inst->moveTo(r->x1() + offset*this->rules->get("ROUTE","horizontalgrid"),r->y1());
-
 
             if(name != ""){
                 Rect * p = inst->getRect(stoplayer);
@@ -233,14 +231,13 @@ namespace cIcCore{
         int hcuts =  obj[5].toInt();
         double xoffset = obj[6].toDouble();
         double yoffset = obj[7].toDouble();
-		QString name = (obj.size() > 8) ? obj[8].toString() : "";
+        QString name = (obj.size() > 8) ? obj[8].toString() : "";
 
         QList<Rect*> rects = this->findAllRectangles(path,startlayer);
 
         foreach(Rect* r, rects){
             if(r == 0) continue;
             Instance * inst= Cut::getInstance(startlayer,stoplayer,hcuts,vcuts);
-			qDebug() << "Y-offset" << yoffset << obj[7] << "\n";
             inst->moveTo(r->x2() + xoffset*inst->width(),r->centerY() + yoffset*inst->height());
 
             Rect * rstop = inst->getRect(stoplayer);
@@ -258,17 +255,40 @@ namespace cIcCore{
                 p->set(rstop);
                 this->add(p);
             }
-			this->add(inst);
+            this->add(inst);
 
 
         }
-
-
-
-
     }
 
+    void LayoutCell::addVerticalRect(QJsonArray obj)
+    {
+        if(obj.size() < 2){
+            qDebug() << "Error: addVerticalRects must contain at least 2 elements\n";
+            return;
+        }
 
+        QString layer = obj[0].toString();
+        QString path = obj[1].toString();
+        int cuts = (obj.size() > 2) ? obj[2].toInt(): 0;
+
+        QList<Rect*> rects = this->findAllRectangles(path,layer);
+
+        foreach(Rect* r, rects){
+            int width = r->width();
+            if(cuts > 0){
+                Instance * inst= Cut::getInstance("M1",layer,cuts,1);
+                if((r->width() - inst->width()) < this->rules->get("M1","width")/2.0){
+                    width = inst->width();
+                }
+
+            }
+            Rect * rn = new Rect(layer,r->x1(), this->y1(),width,this->height());
+            this->add(rn);
+
+
+        }
+    }
 
 
 
@@ -279,11 +299,6 @@ namespace cIcCore{
 //------------------------------------------------------------------------------------------
 // Internal functions
 //------------------------------------------------------------------------------------------
-
-
-
-
-
 
     void LayoutCell::place(){
 

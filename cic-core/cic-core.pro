@@ -48,7 +48,8 @@
   HEADERS +=  src/core/rules.h  \
   src/core/rect.h \
     src/printer/minecraft.h \
-  src/core/graph.h \
+    src/core/graph.h \
+      src/core/datatype.h \
   src/core/cell.h \
   src/core/instance.h \
   src/core/layoutcell.h \

@@ -25,6 +25,7 @@
 #include "instance.h"
 #include "route.h"
 #include "graph.h"
+#include "datatypes.h"
 
 namespace cIcCore{
 
@@ -39,11 +40,16 @@ namespace cIcCore{
 
         Q_INVOKABLE void setYoffsetHalf(QJsonValue obj);
         Q_INVOKABLE void noPowerRoute(QJsonValue obj);
-        Q_INVOKABLE void addDirectedRoute(QJsonArray obj);
+//        Q_INVOKABLE void addDirectedRoute(QString layer, QString net, QString route);
+//		Q_INVOKABLE void addDirectedRoute(QString layer, QString net, QString route,QString option);
+		Q_INVOKABLE void addDirectedRoute(QJsonArray obj);
+		
+
 		Q_INVOKABLE void addConnectivityRoute(QJsonArray obj);
         Q_INVOKABLE void addPortOnRect(QJsonArray obj);
 		Q_INVOKABLE void addVia(QJsonArray obj);
 		Q_INVOKABLE void addPortVia(QJsonArray obj);
+		Q_INVOKABLE void addVerticalRect(QJsonArray obj);
 
         virtual void place();
         virtual void route();
@@ -57,14 +63,15 @@ namespace cIcCore{
 		virtual void fromJson(QJsonObject obj);
 
         void addPowerRoute(QString net,QString excludeInstances);
-    private:
+
+	private:
         bool useHalfHeight;
 		QHash<QString,Graph*> nodeGraph_;
 
         bool noPowerRoute_;
 
 		void addToNodeGraph(Instance * inst);
-		
+
     };
 
 }
