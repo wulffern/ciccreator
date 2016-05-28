@@ -1,5 +1,5 @@
 # ciccreator
-A few years ago I started playing with the thought of generating a SAR ADC with a script, such that it would be easy to port between technologies, the vision is that "Custom IC creator" will be a rapid layout generation tool for SAR ADCs. 
+A few years ago I started playing with the thought of generating a SAR ADC with a script, such that it would be easy to port between technologies, the vision is that "Custom IC Creator" will be a rapid layout generation tool for SAR ADCs. 
 
 #Dependencies
 - Qt 5.4
