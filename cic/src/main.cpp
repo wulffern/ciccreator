@@ -76,8 +76,8 @@ int main(int argc, char *argv[])
             d->read(file);
 
             //Print SVG file
-//        cIcPrinter::Svg * pr = new cIcPrinter::Svg("test");
-            //       pr->print(d);
+//            cIcPrinter::Svg * pr = new cIcPrinter::Svg("test");
+//			pr->print(d);
 
             //Minecraft JavaScript
             cIcPrinter::Minecraft * m = new cIcPrinter::Minecraft(library + ".js");

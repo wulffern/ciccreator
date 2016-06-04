@@ -46,6 +46,7 @@
 #include <QRect>
 #include <QPen>
 #include <QWidget>
+#include <QPushButton>
 #include "cic-core.h"
 #include <QPainter>
 #include <QPaintEvent>
@@ -105,6 +106,7 @@ private:
     QList<Operation> operations;
     float _zoom;
     bool first;
+	QRect * viewRectangle;
     int xc;
     int yc;
     Cell * c;

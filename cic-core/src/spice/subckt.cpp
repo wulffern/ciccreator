@@ -49,6 +49,7 @@ namespace cIcSpice{
     void Subckt::parse(QList<QString> subckt_buffer,int line){
         _spice_str = subckt_buffer;
         this->setLineNumber(line);
+
         //Get first subckt line, and remove last subckt line (.ends)
         QString firstLine = subckt_buffer.first();
 
@@ -67,6 +68,7 @@ namespace cIcSpice{
 
         //TOOD: I assume there are no parameters on subckt
         firstLine = firstLine.trimmed();
+
         //Split on space
         const QRegularExpression re_space("\\s+");
         QStringList nodes = firstLine.split(re_space);
@@ -83,6 +85,7 @@ namespace cIcSpice{
                 continue;
 
             SubcktInstance * inst = new SubcktInstance();
+
             inst->parse(line,instance_line_number);
             if(this->_inst_index.contains(inst->name())){
                 qWarning() << "Error: " << this->name() << " already contains an " << inst->name();

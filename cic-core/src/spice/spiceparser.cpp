@@ -68,6 +68,7 @@ namespace cIcSpice{
 		    while (!in.atEnd())
 		       {
 			 QString line = in.readLine();
+			 line = line.trimmed();
 			 line_number++;
 
 			 //Handle plus

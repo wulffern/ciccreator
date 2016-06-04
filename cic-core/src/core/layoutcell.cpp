@@ -47,7 +47,7 @@ namespace cIcCore{
 
     void LayoutCell::addDirectedRoute(QJsonArray obj){
 
-		 if(obj.size() < 3){
+        if(obj.size() < 3){
             qDebug() << "Error: addDirectedRoute must contain at least three elements\n";
             return;
         }
@@ -60,9 +60,9 @@ namespace cIcCore{
         if(obj.size() > 3){
             options = obj[3].toString();
         }
-		
 
-		QString startRegex;
+
+        QString startRegex;
         QString routeType;
         QString stopRegex;
         QList<Rect*> start;
@@ -216,6 +216,49 @@ namespace cIcCore{
 
     }
 
+
+    void LayoutCell::addConnectivityVia(QJsonArray obj)
+    {
+        if(obj.size() < 4){
+            qDebug() << "Error: addVia must contain at least four elements\n";
+            return;
+        }
+
+        QString startlayer = obj[0].toString();
+        QString stoplayer = obj[1].toString();
+        QString name = obj[2].toString();
+        int grid = obj[3].toInt();
+        int vcuts = obj[4].toInt();
+        int hcuts =  (obj.size() > 5) ? obj[5].toInt() : 1;
+        double xoffset = (obj.size() > 6) ? obj[6].toDouble() : 0;
+        double yoffset = (obj.size() > 7) ? obj[7].toDouble() : 0;
+        QString netname = (obj.size() > 8) ? obj[8].toString() : "";
+
+        QList<Rect*> rects = this->findAllRectangles(name,startlayer);
+
+        int xgrid = 0;
+        foreach(Rect* r, rects){
+            if(r == 0) continue;
+
+            Instance * inst= Cut::getInstance(startlayer,stoplayer,hcuts,vcuts);
+
+            xgrid = (grid != 0) ? grid: inst->width();
+
+            inst->moveTo(r->x1() + xoffset*grid,r->centerY() + yoffset*inst->height());
+
+            if(netname != ""){
+                Rect * p = inst->getRect(stoplayer);
+                if(p != 0) named_rects_[netname] = p;
+                else qDebug() << "Error: Unknown rect " << netname;
+
+            }
+
+            this->add(inst);
+        }
+
+    }
+
+
     void LayoutCell::addPortVia(QJsonArray obj)
     {
         if(obj.size() < 8){
@@ -290,8 +333,47 @@ namespace cIcCore{
         }
     }
 
+    void LayoutCell::addRouteRing(QJsonArray obj)
+    {
+        // if(obj.size() < 1){
+        //     qDebug() << "Error: addRouteRing must contain at least 1 element\n";
+        //     return;
+        // }
+
+        // QString layer = obj[0].toString();
+        // QString nameString = (obj.size() > 1) ? obj[1].toString() : "rtbl";
+        // int width = (obj.size() > 2) ? obj[2].toInt(): 1;
+        // int space = (obj.size() > 3) ? obj[3].toInt(): 2;
 
 
+		// //Rules
+		// int mw = this->rules->get(layer,"width")*width;
+		// int ygrid = this->rules->get("ROUTE","horizontalgrid")*space + mw;
+		// int xgrid = this->rules->get("ROUTE","verticalgrid")*space + mw;
+
+		
+        // QStringList names = this->expandBus(nameString);
+		// foreach(QString name,names){
+		// 	Rect *r = this->getCopy();
+		// 	r->adjust(-xgrid,-ygrid,xgrid,ygrid);
+		// 	int x1 = r->x1();
+		// 	int y1 = r->y1();
+		// 	int y2 = r->x2();
+		// 	int y2 = r->y2();
+
+		// 	Rect *bottom = new Rect(layer,x1,y1,x2-x1,mw);
+		// 	Rect *left   = new Rect(layer,x1,y1,mw,y2-y1);
+		// 	Rect *right  = new Rect(layer,x2-mw,y1,mw,y2-y1);
+		// 	Rect *top    = new Rect(layer,x1,y2-mw,x2-x1,mw);
+
+
+		// 	//TODO: Can I make the routerings easier? It's quite complex
+			
+			
+		// }
+
+
+    }
 
 
 
@@ -299,6 +381,28 @@ namespace cIcCore{
 //------------------------------------------------------------------------------------------
 // Internal functions
 //------------------------------------------------------------------------------------------
+
+    QStringList LayoutCell::expandBus(QString name){
+
+        QStringList names;
+        QRegularExpression re_bus("<(\\d+):(\\d+)>");
+        QRegularExpressionMatch m_bus = re_bus.match(name);
+        if(m_bus.hasMatch()){
+
+            QString start = m_bus.captured(1);
+            QString stop = m_bus.captured(2);
+            int istart = start.toInt();
+            int istop = stop.toInt();
+            for(int i=istart;i>=istop;i=i-1){
+                names.append(name.replace(QRegularExpression("<.*>"),QString("<%1>").arg(i)));
+            }
+
+
+        }else{
+            names.append(name);
+        }
+        return names;
+    }
 
     void LayoutCell::place(){
 
@@ -313,12 +417,16 @@ namespace cIcCore{
                 y = 0;
                 x = x + prev_width;
             }
+			
             prev_group = group;
 
             //The chain of events is important here, ports get defined in the setSubckInstance
             Instance * inst = Instance::getInstance(ckt_inst->subcktName());
             inst->setSubcktInstance(ckt_inst);
             this->add(inst);
+			Text * t = new Text(ckt_inst->name());
+			t->moveTo(x + inst->width()/2, y + inst->height()/2);
+			this->add(t);
             inst->moveTo(x,y);
             this->addToNodeGraph(inst);
             prev_width = inst->width();
@@ -450,6 +558,10 @@ namespace cIcCore{
                 Rect * r = new Rect();
                 r->fromJson(co);
                 this->add(r);
+			}else if(cl == "Text"){
+                Text * t = new Text();
+                t->fromJson(co);
+                this->add(t);
             }else if(cl == "Port"){
                 Port * p = new Port();
                 p->fromJson(co);
@@ -463,7 +575,7 @@ namespace cIcCore{
                 l->fromJson(co);
                 this->add(l);
             }else{
-                qDebug() << "Error: Unknown class " << cl ;
+                qDebug() << "Error(laoyutcell.cpp): Unknown class " << cl ;
             }
         }
         this->updateBoundingRect();

@@ -42,7 +42,7 @@ namespace cIcSpice{
         this->setLineNumber(line_number);
         this->spiceStr().append(buffer);
 
-//		cout << buffer.toStdString() << "\n";
+		cout << "\"" <<  buffer.toStdString() << "\"" << "\n";
         //Remove parameters
         QRegularExpression re_params("\\s+(\\S+)\\s*=\\s*(\\S+)");
         QRegularExpressionMatchIterator it= re_params.globalMatch(buffer);

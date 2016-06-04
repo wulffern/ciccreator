@@ -41,11 +41,12 @@ public:
   void errorMethodNotFound(QString cell, QString theme, QString method);
   void increaseIndent();
   void decreaseIndent();
-
-  private:
-  int indent;
   void startComment(QTextStream &out, AnsiColor color = green);
   void endComment(QTextStream &out);
+	
+  private:
+  int indent;
+
 
 signals:
 

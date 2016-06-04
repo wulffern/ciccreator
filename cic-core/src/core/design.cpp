@@ -30,9 +30,9 @@ namespace cIcCore{
         qRegisterMetaType<cIcCore::PatternCapacitor>("cIcCore::PatternCapacitor");
         qRegisterMetaType<cIcCore::PatternCapacitorGnd>("cIcCore::PatternCapacitorGnd");
         qRegisterMetaType<cIcCore::LayoutCell>("cIcCore::LayoutCell");
-                qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
-                qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
-        cellTranslator["Gds::GdsPatternTransistor"] = "cIcCore::PatternTransistor";
+		qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
+		qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
+cellTranslator["Gds::GdsPatternTransistor"] = "cIcCore::PatternTransistor";
         cellTranslator["Gds::GdsPatternCapacitor"] = "cIcCore::PatternCapacitor";
         cellTranslator["Gds::GdsPatternCapacitorGnd"] = "cIcCore::PatternCapacitorGnd";
         cellTranslator["Layout::LayoutDigitalCell"] = "cIcCore::LayoutCell";
@@ -173,7 +173,7 @@ namespace cIcCore{
         if(cellTranslator.contains(cl)){
             cl = cellTranslator[cl];
         }else{
-            cerr << "Error(design.cpp): Unknown class " << cl.toStdString() << " for " << name.toStdString() <<  "\n";
+//            cerr << "Error(design.cpp): Unknown class " << cl.toStdString() << " for " << name.toStdString() <<  "\n";
         }
 
         //- Set default class name
@@ -443,7 +443,16 @@ namespace cIcCore{
                 index = verr.indexOf("\n",position+1);
             }
 
-            qWarning() << err.errorString() << " at line " << line_count ;
+			QString error("%1%2%3%4");
+			console->comment(error.arg("JSON ERROR (line ")
+							 .arg(line_count)
+							 .arg("): ")
+							 .arg(err.errorString())
+							 ,ConsoleOutput::red);
+			//QTextStream out(stdout);
+			//console->startComment(out,ConsoleOutput::red);
+            //out << "JSON ERROR: " << err.errorString() << " at line " << line_count ;
+			//console->endComment(out);
         }
         QJsonObject obj = d.object();
         return obj;

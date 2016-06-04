@@ -1,0 +1,40 @@
+
+.subckt DDD S
+.ends
+
+.subckt DDA S
+.ends
+
+.subckt DDMVIA S D B
+.ends
+
+
+.subckt TEST A B
+XA1 B DDD
+XA2 A DDD
+XB1 B DDD  
+XB2 A DDD
+.ends
+
+.subckt TEST_OPT A B
+XA1 A DDA
+XA2 A A A DDMVIA
+XB1 A A A DDMVIA  
+XB2 A DDD
+.ends
+
+
+.subckt TESTVIA S D B
+XA1 S D B DDMVIA
+XA2 S D B DDMVIA
+XB1 S D B DDMVIA
+XB2 S D B DDMVIA
+.ends
+
+.subckt TESTDDMVIA S D B
+XA1 S D B DDMVIA
+XA2 S D B DDMVIA
+XB1 S D B DDMVIA
+XB2 S D B DDMVIA
+.ends
+

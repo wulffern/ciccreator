@@ -27,14 +27,18 @@ namespace cIcPrinter{
 
     int Minecraft::toMine(int angstrom){
 
-		double x = angstrom;
-		double xo = angstrom/Rules::getRules()->gamma()/10;
-		if(x != 0 && abs(xo) > 0 && abs(xo) < 1){
-			xo = xo/abs(xo);
-		}
+//		double x = angstrom;
+//		double gamma = Rules::;
 		
-		return xo;
-			;}
+//		int
+//		qDebug() << angstrom ;
+//		if(x != 0 ){
+//			if(x != 0 && abs(xo) > 0 && abs(xo) < 1){
+//			xo = xo/abs(xo);
+//		}
+		
+		return angstrom/500;
+		;}
 
     void Minecraft::printReference(Cell * o){
         QTextStream ts(&file);

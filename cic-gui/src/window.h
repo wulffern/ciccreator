@@ -39,45 +39,45 @@ QT_END_NAMESPACE
 
 
 namespace cIcGui{
-  using namespace cIcCore;
-  //using cIcCore;
+    using namespace cIcCore;
+    //using cIcCore;
 
-class Window : public QWidget
-{
-  Q_OBJECT
-public:
-  explicit Window(QWidget *parent = 0);
-  void loadDesign(Design *d);
-  void loadFile(QString f);
-  ~Window();
+    class Window : public QWidget
+    {
+        Q_OBJECT
+    public:
+        explicit Window(QWidget *parent = 0);
+        void loadDesign(Design *d);
+        void loadFile(QString f);
+        ~Window();
 
-signals:
+    signals:
 
-public slots:
-    void shapeSelected(int index);
-    void zoomChanged(int zoom);
-  void layerClicked(QModelIndex index);
+    public slots:
+        void shapeSelected(int index);
+        void zoomChanged(int zoom);
+        void layerClicked(QModelIndex index);
+        void reloadFile();
+		void saveRenderImage();
+    private:
 
-  void reloadFile();
-private:
-
-  RenderArea *originalRenderArea;
-  QScrollArea *scroll;
-  QComboBox *shapeComboBox;
-  QListWidget * listCells;
-  QListWidget * listLayers;
-  QSlider *zoom;
-  Design * designs;
-  QSplitter * splitter;
+        RenderArea *originalRenderArea;
+        QScrollArea *scroll;
+        QComboBox *shapeComboBox;
+        QListWidget * listCells;
+        QListWidget * listLayers;
+        QSlider *zoom;
+        Design * designs;
+        QSplitter * splitter;
         QString filename;
-  QWidget * leftside;
-
-  QShortcut *shift_z;
-    QShortcut *ctrl_z;
+        QWidget * leftside;
+        QPushButton *saveImage;
+        QShortcut *shift_z;
+        QShortcut *ctrl_z;
         QShortcut *shift_r;
 
 
-};
+    };
 
 }
 

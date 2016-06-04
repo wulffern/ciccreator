@@ -40,22 +40,22 @@ namespace cIcCore{
 
         Q_INVOKABLE void setYoffsetHalf(QJsonValue obj);
         Q_INVOKABLE void noPowerRoute(QJsonValue obj);
-//        Q_INVOKABLE void addDirectedRoute(QString layer, QString net, QString route);
-//		Q_INVOKABLE void addDirectedRoute(QString layer, QString net, QString route,QString option);
 		Q_INVOKABLE void addDirectedRoute(QJsonArray obj);
-		
-
 		Q_INVOKABLE void addConnectivityRoute(QJsonArray obj);
         Q_INVOKABLE void addPortOnRect(QJsonArray obj);
 		Q_INVOKABLE void addVia(QJsonArray obj);
+		Q_INVOKABLE void addConnectivityVia(QJsonArray obj);
 		Q_INVOKABLE void addPortVia(QJsonArray obj);
 		Q_INVOKABLE void addVerticalRect(QJsonArray obj);
+		Q_INVOKABLE void addRouteRing(QJsonArray obj);
 
         virtual void place();
         virtual void route();
         virtual  void addAllPorts();
         virtual void routePower();
         virtual void paint();
+
+		QStringList expandBus(QString name);
 
         virtual QList<Rect*> findRectanglesByNode(QString node, QString filterChild,QString filterInstance);
 

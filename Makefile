@@ -55,11 +55,20 @@ LIBNAME=devices
 JSONFILE=${EXAMPLE}/${LIBNAME}.json
 TECHFILE=${EXAMPLE}/tech.json
 
+minecraft:
+	cd lay; ${CMD} ${JSONFILE} ${EXAMPLE}/tech_minecraft.json minecraft ${OPT}
+
 devices:
 	cd lay; ${CMD} ${JSONFILE} ${TECHFILE} ${LIBNAME} ${OPT}
+
+routes:
+	cd lay; ${CMD} ${EXAMPLE}/routes.json ${TECHFILE} routes ${OPT}
 
 sar:
 	cd lay; make sar
 
 view:
 	cd lay; ../bin/cic-gui ${TECHFILE} ${LIBNAME}.json &
+
+view-routes:
+	cd lay; ../bin/cic-gui ${TECHFILE} routes.json &
