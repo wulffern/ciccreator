@@ -31,7 +31,7 @@ namespace cIcGui{
         rules = Rules::getRules();
         if(rules){
             _zoom = 1.0/rules->gamma()  ;
-
+		   
         }else{
             _zoom = 1.0;
         }
@@ -58,16 +58,16 @@ namespace cIcGui{
 
         first = true;
 
-		// if(this->c){
-		// 	QSize rect = this->parentWidget()->size();
-		// 	Rect r = this->c->calcBoundingRect();
-		// 	r.adjust(this->c->width()/8.0);
-		// 	float xscale =  ((float)rect.width())/((float)r.width());
-		// 	float yscale = ((float)rect.height())/((float)r.height());
-		// 	float scale = xscale > yscale ? yscale : xscale;
-		// 	_zoom = scale;
-		// 	xc = -r.x1()/2;
-		// 	yc = -r.y1()/2;
+        // if(this->c){
+        //  QSize rect = this->parentWidget()->size();
+        //  Rect r = this->c->calcBoundingRect();
+        //  r.adjust(this->c->width()/8.0);
+        //  float xscale =  ((float)rect.width())/((float)r.width());
+        //  float yscale = ((float)rect.height())/((float)r.height());
+        //  float scale = xscale > yscale ? yscale : xscale;
+        //  _zoom = scale;
+        //  xc = -r.x1()/2;
+        //  yc = -r.y1()/2;
         //  }
         update();
     }
@@ -107,14 +107,47 @@ namespace cIcGui{
         this->setZoom(_zoom/1.25);
     }
 
+	void RenderArea::invertY(QPainter &painter){
+		int w1 = this->c->width()*1*_zoom;
+		int h1 = this->c->height()*1*_zoom;
+		
+//        QMatrix m;
+//        m.translate(0,  + h1 );
+//        m.scale( 1, -1 );
+		painter.translate(0,+h1);
+		painter.scale(1,-1);
+//        painter.setMatrix( m );
+
+	}
+
+	void RenderArea::nonInvertY(QPainter &painter){
+		int w1 = this->c->width()*1*_zoom;
+		int h1 = this->c->height()*1*_zoom;
+
+		painter.scale(1,-1);
+		painter.translate(0,-h1);
+		
+//        QMatrix m;
+
+		//      m.scale( 1, -1 );
+		//m.translate(0,   -h1 );
+        //painter.setMatrix( m );
+
+	}
+
+	  
+
     void RenderArea::paintEvent(QPaintEvent *event)
     {
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing);
         painter.fillRect(event->rect(), QBrush(Qt::white));
         painter.save();
+
+		invertY(painter);
         transformPainter(painter);
         drawShape(painter);
+
         painter.restore();
     }
 
@@ -159,7 +192,16 @@ namespace cIcGui{
                     color.setAlpha(150);
                     painter.setPen(QPen(color,Qt::SolidLine));
                     painter.setFont(font);
-                    painter.drawText(p->x1(),p->y1()+p->height(),p->name());
+
+
+					painter.scale(1,-1);
+//					painter.translate(0,-this->c->height());
+
+					painter.drawText(p->x1(),-p->y1(),p->name());
+
+//					painter.translate(0,+this->c->height());
+					painter.scale(1,-1);
+
                 }
 
             }else if(r->isPort()){
@@ -177,7 +219,15 @@ namespace cIcGui{
                     color.setAlpha(150);
                     painter.setPen(QPen(color,Qt::SolidLine));
                     painter.setFont(font);
-                    painter.drawText(p->x1(),p->y1()+p->height(),p->name());
+
+					painter.scale(1,-1);
+//					painter.translate(0,-this->c->height());
+
+                    painter.drawText(p->x1(),-p->y1(),p->name());
+
+//					painter.translate(0,+this->c->height());
+					painter.scale(1,-1);
+
                 }
 
             }else if(r->isCell()){
@@ -220,7 +270,6 @@ namespace cIcGui{
 
         if(c==NULL){return;}
         painter.translate(x,y);
-
         painter.setPen(QPen(QColor("black"),10));
         painter.setBrush(QBrush(Qt::NoBrush));
         painter.drawRect(c->x1(),c->y1(),c->width(),c->height());
@@ -248,8 +297,10 @@ namespace cIcGui{
 
         if(!c)
             return;
+//      painter.translate(c->width(),c->height());
+//      painter.scale( 1, -1 );
         painter.scale(_zoom,_zoom);
-        painter.translate(xc,yc);
+//        painter.translate(xc,yc);
         for (int i = 0; i < operations.size(); ++i) {
             switch (operations[i]) {
             case Translate:

@@ -99,6 +99,8 @@ private:
   // }
   // 	void drawCoordinates(QPainter &painter);
   // 	 void drawOutline(QPainter &painter);
+	void invertY(QPainter &painter);
+	void nonInvertY(QPainter &painter);
     void drawShape(QPainter &painter);
     void transformPainter(QPainter &painter);
     void drawCell(int x, int y, Cell * c, QPainter &painter);

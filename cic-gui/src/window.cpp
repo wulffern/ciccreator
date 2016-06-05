@@ -159,6 +159,8 @@ namespace cIcGui{
         listCells->clear();
 
         foreach(Cell* c ,d->getAllCells()){
+//xs			c->mirrorY(0);
+//			c->moveTo(0,0);
             listCells->addItem(c->name());
         }
 

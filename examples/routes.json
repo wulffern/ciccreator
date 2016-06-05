@@ -99,7 +99,7 @@
 			  ],
 			  [ "M1",
 				"-----------------",
-				"-------wSw-------",
+				"---------wSw-----",
 				"-----------------",
 				"-----------------",
 				"-----------------",
@@ -111,8 +111,8 @@
 				"-----------------",
 				"-----------------",
 				"-----------------",
-				"---wDw-----------",
 				"-----------------",
+				"---wDw-----------",
 				"-----------------",
 				"-----------------",
 				"-----------------"
@@ -241,7 +241,73 @@
 				  ["M4","A","-|--","onTopB"]
 			  ]}
 		  ]
+		},
+		{ "name" : "Options_offsethigh",
+		  "inherit": "TEST",
+		  "beforeRoute": [
+			  {"addDirectedRoutes" : [["M1","A","XA1:S-|--XB2:S","offsethigh"]]}
+		  ]
+		},
+		{ "name" : "Options_offsetlow",
+		  "inherit": "TEST",
+		  "beforeRoute": [
+			  {"addDirectedRoutes" : [["M1","A","XA1:S-|--XB2:S","offsetlow"]]}
+		  ]
+		},
+		{ "name" : "Options_offsethighend",
+		  "inherit": "TEST",
+		  "beforeRoute": [
+			  {"addDirectedRoutes" : [["M1","A","XA1:S-|--XB2:S","offsethighend"]]}
+		  ]
+		},
+		{ "name" : "Options_offsetlowend",
+		  "inherit": "TEST",
+		  "beforeRoute": [
+			  {"addDirectedRoutes" : [["M1","A","XA1:S-|--XB2:S","offsetlowend"]]}
+		  ]
+		},
+		{ "name" : "Options_track4",
+		  "inherit": "TEST",
+		  "beforeRoute": [
+			  {"addDirectedRoutes" : [["M1","A","XA1:S-|--XB2:S","track4"]]}
+		  ]
+		},
+		{ "name" : "Options_track8",
+		  "inherit": "TEST",
+		  "beforeRoute": [
+			  {"addDirectedRoutes" : [["M1","A","XA1:S-|--XB2:S","track8"]]}
+		  ]
+		},
+		{ "name" : "Options_3cuts",
+		  "inherit": "TEST",
+		  "beforeRoute": [
+			  {"addDirectedRoutes" : [["M2","A","XA1:S-|--XB2:S","3cuts"]]}
+		  ]
+		},
+		{ "name" : "Options_5cuts",
+		  "inherit": "TEST",
+		  "beforeRoute": [
+			  {"addDirectedRoutes" : [["M2","A","XA1:S-|--XB2:S","5cuts"]]}
+		  ]
+		},
+		{ "name" : "Options_2vcuts",
+		  "inherit": "TEST",
+		  "beforeRoute": [
+			  {"addDirectedRoutes" : [["M2","A","XA1:S-|--XB2:S","2vcuts"]]}
+		  ]
+		},
+		{ "name" : "Options_4vcuts",
+		  "inherit": "TEST",
+		  "beforeRoute": [
+			  {"addDirectedRoutes" : [["M2","A","XA1:S-|--XB2:S","4vcuts"]]}
+		  ]
 		}
+
+
+
+
+
+
 
     ]
 }
