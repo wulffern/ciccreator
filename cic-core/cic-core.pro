@@ -21,7 +21,7 @@
 
   CONFIG += qt console debug
   CONFIG += staticlib
-
+CONFIG += c++11
   mac {
     CONFIG -= app_bundle
   }
@@ -32,8 +32,8 @@
   linux:DESTDIR = ../lib/linux
 
   #- Add coverage information
-  QMAKE_CFLAGS += $$(CFLAGS) --coverage 
-  QMAKE_LFLAGS += $$(LDFLAGS) --coverage
+  QMAKE_CFLAGS += $$(CFLAGS) 
+  QMAKE_LFLAGS += $$(LDFLAGS)
 
   TARGET = cic
 
@@ -71,8 +71,10 @@
   src/core/layer.h \
   src/printer/spice.h \
   src/core/port.h \
-    src/core/route.h \
-    src/core/cut.h \
+  src/core/route.h \
+  src/core/routering.h \
+  src/core/cut.h \
+  src/core/instancecut.h \
     src/core/instanceport.h \
     src/core/layoutrotatecell.h \
     src/core/text.h \
@@ -103,7 +105,8 @@
   src/core/port.cpp\
   src/spice/mosfet.cpp\
   src/spice/capacitor.cpp \
-    src/core/route.cpp \
+  src/core/route.cpp \
+      src/core/routering.cpp \
     src/core/cut.cpp \
     src/core/instanceport.cpp \
     src/core/layoutrotatecell.cpp \

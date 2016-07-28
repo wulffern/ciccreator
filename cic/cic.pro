@@ -20,7 +20,7 @@
   QT += core
 
   CONFIG += qt console debug
-
+  CONFIG += c++11
   mac {
     CONFIG -= app_bundle
   }

@@ -287,7 +287,6 @@ namespace cIcCore{
         if(!lay.contains(rule)){
             qDebug() << "Could not find rule "<< layer << rule ;
           }else{
-            //		   qDebug() << "rules" << rule;
             v = lay[rule]*gamma_;
 
           }

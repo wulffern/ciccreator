@@ -141,7 +141,11 @@ namespace cIcCore{
               return true;
             }else if(this->inherits("cIcCore::Cut")){
                return true;
-            }
+		  }else if(strcmp(this->metaObject()->className(),"cIcCore::InstanceCut")){
+			  return true;
+		  }else if(this->inherits("cIcCore::InstanceCut")){
+			  return true;
+		  }
             return false;
         }
 

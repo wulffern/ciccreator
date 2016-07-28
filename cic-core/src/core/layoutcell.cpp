@@ -127,7 +127,7 @@ namespace cIcCore{
             QList<Rect*>  rects = g->getRectangles(excludeInstances,includeInstances,layer);
 
             if(rects.count() == 0){
-                qDebug() << "Could not find rectangles on " << node << regex << rects.count() << "\n";
+                qDebug() << "Error: Could not find rectangles on " << node << regex << rects.count() << "\n";
             }
             if(rects.count() > 0){
                 QList<Rect*> empty;
@@ -235,8 +235,8 @@ namespace cIcCore{
         QString netname = (obj.size() > 8) ? obj[8].toString() : "";
 
         QList<Rect*> rects = this->findAllRectangles(name,startlayer);
-
         int xgrid = 0;
+        bool setPort = true;
         foreach(Rect* r, rects){
             if(r == 0) continue;
 
@@ -250,11 +250,25 @@ namespace cIcCore{
                 Rect * p = inst->getRect(stoplayer);
                 if(p != 0) named_rects_[netname] = p;
                 else qDebug() << "Error: Unknown rect " << netname;
+            }
+            this->add(inst);
+            if(setPort){
+                Port* p;
+                Rect* r = inst->getRect(stoplayer);
+                if(ports_.contains(name)){
+                    p = ports_[name];
+                    p->set(r);
+                }else{
+                    p = new Port(name);
+                    p->set(r);
+                    this->add(p);
+                }
+
+                setPort = false;
 
             }
-
-            this->add(inst);
         }
+
 
     }
 
@@ -333,47 +347,163 @@ namespace cIcCore{
         }
     }
 
-    void LayoutCell::addRouteRing(QJsonArray obj)
+    void LayoutCell::addPowerRing(QJsonArray obj)
     {
-        // if(obj.size() < 1){
-        //     qDebug() << "Error: addRouteRing must contain at least 1 element\n";
-        //     return;
-        // }
+        if(obj.size() < 3){
+            qDebug() << "Error: addRouteRing must contain at least 3 element\n";
+            return;
+        }
+        QString layer = obj[0].toString();
+        QString name = obj[1].toString();
+        QString location = (obj.size() > 2) ? obj[2].toString(): "rtbl";
+        int widthmult = (obj.size() > 3) ? obj[3].toInt(): 1;
 
-        // QString layer = obj[0].toString();
-        // QString nameString = (obj.size() > 1) ? obj[1].toString() : "rtbl";
-        // int width = (obj.size() > 2) ? obj[2].toInt(): 1;
-        // int space = (obj.size() > 3) ? obj[3].toInt(): 2;
+        this->addPowerRing(layer,name,location,widthmult);
+    }
 
+    void LayoutCell::addPowerRing(QString layer, QString name, QString location, int widthmult)
+    {
+        Instance* c = Cut::getInstance("M3","M4",2,2);
+        int metalwidth = c->height()*widthmult;
+        int xgrid = this->rules->get("ROUTE","horizontalgrid") + metalwidth;
+        int ygrid = this->rules->get("ROUTE","horizontalgrid") + metalwidth;
 
-		// //Rules
-		// int mw = this->rules->get(layer,"width")*width;
-		// int ygrid = this->rules->get("ROUTE","horizontalgrid")*space + mw;
-		// int xgrid = this->rules->get("ROUTE","verticalgrid")*space + mw;
-
-		
-        // QStringList names = this->expandBus(nameString);
-		// foreach(QString name,names){
-		// 	Rect *r = this->getCopy();
-		// 	r->adjust(-xgrid,-ygrid,xgrid,ygrid);
-		// 	int x1 = r->x1();
-		// 	int y1 = r->y1();
-		// 	int y2 = r->x2();
-		// 	int y2 = r->y2();
-
-		// 	Rect *bottom = new Rect(layer,x1,y1,x2-x1,mw);
-		// 	Rect *left   = new Rect(layer,x1,y1,mw,y2-y1);
-		// 	Rect *right  = new Rect(layer,x2-mw,y1,mw,y2-y1);
-		// 	Rect *top    = new Rect(layer,x1,y2-mw,x2-x1,mw);
-
-
-		// 	//TODO: Can I make the routerings easier? It's quite complex
-			
-			
-		// }
-
+        RouteRing* rr = new RouteRing(layer,name,this->getCopy(),location,ygrid,xgrid,metalwidth);
+        QString rail = "power_" + name;
+        if(rr != 0) named_rects_[rail] = rr;
+        this->add(rr);
 
     }
+
+    void LayoutCell::addRouteRing(QJsonArray obj)
+    {
+        if(obj.size() < 3){
+            qDebug() << "Error: addRouteRing must contain at least 3 element\n";
+            return;
+        }
+        QString layer = obj[0].toString();
+        QString name = obj[1].toString();
+        QString location = (obj.size() > 2) ? obj[2].toString(): "rtbl";
+        int widthmult = (obj.size() > 3) ? obj[3].toInt(): 1;
+        int spacemult = (obj.size() > 4) ? obj[4].toInt(): 2;
+
+        this->addRouteRing(layer,name,location,widthmult,spacemult);
+    }
+
+    void LayoutCell::addRouteRing(QString layer, QString name, QString location, int widthmult, int spacemult)
+    {
+        int metalwidth = this->rules->get(layer,"width")*widthmult;
+        int xgrid = this->rules->get("ROUTE","horizontalgrid")*spacemult + metalwidth;
+        int ygrid = this->rules->get("ROUTE","horizontalgrid")*spacemult + metalwidth;
+
+        QStringList names = expandBus(name);
+        for(auto& n:names){
+            RouteRing* rr = new RouteRing(layer,n,this->getCopy(),location,ygrid,xgrid,metalwidth);
+            QString rail = "rail_" + n;
+            if(rr != 0) named_rects_[rail] = rr;
+            this->add(rr);
+        }
+    }
+
+
+    void LayoutCell::addPowerConnection(QJsonArray obj)
+    {
+        if(obj.size() < 3){
+            qDebug() << "Error: addRouteRing must contain at least 3 element\n";
+            return;
+        }
+        QString name = obj[0].toString();
+        QString includeInstances = obj[1].toString();
+        QString location = obj[2].toString();
+
+        this->addPowerConnection(name,includeInstances,location);
+    }
+
+    void LayoutCell::addPowerConnection(QString name, QString includeInstances, QString location)
+    {
+		if(!nodeGraph_.contains(name)) return;
+		if(!named_rects_.contains("power_" + name)) return;
+		
+		Graph* g  = nodeGraph_[name];
+		QList<Rect*>  rects = g->getRectangles("",includeInstances,"");
+		RouteRing* rr = (RouteRing*) named_rects_["power_" + name];
+		Rect* rrect = rr->get(location);
+		foreach(Rect* r, rects){
+			Instance* ct = Cut::getInstance(r->layer(),rrect->layer(),2,2);
+			Rect* rr = r->getCopy();
+			if (location == "top") {
+				rr->setTop(rrect->y2());
+				ct->moveTo(rr->x1(),rrect->y1());
+			} else if (location == "bottom") {
+				rr->setBottom(rrect->y1());
+				ct->moveTo(rr->x1(),rrect->y1());
+			} else if (location ==  "left") {
+				rr->setLeft(rrect->x1());
+				ct->moveTo(rrect->x1(),rr->y1());
+			} else if (location ==  "right") {
+				rr->setRight(rrect->x2());
+				ct->moveTo(rrect->x1(),rr->y1());
+			}
+			this->add(rr);
+			this->add(ct);
+            }
+
+	
+
+    }
+
+
+    void LayoutCell::addRouteConnection(QJsonArray obj)
+    {
+        if(obj.size() < 3){
+            qDebug() << "Error: addRouteRing must contain at least 3 element\n";
+            return;
+        }
+        QString path = obj[0].toString();
+        QString includeInstances = obj[1].toString();
+        QString location = obj[2].toString();
+        QString layer = (obj.size() > 3) ? obj[3].toString(): "";
+        QString options = (obj.size() > 4) ? obj[4].toString(): "";
+        this->addRouteConnection(path,includeInstances,layer,location,options);
+    }
+
+    void LayoutCell::addRouteConnection(QString path, QString includeInstances, QString layer, QString location, QString options)
+    {
+        QString routeType = "-|--";
+
+        if(location == "top"){
+            routeType = "||";
+            options += ",onTopB,fillvcut";
+        }else if(location == "bottom"){
+            routeType = "||";
+            options += ",onTopT,fillvcut";
+        }else if(location == "right"){
+            routeType = "-";
+            options += ",onTopL,fillhcut";
+        }else if( location == "left"){
+            options += ",onTopR,fillhcut";
+            routeType = "-";
+        }
+
+        foreach(QString node, nodeGraph_.keys()){
+            if(!node.contains(QRegularExpression(path))) continue;
+            if(!named_rects_.contains("rail_" + node)) continue;
+
+            Graph * g = nodeGraph_[node];
+            QList<Rect*>  rects = g->getRectangles("",includeInstances,layer);
+            RouteRing* rr = (RouteRing*) named_rects_["rail_" + node];
+            QList<Rect*> empty;
+            foreach(Rect* r, rects){
+                QList<Rect*> stop;
+                stop.append(rr->get(location));
+                stop.append(r);
+                Route* ro = new Route(node,layer,empty,stop,options,routeType);
+                this->add(ro);
+            }
+
+        }
+    }
+
 
 
 
@@ -396,8 +526,6 @@ namespace cIcCore{
             for(int i=istart;i>=istop;i=i-1){
                 names.append(name.replace(QRegularExpression("<.*>"),QString("<%1>").arg(i)));
             }
-
-
         }else{
             names.append(name);
         }
@@ -417,16 +545,16 @@ namespace cIcCore{
                 y = 0;
                 x = x + prev_width;
             }
-			
+
             prev_group = group;
 
             //The chain of events is important here, ports get defined in the setSubckInstance
             Instance * inst = Instance::getInstance(ckt_inst->subcktName());
             inst->setSubcktInstance(ckt_inst);
             this->add(inst);
-			Text * t = new Text(ckt_inst->name());
-			t->moveTo(x + inst->width()/2, y + inst->height()/2);
-			this->add(t);
+            Text * t = new Text(ckt_inst->name());
+            t->moveTo(x + inst->width()/2, y + inst->height()/2);
+            this->add(t);
             inst->moveTo(x,y);
             this->addToNodeGraph(inst);
             prev_width = inst->width();
@@ -447,16 +575,19 @@ namespace cIcCore{
 
         if(inst == NULL) return;
 
-        foreach(Port * p, inst->ports()){
-            if(p == NULL) continue;
+        auto allp = inst->allports();
+        foreach(QString s, allp.keys()){
 
-            if(nodeGraph_.contains(p->name())){
-                nodeGraph_[p->name()]->append(p);
-            }else{
-                Graph *g = new Graph();
-                g->name = p->name();
-                g->append(p);
-                nodeGraph_[p->name()] = g;
+            foreach(Port * p,allp[s]){
+                if(p == NULL) continue;
+                if(nodeGraph_.contains(p->name())){
+                    nodeGraph_[p->name()]->append(p);
+                }else{
+                    Graph *g = new Graph();
+                    g->name = p->name();
+                    g->append(p);
+                    nodeGraph_[p->name()] = g;
+                }
             }
         }
 
@@ -558,7 +689,7 @@ namespace cIcCore{
                 Rect * r = new Rect();
                 r->fromJson(co);
                 this->add(r);
-			}else if(cl == "Text"){
+            }else if(cl == "Text"){
                 Text * t = new Text();
                 t->fromJson(co);
                 this->add(t);
@@ -570,7 +701,7 @@ namespace cIcCore{
                 Instance * i = new Instance();
                 i->fromJson(co);
                 this->add(i);
-            }else if(cl == "Cell" || cl== "cIcCore::Route"){
+            }else if(cl == "Cell" || cl== "cIcCore::Route" || cl == "cIcCore::RouteRing"){
                 LayoutCell * l = new LayoutCell();
                 l->fromJson(co);
                 this->add(l);

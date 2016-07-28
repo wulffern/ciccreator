@@ -24,6 +24,7 @@
 #include "cell.h"
 #include "instance.h"
 #include "route.h"
+#include "routering.h"
 #include "graph.h"
 #include "datatypes.h"
 
@@ -48,7 +49,15 @@ namespace cIcCore{
 		Q_INVOKABLE void addPortVia(QJsonArray obj);
 		Q_INVOKABLE void addVerticalRect(QJsonArray obj);
 		Q_INVOKABLE void addRouteRing(QJsonArray obj);
+		Q_INVOKABLE void addPowerRing(QJsonArray obj);
+		Q_INVOKABLE void addRouteConnection(QJsonArray obj);
+		Q_INVOKABLE void addPowerConnection(QJsonArray obj);
 
+		void addRouteRing(QString layer, QString name, QString location, int widthmult, int spacemult);
+		void addPowerRing(QString layer, QString name, QString location, int widthmult);
+		void addPowerConnection(QString name, QString includeInstances,  QString location);
+		void addRouteConnection(QString path, QString includeInstances, QString layer, QString location, QString options);
+		
         virtual void place();
         virtual void route();
         virtual  void addAllPorts();

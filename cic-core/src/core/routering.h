@@ -1,7 +1,7 @@
 //====================================================================
 //        Copyright (c) 2016 Carsten Wulff Software, Norway 
 // ===================================================================
-// Created       : wulff at 2016-3-22
+// Created       : wulff at 2016-6-13
 // ===================================================================
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -16,50 +16,42 @@
 //   You should have received a copy of the GNU General Public License
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //====================================================================
+#ifndef CIC_CORE_ROUTE_RING_H
+#define CIC_CORE_ROUTE_RING_H
 
-#ifndef CIC_CORE_GRAPH_H
-#define CIC_CORE_GRAPH_H
-
+#include <QObject>
+#include "cell.h"
 #include "instance.h"
+#include "cut.h"
+#include "text.h"
+#include <iostream>
+
 
 namespace cIcCore{
 
-	class Graph{
+	class RouteRing : public Cell
+	{
 
+
+		Q_OBJECT
 
 	public:
-		QList<Port*> ports;
-		QString name;
-		void append(Port * p){
-			ports.append(p);
-		}
+
+		RouteRing();
+		RouteRing(QString layer,QString name, Rect* size,QString location,int xgrid, int ygrid, int width );
+		~RouteRing();
+
+		void addRoute(Rect* r, QString layer, QString options, QString location);
+		Rect* get(QString location);
 
 
-		QList<Rect*> getRectangles(QString excludeInstances,QString includeInstances, QString layer){
-			QList<Rect*> rects;
-			foreach(Port *p, ports){
-				Rect * r = p->parent();
-				if(r == NULL) continue;
-				if(!r->isInstance()) continue;
-				Instance *i = (Instance *) r;
-				
-				QString instanceName = i->instanceName();
+	protected:
+		Rect *bottom;
+		Rect *left;
+		Rect *right;
+		Rect *top;
 
-				if(excludeInstances != "" && (instanceName.contains(QRegularExpression(excludeInstances))
-											  || i->name().contains(QRegularExpression(excludeInstances)) )) continue;
 
-				if(includeInstances != "" && !i->name().contains(QRegularExpression(includeInstances))
-				   && !instanceName.contains(QRegularExpression(includeInstances))) continue;
-				Rect * rp = p->get(layer);
-				if(rp == NULL) rp = p->get();
-				if(rp != NULL) rects.append(rp);
-			}
-			return rects;
-		}
-
-	
-
-			
 	};
 
 };

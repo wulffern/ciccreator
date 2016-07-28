@@ -139,10 +139,10 @@ namespace cIcCore{
 		  QString cktNode= cktNodes[i];
 		  Port * cellPort = cell->getPort(cktNode);
 		  if(cellPort){
-		   //   instancePorts_[instNode] = cellPort;
-	//	   //   qDebug() << " Ports " << instNode;
-		   InstancePort * instPort = new InstancePort(instNode,cellPort,this);
-		   this->add(instPort);
+              //TODO: FIX INSTANCE PORTS, NEED TO ADD RECTANGLES FOR
+              //EACH CONNECTION
+              InstancePort * instPort = new InstancePort(instNode,cellPort,this);
+              this->add(instPort);
 		  }
 	  }
   }

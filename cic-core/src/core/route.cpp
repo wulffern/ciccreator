@@ -44,14 +44,18 @@ namespace cIcCore{
         track_ = 0;
         cuts_ = 2;
         vcuts_ = 1;
+		fillvcut_ = false;
+		fillhcut_ = false;
         antenna_ = false;
 		hasTrack_= false;
         start_rects_ = start;
         stop_rects_ = stop;
 		this->setName(net);
 
-
-        if(options.contains(QRegularExpression("antenna"))){ startOffset_ = HIGH ;}
+		//Decode options
+		if(options.contains(QRegularExpression("fillhcut"))){ fillhcut_ = true ;}
+		if(options.contains(QRegularExpression("fillvcut"))){ fillvcut_ = true ;}
+        if(options.contains(QRegularExpression("antenna"))){ antenna_ = true ;}
 
         //- Sort direction
         if(options.contains(QRegularExpression("onTopR"))){
@@ -104,6 +108,7 @@ namespace cIcCore{
         else{
             routeType_ = ROUTE_UNKNOWN;
         }
+
 
         //- Route
         if(options.contains(QRegularExpression("leftdownleftup"))){
@@ -227,26 +232,7 @@ namespace cIcCore{
         int width = rules->get(routeLayer_,"width");
         if(this->options_.contains(QRegularExpression("novert"))) return;
         if(this->options_.contains(QRegularExpression("antenna"))){
-//            QString next = t
-
-//            my $nextlayer = $self->rules->getNextLayer($self->rules->getNextLayer($layer));
-//            my $c1 = new Gds::GdsFixedContact($layer,$nextlayer,1,2);
-//            my $c2 = new Gds::GdsFixedContact($layer,$nextlayer,1,2);
-
-
-//            my $r ;
-//            if($self->height > $c1->height*2 + $mw*2){
-//              $r = new Gds::GdsRect($nextlayer,$xm,$self->yc,$mw,$self->height);
-//              $c1->moveTo($xm,$self->yc);
-//              $c2->moveTo($xm,$r->{y2} - $c2->height);
-//              $self->addChild($c1,$c2);
-//            }else{
-//              $r = new Gds::GdsRect($layer,$xm,$self->yc,$mw,$self->height);
-
-//            }
-
-//            $self->addChild($r);
-//            $self->portrect($r);
+			//TODO::Add antenna code
         }else{
 
             Rect * r = Rect::getVerticalRectangleFromTo(routeLayer_,x,this->y1(),this->y2(),width);
@@ -259,8 +245,11 @@ namespace cIcCore{
 
     void Route::routeVertical(){
 
+		
         if( !(start_rects_.count() > 0 && stop_rects_.count() > 0)) return;
 
+
+		
         Rect start_bound = Cell::calcBoundingRect(start_rects_);
         Rect stop_bound = Cell::calcBoundingRect(stop_rects_);
         int width = this->rules->get(routeLayer_,"width");
@@ -269,7 +258,14 @@ namespace cIcCore{
         int yc = start_bound.y1();
         int height = stop_bound.y2() - yc;
 
+		//Align cuts with center of start rectangle
+		foreach(Rect * r, this->children()){
 
+			if(r->isCut()){
+				r->moveCenter(start_bound.centerX(), r->centerY());
+			}
+		}
+		
         Rect *r = new Rect(routeLayer_,xc,yc,width,height);
         this->add(r);
 

@@ -50,6 +50,7 @@ namespace cIcCore{
 	  virtual void set(Rect * r );
 	  virtual Rect* get();
 	  virtual Rect* get(QString layer);
+      virtual QList<Rect*> getAll(QString layer);
 	  void add(Rect* r);
 
 	  bool isInstancePort(){

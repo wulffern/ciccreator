@@ -6,8 +6,6 @@ namespace cIcCore {
 
 
    QString Cut::makeName(QString layer1, QString layer2, int horizontal_cuts, int vertical_cuts) {
-
-
       return QString("cut_%1%2_%3x%4").arg(layer1,layer2,QString::number(horizontal_cuts),QString::number(vertical_cuts));
 
    }
@@ -92,6 +90,24 @@ Cut::~Cut()
 
   }
 
+    QList<Rect*> Cut::getVerticalFillCutsForRects(QString layer1, QList<Rect*> rects, int horizontal_cuts)
+    {
+
+        //TODO: Make fill rectangle
+        
+        
+        QList<Rect*> cuts;
+        foreach(Rect *r, rects){
+            if(r == NULL) continue;
+            if(layer1 == r->layer()) continue;
+            
+            
+
+        }
+        
+    }
+    
+
   QList<Rect*> Cut::getCutsForRects(QString layer1, QList<Rect*> rects, int horizontal_cuts,int vertical_cuts){
 
       QList<Rect*> cuts;
@@ -118,7 +134,7 @@ Cut::~Cut()
 
 Instance * Cut::getInstance(QString layer1, QString layer2, int horizontal_cuts, int vertical_cuts){
 
-  Instance *instance = 0;
+  InstanceCut *instance = 0;
   QString tag1 =   Cut::makeName(layer1,layer2,horizontal_cuts,vertical_cuts);
   QString tag2 = Cut::makeName(layer2,layer1,horizontal_cuts,vertical_cuts);
 
@@ -131,14 +147,12 @@ Instance * Cut::getInstance(QString layer1, QString layer2, int horizontal_cuts,
         c = new Cut(layer1,layer2,horizontal_cuts,vertical_cuts);
 
         cuts_[c->name()] = c;
-
-      //  qDebug() << c->name() << c->toString();
       }
 
     if(c->name() != ""){
 
 
-      instance= new Instance();
+      instance= new InstanceCut();
       instance->setCell(c);
       instance->setName(c->name());
       instance->updateBoundingRect();

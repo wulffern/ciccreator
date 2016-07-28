@@ -69,6 +69,8 @@ namespace cIcCore{
 		bool hasTrack_;
 		int cuts_;
 		int vcuts_;
+		bool fillvcut_;
+		bool fillhcut_;
 		bool antenna_;
 		QString options_;
 		QList<Rect*> start_rects_;

@@ -50,7 +50,7 @@
 #include "cic-core.h"
 #include <QPainter>
 #include <QPaintEvent>
-
+#include <QScrollArea>
 
 QT_BEGIN_NAMESPACE
 class QPaintEvent;
@@ -62,8 +62,7 @@ namespace cIcGui{
 enum Operation { NoTransformation, Translate, Rotate, Scale };
 
 
-class RenderArea : public QWidget
-{
+class RenderArea : public QWidget{
     Q_OBJECT
 
 public:
@@ -71,15 +70,22 @@ public:
     void setOperations(const QList<Operation> &operations);
     void setCell(Cell * c);
     void setZoom(float zoom);
+    void setRenderLevel(int level)
+    {
+        renderlevel_  = level;
+        this->update();
+    }
+    
+    
 
     QSize minimumSizeHint() const Q_DECL_OVERRIDE;
     QSize sizeHint() const Q_DECL_OVERRIDE;
 
-    void paintChildren(Cell* c, QPainter &painter);
+    void paintChildren(Cell* c, QPainter &painter,int level);
 public slots:
     void zoomIn();
     void zoomOut();
-
+    void fit();
 
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
@@ -103,13 +109,14 @@ private:
 	void nonInvertY(QPainter &painter);
     void drawShape(QPainter &painter);
     void transformPainter(QPainter &painter);
-    void drawCell(int x, int y, Cell * c, QPainter &painter);
+    void drawCell(int x, int y, Cell * c, QPainter &painter,int level);
 
     QList<Operation> operations;
     float _zoom;
     bool first;
 	QRect * viewRectangle;
     int xc;
+    int renderlevel_;
     int yc;
     Cell * c;
     QRect xBoundingRect;

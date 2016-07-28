@@ -59,6 +59,9 @@ namespace cIcGui{
         void layerClicked(QModelIndex index);
         void reloadFile();
 		void saveRenderImage();
+
+    protected:
+        bool eventFilter(QObject *obj, QEvent *event);
     private:
 
         RenderArea *originalRenderArea;

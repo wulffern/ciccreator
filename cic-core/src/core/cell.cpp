@@ -158,6 +158,11 @@ namespace cIcCore{
     QList<Port*> Cell::ports(){
         return  ports_.values();
     }
+
+	QMap<QString,QList<Port*>> Cell::allports(){
+		return allports_;
+	}	
+	
     Port * Cell::getPort(QString name){
 
         Port * p = NULL;
@@ -199,7 +204,8 @@ namespace cIcCore{
         if (child && !_children.contains(child)) {
             if(child->isPort()){
                 Port* p = (Port*) child;
-                ports_[p->name()] = p;
+                ports_[p->name()] = p;			   
+				allports_[p->name()].append(p);
             }
             if(child->isRoute()){
                 routes_.append(child);

@@ -88,7 +88,8 @@ namespace cIcCore{
         Port * getCellPort(QString name);
 
 		//! Get all ports on this cell
-	QList<Port *>  ports();
+        QList<Port *>  ports();
+        QMap<QString,QList<Port*>> allports();
 
 		//! Spice subcircuit object
         cIcSpice::Subckt * subckt(){return _subckt;}
@@ -167,8 +168,10 @@ namespace cIcCore{
                         //! List of all cells
 			static QMap<QString,Cell*> _allcells;
 
-			//! Ports in this cell
+        //! Ports in this cell
 		QMap<QString,Port*> ports_;
+
+        QMap<QString,QList<Port*>> allports_;
 
 		//! Named Rects in this cell
 		QMap<QString,Rect*> named_rects_;

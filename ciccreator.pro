@@ -17,7 +17,8 @@
 ##   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ######################################################################
 
-QMAKE_CFLAGS += $$(CFLAGS) --coverage -g
+QMAKE_CFLAGS += $$(CFLAGS)  -g
+CONFIG += c++11
 
 TEMPLATE=subdirs
   CONFIG += ordered

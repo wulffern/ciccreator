@@ -80,10 +80,26 @@ namespace cIcCore{
         return NULL;
     }
 
+    QList<Rect*> Port::getAll(QString layer)
+    {
+        QList<Rect*> rects;
+        foreach(Rect* r, alternates_rectangles_){
+            if(layer == "" && r->layer() == layer){
+                Rect * rp = r->getCopy();
+                rp->setNet(this->name());
+                rects.append(rp);
+            }
+        }
+        return rects;
+    }
+
+
     void Port::add(Rect *r){
         alternates_rectangles_.append(r);
 
     }
+
+
 
     void Port::fromJson(QJsonObject o){
         Rect::fromJson(o);
