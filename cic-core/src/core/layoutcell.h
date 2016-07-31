@@ -52,6 +52,13 @@ namespace cIcCore{
 		Q_INVOKABLE void addPowerRing(QJsonArray obj);
 		Q_INVOKABLE void addRouteConnection(QJsonArray obj);
 		Q_INVOKABLE void addPowerConnection(QJsonArray obj);
+        Q_INVOKABLE void trimRouteRing(QJsonArray obj);
+        Q_INVOKABLE void addRectangle(QJsonArray obj);
+
+
+        void addRectangle(QString layer, int x1, int y1, int width, int height, QString angle);
+        
+        void trimRouteRing(QString path, QString location,QString whichEndToTrim);
 
 		void addRouteRing(QString layer, QString name, QString location, int widthmult, int spacemult);
 		void addPowerRing(QString layer, QString name, QString location, int widthmult);

@@ -347,6 +347,43 @@ namespace cIcCore{
         }
     }
 
+    void LayoutCell::addRectangle(QJsonArray obj)
+    {
+        if(obj.size() < 4){
+            qDebug() << "Error: addRectangle must contain at least 4 element\n";
+            return;
+        }
+        QString layer = obj[0].toString();
+        int x1 = obj[1].toInt();
+        int y1 = obj[2].toInt();
+        int width = obj[3].toInt();
+        
+        int height = obj[4].toInt();
+        QString angle = (obj.size() > 4) ? obj[5].toString(): "";
+        this->addRectangle(layer,x1,y1,width,height,angle);
+        
+    }
+
+    void LayoutCell::addRectangle(QString layer, int x1, int y1, int width, int height,QString angle)
+    {
+        Rect* r = new Rect(layer,x1,y1,width,height);
+        if(angle == "R90"){
+            r->rotate(90);
+        }else if(angle == "R180"){
+            r->rotate(90);
+            r->rotate(90);
+        }else if(angle == "R270"){
+            r->rotate(90);
+            r->rotate(90);
+            r->rotate(90);
+        }
+
+        this->add(r);
+        
+    }
+    
+
+    
     void LayoutCell::addPowerRing(QJsonArray obj)
     {
         if(obj.size() < 3){
@@ -421,34 +458,33 @@ namespace cIcCore{
 
     void LayoutCell::addPowerConnection(QString name, QString includeInstances, QString location)
     {
-		if(!nodeGraph_.contains(name)) return;
-		if(!named_rects_.contains("power_" + name)) return;
-		
-		Graph* g  = nodeGraph_[name];
-		QList<Rect*>  rects = g->getRectangles("",includeInstances,"");
-		RouteRing* rr = (RouteRing*) named_rects_["power_" + name];
-		Rect* rrect = rr->get(location);
-		foreach(Rect* r, rects){
-			Instance* ct = Cut::getInstance(r->layer(),rrect->layer(),2,2);
-			Rect* rr = r->getCopy();
-			if (location == "top") {
-				rr->setTop(rrect->y2());
-				ct->moveTo(rr->x1(),rrect->y1());
-			} else if (location == "bottom") {
-				rr->setBottom(rrect->y1());
-				ct->moveTo(rr->x1(),rrect->y1());
-			} else if (location ==  "left") {
-				rr->setLeft(rrect->x1());
-				ct->moveTo(rrect->x1(),rr->y1());
-			} else if (location ==  "right") {
-				rr->setRight(rrect->x2());
-				ct->moveTo(rrect->x1(),rr->y1());
-			}
-			this->add(rr);
-			this->add(ct);
-            }
+        if(!nodeGraph_.contains(name)) return;
+        if(!named_rects_.contains("power_" + name)) return;
 
-	
+        Graph* g  = nodeGraph_[name];
+        QList<Rect*>  rects = g->getRectangles("",includeInstances,"");
+        RouteRing* routering = (RouteRing*) named_rects_["power_" + name];
+        Rect* rrect = routering->get(location);
+        foreach(Rect* r, rects){
+            Instance* ct = Cut::getInstance(r->layer(),rrect->layer(),2,2);
+            Rect* rr = r->getCopy();
+            if (location == "top") {
+                rr->setTop(rrect->y2());
+                ct->moveTo(rr->x1(),rrect->y1());
+            } else if (location == "bottom") {
+                rr->setBottom(rrect->y1());
+                ct->moveTo(rr->x1(),rrect->y1());
+            } else if (location ==  "left") {
+                rr->setLeft(rrect->x1());
+                ct->moveTo(rrect->x1(),rr->y1());
+            } else if (location ==  "right") {
+                rr->setRight(rrect->x2());
+                ct->moveTo(rrect->x1(),rr->y1());
+            }
+            routering->add(rr);
+            routering->add(ct);
+        }
+
 
     }
 
@@ -495,14 +531,39 @@ namespace cIcCore{
             QList<Rect*> empty;
             foreach(Rect* r, rects){
                 QList<Rect*> stop;
-                stop.append(rr->get(location));
                 stop.append(r);
+                stop.append(rr->get(location));
                 Route* ro = new Route(node,layer,empty,stop,options,routeType);
-                this->add(ro);
+                routes_.append(ro);
+                rr->add(ro);
             }
 
         }
     }
+
+    void LayoutCell::trimRouteRing(QJsonArray obj)
+    {
+
+        if(obj.size() < 3){
+            qDebug() << "Error: trimRouteRings must contain at least 3 element\n";
+            return;
+        }
+        QString path = obj[0].toString();
+        QString location = obj[1].toString();
+        QString whichEndToTrim = obj[2].toString();
+        this->trimRouteRing(path,location,whichEndToTrim);
+    }
+    void LayoutCell::trimRouteRing(QString path, QString location,QString whichEndToTrim)
+    {
+        QList<Rect*> rects = this->getChildren("cIcCore::RouteRing");
+        for(auto* r:rects){
+            RouteRing* rr = (RouteRing*) r;
+            if(rr->name().contains(QRegularExpression(path))){
+                rr->trimRouteRing(location,whichEndToTrim);
+            }
+        }
+    }
+
 
 
 
@@ -594,7 +655,6 @@ namespace cIcCore{
     }
 
     void LayoutCell::route(){
-
         foreach(Rect *r, routes_){
             if(r->isRoute()){
                 Route * route = (Route *) r;

@@ -254,9 +254,17 @@ namespace cIcCore{
         Rect stop_bound = Cell::calcBoundingRect(stop_rects_);
         int width = this->rules->get(routeLayer_,"width");
 
-        int xc = start_bound.centerX() - width/2;
         int yc = start_bound.y1();
-        int height = stop_bound.y2() - yc;
+        int height = stop_bound.y2() - yc;        
+        if(start_bound.y1() > stop_bound.y1()){
+            yc = stop_bound.y1();
+            height = start_bound.y2() - yc;
+            
+        }
+        int xc = start_bound.centerX() - width/2;
+
+
+
 
 		//Align cuts with center of start rectangle
 		foreach(Rect * r, this->children()){

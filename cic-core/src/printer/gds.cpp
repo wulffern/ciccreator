@@ -101,6 +101,9 @@ namespace cIcPrinter{
     //                          // and tilted at some weird angle
     x[0] =  toNano(o->x1());
     y[0] = toNano(o->y1());
+    if(inst->angle() == "R90"){
+        x[0] += toNano(inst->cell()->height() - inst->cell()->y1());
+    }
     gds_write_xy( fd, x, y, 1 );             // at these coordinates (database units)
     gds_write_endel( fd );                   // end of element
   }

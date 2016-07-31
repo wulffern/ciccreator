@@ -188,6 +188,26 @@ namespace cIcCore{
     //-------------------------------------------------------------
     // Children handling
     //-------------------------------------------------------------
+
+    QList<Rect*> Cell::getChildren(QString type)
+    {
+
+
+        if(children_by_type.contains(type)){
+            return children_by_type[type];
+        }else{
+
+            qDebug() << "Error: Could not find child type " << type << " in " << children_by_type.keys();
+            QList<Rect*> r;
+            
+            return r;
+            
+        }
+        
+        
+    }
+    
+    
     void Cell::add(QList<Rect*> children){
         foreach(Rect * r, children){
             this->add(r);
@@ -202,6 +222,16 @@ namespace cIcCore{
         }
 
         if (child && !_children.contains(child)) {
+
+            QString type = child->metaObject()->className();
+            
+            if(!children_by_type.contains(type)){
+                QList<Rect*> a;
+                children_by_type[type] = a;
+            }
+
+            children_by_type[type].append(child);
+
             if(child->isPort()){
                 Port* p = (Port*) child;
                 ports_[p->name()] = p;			   
@@ -303,8 +333,6 @@ namespace cIcCore{
         if(children.count() == 0){
             x1 = y1 = x2 = y2 = 0;
         }
-
-
         foreach(Rect* cr, children) {
 
             int cx1 = cr->x1();
@@ -312,6 +340,7 @@ namespace cIcCore{
             int cy1 = cr->y1();
             int cy2 = cr->y2();
 
+            
             if (cx1 < x1) {
                 x1 = cx1;
             }
@@ -326,6 +355,7 @@ namespace cIcCore{
                 y2 = cy2;
 
             }
+            
         }
         Rect r;
 

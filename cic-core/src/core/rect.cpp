@@ -188,22 +188,28 @@ namespace cIcCore{
     void Rect::rotate(int i)  {
         Point p1(x1_,y1_);
         Point p2(x2_,y2_);
+
+        
         p1.rotate(0,0,i);
         p2.rotate(0,0,i);
 
       if(p2.x < p1.x){
-          p1.x = p2.swapX(p1.x);
+          int xx = p1.x;
+          p1.x = p2.x;
+          p2.x = xx;
         }
 
       if(p2.y < p1.y){
-          p1.y = p2.swapY(p1.y);
+          int yy = p1.y;
+          p1.y = p2.y;
+          p2.y = yy;
         }
 
       x1_ = p1.x;
       x2_ = p2.x;
       y1_ = p1.y;
       y2_ = p2.y;
-        emit updated();
+      emit updated();
     }
 
 

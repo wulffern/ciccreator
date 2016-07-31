@@ -42,6 +42,8 @@ namespace cIcCore{
 			size->adjust(-xgrid,0,0,0);
 		}
 
+        this->setName(name);
+
 		int x1 = size->x1();
 		int y1 = size->y1();
 		int x2 = size->x2();
@@ -85,11 +87,44 @@ namespace cIcCore{
 		}else if(location == "left"){
 			return left->getCopy();
 		}
-		
-		
 	}
 
+    Rect* RouteRing::getPointer(QString location){
+		if(location == "bottom"){
+			return bottom;
+		}else if(location == "top"){
+			return top;
+		}else if(location == "right"){
+			return right;
+		}else if(location == "left"){
+			return left;
+		}
+	}
 
+    void RouteRing::trimRouteRing(QString location,QString whichEndToTrim)
+    {
+
+        QList<Rect*> cuts = this->getChildren("cIcCore::Route");
+        Rect bounds = Cell::calcBoundingRect(cuts);
+        
+        Rect* r = this->getPointer(location);
+        if(whichEndToTrim.contains("l")){
+            r->setLeft(bounds.x1());
+        }
+
+        if(whichEndToTrim.contains("t")){
+            r->setTop(bounds.y2());
+        }
+
+        if(whichEndToTrim.contains("r")){
+            r->setRight(bounds.x2());
+        }
+
+        if(whichEndToTrim.contains("b")){
+            r->setBottom(bounds.y1());
+        }
+    }
+    
 
 
 

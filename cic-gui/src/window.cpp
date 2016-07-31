@@ -192,6 +192,11 @@ namespace cIcGui{
 
             Cell * c = designs->getAllCells().at(index);
             originalRenderArea->setCell(c);
+            
+            Rect* r = originalRenderArea->getCellRect();
+            
+            scroll->ensureVisible(r->x1(),r->y1() );
+            
         }
 
 

@@ -40,9 +40,11 @@ namespace cIcCore{
 		RouteRing();
 		RouteRing(QString layer,QString name, Rect* size,QString location,int xgrid, int ygrid, int width );
 		~RouteRing();
-
 		void addRoute(Rect* r, QString layer, QString options, QString location);
+        void trimRouteRing(QString location,QString whichEndToTrim);
+        
 		Rect* get(QString location);
+        Rect* getPointer(QString location);
 
 
 	protected:

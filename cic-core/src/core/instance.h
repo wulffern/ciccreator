@@ -27,45 +27,47 @@
 
 namespace cIcCore{
 
-  class Instance : public Cell
-  {
+    class Instance : public Cell
+    {
 
-    Q_OBJECT
+        Q_OBJECT
 
-  public:
-    Instance();
-    Instance(const Instance&);
-    ~Instance();
-    Cell * cell(){return _cell;}
-	  QString instanceName(){return instanceName_;}
-    virtual Rect calcBoundingRect();
+    public:
+        Instance();
+        Instance(const Instance&);
+        ~Instance();
+        Cell * cell(){return _cell;}
+        QString instanceName(){return instanceName_;}
+        virtual Rect calcBoundingRect();
+        virtual void updateBoundingRect();
+        
 
-          QString angle(){return angle_;}
-          void setAngle(QString angle){angle_ = angle;}
-	  // Cell * addInstance(QString cell);
-    static Instance * getInstance(QString cell);
-    void setCell(Cell*cell){_cell = cell;}
-    cIcSpice::SubcktInstance *subcktInstance(){return ckt_inst_;}
-    void setSubcktInstance(cIcSpice::SubcktInstance *inst);
+        QString angle(){return angle_;}
+        void setAngle(QString angle){angle_ = angle; this->updateBoundingRect();}
+        // Cell * addInstance(QString cell);
+        static Instance * getInstance(QString cell);
+        void setCell(Cell*cell){_cell = cell;}
+        cIcSpice::SubcktInstance *subcktInstance(){return ckt_inst_;}
+        void setSubcktInstance(cIcSpice::SubcktInstance *inst);
 
-   QList<Rect*> findRectanglesByRegex(QString regex,QString layer);
-   QList<Rect*> findRectanglesByNode(QString node, QString filterChild);
-    QString toString();
+        QList<Rect*> findRectanglesByRegex(QString regex,QString layer);
+        QList<Rect*> findRectanglesByNode(QString node, QString filterChild);
+        QString toString();
 
-	Rect* getRect(QString layer);
+        Rect* getRect(QString layer);
 
-    virtual QJsonObject toJson();
-    void fromJson(QJsonObject o);
-    void setCell(QString cell);
-	  
-  private:
-    Cell * _cell;
-    cIcSpice::SubcktInstance * ckt_inst_;
-    QMap<QString,Port*> instancePorts_;
-    QString angle_;
+        virtual QJsonObject toJson();
+        void fromJson(QJsonObject o);
+        void setCell(QString cell);
+
+    private:
+        Cell * _cell;
+        cIcSpice::SubcktInstance * ckt_inst_;
+        QMap<QString,Port*> instancePorts_;
+        QString angle_;
 
 
-  };
+    };
 
 }
 

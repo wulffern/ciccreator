@@ -25,11 +25,11 @@ void LayoutRotateCell::place(){
         //The chain of events is important here, ports get defined in the setSubckInstance
         Instance * inst = Instance::getInstance(ckt_inst->subcktName());
         inst->setSubcktInstance(ckt_inst);
+        inst->moveTo(0,0);
         inst->setAngle(rotateAngle_);
+        inst->updateBoundingRect();
+        
         this->add(inst);
-        if(rotateAngle_ == "R90"){
-          this->moveTo(-inst->x1(),0);
-        }
     }
     this->updateBoundingRect();
 

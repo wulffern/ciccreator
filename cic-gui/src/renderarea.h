@@ -75,7 +75,8 @@ public:
         renderlevel_  = level;
         this->update();
     }
-    
+
+    Rect* getCellRect();
     
 
     QSize minimumSizeHint() const Q_DECL_OVERRIDE;
@@ -111,6 +112,10 @@ private:
     void transformPainter(QPainter &painter);
     void drawCell(int x, int y, Cell * c, QPainter &painter,int level);
 
+
+
+
+    
     QList<Operation> operations;
     float _zoom;
     bool first;

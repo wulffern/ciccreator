@@ -74,22 +74,23 @@ namespace cIcGui{
         this->c = c;
 
         first = true;
-        this->fit();
+        this->update();
+        
 
     }
 
 
     QSize RenderArea::minimumSizeHint() const
     {
-        return QSize(2000 , 1000);
+        return QSize(4000 , 4000);
     }
 
 
 
     QSize RenderArea::sizeHint() const
     {
-        int w = 2000;
-        int h = 1000;
+        int w = 4000;
+        int h = 4000;
         if(!c)
             return QSize(w,h);
 
@@ -117,9 +118,6 @@ namespace cIcGui{
         int w1 = this->c->width()*1*_zoom;
         int h1 = this->c->height()*1*_zoom;
 
-//        QMatrix m;
-//        m.translate(0,  + h1 );
-//        m.scale( 1, -1 );
         painter.translate(0,+h1);
         painter.scale(1,-1);
 //        painter.setMatrix( m );
@@ -129,19 +127,26 @@ namespace cIcGui{
     void RenderArea::nonInvertY(QPainter &painter){
         int w1 = this->c->width()*1*_zoom;
         int h1 = this->c->height()*1*_zoom;
-
         painter.scale(1,-1);
         painter.translate(0,-h1);
-
-//        QMatrix m;
-
-        //      m.scale( 1, -1 );
-        //m.translate(0,   -h1 );
-        //painter.setMatrix( m );
 
     }
 
 
+    Rect* RenderArea::getCellRect()
+    {
+        if(c){
+            int w1 = this->c->width()*1*_zoom;
+            int h1 = this->c->height()*1*_zoom;
+            int x1 = this->width()/2-w1/2;
+            int y1 = this->height()/2-h1/2;
+            return new Rect("PR",x1,y1,w1,h1);
+        }
+        return new Rect("PR", this->width()/2,this->height()/2,10,10);
+    }
+
+    
+    
 
     void RenderArea::paintEvent(QPaintEvent *event)
     {
@@ -150,9 +155,18 @@ namespace cIcGui{
         painter.fillRect(event->rect(), QBrush(Qt::white));
         painter.save();
 
+        int w1 = this->c->width()*1*_zoom;
+        int h1 = this->c->height()*1*_zoom;
+
+        
+        painter.translate(this->width()/2-w1/2,this->height()/2-h1/2);
         invertY(painter);
+        
         transformPainter(painter);
-        drawShape(painter);
+
+        if(this->c != 0){
+            this->drawCell(0,0,this->c,painter,0);
+        }
 
         painter.restore();
     }
@@ -172,8 +186,13 @@ namespace cIcGui{
                 QTransform old_trans = painter.transform();
                 QTransform trans;
                 //qDebug() << inst->angle();
+                int x = inst->x1();
+                int y = inst->y1();
+                
+                
                 if(inst->angle() == "R90"){
                     trans.rotate(90);
+                    y -= inst->height();
                 }else if(inst->angle() == "R180"){
                     trans.rotate(180);
                 }else if(inst->angle() == "R270"){
@@ -184,7 +203,7 @@ namespace cIcGui{
                     trans.scale(1,-1);
                 }
                 painter.setTransform(trans,true);
-                this->drawCell(inst->x1(),inst->y1(),inst->cell(), painter,level+1);
+                this->drawCell(x,y,inst->cell(), painter,level+1);
                 painter.setTransform(old_trans,false);
             }else if(r->isText()){
                 if(c == this->c){
@@ -292,10 +311,7 @@ namespace cIcGui{
     void RenderArea::drawShape(QPainter &painter)
     {
 
-        if(this->c != 0){
-
-            this->drawCell(-this->c->x1(),0,this->c,painter,0);
-        }
+        
 
         //painter.fillPath(shape, Qt::blue);
     }
@@ -305,10 +321,7 @@ namespace cIcGui{
 
         if(!c)
             return;
-//      painter.translate(c->width(),c->height());
-//      painter.scale( 1, -1 );
         painter.scale(_zoom,_zoom);
-//        painter.translate(xc,yc);
         for (int i = 0; i < operations.size(); ++i) {
             switch (operations[i]) {
             case Translate:

@@ -34,9 +34,14 @@ public:
     }
 
     void rotate(int org_x,int org_y, int angle){
-      double angle_ = angle * 4 * asin(1) / 180.0;
-      x = cos(angle_)*(x - org_x) - sin(angle_)*(y - org_y) + org_x;
-      y = sin(angle_) *(x - org_x) + cos(angle_) * (y- org_y) + org_y;
+      double angle_ = angle * 2 * asin(1) / 180.0;
+      int x1,y1;
+      
+      x1 = cos(angle_)*(x - org_x) - sin(angle_)*(y - org_y) + org_x;
+      y1 = sin(angle_) *(x - org_x) + cos(angle_) * (y- org_y) + org_y;
+
+      x = x1;
+      y = y1;
     }
 
     void translate(int dx, int dy){
@@ -68,6 +73,14 @@ public:
       y = y2;
       return y;
     }
+
+    QString toString()
+    {
+        QString s = "x=%1, y=%2";
+        return s.arg(x).arg(y);
+
+    }
+    
 
 
     bool operator==(Point p ){

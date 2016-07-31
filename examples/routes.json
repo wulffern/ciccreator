@@ -301,6 +301,16 @@
 		  "beforeRoute": [
 			  {"addDirectedRoutes" : [["M2","A","XA1:S-|--XB2:S","4vcuts"]]}
 		  ]
+		},
+		{ "name" : "Rotations",
+		  "beforeRoute": [
+			  {"addRectangles" : [
+				  ["M1",0,0,10000,20000,""],
+				  ["M2",0,0,10000,20000,"R90"],
+				  ["M3",0,0,10000,20000,"R180"],
+				  ["M4",0,0,10000,20000,"R270"]
+			  ]}
+		  ]
 		}
 
 
