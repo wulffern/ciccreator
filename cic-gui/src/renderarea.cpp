@@ -75,7 +75,7 @@ namespace cIcGui{
 
         first = true;
         this->update();
-        
+
 
     }
 
@@ -140,13 +140,13 @@ namespace cIcGui{
             int h1 = this->c->height()*1*_zoom;
             int x1 = this->width()/2-w1/2;
             int y1 = this->height()/2-h1/2;
-            return new Rect("PR",x1,y1,w1,h1);
+            return new Rect("PR",x1,y1,10,10);
         }
         return new Rect("PR", this->width()/2,this->height()/2,10,10);
     }
 
-    
-    
+
+
 
     void RenderArea::paintEvent(QPaintEvent *event)
     {
@@ -158,10 +158,19 @@ namespace cIcGui{
         int w1 = this->c->width()*1*_zoom;
         int h1 = this->c->height()*1*_zoom;
 
+        int h2 = this->height()/2;
+        int w2 = this->width()/2;
         
-        painter.translate(this->width()/2-w1/2,this->height()/2-h1/2);
+
+        painter.translate(w2-w1/2,h2-h1/2);
         invertY(painter);
-        
+
+        //Draw cross in origo
+        painter.setPen(QPen(QColor("gray"),0.5,Qt::DotLine));
+        painter.setBrush(QBrush(Qt::NoBrush));
+        painter.drawLine(-w2,0,w2,0);
+        painter.drawLine(0,-h2,0,h2);
+
         transformPainter(painter);
 
         if(this->c != 0){
@@ -183,16 +192,11 @@ namespace cIcGui{
             if(r->isInstance() && renderlevel_ >= level){
                 Instance *  inst= (Instance *) r;
 
-                QTransform old_trans = painter.transform();
+
                 QTransform trans;
-                //qDebug() << inst->angle();
-                int x = inst->x1();
-                int y = inst->y1();
-                
-                
+
                 if(inst->angle() == "R90"){
                     trans.rotate(90);
-                    y -= inst->height();
                 }else if(inst->angle() == "R180"){
                     trans.rotate(180);
                 }else if(inst->angle() == "R270"){
@@ -202,15 +206,27 @@ namespace cIcGui{
                 }else if(inst->angle() == "MY"){
                     trans.scale(1,-1);
                 }
+
+                //Draw instance boundary
+//                painter.setPen(QPen(QColor("red"),0.5/_zoom));
+//                painter.setBrush(QBrush(Qt::NoBrush));
+//                painter.drawRect(inst->x1(),inst->y1(),inst->width(),inst->height());
+
+                Point* p = inst->getCellPoint();
+                painter.translate(p->x,p->y);
+                //Paint with rotated transform
+                QTransform old_trans = painter.transform();
                 painter.setTransform(trans,true);
-                this->drawCell(x,y,inst->cell(), painter,level+1);
+                this->drawCell(0,0,inst->cell(), painter,level+1);
                 painter.setTransform(old_trans,false);
+                painter.translate(-p->x,-p->y);
+
             }else if(r->isText()){
                 if(c == this->c){
                     Text * p = (Text *) r;
                     QFont font=painter.font() ;
                     font.setFamily("Arial");
-                    font.setPointSize (500 );
+                    font.setPointSize (10/_zoom );
                     Layer *l = rules->getLayer(p->layer());
                     if(!l->visible){
                         continue;
@@ -220,13 +236,8 @@ namespace cIcGui{
                     painter.setPen(QPen(color,Qt::SolidLine));
                     painter.setFont(font);
 
-
                     painter.scale(1,-1);
-//                  painter.translate(0,-this->c->height());
-
                     painter.drawText(p->x1(),-p->y1(),p->name());
-
-//                  painter.translate(0,+this->c->height());
                     painter.scale(1,-1);
 
                 }
@@ -237,7 +248,7 @@ namespace cIcGui{
                     QFont font=painter.font() ;
                     font.setFamily("Arial");
 
-                    font.setPointSize (500 );
+                    font.setPointSize (10/_zoom );
                     Layer *l = rules->getLayer(p->pinLayer());
                     if(!l->visible){
                         continue;
@@ -259,6 +270,13 @@ namespace cIcGui{
 
             }else if(r->isCell() && renderlevel_ >= level){
                 Cell * childcell = (Cell*)r;
+                
+
+                
+                //painter.setPen(QPen(QColor("black"),0.5/_zoom));
+                //painter.setBrush(QBrush(Qt::NoBrush));
+                //painter.drawRect(c->x1(),c->y1(),c->width(),c->height());
+
                 this->paintChildren(childcell,painter,level);
             }
             else{
@@ -297,6 +315,7 @@ namespace cIcGui{
 
         if(c==NULL){return;}
         painter.translate(x,y);
+        //Draw instance boundary
         painter.setPen(QPen(QColor("black"),0.5/_zoom));
         painter.setBrush(QBrush(Qt::NoBrush));
         painter.drawRect(c->x1(),c->y1(),c->width(),c->height());
@@ -311,7 +330,7 @@ namespace cIcGui{
     void RenderArea::drawShape(QPainter &painter)
     {
 
-        
+
 
         //painter.fillPath(shape, Qt::blue);
     }

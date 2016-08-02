@@ -69,12 +69,18 @@ namespace cIcCore{
         //! Center this cell, and all children on ax and ay
         Q_INVOKABLE void moveCenter(int ax, int ay);
 
+        //! Center this cell, and all children on ax and ay
+        Q_INVOKABLE void boundaryIgnoreRouting(QJsonValue obj);
+        void setBoundaryIgnoreRouting(bool bir);
+        bool boundaryIgnoreRouting();
+        
         //! Mirror this cell, and all children around horizontal center point (basically flip horizontal)
         Q_INVOKABLE void mirrorCenterX();
 
         //! Calculate the extent of this cell. Should be overriden by children
         virtual Rect calcBoundingRect();
         static Rect calcBoundingRect(QList<Rect*> children);
+        static Rect calcBoundingRect(QList<Rect*> children,bool ignoreBoundaryRouting);
 
         //! Convert cell to a human readable format, useful for debug
         QString toString();
@@ -152,7 +158,7 @@ namespace cIcCore{
             return c;
         }
 
-
+  
 
         //! Find all rectangles by regular expression
         virtual QList<Rect *> findRectanglesByRegex(QString regex,QString layer);
@@ -197,6 +203,8 @@ namespace cIcCore{
 
     protected:
         QString instanceName_;
+        bool boundaryIgnoreRouting_;
+        
 
     private:
         //! Cell name

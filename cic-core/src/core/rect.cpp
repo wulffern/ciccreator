@@ -79,80 +79,80 @@ namespace cIcCore{
 
     QList<Rect *> Rect::sortLeftOnTop(QList<Rect *> rects)
     {
-      if(rects.count() < 2){return rects;}
-      int index = 0;
-      int count = 0;
-      int x = std::numeric_limits<int>::max();
-      foreach(Rect *r, rects){
-          if(r->x1() < x){
-              index = count;
-			  x = r->x1();
+        if(rects.count() < 2){return rects;}
+        int index = 0;
+        int count = 0;
+        int x = std::numeric_limits<int>::max();
+        foreach(Rect *r, rects){
+            if(r->x1() < x){
+                index = count;
+                x = r->x1();
             }
-          count++;
+            count++;
         }
 
-      Rect * a = rects[0];
-      rects[0] = rects[index];
-      rects[index]  = a;
-      return rects;
+        Rect * a = rects[0];
+        rects[0] = rects[index];
+        rects[index]  = a;
+        return rects;
     }
 
     QList<Rect *> Rect::sortRightOnTop(QList<Rect *> rects)
     {
-      if(rects.count() < 2){return rects;}
-      int index = 0;
-      int count = 0;
-      int x = -std::numeric_limits<int>::max();
-      foreach(Rect *r, rects){
-          if(r->x2() > x){
-              index = count;
-			  x = r->x2();
+        if(rects.count() < 2){return rects;}
+        int index = 0;
+        int count = 0;
+        int x = -std::numeric_limits<int>::max();
+        foreach(Rect *r, rects){
+            if(r->x2() > x){
+                index = count;
+                x = r->x2();
             }
-          count++;
+            count++;
         }
-      Rect * a = rects[0];
-      rects[0] = rects[index];
-      rects[index]  = a;
-      return rects;
+        Rect * a = rects[0];
+        rects[0] = rects[index];
+        rects[index]  = a;
+        return rects;
     }
 
     QList<Rect *> Rect::sortBottomOnTop(QList<Rect *> rects)
     {
-      if(rects.count() < 2){return rects;}
-      int index = 0;
-      int count = 0;
-      int y = std::numeric_limits<int>::max();
-      foreach(Rect *r, rects){
-          if(r->y1() < y){
-              index = count;
-			  y = r->y1();
+        if(rects.count() < 2){return rects;}
+        int index = 0;
+        int count = 0;
+        int y = std::numeric_limits<int>::max();
+        foreach(Rect *r, rects){
+            if(r->y1() < y){
+                index = count;
+                y = r->y1();
             }
-          count++;
+            count++;
         }
-      Rect * a = rects[0];
-      rects[0] = rects[index];
-      rects[index]  = a;
-      return rects;
+        Rect * a = rects[0];
+        rects[0] = rects[index];
+        rects[index]  = a;
+        return rects;
     }
 
     QList<Rect *> Rect::sortTopOnTop(QList<Rect *> rects)
     {
-      if(rects.count() < 2){return rects;}
-      int index = 0;
-      int count = 0;
-      int y = -std::numeric_limits<int>::max();
-      foreach(Rect *r, rects){
-          if(r->y2() > y){
-              index = count;
-			  y = r->y2();
+        if(rects.count() < 2){return rects;}
+        int index = 0;
+        int count = 0;
+        int y = -std::numeric_limits<int>::max();
+        foreach(Rect *r, rects){
+            if(r->y2() > y){
+                index = count;
+                y = r->y2();
             }
-          count++;
+            count++;
         }
 
-      Rect * a = rects[0];
-      rects[0] = rects[index];
-      rects[index]  = a;
-      return rects;
+        Rect * a = rects[0];
+        rects[0] = rects[index];
+        rects[index]  = a;
+        return rects;
     }
 
     void Rect::setLayer(QString layer){  _layer  = layer;}
@@ -168,15 +168,15 @@ namespace cIcCore{
 
     Rect* Rect::getCopy(){
         Rect* r =  new Rect(_layer, x1() , y1(), width(), height() );
-		r->setNet(this->net());
-		return r;
+        r->setNet(this->net());
+        return r;
     }
-	
+
 
     Rect* Rect::getCopy(const QString layer){
-		Rect * r = new Rect(layer, x1(), y1(), width(), height() );
-		r->setNet(this->net());
-		return r;
+        Rect * r = new Rect(layer, x1(), y1(), width(), height() );
+        r->setNet(this->net());
+        return r;
     }
 
     int Rect::snap(int x){
@@ -189,27 +189,27 @@ namespace cIcCore{
         Point p1(x1_,y1_);
         Point p2(x2_,y2_);
 
-        
+
         p1.rotate(0,0,i);
         p2.rotate(0,0,i);
 
-      if(p2.x < p1.x){
-          int xx = p1.x;
-          p1.x = p2.x;
-          p2.x = xx;
+        if(p2.x < p1.x){
+            int xx = p1.x;
+            p1.x = p2.x;
+            p2.x = xx;
         }
 
-      if(p2.y < p1.y){
-          int yy = p1.y;
-          p1.y = p2.y;
-          p2.y = yy;
+        if(p2.y < p1.y){
+            int yy = p1.y;
+            p1.y = p2.y;
+            p2.y = yy;
         }
 
-      x1_ = p1.x;
-      x2_ = p2.x;
-      y1_ = p1.y;
-      y2_ = p2.y;
-      emit updated();
+        x1_ = p1.x;
+        x2_ = p2.x;
+        y1_ = p1.y;
+        y2_ = p2.y;
+        emit updated();
     }
 
 
@@ -283,27 +283,27 @@ namespace cIcCore{
 
 
     QString Rect::toString(){
-      return QString("%6: layer=%1 X=%2 Y=%3 W=%4 H=%5").arg(layer()).arg(left()).arg(bottom()).arg(width()).arg(height()).arg(this->metaObject()->className());
+        return QString("%6: layer=%1 X=%2 Y=%3 W=%4 H=%5").arg(layer()).arg(left()).arg(bottom()).arg(width()).arg(height()).arg(this->metaObject()->className());
     }
 
     Rect *Rect::getHorizontalRectangleFromTo(QString layer, int x1, int x2, int y, int height)
     {
-      Rect *r;
-      if(x1 > x2){
-          r = new Rect(layer,x2,y,x1-x2,height);
+        Rect *r;
+        if(x1 > x2){
+            r = new Rect(layer,x2,y,x1-x2,height);
         }else{
-          r = new Rect(layer,x1,y,x2-x1,height);
+            r = new Rect(layer,x1,y,x2-x1,height);
         }
         return r;
     }
 
     Rect *Rect::getVerticalRectangleFromTo(QString layer, int x, int y1, int y2, int width)
     {
-      Rect *r;
-      if(y1 > y2){
-          r = new Rect(layer,x,y2,width,y1-y2);
+        Rect *r;
+        if(y1 > y2){
+            r = new Rect(layer,x,y2,width,y1-y2);
         }else{
-          r = new Rect(layer,x,y1,width,y2-y1);
+            r = new Rect(layer,x,y1,width,y2-y1);
         }
         return r;
 
@@ -311,22 +311,90 @@ namespace cIcCore{
 
 
     void Rect::fromJson(QJsonObject o){
-      x1_ = o["x1"].toInt();
-      x2_ = o["x2"].toInt();
-      y1_ = o["y1"].toInt();
-      y2_ = o["y2"].toInt();
-      _layer = o["layer"].toString();
+        x1_ = o["x1"].toInt();
+        x2_ = o["x2"].toInt();
+        y1_ = o["y1"].toInt();
+        y2_ = o["y2"].toInt();
+        _layer = o["layer"].toString();
     }
 
     QJsonObject Rect::toJson(){
-      QJsonObject o;
-      o["class"] = "Rect";
-      o["x1"] = x1_;
-      o["y1"] = y1_;
-      o["x2"] = x2_;
-      o["y2"] = y2_;
-      o["layer"] = _layer;
-      return o;
+        QJsonObject o;
+        o["class"] = "Rect";
+        o["x1"] = x1_;
+        o["y1"] = y1_;
+        o["x2"] = x2_;
+        o["y2"] = y2_;
+        o["layer"] = _layer;
+        return o;
+    }
+
+    //! Check if this is an cIcCore::Instance object
+    bool Rect::isInstance(){
+        if(this->metaObject()->className() == "cIcCore::Instance"){
+            return true;
+        }else if(this->inherits("cIcCore::Instance")){
+            //
+            return true;
+        }
+        return false;
+    }
+
+    //! Check if this is a cIcCore::Routeobject
+    bool Rect::isRoute(){
+        if(this->metaObject()->className() == "cIcCore::Route"){
+            return true;
+        }else if(this->inherits("cIcCore::Route")){
+            return true;
+        }
+        return false;
+    }
+
+    //! Check if this is a cIcCore::Cut object
+    bool Rect::isCut(){
+        if(this->metaObject()->className() == "cIcCore::Cut"){
+            return true;
+        }else if(this->inherits("cIcCore::Cut")){
+            return true;
+        }else if(this->metaObject()->className() == "cIcCore::InstanceCut"){
+            return true;
+        }else if(this->inherits("cIcCore::InstanceCut")){
+            return true;
+        }
+        return false;
+    }
+
+    //! Check if this is a cIcCore::Cell object
+    bool Rect::isCell(){
+        if(this->metaObject()->className() == "cIcCore::Cell" ){
+
+            return true;
+        }else  if(this->inherits("cIcCore::Cell")){
+            return true;
+        }
+        return false;
+    }
+
+    //! Check if this is a cIcCore::Port object
+    bool Rect::isPort(){
+        if(this->metaObject()->className() == "cIcCore::Port" ){
+            return true;
+        }else if(this->inherits("cIcCore::Port")){
+            return true;
+        }
+        return false;
+
+    }
+
+    //! Check if this is a cIcCore::Text object
+    bool Rect::isText(){
+        if(this->metaObject()->className() == "cIcCore::Text"){
+            return true;
+        }else if(this->inherits("cIcCore::Text")){
+            return true;
+        }
+        return false;
+
     }
 
 }

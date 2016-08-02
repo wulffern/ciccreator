@@ -24,13 +24,19 @@ namespace cIcCore{
     {
         _cell = 0;
         ckt_inst_ = 0;
-
+        xcell= 0;
+        ycell = 0;
+        angle_ = "";
     }
 
     Instance::Instance(const Instance& inst): Cell(inst)
     {
         _cell = 0;
         ckt_inst_ = 0;
+        xcell = 0;
+        ycell = 0;
+        angle_ = "";
+        
     }
 
 
@@ -47,11 +53,24 @@ namespace cIcCore{
             r = this->cell()->getRect(layer);
             if(r){
                 r = r->getCopy();
+                this->transform(r);
                 r->translate(this->x1(),this->y1());
+                
             }
         }
         return r;
     }
+
+    void Instance::transform(Rect* r)
+    {
+
+        if(this->angle() == "R90"){
+            r->rotate(90);
+            r->translate(xcell,ycell);
+        }
+
+    }
+    
 
     QList<Rect*> Instance::findRectanglesByRegex(QString regex,QString layer){
         QList<Rect*> rects;
@@ -59,6 +78,7 @@ namespace cIcCore{
         if(c){
             QList<Rect*> child_rects = c->findRectanglesByRegex(regex,layer);
             foreach(Rect * r, child_rects){
+                this->transform(r);
                 r->translate(this->x1(),this->y1());
                 rects.append(r);
             }
@@ -81,6 +101,7 @@ namespace cIcCore{
                (filterChild == "" || !pi->childName().contains(QRegularExpression(filterChild)))){
                 Rect * r = pi->get();
 
+                this->transform(r);
                 if(r){
                     r->parent(this);
                     rects.append(r);
@@ -145,30 +166,27 @@ namespace cIcCore{
         }
     }
 
+    void Instance::setAngle(QString angle){
+        angle_ = angle;
+        if(angle == "R90"){
+            xcell = this->cell()->height();
+
+        }
+        this->updateBoundingRect();
+    }
+
     Rect Instance::calcBoundingRect(){
         Rect r = this->_cell->calcBoundingRect();
 
-        int x = this->x1();
-        int y = this->y1();
-        
         if(this->angle() == "R90"){
-            r.rotate(-90);
+            r.rotate(90);
+            
         }
-        r.moveTo(x, y);
-        
+        r.moveTo(this->x1(), this->y1());        
         return r;
     }
 
-    void Instance::updateBoundingRect(){
-        Rect r = this->_cell->calcBoundingRect();
-
-        this->setWidth(r.width());
-        this->setHeight(r.height());
-        
-        
-//        this->setRect(r);
-    }
-
+   
 
 
     void Instance::setCell(QString cell){
@@ -184,6 +202,13 @@ namespace cIcCore{
             this->updateBoundingRect();
         }
     }
+
+    Point* Instance::getCellPoint()
+    {
+        Point* p = new Point(this->x1() + xcell,this->y1() + ycell);
+        return p;
+    }
+    
 
     Instance * Instance::getInstance(QString cell){
         Instance * c = new Instance();
@@ -207,9 +232,12 @@ namespace cIcCore{
     }
 
     void Instance::fromJson(QJsonObject o){
-        Cell::fromJson(o);
+
         angle_ = o["angle"].toString();
+        xcell = o["xcell"].toInt();
+        ycell = o["ycell"].toInt();
         instanceName_ = o["instanceName"].toString();
+        Cell::fromJson(o);
         this->setCell(o["cell"].toString());
     }
 
@@ -220,7 +248,10 @@ namespace cIcCore{
             o["cell"] = _cell->name();
         }
         o["angle"] = angle_;
+        o["xcell"] = xcell;
+        o["ycell"] = ycell;
         o["instanceName"] = instanceName_;
+
         return o;
     }
 

@@ -27,13 +27,20 @@ void LayoutRotateCell::place(){
         inst->setSubcktInstance(ckt_inst);
         inst->moveTo(0,0);
         inst->setAngle(rotateAngle_);
-        inst->updateBoundingRect();
+        //   inst->updateBoundingRect();
         
         this->add(inst);
-    }
-    this->updateBoundingRect();
 
+    }
 }
+
+
+    void LayoutRotateCell::paint(){
+        LayoutCell::paint();
+    }
+    
+
+    
 
 }
 

@@ -311,13 +311,15 @@
 				  ["M4",0,0,10000,20000,"R270"]
 			  ]}
 		  ]
-		}
+		},
 
-
-
-
-
-
-
+        { "name" : "TEST_R", "class" : "Layout::LayoutRotateCell", "rotateAngle" : "R90",
+          "boundaryIgnoreRouting" : 0,
+          "spice" : [
+			  ".subckt TEST_R A B",
+			  "XA1 B B A DDMVIA",
+              ".ends"
+          ]
+        }
     ]
 }

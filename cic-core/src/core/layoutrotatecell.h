@@ -19,6 +19,8 @@ public:
   Q_INVOKABLE void rotateAngle(QString s);
   virtual void place();
 
+    virtual void paint();
+
 protected:
   QString rotateAngle_;
 };

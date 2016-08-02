@@ -98,12 +98,12 @@ namespace cIcPrinter{
         gds_write_angle( fd, 270.0 );
 	}
 
+    Point* p = inst->getCellPoint();
+    
     //                          // and tilted at some weird angle
-    x[0] =  toNano(o->x1());
-    y[0] = toNano(o->y1());
-    if(inst->angle() == "R90"){
-        x[0] += toNano(inst->cell()->height() - inst->cell()->y1());
-    }
+    x[0] =  toNano(p->x);
+    y[0] = toNano(p->y);
+
     gds_write_xy( fd, x, y, 1 );             // at these coordinates (database units)
     gds_write_endel( fd );                   // end of element
   }
@@ -118,7 +118,7 @@ namespace cIcPrinter{
 	x[1] = toNano(o->x2());  y[1] = toNano(o->y1());
     x[2] = toNano(o->x2());  y[2] = toNano(o->y2());       // in this example 1 integer unit = 1 nm
 	x[3] = toNano(o->x1());  y[3] = toNano(o->y2());
-																				  x[4] = toNano(o->x1());  y[4] = toNano(o->y1());       // required repetition of first point (yup, that's stupid)
+    x[4] = toNano(o->x1());  y[4] = toNano(o->y1());       // required repetition of first point (yup, that's stupid)
 
     gds_write_xy( fd, x, y, 5 );    // polygon, four vertices, first vertex repeated => 5 points
     gds_write_endel( fd );          // end of element

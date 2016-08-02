@@ -26,17 +26,42 @@ namespace cIcCore{
     Cell::Cell(): Rect(){
         spiceObject_ = NULL;
         _subckt = NULL;
+        boundaryIgnoreRouting_ = false;
+        
     }
 
     Cell::Cell(const Cell&){
         spiceObject_ = NULL;
         _subckt = NULL;
+        boundaryIgnoreRouting_ = false;
     }
 
     Cell::~Cell() {
 
     }
 
+    void Cell::boundaryIgnoreRouting(QJsonValue obj)
+    {
+//        if(!obj) return;
+        int bir = obj.toInt();
+        if(bir) setBoundaryIgnoreRouting(true);
+        else setBoundaryIgnoreRouting(false);
+    }
+
+    void Cell::setBoundaryIgnoreRouting(bool bir)
+    {
+        boundaryIgnoreRouting_ = bir;
+        
+    }
+    bool Cell::boundaryIgnoreRouting()
+    {
+        return boundaryIgnoreRouting_;
+        
+    }
+    
+    
+    
+    
     void Cell::mirrorCenterX(){
         this->mirrorX(this->centerX());
     }
@@ -47,11 +72,11 @@ namespace cIcCore{
     void Cell::route(){}
     void Cell::place(){}
 
-	QList<Rect*> Cell::findAllRectangles(QString regex,QString layer){
-		QList<Rect*> rects = findRectanglesByRegex(regex, layer);
-		findRectangles(rects,regex,layer);
-		return rects;
-	}
+    QList<Rect*> Cell::findAllRectangles(QString regex,QString layer){
+        QList<Rect*> rects = findRectanglesByRegex(regex, layer);
+        findRectangles(rects,regex,layer);
+        return rects;
+    }
 
     void Cell::findRectangles(QList<Rect*> &rects, QString name, QString layer){
 
@@ -159,10 +184,10 @@ namespace cIcCore{
         return  ports_.values();
     }
 
-	QMap<QString,QList<Port*>> Cell::allports(){
-		return allports_;
-	}	
-	
+    QMap<QString,QList<Port*>> Cell::allports(){
+        return allports_;
+    }
+
     Port * Cell::getPort(QString name){
 
         Port * p = NULL;
@@ -199,15 +224,15 @@ namespace cIcCore{
 
             qDebug() << "Error: Could not find child type " << type << " in " << children_by_type.keys();
             QList<Rect*> r;
-            
+
             return r;
-            
+
         }
-        
-        
+
+
     }
-    
-    
+
+
     void Cell::add(QList<Rect*> children){
         foreach(Rect * r, children){
             this->add(r);
@@ -224,7 +249,7 @@ namespace cIcCore{
         if (child && !_children.contains(child)) {
 
             QString type = child->metaObject()->className();
-            
+
             if(!children_by_type.contains(type)){
                 QList<Rect*> a;
                 children_by_type[type] = a;
@@ -234,8 +259,8 @@ namespace cIcCore{
 
             if(child->isPort()){
                 Port* p = (Port*) child;
-                ports_[p->name()] = p;			   
-				allports_[p->name()].append(p);
+                ports_[p->name()] = p;
+                allports_[p->name()].append(p);
             }
             if(child->isRoute()){
                 routes_.append(child);
@@ -325,6 +350,11 @@ namespace cIcCore{
     }
 
     Rect Cell::calcBoundingRect(QList<Rect*> children){
+        return Cell::calcBoundingRect(children,false);
+    }
+    
+    
+    Rect Cell::calcBoundingRect(QList<Rect*> children,bool ignoreBoundaryRouting){
         int x1  = std::numeric_limits<int>::max();
         int y1  = std::numeric_limits<int>::max();
         int x2  = -std::numeric_limits<int>::max();
@@ -335,12 +365,22 @@ namespace cIcCore{
         }
         foreach(Rect* cr, children) {
 
+//            qDebug() << "before: " << cr->metaObject()->className();
+
+//            if(ignoreBoundaryRouting) qDebug() << "before: " << cr->metaObject()->className() <<
+//                                          cr->isRoute() << cr->isCut() << cr->isText() << cr->isPort() <<             
+                                          "\n";
+            
+            if(ignoreBoundaryRouting && (cr->isRoute() || cr->isCut() || cr->isText() || cr->isPort())) continue;
+
+            
+            //        if(ignoreBoundaryRouting) qDebug() << "after: " << cr->metaObject()->className() << static_cast<Cell*>(cr)->name() << "\n";
+            
             int cx1 = cr->x1();
             int cx2 = cr->x2();
             int cy1 = cr->y1();
             int cy2 = cr->y2();
 
-            
             if (cx1 < x1) {
                 x1 = cx1;
             }
@@ -355,7 +395,7 @@ namespace cIcCore{
                 y2 = cy2;
 
             }
-            
+
         }
         Rect r;
 
@@ -368,7 +408,7 @@ namespace cIcCore{
     }
 
     Rect Cell::calcBoundingRect(){
-        return this->calcBoundingRect(this->children());
+        return this->calcBoundingRect(this->children(),this->boundaryIgnoreRouting());
     }
 
     QString Cell::toString(){

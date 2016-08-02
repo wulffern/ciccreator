@@ -95,18 +95,22 @@ cellTranslator["Gds::GdsPatternTransistor"] = "cIcCore::PatternTransistor";
                 QJsonObject parent  = reverse_parents->at(i);
                 cIcSpice::Subckt * ckt_parent = _spice_parser.getSubckt(parent["name"].toString());
                 if(ckt_parent == NULL) continue;
+
+
+                
+                //Apply spice-regex
                 if(jobj.contains("spiceRegex")){
                     QJsonArray jarr = jobj["spiceRegex"].toArray();
+                    QStringList strlist = ckt_parent->spiceStr();
+                    strlist.replaceInStrings(parent["name"].toString(),name);
                     foreach(QJsonValue rval, jarr){
                         QJsonArray reg_arr = rval.toArray();
                         QString from = reg_arr[0].toString();
                         QString to = reg_arr[1].toString();
-                        QStringList strlist = ckt_parent->spiceStr();
-                        strlist.replaceInStrings(parent["name"].toString(),name);
                         strlist.replaceInStrings(QRegularExpression(from),to);
-                        _spice_parser.parseSubckt(0,strlist);
-                        ckt = _spice_parser.getSubckt(name);
                     }
+                    _spice_parser.parseSubckt(0,strlist);
+                    ckt = _spice_parser.getSubckt(name);
 
                 }else{
                     ckt = ckt_parent;
@@ -119,7 +123,7 @@ cellTranslator["Gds::GdsPatternTransistor"] = "cIcCore::PatternTransistor";
         }
 
 
-
+        
 
         if(ckt == NULL){
             ckt = new cIcSpice::Subckt();

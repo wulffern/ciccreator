@@ -231,6 +231,9 @@ namespace cIcGui{
                 originalRenderArea->setRenderLevel(8);
             if(keyEvent->key() == Qt::Key_F)
                 originalRenderArea->fit();
+            if(keyEvent->key() == Qt::Key_Z)
+                originalRenderArea->zoomOut();
+            
             
 
 

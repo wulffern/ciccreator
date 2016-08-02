@@ -39,11 +39,11 @@ namespace cIcCore{
         Cell * cell(){return _cell;}
         QString instanceName(){return instanceName_;}
         virtual Rect calcBoundingRect();
-        virtual void updateBoundingRect();
         
 
         QString angle(){return angle_;}
-        void setAngle(QString angle){angle_ = angle; this->updateBoundingRect();}
+        void setAngle(QString angle);
+        
         // Cell * addInstance(QString cell);
         static Instance * getInstance(QString cell);
         void setCell(Cell*cell){_cell = cell;}
@@ -54,8 +54,11 @@ namespace cIcCore{
         QList<Rect*> findRectanglesByNode(QString node, QString filterChild);
         QString toString();
 
+        void transform(Rect* r);
+        
         Rect* getRect(QString layer);
-
+        Point* getCellPoint();
+        
         virtual QJsonObject toJson();
         void fromJson(QJsonObject o);
         void setCell(QString cell);
@@ -65,6 +68,9 @@ namespace cIcCore{
         cIcSpice::SubcktInstance * ckt_inst_;
         QMap<QString,Port*> instancePorts_;
         QString angle_;
+        int xcell;
+        int ycell;
+        
 
 
     };

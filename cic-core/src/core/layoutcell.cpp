@@ -715,7 +715,7 @@ namespace cIcCore{
             QList<Rect*>  cuts = Cut::getCutsForRects("M4",rects,2,1);
             Rect * rp = NULL;
             if(cuts.count() > 0){
-                Rect r=  Cell::calcBoundingRect(cuts);
+                Rect r=  Cell::calcBoundingRect(cuts,false);
                 r.setTop(this->top());
                 r.setBottom(this->bottom());
                 r.setLayer("M4");
@@ -723,7 +723,7 @@ namespace cIcCore{
 
                 rp = new Rect(r);
             }else{
-                Rect r=  Cell::calcBoundingRect(rects);
+                Rect r=  Cell::calcBoundingRect(rects,false);
                 r.setTop(this->top());
                 r.setBottom(this->bottom());
                 r.setLayer("M4");

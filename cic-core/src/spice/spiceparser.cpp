@@ -35,8 +35,6 @@ namespace cIcSpice{
     }
 
 
-
-
     void SpiceParser::parseSubckt(int line_number, QList<QString> subckt_buffer)
     {
       Subckt * ckt = new Subckt();

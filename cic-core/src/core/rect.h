@@ -114,73 +114,25 @@ namespace cIcCore{
 		void setPoint1(int x1, int y1){x1_ = x1;y1_ = y1;}
         void setPoint2(int x2, int y2){x2_ = x2;y2_ = y2;}
 
-		//! Check if this is an cIcCore::Instance object
-        bool isInstance(){
-          if(strcmp(this->metaObject()->className(),"cIcCore::Instance") == 0){
-              return true;
-            }else if(this->inherits("cIcCore::Instance")){
-          //
-                return true;
-            }
-            return false;
-        }
+	    bool isInstance();
 
-        //! Check if this is a cIcCore::Rect object
-        bool isRoute(){
-          if(strcmp(this->metaObject()->className(),"cIcCore::Route") == 0){
-              return true;
-            }else if(this->inherits("cIcCore::Route")){
-              return true;
-            }
-            return false;
-        }
+        //! Check if this is a cIcCore::Routeobject
+        bool isRoute();
 
-        //! Check if this is a cIcCore::Rect object
-        bool isCut(){
-          if(strcmp(this->metaObject()->className(),"cIcCore::Cut") == 0){
-              return true;
-            }else if(this->inherits("cIcCore::Cut")){
-               return true;
-		  }else if(strcmp(this->metaObject()->className(),"cIcCore::InstanceCut")){
-			  return true;
-		  }else if(this->inherits("cIcCore::InstanceCut")){
-			  return true;
-		  }
-            return false;
-        }
-
-        //! Check if this is a cIcCore::Rect object
-        bool isCell(){
-          if(strcmp(this->metaObject()->className(),"cIcCore::Cell") == 0){
-
-              return true;
-            }else  if(this->inherits("cIcCore::Cell")){
-                return true;
-            }
-            return false;
-        }
+        //! Check if this is a cIcCore::Cut object
+        bool isCut();
+        
+        //! Check if this is a cIcCore::Cell object
+        bool isCell();
 
 		//! Check if this is a cIcCore::Port object
-        bool isPort(){
-            if(strcmp(this->metaObject()->className(),"cIcCore::Port") == 0){
-                return true;
-            }else if(this->inherits("cIcCore::Port")){
-                return true;
-              }
-            return false;
+        bool isPort();
 
-        }
+        //! Check if this is a cIcCore::Text object
+        bool isText();
+        
 
-				//! Check if this is a cIcCore::Port object
-		bool isText(){
-			if(strcmp(this->metaObject()->className(),"cIcCore::Text") == 0){
-                return true;
-            }else if(this->inherits("cIcCore::Text")){
-                return true;
-              }
-            return false;
 
-        }
 
 		
 		//! Check if a rectangle is exactly to the left of of this rectangle
