@@ -28,298 +28,329 @@
     "cells":
     [
         { "name" : "DDD",
-		  "class" : "cIcCore::PatternTile",
-		  "fillCoordinatesFromStrings" : [
-			  [ "PO",
-				"XXXXXXXXXXXXXXXXX",
-				"X---------------X",
-				"X---------------X",
-				"X---------------X",
-				"X---------------X",
-				"X---------------X",
-				"X---------------X",
-				"XXXXXXXXXXXXXXXXX"
-				
-			  ],
+          "class" : "cIcCore::PatternTile",
+          "fillCoordinatesFromStrings" : [
+              [ "PO",
+                "XXXXXXXXXXXXXXXXX",
+                "X---------------X",
+                "X---------------X",
+                "X---------------X",
+                "X---------------X",
+                "X---------------X",
+                "X---------------X",
+                "XXXXXXXXXXXXXXXXX"
 
-			  [ "M1",
-				"-----------------",
-				"-----------------",
-				"-----------------",
-				"-------wSw-------",
-				"-----------------",
-				"-----------------",
-				"-----------------",
-				"-----------------"
-				
-			  ]
-		  ]
-		},
-		{ "name" : "DDA",
-		  "class" : "cIcCore::PatternTile",
-		  "fillCoordinatesFromStrings" : [
-			  [ "PO",
-				"XXXXXXXXXXXXXXXXX",
-				"X---------------X",
-				"X---------------X",
-				"X---------------X",
-				"X---------------X",
-				"X---------------X",
-				"X---------------X",
-				"XXXXXXXXXXXXXXXXX"
-				
-			  ],
+              ],
 
-			  [ "M1",
-				"-----------------",
-				"-----------------",
-				"-----------------",
-				"-----------wSw---",
-				"-----------------",
-				"-----------------",
-				"-----------------",
-				"-----------------"
-				
-			  ]
-		  ]
-		},
-		{ "name" : "DDMVIA",
-		  "class" : "cIcCore::PatternTile",
-		  "fillCoordinatesFromStrings" : [
-			  [ "PO",
-				"XXXXXXXXXXXXXXXXX",
-				"X---------------X",
-				"X---------------X",
-				"X---------------X",
-				"X---------------X",
-				"X---------------X",
-				"X---------------X",
-				"XXXXXXXXXXXXXXXXX"
-				
-			  ],
-			  [ "M1",
-				"-----------------",
-				"---------wSw-----",
-				"-----------------",
-				"-----------------",
-				"-----------------",
-				"-----------------",
-				"-----------------",
-				"-----------------"
-			  ],
-			  [ "M2",
-				"-----------------",
-				"-----------------",
-				"-----------------",
-				"-----------------",
-				"---wDw-----------",
-				"-----------------",
-				"-----------------",
-				"-----------------"
-			  ],
-			  [ "M3",
-				"-----------------",
-				"-----------------",
-				"-----------------",
-				"-----------------",
-				"-----------------",
-				"-------wBw-------",
-				"-----------------",
-				"-----------------"
-			  ]
-		  ]
-		},
-		
-		{ "name" : "TEST",
-		  "class" : "cIcCore::LayoutCell"
-		},
-		{ "name" : "TEST_OPT",
-		  "class" : "cIcCore::LayoutCell"
-		},
+              [ "M1",
+                "-----------------",
+                "-----------------",
+                "-----------------",
+                "-------wSw-------",
+                "-----------------",
+                "-----------------",
+                "-----------------",
+                "-----------------"
 
-		{ "name" : "Directed_StartLeft_Left(-|--)",
-		  "inherit": "TEST",
-		  "beforeRoute": [
-			  {"addDirectedRoutes" : [["M1","S","XA1:S-|--XB2:S"]]}
-		  ]
-		},
-		{ "name" : "Directed_StartLeft_Right(--|-)",
-		  "inherit": "TEST",
-		  "beforeRoute": [
-			  {"addDirectedRoutes" : [["M1","S","XA1:S--|-XB2:S"]]}
-			  ]
-		},
-		{ "name" : "Directed_StartRight_Right(--|-)",
-		  "inherit": "TEST",
-		  "beforeRoute": [
-			  {"addDirectedRoutes" : [["M1","S","XB1:S--|-XA2:S"]]}
-			  ]
-		},
-		{ "name" : "Directed_StartRight_Left(-|--)",
-		  "inherit": "TEST",
-		  "beforeRoute": [
-			  {"addDirectedRoutes" : [["M1","S","XB1:S-|--XA2:S"]]}
-			  ]
-		},
-		{ "name" : "Directed_Vertical(||)",
-		  "inherit": "TEST",
-		  "beforeRoute": [
-			  {"addDirectedRoutes" : [["M1","S","XB1:S||XB2:S"]]}
-			  ]
-		},
-		{ "name" : "Directed_U_Right(-|)",
-		  "inherit": "TEST",
-		  "beforeRoute": [
-			  {"addDirectedRoutes" : [["M1","S","XB1:S-|XB2:S"]]}
-			  ]
-		},
-		{ "name" : "Directed_U_Left(|-)",
-		  "inherit": "TEST",
-		  "beforeRoute": [
-			  {"addDirectedRoutes" : [["M1","S","XB1:S|-XB2:S"]]}
-			  ]
-		},
+              ]
+          ]
+        },
+        { "name" : "DDA",
+          "class" : "cIcCore::PatternTile",
+          "fillCoordinatesFromStrings" : [
+              [ "PO",
+                "XXXXXXXXXXXXXXXXX",
+                "X---------------X",
+                "X---------------X",
+                "X---------------X",
+                "X---------------X",
+                "X---------------X",
+                "X---------------X",
+                "XXXXXXXXXXXXXXXXX"
 
-		{ "name" : "Connectivity_A_-|--",
-		  "inherit": "TEST",
-		  "beforeRoute": [
-			  {"addConnectivityRoutes" : [["M1","A","-|--"]]}
-		  ]
-		},
-		{ "name" : "Connectivity_B_-|--",
-		  "inherit": "TEST",
-		  "beforeRoute": [
-			  {"addConnectivityRoutes" : [["M1","B","-|--"]]}
-		  ]
-		},
-		{ "name" : "Connectivity_A|B_-",
-		  "inherit": "TEST",
-		  "beforeRoute": [
-			  {"addConnectivityRoutes" : [["M1","A|B","-"]]}
-		  ]
-		},
-		{ "name" : "TESTDDMVIA",
-		  "class" : "cIcCore::LayoutCell"},
-		{ "name" : "TESTVIA",
-		  "inherit" : "TESTDDMVIA",
-		  "beforeRoute": [
-			  {"addConnectivityRoutes" : [
-				  ["M4","S","-|--","track0"],
-				  ["M1","D","-|--","track4"],
-				  ["M2","B","-|--","track6"]
-			  ]}
-		  ]
-		},
-		{ "name" : "Options_onTopR",
-		  "inherit" : "TEST_OPT",
-		  "beforeRoute": [
-			  {"addConnectivityRoutes" : [
-				  ["M4","A","-|--","onTopR"]
-			  ]}
-		  ]
-		},
-		{ "name" : "Options_onTopL",
-		  "inherit" : "TEST_OPT",
-		  "beforeRoute": [
-			  {"addConnectivityRoutes" : [
-				  ["M4","A","-|--","onTopL"]
-			  ]}
-		  ]
-		},
-		{ "name" : "Options_onTopT",
-		  "inherit" : "TEST_OPT",
-		  "beforeRoute": [
-			  {"addConnectivityRoutes" : [
-				  ["M4","A","-|--","onTopT"]
-			  ]}
-		  ]
-		},
-		{ "name" : "Options_onTopB",
-		  "inherit" : "TEST_OPT",
-		  "beforeRoute": [
-			  {"addConnectivityRoutes" : [
-				  ["M4","A","-|--","onTopB"]
-			  ]}
-		  ]
-		},
-		{ "name" : "Options_offsethigh",
-		  "inherit": "TEST",
-		  "beforeRoute": [
-			  {"addDirectedRoutes" : [["M1","A","XA1:S-|--XB2:S","offsethigh"]]}
-		  ]
-		},
-		{ "name" : "Options_offsetlow",
-		  "inherit": "TEST",
-		  "beforeRoute": [
-			  {"addDirectedRoutes" : [["M1","A","XA1:S-|--XB2:S","offsetlow"]]}
-		  ]
-		},
-		{ "name" : "Options_offsethighend",
-		  "inherit": "TEST",
-		  "beforeRoute": [
-			  {"addDirectedRoutes" : [["M1","A","XA1:S-|--XB2:S","offsethighend"]]}
-		  ]
-		},
-		{ "name" : "Options_offsetlowend",
-		  "inherit": "TEST",
-		  "beforeRoute": [
-			  {"addDirectedRoutes" : [["M1","A","XA1:S-|--XB2:S","offsetlowend"]]}
-		  ]
-		},
-		{ "name" : "Options_track4",
-		  "inherit": "TEST",
-		  "beforeRoute": [
-			  {"addDirectedRoutes" : [["M1","A","XA1:S-|--XB2:S","track4"]]}
-		  ]
-		},
-		{ "name" : "Options_track8",
-		  "inherit": "TEST",
-		  "beforeRoute": [
-			  {"addDirectedRoutes" : [["M1","A","XA1:S-|--XB2:S","track8"]]}
-		  ]
-		},
-		{ "name" : "Options_3cuts",
-		  "inherit": "TEST",
-		  "beforeRoute": [
-			  {"addDirectedRoutes" : [["M2","A","XA1:S-|--XB2:S","3cuts"]]}
-		  ]
-		},
-		{ "name" : "Options_5cuts",
-		  "inherit": "TEST",
-		  "beforeRoute": [
-			  {"addDirectedRoutes" : [["M2","A","XA1:S-|--XB2:S","5cuts"]]}
-		  ]
-		},
-		{ "name" : "Options_2vcuts",
-		  "inherit": "TEST",
-		  "beforeRoute": [
-			  {"addDirectedRoutes" : [["M2","A","XA1:S-|--XB2:S","2vcuts"]]}
-		  ]
-		},
-		{ "name" : "Options_4vcuts",
-		  "inherit": "TEST",
-		  "beforeRoute": [
-			  {"addDirectedRoutes" : [["M2","A","XA1:S-|--XB2:S","4vcuts"]]}
-		  ]
-		},
-		{ "name" : "Rotations",
-		  "beforeRoute": [
-			  {"addRectangles" : [
-				  ["M1",0,0,10000,20000,""],
-				  ["M2",0,0,10000,20000,"R90"],
-				  ["M3",0,0,10000,20000,"R180"],
-				  ["M4",0,0,10000,20000,"R270"]
-			  ]}
-		  ]
-		},
+              ],
+
+              [ "M1",
+                "-----------------",
+                "-----------------",
+                "-----------------",
+                "-----------wSw---",
+                "-----------------",
+                "-----------------",
+                "-----------------",
+                "-----------------"
+
+              ]
+          ]
+        },
+        { "name" : "DDMVIA",
+          "class" : "cIcCore::PatternTile",
+          "fillCoordinatesFromStrings" : [
+              [ "PO",
+                "XXXXXXXXXXXXXXXXX",
+                "X---------------X",
+                "X---------------X",
+                "X---------------X",
+                "X---------------X",
+                "X---------------X",
+                "X---------------X",
+                "XXXXXXXXXXXXXXXXX"
+
+              ],
+              [ "M1",
+                "-----------------",
+                "---------wSw-----",
+                "-----------------",
+                "-----------------",
+                "-----------------",
+                "-----------------",
+                "-----------------",
+                "-----------------"
+              ],
+              [ "M2",
+                "-----------------",
+                "-----------------",
+                "-----------------",
+                "-----------------",
+                "---wDw-----------",
+                "-----------------",
+                "-----------------",
+                "-----------------"
+              ],
+              [ "M3",
+                "-----------------",
+                "-----------------",
+                "-----------------",
+                "-----------------",
+                "-----------------",
+                "-------wBw-------",
+                "-----------------",
+                "-----------------"
+              ]
+          ]
+        },
+
+        { "name" : "TEST",
+          "class" : "cIcCore::LayoutCell"
+        },
+        { "name" : "TEST_OPT",
+          "class" : "cIcCore::LayoutCell"
+        },
+
+        { "name" : "Directed_StartLeft_Left(-|--)",
+          "inherit": "TEST",
+          "beforeRoute": [
+              {"addDirectedRoutes" : [["M1","S","XA1:S-|--XB2:S"]]}
+          ]
+        },
+        { "name" : "Directed_StartLeft_Right(--|-)",
+          "inherit": "TEST",
+          "beforeRoute": [
+              {"addDirectedRoutes" : [["M1","S","XA1:S--|-XB2:S"]]}
+          ]
+        },
+        { "name" : "Directed_StartRight_Right(--|-)",
+          "inherit": "TEST",
+          "beforeRoute": [
+              {"addDirectedRoutes" : [["M1","S","XB1:S--|-XA2:S"]]}
+          ]
+        },
+        { "name" : "Directed_StartRight_Left(-|--)",
+          "inherit": "TEST",
+          "beforeRoute": [
+              {"addDirectedRoutes" : [["M1","S","XB1:S-|--XA2:S"]]}
+          ]
+        },
+        { "name" : "Directed_Vertical(||)",
+          "inherit": "TEST",
+          "beforeRoute": [
+              {"addDirectedRoutes" : [["M1","S","XB1:S||XB2:S"]]}
+          ]
+        },
+        { "name" : "Directed_U_Right(-|)",
+          "inherit": "TEST",
+          "beforeRoute": [
+              {"addDirectedRoutes" : [["M1","S","XB1:S-|XB2:S"]]}
+          ]
+        },
+        { "name" : "Directed_U_Left(|-)",
+          "inherit": "TEST",
+          "beforeRoute": [
+              {"addDirectedRoutes" : [["M1","S","XB1:S|-XB2:S"]]}
+          ]
+        },
+
+        { "name" : "Connectivity_A_-|--",
+          "inherit": "TEST",
+          "beforeRoute": [
+              {"addConnectivityRoutes" : [["M1","A","-|--"]]}
+          ]
+        },
+        { "name" : "Connectivity_B_-|--",
+          "inherit": "TEST",
+          "beforeRoute": [
+              {"addConnectivityRoutes" : [["M1","B","-|--"]]}
+          ]
+        },
+        { "name" : "Connectivity_A|B_-",
+          "inherit": "TEST",
+          "beforeRoute": [
+              {"addConnectivityRoutes" : [["M1","A|B","-"]]}
+          ]
+        },
+        { "name" : "TESTDDMVIA",
+          "class" : "cIcCore::LayoutCell"},
+        { "name" : "TESTVIA",
+          "inherit" : "TESTDDMVIA",
+          "beforeRoute": [
+              {"addConnectivityRoutes" : [
+                  ["M4","S","-|--","track0"],
+                  ["M1","D","-|--","track4"],
+                  ["M2","B","-|--","track6"]
+              ]}
+          ]
+        },
+        { "name" : "Options_onTopR",
+          "inherit" : "TEST_OPT",
+          "beforeRoute": [
+              {"addConnectivityRoutes" : [
+                  ["M4","A","-|--","onTopR"]
+              ]}
+          ]
+        },
+        { "name" : "Options_onTopL",
+          "inherit" : "TEST_OPT",
+          "beforeRoute": [
+              {"addConnectivityRoutes" : [
+                  ["M4","A","-|--","onTopL"]
+              ]}
+          ]
+        },
+        { "name" : "Options_onTopT",
+          "inherit" : "TEST_OPT",
+          "beforeRoute": [
+              {"addConnectivityRoutes" : [
+                  ["M4","A","-|--","onTopT"]
+              ]}
+          ]
+        },
+        { "name" : "Options_onTopB",
+          "inherit" : "TEST_OPT",
+          "beforeRoute": [
+              {"addConnectivityRoutes" : [
+                  ["M4","A","-|--","onTopB"]
+              ]}
+          ]
+        },
+        { "name" : "Options_offsethigh",
+          "inherit": "TEST",
+          "beforeRoute": [
+              {"addDirectedRoutes" : [["M1","A","XA1:S-|--XB2:S","offsethigh"]]}
+          ]
+        },
+        { "name" : "Options_offsetlow",
+          "inherit": "TEST",
+          "beforeRoute": [
+              {"addDirectedRoutes" : [["M1","A","XA1:S-|--XB2:S","offsetlow"]]}
+          ]
+        },
+        { "name" : "Options_offsethighend",
+          "inherit": "TEST",
+          "beforeRoute": [
+              {"addDirectedRoutes" : [["M1","A","XA1:S-|--XB2:S","offsethighend"]]}
+          ]
+        },
+        { "name" : "Options_offsetlowend",
+          "inherit": "TEST",
+          "beforeRoute": [
+              {"addDirectedRoutes" : [["M1","A","XA1:S-|--XB2:S","offsetlowend"]]}
+          ]
+        },
+        { "name" : "Options_track4",
+          "inherit": "TEST",
+          "beforeRoute": [
+              {"addDirectedRoutes" : [["M1","A","XA1:S-|--XB2:S","track4"]]}
+          ]
+        },
+        { "name" : "Options_track8",
+          "inherit": "TEST",
+          "beforeRoute": [
+              {"addDirectedRoutes" : [["M1","A","XA1:S-|--XB2:S","track8"]]}
+          ]
+        },
+        { "name" : "Options_3cuts",
+          "inherit": "TEST",
+          "beforeRoute": [
+              {"addDirectedRoutes" : [["M2","A","XA1:S-|--XB2:S","3cuts"]]}
+          ]
+        },
+        { "name" : "Options_5cuts",
+          "inherit": "TEST",
+          "beforeRoute": [
+              {"addDirectedRoutes" : [["M2","A","XA1:S-|--XB2:S","5cuts"]]}
+          ]
+        },
+        { "name" : "Options_2vcuts",
+          "inherit": "TEST",
+          "beforeRoute": [
+              {"addDirectedRoutes" : [["M2","A","XA1:S-|--XB2:S","2vcuts"]]}
+          ]
+        },
+        { "name" : "Options_4vcuts",
+          "inherit": "TEST",
+          "beforeRoute": [
+              {"addDirectedRoutes" : [["M2","A","XA1:S-|--XB2:S","4vcuts"]]}
+          ]
+        },
+        { "name" : "Rotations",
+          "beforeRoute": [
+              {"addRectangles" : [
+                  ["M1",0,0,10000,20000,""],
+                  ["M2",0,0,10000,20000,"R90"],
+                  ["M3",0,0,10000,20000,"R180"],
+                  ["M4",0,0,10000,20000,"R270"]
+              ]}
+          ]
+        },
 
         { "name" : "TEST_R", "class" : "Layout::LayoutRotateCell", "rotateAngle" : "R90",
           "boundaryIgnoreRouting" : 0,
           "spice" : [
-			  ".subckt TEST_R A B",
-			  "XA1 B B A DDMVIA",
+              ".subckt TEST_R A B",
+              "XA1 B B A DDMVIA",
               ".ends"
           ]
+        },
+        { "name" : "TEST_NOANGLE",
+          "boundaryIgnoreRouting" : 0,
+          "spice" : [
+              ".subckt TEST_NOANGLE A B",
+              "XA1 B B A DDMVIA",
+              ".ends"
+          ]
+        },
+        { "name" : "TEST_MY", "class" : "Layout::LayoutRotateCell",
+          "boundaryIgnoreRouting" : 0,
+          "spice" : [
+              ".subckt TEST_MY A B",
+              "XA1 B B A DDMVIA",
+              ".ends"
+          ],
+          "rotateAngle" : "MY"
+        },
+
+		{ "name" : "TEST_INST_MY",
+          "boundaryIgnoreRouting" : 0,
+          "spice" : [
+              ".subckt TEST_INST_MY A B",
+              "XA1 A B TEST_MY",
+			  "XA2 A B TEST_NOANGLE",
+			  "XB1 A B TEST_NOANGLE",
+              "XB2 A B TEST_MY",
+              ".ends"
+          ],
+          "rotateAngle" : "MY"
         }
+
     ]
 }

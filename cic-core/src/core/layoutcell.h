@@ -54,9 +54,13 @@ namespace cIcCore{
 		Q_INVOKABLE void addPowerConnection(QJsonArray obj);
         Q_INVOKABLE void trimRouteRing(QJsonArray obj);
         Q_INVOKABLE void addRectangle(QJsonArray obj);
-
+        
+        QList<Graph*> getNodeGraphs(QString regex);
+        void noPowerRoute();
+        Instance* addInstance(cIcSpice::SubcktInstance* ckt,int x, int y);
 
         void addRectangle(QString layer, int x1, int y1, int width, int height, QString angle);
+        void addConnectivityRoute(QString layer,QString regex, QString routeType,QString options,QString cuts,QString excludeInstances, QString includeInstances);
         
         void trimRouteRing(QString path, QString location,QString whichEndToTrim);
 
@@ -64,6 +68,7 @@ namespace cIcCore{
 		void addPowerRing(QString layer, QString name, QString location, int widthmult);
 		void addPowerConnection(QString name, QString includeInstances,  QString location);
 		void addRouteConnection(QString path, QString includeInstances, QString layer, QString location, QString options);
+
 		
         virtual void place();
         virtual void route();

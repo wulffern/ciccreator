@@ -282,7 +282,7 @@ namespace cIcCore{
         emit updated();
     }
 
-    void Cell::mirrorX(int ax) {
+    void Cell::mirrorY(int ax) {
         this->setLeft(2*ax - this->left());
         this->setRight(2*ax - this->right());
 
@@ -299,7 +299,7 @@ namespace cIcCore{
         emit updated();
     }
 
-    void Cell::mirrorY(int ay) {
+    void Cell::mirrorX(int ay) {
 
         this->setTop(2 *  ay - this->top());
         this->setBottom(2 *  ay - this->bottom());
@@ -365,17 +365,8 @@ namespace cIcCore{
         }
         foreach(Rect* cr, children) {
 
-//            qDebug() << "before: " << cr->metaObject()->className();
-
-//            if(ignoreBoundaryRouting) qDebug() << "before: " << cr->metaObject()->className() <<
-//                                          cr->isRoute() << cr->isCut() << cr->isText() << cr->isPort() <<             
-                                          "\n";
-            
-            if(ignoreBoundaryRouting && (cr->isRoute() || cr->isCut() || cr->isText() || cr->isPort())) continue;
-
-            
-            //        if(ignoreBoundaryRouting) qDebug() << "after: " << cr->metaObject()->className() << static_cast<Cell*>(cr)->name() << "\n";
-            
+            if(ignoreBoundaryRouting && !cr->isInstance()) continue;
+                        
             int cx1 = cr->x1();
             int cx2 = cr->x2();
             int cy1 = cr->y1();

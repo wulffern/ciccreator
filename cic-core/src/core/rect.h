@@ -47,6 +47,10 @@ namespace cIcCore{
 		Rect(QString layer, int left, int bottom, int width, int height);
 
 
+        bool isHorizontal();
+        bool isVertical();
+        
+
 		//! Return a copy of this rectangle, creates a new rectangle
         Rect* getCopy();
 

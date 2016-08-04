@@ -96,7 +96,15 @@ namespace cIcPrinter{
 	}else if(inst->angle() == "R270"){
 		gds_write_strans( fd, 0, 1, 0 );        // fd, reflect, abs_angle, abs_mag
         gds_write_angle( fd, 270.0 );
-	}
+	}else if(inst->angle() == "MX"){
+        gds_write_strans(fd,1,1,0);
+        gds_write_angle( fd, 0.0 );
+    }else if(inst->angle() == "MY"){
+        gds_write_strans(fd,1,1,0);
+        gds_write_angle( fd, 180.0 );
+    }
+    
+    
 
     Point* p = inst->getCellPoint();
     

@@ -32,11 +32,16 @@ namespace cIcCore{
         qRegisterMetaType<cIcCore::LayoutCell>("cIcCore::LayoutCell");
 		qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
 		qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
-cellTranslator["Gds::GdsPatternTransistor"] = "cIcCore::PatternTransistor";
+        qRegisterMetaType<cIcCells::SAR>("cIcCells::SAR");
+
+
+        //Translate from Perl names to c++ names
+        cellTranslator["Gds::GdsPatternTransistor"] = "cIcCore::PatternTransistor";
         cellTranslator["Gds::GdsPatternCapacitor"] = "cIcCore::PatternCapacitor";
         cellTranslator["Gds::GdsPatternCapacitorGnd"] = "cIcCore::PatternCapacitorGnd";
         cellTranslator["Layout::LayoutDigitalCell"] = "cIcCore::LayoutCell";
         cellTranslator["Layout::LayoutRotateCell"] = "cIcCore::LayoutRotateCell";
+        cellTranslator["Layout::LayoutSARCDAC"] = "cIcCells::SAR";
         nameTranslator["type"] = "mosType";
         console = new ConsoleOutput();
 

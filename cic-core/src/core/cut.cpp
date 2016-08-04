@@ -122,16 +122,22 @@ namespace cIcCore {
         foreach(Rect *r, rects){
             if(r == NULL){continue;}
             if(layer1 != r->layer()){
+
+                
                 Instance * inst= Cut::getInstance(layer1,r->layer(),horizontal_cuts,vertical_cuts);
                 if(inst){
+
+                    if((r->isVertical() && inst->isHorizontal()) || (r->isHorizontal() && inst->isVertical())){
+                        //In this case we've got the wrong cut, and it
+                        //should be rotated
+                        inst= Cut::getInstance(layer1,r->layer(),vertical_cuts,horizontal_cuts);
+                        
+                    }
+                    
                     inst->moveTo(r->x1(),r->y1());
 
-                    //--- Center rectangles, might have unintended consequences
-                    //inst->moveTo(r->centerX() - inst->width()/2.0,r->y1());
-                    //r->moveTo(inst->x1(),inst->y1());
-                    //---
-
-                    r->setWidth(inst->width());
+//Don't think this is a good idea
+//r->setWidth(inst->width());
 
                     cuts.append(inst);
                 }

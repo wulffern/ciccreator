@@ -36,7 +36,7 @@ namespace cIcCore{
         xcell = 0;
         ycell = 0;
         angle_ = "";
-        
+
     }
 
 
@@ -54,8 +54,6 @@ namespace cIcCore{
             if(r){
                 r = r->getCopy();
                 this->transform(r);
-                r->translate(this->x1(),this->y1());
-                
             }
         }
         return r;
@@ -67,10 +65,14 @@ namespace cIcCore{
         if(this->angle() == "R90"){
             r->rotate(90);
             r->translate(xcell,ycell);
+        }else if(this->angle() == "MY"){
+            r->mirrorY(0);
+            r->translate(xcell,ycell);
+            
         }
-
+        r->translate(this->x1(),this->y1());
     }
-    
+
 
     QList<Rect*> Instance::findRectanglesByRegex(QString regex,QString layer){
         QList<Rect*> rects;
@@ -79,7 +81,6 @@ namespace cIcCore{
             QList<Rect*> child_rects = c->findRectanglesByRegex(regex,layer);
             foreach(Rect * r, child_rects){
                 this->transform(r);
-                r->translate(this->x1(),this->y1());
                 rects.append(r);
             }
         }
@@ -100,8 +101,6 @@ namespace cIcCore{
             if(pi->name().contains(QRegularExpression(node)) &&
                (filterChild == "" || !pi->childName().contains(QRegularExpression(filterChild)))){
                 Rect * r = pi->get();
-
-                this->transform(r);
                 if(r){
                     r->parent(this);
                     rects.append(r);
@@ -136,7 +135,7 @@ namespace cIcCore{
         }else if(sobj){
             cktNodes = sobj->nodes();
         }else{
-            //qWarning() << "Subckt " << inst->subcktName() << " not found";
+            qWarning() << "Warning: Subckt " << inst->subcktName() << " not found";
             return;
         }
 
@@ -146,7 +145,6 @@ namespace cIcCore{
             qWarning() << "Error: different number of nodes for " << inst->name() << "(" << instNodes.count() << ")" << " and " << inst->subcktName() << "(" << cktNodes.count() << ")";
 
         }
-
 
         if(cktNodes.count() != instNodes.count()){
 
@@ -169,9 +167,22 @@ namespace cIcCore{
     void Instance::setAngle(QString angle){
         angle_ = angle;
         if(angle == "R90"){
-            xcell = this->cell()->height();
+            xcell = this->cell()->y2();
 
+            
+        }else if(angle == "MY"){
+            xcell = this->cell()->x2();
+            //Fix instanceports
         }
+
+//        this->transform(this);
+
+        foreach(Rect* r,this->children()){
+            r->translate(-this->x1(),-this->y1());
+            this->transform(r);
+        }
+
+
         this->updateBoundingRect();
     }
 
@@ -180,13 +191,11 @@ namespace cIcCore{
 
         if(this->angle() == "R90"){
             r.rotate(90);
-            
         }
-        r.moveTo(this->x1(), this->y1());        
+        r.moveTo(this->x1(), this->y1());
         return r;
     }
 
-   
 
 
     void Instance::setCell(QString cell){
@@ -208,7 +217,7 @@ namespace cIcCore{
         Point* p = new Point(this->x1() + xcell,this->y1() + ycell);
         return p;
     }
-    
+
 
     Instance * Instance::getInstance(QString cell){
         Instance * c = new Instance();

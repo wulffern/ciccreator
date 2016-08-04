@@ -48,8 +48,8 @@ namespace cIcCore{
 				if(excludeInstances != "" && (instanceName.contains(QRegularExpression(excludeInstances))
 											  || i->name().contains(QRegularExpression(excludeInstances)) )) continue;
 
-				if(includeInstances != "" && !i->name().contains(QRegularExpression(includeInstances))
-				   && !instanceName.contains(QRegularExpression(includeInstances))) continue;
+				if(includeInstances != "" && !(i->name().contains(QRegularExpression(includeInstances))
+                                              || instanceName.contains(QRegularExpression(includeInstances)) ) ) continue;
 				Rect * rp = p->get(layer);
 				if(rp == NULL) rp = p->get();
 				if(rp != NULL) rects.append(rp);

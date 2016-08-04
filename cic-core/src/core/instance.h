@@ -39,8 +39,6 @@ namespace cIcCore{
         Cell * cell(){return _cell;}
         QString instanceName(){return instanceName_;}
         virtual Rect calcBoundingRect();
-        
-
         QString angle(){return angle_;}
         void setAngle(QString angle);
         
@@ -70,8 +68,8 @@ namespace cIcCore{
         QString angle_;
         int xcell;
         int ycell;
+        QList<InstancePort*> instance_ports_;
         
-
 
     };
 

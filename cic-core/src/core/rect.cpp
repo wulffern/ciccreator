@@ -155,6 +155,20 @@ namespace cIcCore{
         return rects;
     }
 
+    bool Rect::isHorizontal()
+    {
+        if(this->width() >= this->height()) return true;
+        return false;
+    }
+
+    bool Rect::isVertical()
+    {
+        if(this->height() >= this->width()) return true;
+        return false;
+    }
+
+    
+    
     void Rect::setLayer(QString layer){  _layer  = layer;}
 
 
@@ -220,7 +234,7 @@ namespace cIcCore{
 
 
 
-    void Rect::mirrorX(int ax){
+    void Rect::mirrorY(int ax){
         this->setLeft(2.0*ax - this->left());
         this->setRight(2.0*ax - this->right());
 
@@ -234,7 +248,7 @@ namespace cIcCore{
     }
 
 
-    void Rect::mirrorY(int ay){
+    void Rect::mirrorX(int ay){
 
         this->setTop(2 *  ay - this->top());
         this->setBottom(2 *  ay - this->bottom());

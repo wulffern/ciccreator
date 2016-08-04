@@ -41,8 +41,24 @@ namespace cIcCore{
     }
 
     void LayoutCell::noPowerRoute(QJsonValue obj){
+        noPowerRoute();
+    }
+
+    void LayoutCell::noPowerRoute(){
         noPowerRoute_ = true;
     }
+
+    QList<Graph*> LayoutCell::getNodeGraphs(QString regex)
+    {
+        QList<Graph*> graphs;
+
+        foreach(QString node, nodeGraph_.keys()){
+            if(!node.contains(QRegularExpression(regex))) continue;
+            graphs.append(nodeGraph_[node]);
+        }
+        return graphs;
+    }
+
 
 
     void LayoutCell::addDirectedRoute(QJsonArray obj){
@@ -119,13 +135,23 @@ namespace cIcCore{
         if(obj.size() > 5){
             includeInstances = obj[5].toString();
         }
+        this->addConnectivityRoute(layer,regex,routeType,options,cuts,excludeInstances,includeInstances);
+
+    }
+
+
+    void LayoutCell::addConnectivityRoute(QString layer,QString regex, QString routeType,QString options,QString cuts,QString excludeInstances, QString includeInstances)
+    {
 
         foreach(QString node, nodeGraph_.keys()){
+
+
             if(!node.contains(QRegularExpression(regex))) continue;
 
             Graph * g = nodeGraph_[node];
             QList<Rect*>  rects = g->getRectangles(excludeInstances,includeInstances,layer);
-
+            if(includeInstances == "XDAC") qDebug() << node;
+            
             if(rects.count() == 0){
                 qDebug() << "Error: Could not find rectangles on " << node << regex << rects.count() << "\n";
             }
@@ -357,11 +383,11 @@ namespace cIcCore{
         int x1 = obj[1].toInt();
         int y1 = obj[2].toInt();
         int width = obj[3].toInt();
-        
+
         int height = obj[4].toInt();
         QString angle = (obj.size() > 4) ? obj[5].toString(): "";
         this->addRectangle(layer,x1,y1,width,height,angle);
-        
+
     }
 
     void LayoutCell::addRectangle(QString layer, int x1, int y1, int width, int height,QString angle)
@@ -379,20 +405,20 @@ namespace cIcCore{
         }
 
         this->add(r);
-        
-    }
-    
 
-    
+    }
+
+
+
     void LayoutCell::addPowerRing(QJsonArray obj)
     {
-        if(obj.size() < 3){
-            qDebug() << "Error: addRouteRing must contain at least 3 element\n";
+        if(obj.size() < 2){
+            qDebug() << "Error: addPowerRing must contain at least 2 element\n";
             return;
         }
         QString layer = obj[0].toString();
         QString name = obj[1].toString();
-        QString location = (obj.size() > 2) ? obj[2].toString(): "rtbl";
+        QString location = (obj.size() > 2) ? obj[2].toString() : "rtbl";
         int widthmult = (obj.size() > 3) ? obj[3].toInt(): 1;
 
         this->addPowerRing(layer,name,location,widthmult);
@@ -400,6 +426,7 @@ namespace cIcCore{
 
     void LayoutCell::addPowerRing(QString layer, QString name, QString location, int widthmult)
     {
+//        qDebug() << layer << name << location << widthmult;
         Instance* c = Cut::getInstance("M3","M4",2,2);
         int metalwidth = c->height()*widthmult;
         int xgrid = this->rules->get("ROUTE","horizontalgrid") + metalwidth;
@@ -467,19 +494,20 @@ namespace cIcCore{
         Rect* rrect = routering->get(location);
         foreach(Rect* r, rects){
             Instance* ct = Cut::getInstance(r->layer(),rrect->layer(),2,2);
+
             Rect* rr = r->getCopy();
             if (location == "top") {
                 rr->setTop(rrect->y2());
-                ct->moveTo(rr->x1(),rrect->y1());
+                if(ct) ct->moveTo(rr->x1(),rrect->y1());
             } else if (location == "bottom") {
                 rr->setBottom(rrect->y1());
-                ct->moveTo(rr->x1(),rrect->y1());
+                if(ct) ct->moveTo(rr->x1(),rrect->y1());
             } else if (location ==  "left") {
                 rr->setLeft(rrect->x1());
-                ct->moveTo(rrect->x1(),rr->y1());
+                if(ct) ct->moveTo(rrect->x1(),rr->y1());
             } else if (location ==  "right") {
                 rr->setRight(rrect->x2());
-                ct->moveTo(rrect->x1(),rr->y1());
+                if(ct) ct->moveTo(rrect->x1(),rr->y1());
             }
             routering->add(rr);
             routering->add(ct);
@@ -609,27 +637,35 @@ namespace cIcCore{
 
             prev_group = group;
 
-            //The chain of events is important here, ports get defined in the setSubckInstance
-            Instance * inst = Instance::getInstance(ckt_inst->subcktName());
-            inst->setSubcktInstance(ckt_inst);
-            this->add(inst);
-            Text * t = new Text(ckt_inst->name());
-            t->moveTo(x + inst->width()/2, y + inst->height()/2);
-            this->add(t);
-            inst->moveTo(x,y);
-            this->addToNodeGraph(inst);
+            Instance* inst = this->addInstance(ckt_inst,x,y);
+
+
             prev_width = inst->width();
+
             if(useHalfHeight){
                 y += inst->height()/2;
             }else{
                 y += inst->height();
             }
-
-
         }
 
         this->updateBoundingRect();
 
+    }
+
+    Instance* LayoutCell::addInstance(cIcSpice::SubcktInstance* ckt_inst, int x, int y)
+    {
+
+        //The chain of events is important here, ports get defined in the setSubckInstance
+        Instance * inst = Instance::getInstance(ckt_inst->subcktName());
+        inst->setSubcktInstance(ckt_inst);
+        this->add(inst);
+        Text * t = new Text(ckt_inst->name());
+        t->moveTo( inst->width()/2,  inst->height()/2);
+        inst->add(t);
+        inst->moveTo(x,y);
+        this->addToNodeGraph(inst);
+        return inst;
     }
 
     void LayoutCell::addToNodeGraph(Instance * inst){
@@ -655,6 +691,8 @@ namespace cIcCore{
     }
 
     void LayoutCell::route(){
+
+        
         foreach(Rect *r, routes_){
             if(r->isRoute()){
                 Route * route = (Route *) r;

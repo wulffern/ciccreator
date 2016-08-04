@@ -160,7 +160,7 @@ namespace cIcGui{
 
         int h2 = this->height()/2;
         int w2 = this->width()/2;
-        
+
 
         painter.translate(w2-w1/2,h2-h1/2);
         invertY(painter);
@@ -186,8 +186,6 @@ namespace cIcGui{
         if(!c)
             return;
 
-
-
         foreach(Rect * r, c->children()){
             if(r->isInstance() && renderlevel_ >= level){
                 Instance *  inst= (Instance *) r;
@@ -202,9 +200,9 @@ namespace cIcGui{
                 }else if(inst->angle() == "R270"){
                     trans.rotate(270);
                 }else if(inst->angle() == "MX"){
-                    trans.scale(-1,1);
-                }else if(inst->angle() == "MY"){
                     trans.scale(1,-1);
+                }else if(inst->angle() == "MY"){
+                    trans.scale(-1,1);
                 }
 
                 //Draw instance boundary
@@ -270,9 +268,9 @@ namespace cIcGui{
 
             }else if(r->isCell() && renderlevel_ >= level){
                 Cell * childcell = (Cell*)r;
-                
 
-                
+
+
                 //painter.setPen(QPen(QColor("black"),0.5/_zoom));
                 //painter.setBrush(QBrush(Qt::NoBrush));
                 //painter.drawRect(c->x1(),c->y1(),c->width(),c->height());
@@ -315,24 +313,20 @@ namespace cIcGui{
 
         if(c==NULL){return;}
         painter.translate(x,y);
-        //Draw instance boundary
+//        if(level==0){
         painter.setPen(QPen(QColor("black"),0.5/_zoom));
         painter.setBrush(QBrush(Qt::NoBrush));
-        painter.drawRect(c->x1(),c->y1(),c->width(),c->height());
+        painter.drawRect(0,0,c->width(),c->height());
+            //      }
+
         this->paintChildren(c, painter, level);
         painter.translate(-x,-y);
         QRectF r = painter.window();
-        //  this->resize(r.width(),r.height());
-
-
     }
 
     void RenderArea::drawShape(QPainter &painter)
     {
 
-
-
-        //painter.fillPath(shape, Qt::blue);
     }
 
     void RenderArea::transformPainter(QPainter &painter)

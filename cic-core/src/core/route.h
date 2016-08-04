@@ -49,7 +49,7 @@ namespace cIcCore{
 
 		virtual void addStartCuts();
 		virtual void addEndCuts(); 
-		virtual void addCuts(QList<Rect*>);
+		virtual void addCuts(QList<Rect*>,QList<Rect*>&);
 		virtual void route();
 
 		void addVertical(int x);
@@ -75,7 +75,10 @@ namespace cIcCore{
 		QString options_;
 		QList<Rect*> start_rects_;
 		QList<Rect*> stop_rects_;
-
+        QList<Rect*> startcuts;
+        QList<Rect*> endcuts;
+        
+        
 		void routeStraight();
 		void routeLeft();
 		void routeRight();

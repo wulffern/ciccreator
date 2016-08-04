@@ -126,22 +126,26 @@ namespace cIcCore{
 
     void Route::addStartCuts(){
         if(!this->options_.contains(QRegularExpression("nostartcut"))){
-            this->addCuts(start_rects_);
+            this->addCuts(start_rects_,startcuts);
         }
     }
 
     void Route::addEndCuts(){
         if(!this->options_.contains(QRegularExpression("noendcut"))){
-            this->addCuts(stop_rects_);
+            this->addCuts(stop_rects_,endcuts);
         }
     }
 
-    void Route::addCuts(QList<Rect*> rects){
+    void Route::addCuts(QList<Rect*> rects,QList<Rect*>& allcuts){
         //TODO: Make poly routing work, right now all routing must happen in > M1
         if(routeLayer_ == "PO"){
             return;
         }
         QList<Rect*>  cuts = Cut::getCutsForRects(routeLayer_,rects,cuts_,vcuts_);
+        foreach(Rect* r,cuts){
+            allcuts.append(r);
+        }
+        
         this->add(cuts);
 
     }
@@ -300,6 +304,13 @@ namespace cIcCore{
             int center = r1->centerY();
             Rect * r = new Rect(routeLayer_, r1->x1(),center - height/2.0,r2->x2() - r1->x1(),height);
             this->add(r);
+
+            //TODO: Relocate cuts for endcuts
+            foreach(Rect* r,endcuts){
+                r->moveCenter(r2->centerX(),center);
+                
+            }
+            
         }
 
     }

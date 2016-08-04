@@ -78,7 +78,8 @@ CONFIG += c++11
     src/core/instanceport.h \
     src/core/layoutrotatecell.h \
     src/core/text.h \
-    src/core/point.h
+    src/core/point.h \
+    src/cells/sar.h
 
 
   SOURCES +=         src/printer/gds.cpp \
@@ -111,4 +112,5 @@ CONFIG += c++11
     src/core/instanceport.cpp \
     src/core/layoutrotatecell.cpp \
     src/core/text.cpp \
-    src/core/point.cpp
+    src/core/point.cpp \
+    src/cells/sar.cpp

@@ -33,6 +33,9 @@
 #include "core/layoutcell.h"
 #include "core/layoutrotatecell.h"
 #include "spice/spiceparser.h"
+
+#include "cells/sar.h"
+
 #include <exception>
 #include <iostream>
 
