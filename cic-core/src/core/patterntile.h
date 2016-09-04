@@ -68,6 +68,8 @@ namespace cIcCore{
         ~PatternTile();
 
         Q_INVOKABLE void fillCoordinatesFromString(QJsonArray ar);
+        Q_INVOKABLE void getRuleForHorizontalGrid(QJsonArray ar);
+        Q_INVOKABLE void getRuleForVerticalGrid(QJsonArray ar);
         Q_INVOKABLE void copyColumn(QJsonObject obj);
         Q_INVOKABLE void addEnclosure(QJsonArray ar);
         Q_INVOKABLE void addEnclosureByRectangle(QJsonArray ar);

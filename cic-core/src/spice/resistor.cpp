@@ -1,7 +1,7 @@
 //====================================================================
 //        Copyright (c) 2016 Carsten Wulff Software, Norway 
 // ===================================================================
-// Created       : wulff at 2016-6-13
+// Created       : wulff at 2016-9-4
 // ===================================================================
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -16,47 +16,39 @@
 //   You should have received a copy of the GNU General Public License
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //====================================================================
-#ifndef CIC_CORE_ROUTE_RING_H
-#define CIC_CORE_ROUTE_RING_H
-
-#include <QObject>
-#include "cell.h"
-#include "instance.h"
-#include "cut.h"
-#include "text.h"
-#include <iostream>
 
 
-namespace cIcCore{
 
-	class RouteRing : public Cell
-	{
+#include "spice/resistor.h"
+namespace cIcSpice{
+
+    Resistor::Resistor(){
+        this->deviceName_ = "mres";
+        this->spiceType_ = "X";
+        QStringList n;
+        n << "A" << "B";
+        this->setNodes(n);
+    }
+
+    Resistor::Resistor(const Resistor& cap){
+
+    }
+
+    Resistor::~Resistor(){
+
+    }
 
 
-		Q_OBJECT
+    QString Resistor::toSpice( QString instance, QStringList nodes){
+        QString s;
+        QTextStream ts(&s);
 
-	public:
+        cIcCore::Rules * rules = cIcCore::Rules::getRules();
+        cIcCore::Device * mtype = rules->getDevice(this->deviceName());
 
-		RouteRing();
-		RouteRing(QString layer,QString name, Rect* size,QString location,int xgrid, int ygrid, int width );
-		~RouteRing();
-		void addRoute(Rect* r, QString layer, QString options, QString location);
-        void trimRouteRing(QString location,QString whichEndToTrim);
-        
-		Rect* get(QString location);
-        Rect* getDefault();
-        Rect* getPointer(QString location);
+        ts << "R" << instance << " A B " << mtype->name << "\n";
 
+        return s;
+    }
 
-	protected:
-		Rect* bottom;
-		Rect* left;
-		Rect* right;
-		Rect* top;
-        Rect* default_rectangle;
-
-	};
-
-};
-
-#endif
+}

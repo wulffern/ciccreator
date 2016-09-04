@@ -37,6 +37,13 @@ json:
 	${cmd}   ../examples/${FILE}.json ${tech} ${FILE} ${OPT}
 
 
+esscirc:
+	${cmd}   ../examples/SAR_ESSCIRC16_28N.json ../../cnano/examples/soi.json SAR_ESSCIRC16_28N ${OPT}
+	cat SAR_ESSCIRC16_28N.spi | perl -pe 'if(m/^\s*M\d+/ig){s/\n//ig;$$_ = $$_ . " p_la=0 \n";}' > SAR_ESSCIRC16_28N_tmp.spi;
+	rm SAR_ESSCIRC16_28N.spi;
+	mv SAR_ESSCIRC16_28N_tmp.spi SAR_ESSCIRC16_28N.spi
+
+
 #--------------------------------------------------------------------
 # Sections below are used for testing of ADC compile, which is not public (yet)
 #--------------------------------------------------------------------
@@ -46,6 +53,8 @@ sar:
 	cat SAR_LPWR_ST28N.spi | perl -pe 'if(m/^\s*M\d+/ig){s/\n//ig;$$_ = $$_ . " p_la=0 \n";}' > SAR_LPWR_ST28N_tmp.spi;
 	rm SAR_LPWR_ST28N.spi;
 	mv SAR_LPWR_ST28N_tmp.spi SAR_LPWR_ST28N.spi
+
+
 
 devices:
 	${cmd}   ../examples/devices.json ../../cnano/examples/soi.json DEVICES ${OPT}

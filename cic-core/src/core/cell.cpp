@@ -27,7 +27,7 @@ namespace cIcCore{
         spiceObject_ = NULL;
         _subckt = NULL;
         boundaryIgnoreRouting_ = false;
-        
+
     }
 
     Cell::Cell(const Cell&){
@@ -51,17 +51,17 @@ namespace cIcCore{
     void Cell::setBoundaryIgnoreRouting(bool bir)
     {
         boundaryIgnoreRouting_ = bir;
-        
+
     }
     bool Cell::boundaryIgnoreRouting()
     {
         return boundaryIgnoreRouting_;
-        
+
     }
-    
-    
-    
-    
+
+
+
+
     void Cell::mirrorCenterX(){
         this->mirrorX(this->centerX());
     }
@@ -209,6 +209,23 @@ namespace cIcCore{
     }
 
 
+    Port * Cell::updatePort(QString name,Rect* r)
+    {
+
+        Port* p_ptr;
+        if(ports_.contains(name)){
+            p_ptr = ports_[name];
+            p_ptr->set(r);
+        }else{
+            p_ptr = new Port(name);
+            p_ptr->set(r);
+            this->add(p_ptr);
+        }
+        return p_ptr;
+    }
+
+
+
 
     //-------------------------------------------------------------
     // Children handling
@@ -262,6 +279,7 @@ namespace cIcCore{
                 ports_[p->name()] = p;
                 allports_[p->name()].append(p);
             }
+            
             if(child->isRoute()){
                 routes_.append(child);
             }
@@ -352,8 +370,8 @@ namespace cIcCore{
     Rect Cell::calcBoundingRect(QList<Rect*> children){
         return Cell::calcBoundingRect(children,false);
     }
-    
-    
+
+
     Rect Cell::calcBoundingRect(QList<Rect*> children,bool ignoreBoundaryRouting){
         int x1  = std::numeric_limits<int>::max();
         int y1  = std::numeric_limits<int>::max();
@@ -366,7 +384,7 @@ namespace cIcCore{
         foreach(Rect* cr, children) {
 
             if(ignoreBoundaryRouting && !cr->isInstance()) continue;
-                        
+
             int cx1 = cr->x1();
             int cx2 = cr->x2();
             int cy1 = cr->y1();

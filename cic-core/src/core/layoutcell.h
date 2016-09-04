@@ -26,7 +26,6 @@
 #include "route.h"
 #include "routering.h"
 #include "graph.h"
-#include "datatypes.h"
 
 namespace cIcCore{
 
@@ -68,6 +67,9 @@ namespace cIcCore{
 		void addPowerRing(QString layer, QString name, QString location, int widthmult);
 		void addPowerConnection(QString name, QString includeInstances,  QString location);
 		void addRouteConnection(QString path, QString includeInstances, QString layer, QString location, QString options);
+
+        Instance* getInstanceFromInstanceName(QString instanceName);
+        
 
 		
         virtual void place();

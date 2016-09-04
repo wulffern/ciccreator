@@ -33,6 +33,8 @@ namespace cIcCore{
 		qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
 		qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
         qRegisterMetaType<cIcCells::SAR>("cIcCells::SAR");
+        qRegisterMetaType<cIcCells::CapCell>("cIcCells::CapCell");
+        qRegisterMetaType<cIcCore::PatternResistor>("cIcCore::PatternResistor");
 
 
         //Translate from Perl names to c++ names
@@ -42,6 +44,7 @@ namespace cIcCore{
         cellTranslator["Layout::LayoutDigitalCell"] = "cIcCore::LayoutCell";
         cellTranslator["Layout::LayoutRotateCell"] = "cIcCore::LayoutRotateCell";
         cellTranslator["Layout::LayoutSARCDAC"] = "cIcCells::SAR";
+        cellTranslator["Layout::LayoutCapCellSmall"] = "cIcCells::CapCell";
         nameTranslator["type"] = "mosType";
         console = new ConsoleOutput();
 

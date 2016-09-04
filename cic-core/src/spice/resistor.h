@@ -1,7 +1,7 @@
 //====================================================================
 //        Copyright (c) 2016 Carsten Wulff Software, Norway 
 // ===================================================================
-// Created       : wulff at 2016-6-13
+// Created       : wulff at 2016-9-4
 // ===================================================================
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -16,47 +16,33 @@
 //   You should have received a copy of the GNU General Public License
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //====================================================================
-#ifndef CIC_CORE_ROUTE_RING_H
-#define CIC_CORE_ROUTE_RING_H
-
-#include <QObject>
-#include "cell.h"
-#include "instance.h"
-#include "cut.h"
-#include "text.h"
-#include <iostream>
 
 
-namespace cIcCore{
 
-	class RouteRing : public Cell
-	{
+#ifndef CIC_SPICE_RESISTOR
+#define CIC_SPICE_RESISTOR
 
+#include <QString>
+#include "core/rules.h"
+#include "spice/spiceobject.h"
 
-		Q_OBJECT
+namespace cIcSpice{
 
-	public:
+    class Resistor : public SpiceObject
+    {
 
-		RouteRing();
-		RouteRing(QString layer,QString name, Rect* size,QString location,int xgrid, int ygrid, int width );
-		~RouteRing();
-		void addRoute(Rect* r, QString layer, QString options, QString location);
-        void trimRouteRing(QString location,QString whichEndToTrim);
-        
-		Rect* get(QString location);
-        Rect* getDefault();
-        Rect* getPointer(QString location);
+        Q_OBJECT
 
+    public:
+        Resistor();
+        Resistor(const Resistor& mos);
+        ~Resistor();
+        virtual QString toSpice( QString instance, QStringList nodes);
 
-	protected:
-		Rect* bottom;
-		Rect* left;
-		Rect* right;
-		Rect* top;
-        Rect* default_rectangle;
+    };
 
-	};
+}
 
-};
+Q_DECLARE_METATYPE(cIcSpice::Resistor)
 
-#endif
+#endif 
