@@ -24,7 +24,8 @@ TEMPLATE=subdirs
   CONFIG += ordered
   SUBDIRS = cic-core \
   cic \
-  cic-gui
+  cic-gui \
+  cic-color
 
   cic.depends = cic-core
   cic-gui.depends = cic-core

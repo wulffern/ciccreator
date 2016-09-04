@@ -76,6 +76,33 @@ namespace cIcCore {
     }
 
 
+    void PatternTile::getRuleForHorizontalGrid(QJsonArray ar)
+    {
+        if(ar.size() < 2){
+            qDebug() << "Error: getRuleForHorizontalGrid must contain at least to elements\n";
+            return;
+        }
+
+        QString layer = ar[0].toString();
+        QString rule = ar[1].toString();
+        horizontalGrid_ = this->getRules()->get(layer,rule);
+        
+    }
+    
+    void PatternTile::getRuleForVerticalGrid(QJsonArray ar)
+    {
+        if(ar.size() < 2){
+            qDebug() << "Error: getRuleForVerticalGrid must contain at least to elements\n";
+            return;
+        }
+
+        QString layer = ar[0].toString();
+        QString rule = ar[1].toString();
+        verticalGrid_ = this->getRules()->get(layer,rule);
+
+    }
+    
+
 
     void PatternTile::fillCoordinatesFromString(QJsonArray ar){
 
@@ -84,6 +111,14 @@ namespace cIcCore {
         this->xspace_ = this->rules->get("ROUTE","horizontalgrid");
         this->yspace_ = this->rules->get("ROUTE","verticalgrid");
 
+        if(horizontalGrid_ != 0){
+            this->xspace_ = horizontalGrid_;
+        }
+        
+        if(verticalGrid_ != 0){
+            this->yspace_ = verticalGrid_;
+        }
+        
 
         QMap<QString,QVariant> data = this->initFillCoordinates();
 

@@ -154,14 +154,24 @@ namespace cIcCells{
             ports_["SARN"]->set(sarn);
         }
 
+        QList<Rect*> sarn_cdac = this->findRectanglesByNode("SARN","","CDAC");
+        QList<Rect*> sarn_start;
+        sarn_start.append(sarn);
+        Route* r = new Route("SARN","M3",sarn_start,sarn_cdac,"","-|--");
+        this->add(r);
 
-        
+        QList<Rect*> sarp_cdac = this->findRectanglesByNode("SARP","","CDAC");
+        QList<Rect*> sarp_start;
+        sarp_start.append(sarp);
+        Route* r1 = new Route("SARP","M3",sarp_start,sarp_cdac,"","-|--");
+        this->add(r1);
+
         
     }
 
     void SAR::route()
     {
-        this->addConnectivityRoute("M3","SAR(N|P)","||","","","","CDAC");
+
 
         LayoutCell::route();
         

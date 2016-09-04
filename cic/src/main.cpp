@@ -99,6 +99,8 @@ int main(int argc, char *argv[])
             //Write JSON
             d->writeJsonFile(library + ".json");
 
+
+
         }else{
             qWarning() << "Wrong number of arguments " << argc;
         }

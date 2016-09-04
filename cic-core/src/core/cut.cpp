@@ -84,7 +84,8 @@ namespace cIcCore {
             }
         }
 
-
+        this->updateBoundingRect();
+        
     }
 
     Cut::~Cut()

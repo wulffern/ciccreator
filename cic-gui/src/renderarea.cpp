@@ -255,14 +255,29 @@ namespace cIcGui{
                     color.setAlpha(150);
                     painter.setPen(QPen(color,Qt::SolidLine));
                     painter.setFont(font);
+                    
+                    if(l->nofill){
+                        painter.setBrush(QBrush(Qt::NoBrush));
+                    }else{
+                        Qt::BrushStyle bstyle = Qt::SolidPattern;
+                        painter.setBrush(QBrush(color,bstyle));
+                    }
 
+                    
+                    painter.drawRect(p->x1(),p->y1(),p->width(),p->height());
+                    
                     painter.scale(1,-1);
 //                  painter.translate(0,-this->c->height());
 
                     painter.drawText(p->x1(),-p->y1(),p->name());
 
+
+
+
 //                  painter.translate(0,+this->c->height());
                     painter.scale(1,-1);
+
+
 
                 }
 
@@ -317,7 +332,7 @@ namespace cIcGui{
         painter.setPen(QPen(QColor("black"),0.5/_zoom));
         painter.setBrush(QBrush(Qt::NoBrush));
         painter.drawRect(0,0,c->width(),c->height());
-            //      }
+        //      }
 
         this->paintChildren(c, painter, level);
         painter.translate(-x,-y);

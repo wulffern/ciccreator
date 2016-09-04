@@ -57,18 +57,22 @@ namespace cIcCore{
 
 		if(location.contains("b")){
 			this->add(bottom);
+            default_rectangle = bottom;
 		}
 
 		if(location.contains("t")){
 			this->add(top);
+            default_rectangle = top;
 		}
 
 		if(location.contains("l")){
 			this->add(left);
+            default_rectangle = left;
 		}
 
 		if(location.contains("r")){
 			this->add(right);
+            default_rectangle = right;
 		}
 		
 	}
@@ -76,6 +80,12 @@ namespace cIcCore{
 	RouteRing::~RouteRing(){
 
 	}
+
+    Rect* RouteRing::getDefault()
+    {
+        return default_rectangle;
+    }
+    
 
 	Rect* RouteRing::get(QString location){
 		if(location == "bottom"){

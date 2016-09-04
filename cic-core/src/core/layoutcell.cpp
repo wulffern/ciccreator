@@ -151,7 +151,7 @@ namespace cIcCore{
             Graph * g = nodeGraph_[node];
             QList<Rect*>  rects = g->getRectangles(excludeInstances,includeInstances,layer);
             if(includeInstances == "XDAC") qDebug() << node;
-            
+
             if(rects.count() == 0){
                 qDebug() << "Error: Could not find rectangles on " << node << regex << rects.count() << "\n";
             }
@@ -188,20 +188,9 @@ namespace cIcCore{
             if(r->layer() != layer){
                 qDebug()<< "Layer " << r->layer() << " is different from " << port << "on rect " << path << " in layer " << layer;
             }else{
-                if(ports_.contains(port)){
-                    Port *p = ports_[port];
-                    p->set(r);
-                }else{
-                    Port * p = new Port(port);
-                    p->set(r);
-                    this->add(p);
-
-
-                }
+                this->updatePort(port,r);
             }
         }
-
-
     }
 
     void LayoutCell::addVia(QJsonArray obj)
@@ -241,6 +230,20 @@ namespace cIcCore{
         }
 
     }
+
+    Instance* LayoutCell::getInstanceFromInstanceName(QString instanceName)
+    {
+        QList<Rect*> instances = this->getChildren("cIcCore::Instance");
+        foreach(Rect* r, instances){
+            Instance* i = (Instance*) r;
+            qDebug() << i->instanceName();
+            if(i->instanceName() == instanceName){
+                return i;
+            }
+        }
+        return 0;
+    }
+    
 
 
     void LayoutCell::addConnectivityVia(QJsonArray obj)
@@ -426,7 +429,6 @@ namespace cIcCore{
 
     void LayoutCell::addPowerRing(QString layer, QString name, QString location, int widthmult)
     {
-//        qDebug() << layer << name << location << widthmult;
         Instance* c = Cut::getInstance("M3","M4",2,2);
         int metalwidth = c->height()*widthmult;
         int xgrid = this->rules->get("ROUTE","horizontalgrid") + metalwidth;
@@ -435,9 +437,13 @@ namespace cIcCore{
         RouteRing* rr = new RouteRing(layer,name,this->getCopy(),location,ygrid,xgrid,metalwidth);
         QString rail = "power_" + name;
         if(rr != 0) named_rects_[rail] = rr;
+
+        this->updatePort(name,rr->getDefault());
+
         this->add(rr);
 
     }
+
 
     void LayoutCell::addRouteRing(QJsonArray obj)
     {
@@ -463,6 +469,7 @@ namespace cIcCore{
         QStringList names = expandBus(name);
         for(auto& n:names){
             RouteRing* rr = new RouteRing(layer,n,this->getCopy(),location,ygrid,xgrid,metalwidth);
+            this->updatePort(n,rr->getDefault());
             QString rail = "rail_" + n;
             if(rr != 0) named_rects_[rail] = rr;
             this->add(rr);
@@ -552,15 +559,16 @@ namespace cIcCore{
         foreach(QString node, nodeGraph_.keys()){
             if(!node.contains(QRegularExpression(path))) continue;
             if(!named_rects_.contains("rail_" + node)) continue;
-
+            
             Graph * g = nodeGraph_[node];
             QList<Rect*>  rects = g->getRectangles("",includeInstances,layer);
             RouteRing* rr = (RouteRing*) named_rects_["rail_" + node];
+            Rect* routering = rr->get(location);
             QList<Rect*> empty;
             foreach(Rect* r, rects){
                 QList<Rect*> stop;
                 stop.append(r);
-                stop.append(rr->get(location));
+                stop.append(routering);
                 Route* ro = new Route(node,layer,empty,stop,options,routeType);
                 routes_.append(ro);
                 rr->add(ro);
@@ -692,7 +700,7 @@ namespace cIcCore{
 
     void LayoutCell::route(){
 
-        
+
         foreach(Rect *r, routes_){
             if(r->isRoute()){
                 Route * route = (Route *) r;

@@ -67,6 +67,9 @@ routes:
 sar:
 	cd lay; make sar
 
+esscirc:
+	cd lay; make esscirc
+
 view:
 	cd lay; ../bin/cic-gui ${TECHFILE} ${LIBNAME}.json &
 

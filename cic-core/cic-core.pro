@@ -49,7 +49,6 @@ CONFIG += c++11
   src/core/rect.h \
     src/printer/minecraft.h \
     src/core/graph.h \
-      src/core/datatype.h \
   src/core/cell.h \
   src/core/instance.h \
   src/core/layoutcell.h \
@@ -58,7 +57,9 @@ CONFIG += c++11
   src/spice/spiceobject.h \
   src/spice/mosfet.h \
   src/spice/capacitor.h \
-  src/core/patterncapacitor.h \
+    src/spice/resistor.h \
+    src/core/patterncapacitor.h \
+    src/core/patternresistor.h \
   src/core/design.h \
   src/printer/gds.h \
   src/printer/designprinter.h \
@@ -79,7 +80,8 @@ CONFIG += c++11
     src/core/layoutrotatecell.h \
     src/core/text.h \
     src/core/point.h \
-    src/cells/sar.h
+    src/cells/sar.h \
+    src/cells/capcell.h
 
 
   SOURCES +=         src/printer/gds.cpp \
@@ -90,6 +92,7 @@ CONFIG += c++11
   src/core/patterntile.cpp \
   src/core/patterntransistor.cpp \
   src/core/patterncapacitor.cpp \
+      src/core/patternresistor.cpp \
   src/core/design.cpp \
   src/printer/designprinter.cpp \
   src/printer/svg.cpp \
@@ -106,11 +109,13 @@ CONFIG += c++11
   src/core/port.cpp\
   src/spice/mosfet.cpp\
   src/spice/capacitor.cpp \
+  src/spice/resistor.cpp \
   src/core/route.cpp \
-      src/core/routering.cpp \
-    src/core/cut.cpp \
-    src/core/instanceport.cpp \
-    src/core/layoutrotatecell.cpp \
-    src/core/text.cpp \
-    src/core/point.cpp \
-    src/cells/sar.cpp
+  src/core/routering.cpp \
+  src/core/cut.cpp \
+  src/core/instanceport.cpp \
+  src/core/layoutrotatecell.cpp \
+  src/core/text.cpp \
+  src/core/point.cpp \
+  src/cells/sar.cpp\
+  src/cells/capcell.cpp

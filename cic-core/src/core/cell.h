@@ -97,6 +97,10 @@ namespace cIcCore{
         QList<Port *>  ports();
         QMap<QString,QList<Port*>> allports();
 
+        //! Update rectangle of port, if port does not exist a new one
+        //! is created
+        Port * updatePort(QString name,Rect* r);
+
         //! Spice subcircuit object
         cIcSpice::Subckt * subckt(){return _subckt;}
         cIcSpice::Subckt * setSubckt(cIcSpice::Subckt * val){ _subckt = val; return _subckt;}

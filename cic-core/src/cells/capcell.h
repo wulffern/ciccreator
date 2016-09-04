@@ -1,7 +1,7 @@
 //====================================================================
 //        Copyright (c) 2016 Carsten Wulff Software, Norway 
 // ===================================================================
-// Created       : wulff at 2016-8-2
+// Created       : wulff at 2016-9-3
 // ===================================================================
 // The MIT License (MIT)
 // 
@@ -25,43 +25,32 @@
 // 
 //====================================================================
 
-
-#ifndef CIC_CELLS_SAR_H
-#define CIC_CELLS_SAR_H
+#ifndef CIC_CELLS_CAPCELL_H
+#define CIC_CELLS_CAPCELL_H
 
 #include "core/layoutcell.h"
 
-
-typedef QMap<QString,QList<cIcSpice::SubcktInstance*>>  SARgroup;
-
-
-
 namespace cIcCells{
-    
-    class SAR : public cIcCore::LayoutCell
+
+    class CapCell: public cIcCore::LayoutCell
     {
         Q_OBJECT
 
     public:
-        
         virtual void place();
-        virtual void route();
-        
-        int getCellWidth(SARgroup groups,QString group);
-        cIcCore::Instance* placeAlternateMirror(SARgroup groups,QString group, int i, int x ,int y, int xoffset);
-        void addSarRouting(int y,int msw,int mw);
+
+        void addContacts(QString name, QString node,int y,QList<int> array);
         
     private:
-
-        Rect* sarn;
-        Rect* sarp;
+        int msw;
+        int xorg;
+        int yMax;
+        
 
     };
-    
-        
-}
 
-Q_DECLARE_METATYPE(cIcCells::SAR)
 
-#endif
+};
+    Q_DECLARE_METATYPE(cIcCells::CapCell)
 
+#endif 
