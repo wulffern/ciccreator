@@ -34,6 +34,7 @@ namespace cIcCore{
 		qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
         qRegisterMetaType<cIcCells::SAR>("cIcCells::SAR");
         qRegisterMetaType<cIcCells::CapCell>("cIcCells::CapCell");
+                qRegisterMetaType<cIcCells::CDAC>("cIcCells::CDAC");
         qRegisterMetaType<cIcCore::PatternResistor>("cIcCore::PatternResistor");
 
 
@@ -44,6 +45,7 @@ namespace cIcCore{
         cellTranslator["Layout::LayoutDigitalCell"] = "cIcCore::LayoutCell";
         cellTranslator["Layout::LayoutRotateCell"] = "cIcCore::LayoutRotateCell";
         cellTranslator["Layout::LayoutSARCDAC"] = "cIcCells::SAR";
+        cellTranslator["Layout::LayoutCDACSmall"] = "cIcCells::CDAC";
         cellTranslator["Layout::LayoutCapCellSmall"] = "cIcCells::CapCell";
         nameTranslator["type"] = "mosType";
         console = new ConsoleOutput();
@@ -99,15 +101,18 @@ namespace cIcCore{
 
         if(ckt == NULL){ //Try to find a parent with a subckt
             int count = reverse_parents->count();
-            for(int i=0;i<count; i++){
+            for(int i=count-1;i>=0; i--){
                 QJsonObject parent  = reverse_parents->at(i);
                 cIcSpice::Subckt * ckt_parent = _spice_parser.getSubckt(parent["name"].toString());
+                qDebug() << parent["name"];
+                
+                
+                
                 if(ckt_parent == NULL) continue;
-
-
                 
                 //Apply spice-regex
                 if(jobj.contains("spiceRegex")){
+
                     QJsonArray jarr = jobj["spiceRegex"].toArray();
                     QStringList strlist = ckt_parent->spiceStr();
                     strlist.replaceInStrings(parent["name"].toString(),name);

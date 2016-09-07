@@ -73,6 +73,10 @@ namespace cIcCore{
         Q_INVOKABLE void boundaryIgnoreRouting(QJsonValue obj);
         void setBoundaryIgnoreRouting(bool bir);
         bool boundaryIgnoreRouting();
+
+        //! Shortcut for adding ports
+        void addPort(QString name, Rect* r);
+        
         
         //! Mirror this cell, and all children around horizontal center point (basically flip horizontal)
         Q_INVOKABLE void mirrorCenterX();

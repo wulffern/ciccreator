@@ -80,7 +80,9 @@ CONFIG += c++11
     src/core/layoutrotatecell.h \
     src/core/text.h \
     src/core/point.h \
+    src/cells/cells.h \
     src/cells/sar.h \
+    src/cells/cdac.h \
     src/cells/capcell.h
 
 
@@ -118,4 +120,5 @@ CONFIG += c++11
   src/core/text.cpp \
   src/core/point.cpp \
   src/cells/sar.cpp\
+  src/cells/cdac.cpp \
   src/cells/capcell.cpp

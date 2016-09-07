@@ -174,10 +174,8 @@ namespace cIcCore{
             xcell = this->cell()->x2();
             //Fix instanceports
         }
-
-//        this->transform(this);
-
         foreach(Rect* r,this->children()){
+            //TODO: HOW TO HANDLE INSTANCES WITH NEGATIVE COORDINATES
             r->translate(-this->x1(),-this->y1());
             this->transform(r);
         }
@@ -192,6 +190,9 @@ namespace cIcCore{
         if(this->angle() == "R90"){
             r.rotate(90);
         }
+
+
+        //TODO: HOW TO HANDLE INSTANCES WITH NEGATIVE COORDINATES
         r.moveTo(this->x1(), this->y1());
         return r;
     }

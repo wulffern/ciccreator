@@ -64,11 +64,17 @@ devices:
 routes:
 	cd lay; ${CMD} ${EXAMPLE}/routes.json ${TECHFILE} routes ${OPT}
 
-sar:
+esscirc:
+	cd lay; ${CMD} ${EXAMPLE}/SAR_ESSCIRC16_28N.json ${TECHFILE} SAR_ESSCIRC16_28N ${OPT}
+
+
+esscirc_soi:
+	cd lay; make esscirc
+
+sar_soi:
 	cd lay; make sar
 
-esscirc:
-	cd lay; make esscirc
+
 
 view:
 	cd lay; ../bin/cic-gui ${TECHFILE} ${LIBNAME}.json &

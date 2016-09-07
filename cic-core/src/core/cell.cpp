@@ -27,7 +27,6 @@ namespace cIcCore{
         spiceObject_ = NULL;
         _subckt = NULL;
         boundaryIgnoreRouting_ = false;
-
     }
 
     Cell::Cell(const Cell&){
@@ -44,7 +43,7 @@ namespace cIcCore{
     {
 //        if(!obj) return;
         int bir = obj.toInt();
-        if(bir) setBoundaryIgnoreRouting(true);
+        if(bir==1) setBoundaryIgnoreRouting(true);
         else setBoundaryIgnoreRouting(false);
     }
 
@@ -179,6 +178,13 @@ namespace cIcCore{
     //-------------------------------------------------------------
     // Port functions
     //-------------------------------------------------------------
+    void Cell::addPort(QString name, Rect* r)
+    {
+        Port* p = new Port(name);
+        p->set(r);
+        this->add(p);
+    }
+    
     void Cell::addAllPorts(){}
     QList<Port*> Cell::ports(){
         return  ports_.values();
@@ -383,8 +389,12 @@ namespace cIcCore{
         }
         foreach(Rect* cr, children) {
 
-            if(ignoreBoundaryRouting && !cr->isInstance()) continue;
+            if(ignoreBoundaryRouting && (!cr->isInstance() || cr->isCut())) continue;
 
+            
+
+            
+            
             int cx1 = cr->x1();
             int cx2 = cr->x2();
             int cy1 = cr->y1();
@@ -407,7 +417,6 @@ namespace cIcCore{
 
         }
         Rect r;
-
         r.setPoint1(x1,y1);
         r.setPoint2(x2,y2);
 
@@ -417,6 +426,7 @@ namespace cIcCore{
     }
 
     Rect Cell::calcBoundingRect(){
+        
         return this->calcBoundingRect(this->children(),this->boundaryIgnoreRouting());
     }
 

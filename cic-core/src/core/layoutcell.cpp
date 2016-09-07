@@ -24,6 +24,7 @@ namespace cIcCore{
     {
         useHalfHeight = false;
         noPowerRoute_ = false;
+        boundaryIgnoreRouting_ = true;
     }
 
     LayoutCell::LayoutCell(const LayoutCell& cell): Cell(cell){
