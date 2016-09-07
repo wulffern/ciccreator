@@ -49,6 +49,7 @@
         "SVT" : { "number" : 12, "datatype" : 164 , "material" : "marker" , "color" : "cyan","fill" : "nofill"}
     },
     "technology" :{
+		"gamma" : 30,
         "devices" : {
             "rppo" : { "name" : "rppo", "ports" : ["p","n"]},
             "mres" : { "name" : "mres", "ports" : ["p","n"]},
