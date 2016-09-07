@@ -51,6 +51,7 @@ namespace cIcCore{
         start_rects_ = start;
         stop_rects_ = stop;
 		this->setName(net);
+        this->setBoundaryIgnoreRouting(false);
 
 		//Decode options
 		if(options.contains(QRegularExpression("fillhcut"))){ fillhcut_ = true ;}
@@ -201,7 +202,6 @@ namespace cIcCore{
 
 		this->updateBoundingRect();
 
-		Rect r = this->calcBoundingRect();
 		
     }
 

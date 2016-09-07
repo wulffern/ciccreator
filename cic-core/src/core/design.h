@@ -35,6 +35,7 @@
 #include "spice/spiceparser.h"
 #include "core/patternresistor.h"
 #include "cells/sar.h"
+#include "cells/cdac.h"
 #include "cells/capcell.h"
 
 #include <exception>

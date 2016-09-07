@@ -23,7 +23,7 @@ namespace cIcCore{
 
 
 	RouteRing::RouteRing(){
-
+        this->setBoundaryIgnoreRouting(false);
 	}
 	
 	RouteRing::RouteRing(QString layer,QString name, Rect * size,QString location, int xgrid, int ygrid,int metalwidth ){
@@ -116,6 +116,7 @@ namespace cIcCore{
 
         QList<Rect*> cuts = this->getChildren("cIcCore::Route");
         Rect bounds = Cell::calcBoundingRect(cuts);
+        qDebug() << bounds.toString() << cuts.count();
         
         Rect* r = this->getPointer(location);
         if(whichEndToTrim.contains("l")){
@@ -132,6 +133,7 @@ namespace cIcCore{
 
         if(whichEndToTrim.contains("b")){
             r->setBottom(bounds.y1());
+            qDebug() << bounds.y1();
         }
     }
     
