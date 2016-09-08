@@ -88,26 +88,26 @@ namespace cIcCore{
 
 
     void RouteRing::translate(int dx, int dy) {
-        bottom->translate(dx,dy);
-        left->translate(dx,dy);
-        top->translate(dx,dy);
-        right->translate(dx,dy);
+//        bottom->translate(dx,dy);
+//        left->translate(dx,dy);
+        //       top->translate(dx,dy);
+//        right->translate(dx,dy);
         Cell::translate(dx,dy);
-        emit updated();
+//        emit updated();
     }
 
     void RouteRing::moveTo(int ax, int ay) {
         int x1 = this->x1();
         int y1 = this->y1();
-        Cell::moveTo(ax,ay);
+
         ax = ax - x1;
         ay = ay - y1;
-        bottom->translate(ax,ay);
-        left->translate(ax,ay);
-        top->translate(ax,ay);
-        right->translate(ax,ay);
-        
-        emit updated();
+//        bottom->translate(ax,ay);
+//        left->translate(ax,ay);
+//        top->translate(ax,ay);
+//        right->translate(ax,ay);
+        Cell::moveTo(ax,ay);        
+//        emit updated();
     }
 
 

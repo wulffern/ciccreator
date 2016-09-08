@@ -32,7 +32,7 @@ namespace cIcCells{
     {
         this->noPowerRoute();
         this->setBoundaryIgnoreRouting(false);     
-        
+
         int prev_width = 0;
         int x = 0;
         int y = 0;
@@ -47,7 +47,7 @@ namespace cIcCells{
             }
         }
 
-        //Find how many nets called CP
+         //Find how many nets called CP
         QStringList nodes= subckt()->nodes();
         int i=0;
         foreach(QString s,nodes){
@@ -73,6 +73,8 @@ namespace cIcCells{
 
     void CDAC::route()
     {
+
+       
         
 
         this->addRouteConnection("CP","","M1","left","");

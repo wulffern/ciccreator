@@ -91,10 +91,10 @@ namespace cIcCore{
 
 
 		//! Move this rectangle by ax and ay
-		void translate(int ax, int ay);
+		virtual void translate(int ax, int ay);
 
 		//! Move this rectangle to x and y
-		void moveTo(int x, int y);
+		virtual void moveTo(int x, int y);
 
 		//! Place center of this rectangel at x and y
         void moveCenter(int x, int y);
