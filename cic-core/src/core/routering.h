@@ -42,8 +42,9 @@ namespace cIcCore{
 		~RouteRing();
 		void addRoute(Rect* r, QString layer, QString options, QString location);
         void trimRouteRing(QString location,QString whichEndToTrim);
-        
-		Rect* get(QString location);
+        virtual void translate(int dx, int dy);
+        virtual void moveTo(int ax,int ay);
+        Rect* get(QString location);
         Rect* getDefault();
         Rect* getPointer(QString location);
 

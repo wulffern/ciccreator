@@ -34,6 +34,9 @@ namespace cIcCells{
         virtual void route();
         
     private:
+        cIcCore::Instance* firstinst;
+        cIcCore::Instance* inst;
+
         
 
     };

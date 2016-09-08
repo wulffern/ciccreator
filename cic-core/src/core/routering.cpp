@@ -85,7 +85,32 @@ namespace cIcCore{
     {
         return default_rectangle;
     }
-    
+
+
+    void RouteRing::translate(int dx, int dy) {
+        bottom->translate(dx,dy);
+        left->translate(dx,dy);
+        top->translate(dx,dy);
+        right->translate(dx,dy);
+        Cell::translate(dx,dy);
+        emit updated();
+    }
+
+    void RouteRing::moveTo(int ax, int ay) {
+        int x1 = this->x1();
+        int y1 = this->y1();
+        Cell::moveTo(ax,ay);
+        ax = ax - x1;
+        ay = ay - y1;
+        bottom->translate(ax,ay);
+        left->translate(ax,ay);
+        top->translate(ax,ay);
+        right->translate(ax,ay);
+        
+        emit updated();
+    }
+
+
 
 	Rect* RouteRing::get(QString location){
 		if(location == "bottom"){
@@ -116,7 +141,6 @@ namespace cIcCore{
 
         QList<Rect*> cuts = this->getChildren("cIcCore::Route");
         Rect bounds = Cell::calcBoundingRect(cuts);
-        qDebug() << bounds.toString() << cuts.count();
         
         Rect* r = this->getPointer(location);
         if(whichEndToTrim.contains("l")){
@@ -133,7 +157,6 @@ namespace cIcCore{
 
         if(whichEndToTrim.contains("b")){
             r->setBottom(bounds.y1());
-            qDebug() << bounds.y1();
         }
     }
     

@@ -37,8 +37,6 @@ namespace cIcCells{
         int x = 0;
         int y = 0;
         bool first = true;
-        Instance* firstinst;
-        Instance* inst;
         
         foreach(cIcSpice::SubcktInstance * ckt_inst,_subckt->instances()){
             inst= this->addInstance(ckt_inst,x,y);
@@ -59,27 +57,14 @@ namespace cIcCells{
         }
 
         //Add the route rings
-        this->updateBoundingRect();
+
         for(auto x=0;x<i;x++){
             QString name = QString("CP<%1>").arg(x);
             this->addRouteRing("M2",name,"l",1,1);
         }
         
-
-        this->addRouteConnection("CP","","M1","left","");
-
-        //Add ports
-        QList<Rect*> rects1 = firstinst->findRectanglesByNode("AVSS","");
-        if(rects1.count() > 1 ){
-            this->addPort("AVSS",rects1[0]);
-        }
-
-        
-        QList<Rect*> rects2 = inst->findRectanglesByNode("CTOP","");
-        if(rects2.count() > 1){
-            this->addPort("CTOP",rects2[0]);
-
-        }
+        this->updateBoundingRect();
+ 
 
         
 
@@ -88,9 +73,30 @@ namespace cIcCells{
 
     void CDAC::route()
     {
+        
+
+        this->addRouteConnection("CP","","M1","left","");
+
+        if(firstinst){
+            //Add ports
+            QList<Rect*> rects1 = firstinst->findRectanglesByNode("AVSS","");
+            if(rects1.count() > 1 ){
+                this->addPort("AVSS",rects1[0]);
+            }
+        }
+        
+        if(inst){
+            QList<Rect*> rects2 = inst->findRectanglesByNode("CTOP","");
+            if(rects2.count() > 1){
+                this->addPort("CTOP",rects2[0]);
+                
+            }
+        }
+        
+        
         LayoutCell::route();
         this->trimRouteRing("CP<","left","b");
-                this->updateBoundingRect();
+        this->updateBoundingRect();
     }
     
     
