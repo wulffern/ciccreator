@@ -468,7 +468,7 @@ namespace cIcCore{
         int ygrid = this->rules->get("ROUTE","horizontalgrid")*spacemult + metalwidth;
 
         QStringList names = expandBus(name);
-        for(auto& n:names){
+        foreach(QString n,names){
             RouteRing* rr = new RouteRing(layer,n,this->getCopy(),location,ygrid,xgrid,metalwidth);
             this->updatePort(n,rr->getDefault());
             QString rail = "rail_" + n;
@@ -593,7 +593,7 @@ namespace cIcCore{
     void LayoutCell::trimRouteRing(QString path, QString location,QString whichEndToTrim)
     {
         QList<Rect*> rects = this->getChildren("cIcCore::RouteRing");
-        for(auto* r:rects){
+        foreach(Rect* r,rects){
             RouteRing* rr = (RouteRing*) r;
             if(rr->name().contains(QRegularExpression(path))){
                 rr->trimRouteRing(location,whichEndToTrim);

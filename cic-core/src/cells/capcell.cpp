@@ -159,12 +159,21 @@ namespace cIcCells{
         //-             8  8              8  8                          8  8              8  8
         //  16 16 16 16                         16 16 16 16 16 16 16 16                         16 16 16 16
 
-        this->addContacts("XRES1A","C1A",y1a ,QList<int>({15}));
-        this->addContacts("XRES1B","C1B",y1b ,QList<int>({49}));
-        this->addContacts("XRES2","C2",y2,QList<int>({17,47}));
-        this->addContacts("XRES4","C4",y4,QList<int>({13,19,45,51}));
-        this->addContacts("XRES8","C8",y8,QList<int>({9,11,21,23,41,43,53,55}));
-        this->addContacts("XRES16","C16",y16,QList<int>({1,3,5,7,25,27,29,31,33,35,37,39,57,59,61,63}));
+        QList<int> cint1a = QList<int>() << 15;
+        QList<int> cint1b = QList<int>() << 49;
+        QList<int> cint2 = QList<int>() << 17 << 47;
+        QList<int> cint4 = QList<int>() <<13 << 19 <<45 <<51;
+        QList<int> cint8 = QList<int>() <<9 <<11 <<21 <<23 <<41<<43<<53<<55;
+        QList<int> cint16 = QList<int>() <<1<<3<<5<<7<<25<<27<<29<<31<<33<<35<<37<<39<<57<<59<<61<<63;
+        
+        
+        
+        this->addContacts("XRES1A","C1A",y1a ,cint1a);
+        this->addContacts("XRES1B","C1B",y1b ,cint1b);
+        this->addContacts("XRES2","C2",y2,cint2);
+        this->addContacts("XRES4","C4",y4,cint4);
+        this->addContacts("XRES8","C8",y8,cint8);
+        this->addContacts("XRES16","C16",y16,cint16);
         this->add(rects);
     }
 
@@ -182,9 +191,10 @@ namespace cIcCells{
             auto mw = ct->width();
             ct->moveTo(xorg + msw*x ,y+mw/2- ct->height()/2);
             auto ra = new Rect("M2",ct->x1(),0,ct->width(),ct->y1()- ms);
-            
             auto rb = new Rect("M2",ct->x1(),ct->y2() + ms,ct->width(),yMax - ct->y2() - ms );
-            this->add(QList<Rect*>({ct,ra,rb}));
+            this->add(ct);
+            this->add(ra);
+            this->add(rb);
 
         }
     }

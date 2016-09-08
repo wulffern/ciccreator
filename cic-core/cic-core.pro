@@ -21,7 +21,8 @@
 
   CONFIG += qt console debug
   CONFIG += staticlib
-CONFIG += c++11
+  CONFIG += c++11
+
   mac {
     CONFIG -= app_bundle
   }
