@@ -341,6 +341,22 @@ namespace cIcCore{
         emit updated();
     }
 
+    void Cell::moveTo(QJsonArray obj)
+    {
+
+        if(obj.size() < 2){
+            qDebug() << "Error: moveTo must contain at least two elements:[int,int]\n";
+            return;
+        }
+
+        int x = obj[0].toInt();
+        int y = obj[1].toInt();
+        this->moveTo(x,y);
+        
+
+    }
+    
+
     void Cell::moveTo(int ax, int ay) {
         int x1 = this->x1();
         int y1 = this->y1();

@@ -41,6 +41,7 @@ namespace cIcCore{
     {
         Q_OBJECT
         Q_PROPERTY(QString name READ name WRITE setName)
+        Q_INVOKABLE void moveTo(QJsonArray obj);
 
     public:
         Cell();

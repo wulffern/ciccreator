@@ -1,18 +1,18 @@
 {
     "header" : {
-		"author" : "Carsten Wulff",
-        "license" : [ 
+        "author" : "Carsten Wulff",
+        "license" : [
             "Copyright (c) 2014 Carsten Wulff",
-			"This program is free software: you can redistribute it and/or modify",
-			"it under the terms of the GNU General Public License as published by",
-			"the Free Software Foundation, either version 3 of the License, or",
-			"(at your option) any later version.",
-			"This program is distributed in the hope that it will be useful,",
-			"but WITHOUT ANY WARRANTY; without even the implied warranty of",
-			"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the",
-			"GNU General Public License for more details.",
-			"You should have received a copy of the GNU General Public License",
-			"along with this program.  If not, see <http://www.gnu.org/licenses/>."
+            "This program is free software: you can redistribute it and/or modify",
+            "it under the terms of the GNU General Public License as published by",
+            "the Free Software Foundation, either version 3 of the License, or",
+            "(at your option) any later version.",
+            "This program is distributed in the hope that it will be useful,",
+            "but WITHOUT ANY WARRANTY; without even the implied warranty of",
+            "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the",
+            "GNU General Public License for more details.",
+            "You should have received a copy of the GNU General Public License",
+            "along with this program.  If not, see <http://www.gnu.org/licenses/>."
         ]
     },
     "disableCells" : "Reduce the cells in the GDS by skipping some of the cells defined below",
@@ -23,19 +23,19 @@
     "cells":
     [
         { "name": "RM1" , "class" : "cIcCore::PatternResistor",
-		  "getRuleForHorizontalGrid" : ["M1","width"],
-		  "getRuleForVerticalGrid" : ["M1","width"],
-		  "afterNew" :{
-			  "fillCoordinatesFromStrings" :[[	"M1","ArB"]]
-		  }
-		},
-		{ "name": "RM4" , "class" : "cIcCore::PatternResistor",
-		  "getRuleForHorizontalGrid" : ["M4","width"],
-		  "getRuleForVerticalGrid" : ["M4","width"],
-		  "afterNew" :{
-			  "fillCoordinatesFromStrings" :[[	"M4","ArB"]]
-		  }
-		},
+          "getRuleForHorizontalGrid" : ["M1","width"],
+          "getRuleForVerticalGrid" : ["M1","width"],
+          "afterNew" :{
+              "fillCoordinatesFromStrings" :[[  "M1","ArB"]]
+          }
+        },
+        { "name": "RM4" , "class" : "cIcCore::PatternResistor",
+          "getRuleForHorizontalGrid" : ["M4","width"],
+          "getRuleForVerticalGrid" : ["M4","width"],
+          "afterNew" :{
+              "fillCoordinatesFromStrings" :[[  "M4","ArB"]]
+          }
+        },
         { "name" : "CAP",
           "class" : "Gds::GdsPatternCapacitor",
           "yoffset": -0.5,
@@ -358,7 +358,7 @@
         },
         { "name": "TAPCELLB_CV",
           "class" : "Layout::LayoutDigitalCell",
-		  "boundaryIgnoreRouting" : 1,
+          "boundaryIgnoreRouting" : 1,
           "beforeRoute" : {
               "addDirectedRoutes" : [ ["M1","TAP","MN1:B->MN1:G"],
                                       ["M1","TAP","MN1:G-|--MN1:S"],
@@ -636,7 +636,7 @@
               ["SWX2_CV","SWX4_CV"]
           ]
         },
-        { "name": "CDAC9_CV", "class" : "Layout::LayoutCDACSmall", "inherit" : "CDAC8_CV"},
+        { "name": "CDAC9_CV", "class" : "Layout::LayoutCDACSmall", "beforeRoute" : { "moveTo" : [0,0]}},
         {"name": "SAR9B_CV",
          "class" : "Layout::LayoutSARCDAC",
          "ctrlOutside" : 0,
