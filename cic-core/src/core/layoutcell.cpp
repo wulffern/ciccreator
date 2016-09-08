@@ -432,8 +432,8 @@ namespace cIcCore{
     {
         Instance* c = Cut::getInstance("M3","M4",2,2);
         int metalwidth = c->height()*widthmult;
-        int xgrid = this->rules->get("ROUTE","horizontalgrid") + metalwidth;
-        int ygrid = this->rules->get("ROUTE","horizontalgrid") + metalwidth;
+        int xgrid = this->rules->get("ROUTE","horizontalgrid")*10;
+        int ygrid = this->rules->get("ROUTE","horizontalgrid")*10;
 
         RouteRing* rr = new RouteRing(layer,name,this->getCopy(),location,ygrid,xgrid,metalwidth);
         QString rail = "power_" + name;

@@ -56,7 +56,7 @@ namespace cIcCore{
         void add(QList<Rect*> rects);
 
         //! Move this cell, and all children by dx and dy
-        void translate(int dx, int dy);
+        virtual void translate(int dx, int dy);
 
         //! Mirror this cell, and all children around ax
         void mirrorX(int ax);
@@ -65,7 +65,7 @@ namespace cIcCore{
         void mirrorY(int ay);
 
         //! Move this cell, and all children to ax and ay
-        void moveTo(int ax, int ay);
+        virtual void moveTo(int ax, int ay);
 
         //! Center this cell, and all children on ax and ay
         Q_INVOKABLE void moveCenter(int ax, int ay);
