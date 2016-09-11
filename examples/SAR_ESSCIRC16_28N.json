@@ -1,8 +1,10 @@
 {
     "header" : {
         "author" : "Carsten Wulff",
+		"contact" : "carsten (at) wulff.no",
         "license" : [
             "Copyright (c) 2014 Carsten Wulff",
+			"Non-commercial use only, for commercial use contact license holder",
             "This program is free software: you can redistribute it and/or modify",
             "it under the terms of the GNU General Public License as published by",
             "the Free Software Foundation, either version 3 of the License, or",
@@ -13,7 +15,8 @@
             "GNU General Public License for more details.",
             "You should have received a copy of the GNU General Public License",
             "along with this program.  If not, see <http://www.gnu.org/licenses/>."
-        ]
+        ],
+
     },
     "disableCells" : "Reduce the cells in the GDS by skipping some of the cells defined below",
     "disableCells" : [

@@ -375,7 +375,7 @@ namespace cIcCore{
         int yc1 = this->centerY();
 
         int xpos = this->left() - ( xc1 - ax );
-        int ypos = this->top() - ( yc1 - ay );
+        int ypos = this->bottom() - ( yc1 - ay );
 
         this->moveTo(xpos,ypos);
     }
