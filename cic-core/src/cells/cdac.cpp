@@ -57,44 +57,36 @@ namespace cIcCells{
         }
 
         //Add the route rings
-
         for(auto x=0;x<i;x++){
             QString name = QString("CP<%1>").arg(x);
             this->addRouteRing("M2",name,"l",1,1);
         }
         
         this->updateBoundingRect();
- 
-
-        
-
     }
 
 
     void CDAC::route()
     {
-
-       
-        
-
         this->addRouteConnection("CP","","M1","left","");
 
         if(firstinst){
             //Add ports
             QList<Rect*> rects1 = firstinst->findRectanglesByNode("AVSS","");
-            if(rects1.count() > 1 ){
+            if(rects1.count() > 0 ){
                 this->addPort("AVSS",rects1[0]);
             }
         }
         
+        
         if(inst){
             QList<Rect*> rects2 = inst->findRectanglesByNode("CTOP","");
-            if(rects2.count() > 1){
+            if(rects2.count() > 0){
+                qDebug() << rects2[0];
                 this->addPort("CTOP",rects2[0]);
                 
             }
-        }
-        
+        }        
         
         LayoutCell::route();
         this->trimRouteRing("CP<","left","b");

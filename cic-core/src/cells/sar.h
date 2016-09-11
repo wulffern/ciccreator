@@ -44,7 +44,7 @@ namespace cIcCells{
         
         int getCellWidth(SARgroup groups,QString group);
         cIcCore::Instance* placeAlternateMirror(SARgroup groups,QString group, int i, int x ,int y, int xoffset);
-        void addSarRouting(int y,int msw,int mw);
+        int addSarRouting(int y,int msw,int mw);
         
     private:
 
