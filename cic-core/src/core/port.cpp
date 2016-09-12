@@ -41,6 +41,8 @@ namespace cIcCore{
 
     QString Port::pinLayer(){if(routeLayer_){return routeLayer_->pin;}else{return "";}}
 
+    
+    
 
     void Port::set(Rect * r ){
         if(!r){return;};

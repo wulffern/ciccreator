@@ -151,7 +151,6 @@ namespace cIcCore{
 
             Graph * g = nodeGraph_[node];
             QList<Rect*>  rects = g->getRectangles(excludeInstances,includeInstances,layer);
-            if(includeInstances == "XDAC") qDebug() << node;
 
             if(rects.count() == 0){
                 qDebug() << "Error: Could not find rectangles on " << node << regex << rects.count() << "\n";
@@ -181,10 +180,13 @@ namespace cIcCore{
             path = obj[2].toString();
         }
 
+
+
         QList<Rect*> rects = this->findAllRectangles(path,layer);
         if( rects.count() == 0){
             qDebug()<< "Could not find port " << port << "on path " << path << " in layer " << layer;
         }else{
+
             Rect * r = rects[0];
             if(r->layer() != layer){
                 qDebug()<< "Layer " << r->layer() << " is different from " << port << "on rect " << path << " in layer " << layer;
@@ -212,7 +214,7 @@ namespace cIcCore{
 
         QList<Rect*> rects = this->findAllRectangles(path,startlayer);
 
-
+        
         foreach(Rect* r, rects){
             if(r == 0) continue;
             Instance * inst= Cut::getInstance(startlayer,stoplayer,hcuts,vcuts);
@@ -237,7 +239,6 @@ namespace cIcCore{
         QList<Rect*> instances = this->getChildren("cIcCore::Instance");
         foreach(Rect* r, instances){
             Instance* i = (Instance*) r;
-            qDebug() << i->instanceName();
             if(i->instanceName() == instanceName){
                 return i;
             }
@@ -718,6 +719,7 @@ namespace cIcCore{
             this->routePower();
         }
 
+        Cell::paint();
     }
 
     QList<Rect *> LayoutCell::findRectanglesByNode(QString node,  QString filterChild, QString matchInstance)

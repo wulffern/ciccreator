@@ -22,6 +22,7 @@
 #define CIC_CELLS_CDAC_H
 
 #include "core/layoutcell.h"
+#include "cells/capcell.h"
 
 namespace cIcCells{
 
