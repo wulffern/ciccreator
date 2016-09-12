@@ -34,6 +34,17 @@ namespace cIcCells{
         r.adjust(0,+mw/2,0,-mw/2);
         return r;
     }
+
+    Rect* CapCell::getAvssConnectRect(Rect* rect)
+    {
+        Instance* c = Cut::getInstance("M1","M2",1,2);
+        c->moveTo(ports_["AVSS"]->x1(),rect->centerY() - c->height()/2.0);
+
+        return c;
+        
+    }
+
+
     
     
 
