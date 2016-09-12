@@ -54,7 +54,6 @@ namespace cIcSpice{
 
 		}
 
-		qDebug() << s;
 		
         return s;
     }

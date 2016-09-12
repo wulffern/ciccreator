@@ -14,6 +14,9 @@ InstancePort::InstancePort(QString name, Port * p, Rect * parent):Port(name)
     }
 }
 
+
+
+
 InstancePort::~InstancePort()
 {
 

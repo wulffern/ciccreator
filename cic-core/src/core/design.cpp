@@ -30,11 +30,11 @@ namespace cIcCore{
         qRegisterMetaType<cIcCore::PatternCapacitor>("cIcCore::PatternCapacitor");
         qRegisterMetaType<cIcCore::PatternCapacitorGnd>("cIcCore::PatternCapacitorGnd");
         qRegisterMetaType<cIcCore::LayoutCell>("cIcCore::LayoutCell");
-		qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
-		qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
+        qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
+        qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
         qRegisterMetaType<cIcCells::SAR>("cIcCells::SAR");
         qRegisterMetaType<cIcCells::CapCell>("cIcCells::CapCell");
-                qRegisterMetaType<cIcCells::CDAC>("cIcCells::CDAC");
+        qRegisterMetaType<cIcCells::CDAC>("cIcCells::CDAC");
         qRegisterMetaType<cIcCore::PatternResistor>("cIcCore::PatternResistor");
 
 
@@ -104,30 +104,31 @@ namespace cIcCore{
             for(int i=count-1;i>=0; i--){
                 QJsonObject parent  = reverse_parents->at(i);
                 cIcSpice::Subckt * ckt_parent = _spice_parser.getSubckt(parent["name"].toString());
-                qDebug() << parent["name"];
-                
-                
-                
+
+
                 if(ckt_parent == NULL) continue;
-                
+
+
+
+                QStringList strlist = ckt_parent->spiceStr();
+                strlist.replaceInStrings(parent["name"].toString(),name);
+
                 //Apply spice-regex
                 if(jobj.contains("spiceRegex")){
 
                     QJsonArray jarr = jobj["spiceRegex"].toArray();
-                    QStringList strlist = ckt_parent->spiceStr();
-                    strlist.replaceInStrings(parent["name"].toString(),name);
                     foreach(QJsonValue rval, jarr){
                         QJsonArray reg_arr = rval.toArray();
                         QString from = reg_arr[0].toString();
                         QString to = reg_arr[1].toString();
                         strlist.replaceInStrings(QRegularExpression(from),to);
                     }
-                    _spice_parser.parseSubckt(0,strlist);
-                    ckt = _spice_parser.getSubckt(name);
 
-                }else{
-                    ckt = ckt_parent;
                 }
+
+                _spice_parser.parseSubckt(0,strlist);
+                ckt = _spice_parser.getSubckt(name);
+
                 if(ckt){
                     break;
                 }
@@ -136,7 +137,7 @@ namespace cIcCore{
         }
 
 
-        
+
 
         if(ckt == NULL){
             ckt = new cIcSpice::Subckt();
@@ -249,9 +250,9 @@ namespace cIcCore{
         }
     }
 
-    /*
-      Search through JSON and find all parents
-    */
+/*
+  Search through JSON and find all parents
+*/
     void Design::findAllParents(QList<QJsonObject > *reverse_parents,QString inh)
     {
         if(_cells.contains(inh)){
@@ -275,26 +276,26 @@ namespace cIcCore{
 
     void Design::runAllMethods(QString jname, Cell *c, QJsonObject jobj){
         QJsonValue jo = jobj[jname];
-                QString name = jobj["name"].toString();
+        QString name = jobj["name"].toString();
         if(jo.isUndefined()) return;
 
         if(jo.isObject()){
             QJsonObject job = jo.toObject();
-                        job["name"] = name;
-//			job["name"] = jobj["name"].toString();
+            job["name"] = name;
+//          job["name"] = jobj["name"].toString();
             this->runIfObjectCanMethods(c,job,jname);
 
-	}else if (jo.isArray()){
-			QJsonArray job = jo.toArray();
-			foreach(QJsonValue cjv, job){
+        }else if (jo.isArray()){
+            QJsonArray job = jo.toArray();
+            foreach(QJsonValue cjv, job){
 
-				QJsonObject job = cjv.toObject();
-				job["name"] = name;
-//				cjo["name"] = jobj["name"].toString();
-				this->runIfObjectCanMethods(c,job,jname);
-			}
+                QJsonObject job = cjv.toObject();
+                job["name"] = name;
+//              cjo["name"] = jobj["name"].toString();
+                this->runIfObjectCanMethods(c,job,jname);
+            }
 
-	}
+        }
 
     }
 
@@ -302,7 +303,7 @@ namespace cIcCore{
         int count = parents->count();
         for(int i=0;i<count;i++){
             QJsonObject par = parents->at(i);
-//			par["name"] = c->name();
+//          par["name"] = c->name();
             this->runIfObjectCanMethods(c,par,theme);
         }
 
@@ -357,7 +358,7 @@ namespace cIcCore{
             }
 
 
-                        //Invoke method
+            //Invoke method
             if(methods.contains(method_key) && jobj.contains(method_key)){
                 QMetaMethod method = methods[method_key];
                 QJsonValue value = jobj[method_key];
@@ -460,16 +461,16 @@ namespace cIcCore{
                 index = verr.indexOf("\n",position+1);
             }
 
-			QString error("%1%2%3%4");
-			console->comment(error.arg("JSON ERROR (line ")
-							 .arg(line_count)
-							 .arg("): ")
-							 .arg(err.errorString())
-							 ,ConsoleOutput::red);
-			//QTextStream out(stdout);
-			//console->startComment(out,ConsoleOutput::red);
+            QString error("%1%2%3%4");
+            console->comment(error.arg("JSON ERROR (line ")
+                             .arg(line_count)
+                             .arg("): ")
+                             .arg(err.errorString())
+                             ,ConsoleOutput::red);
+            //QTextStream out(stdout);
+            //console->startComment(out,ConsoleOutput::red);
             //out << "JSON ERROR: " << err.errorString() << " at line " << line_count ;
-			//console->endComment(out);
+            //console->endComment(out);
         }
         QJsonObject obj = d.object();
         return obj;

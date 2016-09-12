@@ -282,6 +282,10 @@ namespace cIcCore{
 
             if(child->isPort()){
                 Port* p = (Port*) child;
+                //Remove old port
+//                if(allports_.contains(p->name())){
+//                    allports_.remove(p->name());
+//                }
                 ports_[p->name()] = p;
                 allports_[p->name()].append(p);
             }

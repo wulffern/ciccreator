@@ -267,14 +267,14 @@
           "class" : "Layout::LayoutDigitalCell",
           "symbol" : "",
           "inherit" : "IVX2_CV",
-          "beforeRoute" : {
-              "addVias" :  [
+          "beforeRoute" : [
+              {"addVias" :  [
                   ["M3","M4","MP1:D",2,1,8,"CUST_VREF"]
-              ],
-              "addDirectedRoutes" : [
+              ]},
+              {"addDirectedRoutes" : [
                   ["M3","VREF","MP0:S,MP1:D-|--CUST_VREF"]
-              ]
-          },
+              ]}
+          ],
           "afterRoute"  : {
               "addPortOnRects" : [  ["VREF","M4","CUST_VREF"]]
           }
@@ -284,20 +284,17 @@
           "symbol" : "",
           "setYoffsetHalf" :  "" ,
           "rows" : 4,
-          "beforeRoute" : {
-              "addVias" :  [
+          "beforeRoute" : [
+              {"addVias" :  [
                   ["M3","M4","MP1:D",2,1,8,"CUST_VREF"]
-              ],
-              "addRouteHorizontalRects" : [
-
-              ],
-              "addDirectedRoutes" : [ ["M1","Y","MN0:D,MN2:D-|--MP0:D,MP2:D"],
-                                      ["PO","A","MN:G-MP:G"] ,
-                                      ["M1","A","MN0:G||MN3:G"] ,
-                                      ["M1","A","MP0:G||MP3:G"],
-                                      ["M3","VREF","MP0:S,MP1:D,MP3:D-|--CUST_VREF"]
-                                    ]
-          },
+              ]},
+			  {"addDirectedRoutes" : [ ["M1","Y","MN0:D,MN2:D-|--MP0:D,MP2:D"],
+                                       ["PO","A","MN:G-MP:G"] ,
+                                       ["M1","A","MN0:G||MN3:G"] ,
+                                       ["M1","A","MP0:G||MP3:G"],
+                                       ["M3","VREF","MP0:S,MP1:D,MP3:D-|--CUST_VREF"]
+									 ]}
+          ],
           "afterRoute"  : {
 
               "addPortOnRects" : [  ["A","M1", "MN0:G"] , ["Y", "M1", "MN0:D"],["VREF","M4","CUST_VREF"]]
@@ -316,7 +313,7 @@
                                       ["M1","CN","MN2:G-|--MN0:S"],
                                       ["M1","C","MP0:G-|MP2:G"],
                                       ["M4","NC","MP1:S--|--MP1:G"]
-                                    ]
+                                    ]			  
           },
           "afterRoute"  : {
               "addPortOnRects" : [  ["C","M1", "MP0:G"],["B","M1","MP2:S"],["A","M1","MN2:D"]
@@ -468,7 +465,7 @@
                                       ["M1","CO","MP3:D,MP5:D--|-MN6:D"],
                                       ["PO","CK","MN0:G-MP0:G"],
                                       ["M1","CK","MP0:G,MP1:G-|MP3:G"],
-                                      ["M4","NC","MP2$:D--|--MP2:G"]
+                                      ["M4","NC","MP2$:D-|--MP2:G"]
                                     ]
           },
           "afterRoute" : {
@@ -488,7 +485,7 @@
                                         ["M1","NC","MP1:G||MP6:G"],
                                         ["M1","NC","MP1:S||MP6:D"],
                                         ["M1","NC","MN6:D-MP6:D"],
-                                        ["M1","NC","MP6:D--|--MP6:G"]
+                                        ["M1","NC","MP6:D-|--MP6:G"]
                                     ]
           },
           "afterRoute" : {
@@ -518,10 +515,14 @@
           "symbol" : "SARCMP",
           "composite" : 1,
           "beforeRoute" : {
+
+			  "TaddDirectedRoutes" : [
+
+			  ],
               "addDirectedRoutes" : [
                   ["M1","CNO_I","XA2b?$:MP6:S-|--XA3b?$:MP4:G,XA3a:MP0:G"],
                   ["M2","CPO_I","XA3b?$:MP4:S-|--XA2b?$:MP5:G,XA2a:MP0:G"],
-                  ["M2","CNI", "XA1$:MN5:G-|XA2$:MN1:G"],
+			      ["M2","CNI", "XA1$:MN5:G-|XA2$:MN1:G"],
                   ["M2","CPI", "XA3$:MN5:G-|XA4$:MN1:G"],
                   ["M1","CK_B","XA1$:MN6:G|-XA2b?$:MN0:G,XA3b?$:MN0:G,XA4$:MN6:G"],
                   ["M1","CK_B","XA4$:MN6:G-|--XA9:Y"],
@@ -530,10 +531,12 @@
                   ["M1","DONE_N","XA11:Y--|-XA10:MN0:G"],
                   ["M1","CK_A","XA12:MP0:D-|--XA10:MP1:G"],
                   ["M1","N1","XA2b?$:MN4:D|-XA3b?$:MN4:D"]
-              ]
+              ],
+			  "addConnectivityRoutes" : [
+			  ]
           },
           "afterRoute" : {
-              "addPortOnRects" : [ ["CK_SAMPLE","M1"] ,["CK_CMP","M1"],["DONE","M1"],["CNO", "M1","XA3A:Y"], ["CPO","M1","XA2A:Y"] ,["CPI","M1","XA1$:MN5:G" ],["CNI","M1","XA3$:MN5:G" ] ]
+              "addPortOnRects" : [ ["CK_SAMPLE","M1"] ,["CK_CMP","M1"],["DONE","M1"],["CNO", "M1","XA3a:Y"], ["CPO","M1","XA2a:Y"] ,["CPI","M1","XA1$:MN5:G" ],["CNI","M1","XA3$:MN5:G" ] ]
           }
         },
         { "name" : "SARBSSW_CV", "class" : "Layout::LayoutDigitalCell",
@@ -578,7 +581,7 @@
           "rows" : 5,
           "beforeRoute" : {
               "addDirectedRoutes" : [ ["M1","RST_N","XA1:RST_N-|XA4:RST_N,XA5:RST_N"],
-                                      ["M1","ENO","XA2:MN:G>-|--XA1:MN3:D"],
+                                      ["M1","ENO","XA2:MN:G-|--XA1:MN3:D"],
                                       ["M1","LCK_N","XA5:MN1:G-|--XA2:MN:D"],
                                       ["M1","LCK_N","XA4:MN1:G-|--XA2:MN:D"],
                                       ["M1","CMP_OP","XA1:MN1:G|-XA5:MN0:G"],
@@ -626,7 +629,11 @@
                                       ["M1","CEO1","XA12:MN0:G-|--XA11:MN1:S"],
                                       ["M1","CN0","XA5:MP0:D-|--XA6:MP0:G"],
                                       ["M2","CP1","XA3:MP0:D-|--XA6:MP2:G"]
-                                    ]
+                                    ],
+			  "addConnectivityRoutes" : [
+				  ["M4","VREF","||"]
+			  ]
+
           },
           "afterRoute" : {
               "addPortOnRects" : [ ["CEIN", "M1","XA11:MN1:G"], ["CEO", "M1","XA12:MP0:D"] , ["CKS", "M1"],["DONE", "M1"], ["VREF", "M4" ,"XA2:VREF"] ]

@@ -24,9 +24,6 @@ using namespace cIcSpice;
 
 
 namespace cIcCells{
-
-    
-
     
     void CDAC::place()
     {
@@ -61,6 +58,26 @@ namespace cIcCells{
             QString name = QString("CP<%1>").arg(x);
             this->addRouteRing("M2",name,"l",1,1);
         }
+
+        QList<Graph*> graphs = this->getNodeGraphs("AVSS");
+        foreach(Graph* graph,graphs){
+            foreach(Port* p, graph->ports){
+                if(!p->isInstancePort()) continue;
+                InstancePort* ip = (InstancePort*) p;
+                if(!ip->childName().contains("C")) continue;
+                Rect * r = p->parent();
+                if(!r->isInstance()) continue;
+                Instance* i = (Instance *) r;
+                Cell* c = (Cell*) i->cell();
+                if(c && strcmp(c->metaObject()->className(),"cIcCells::CapCell") == 0){
+                    CapCell* cap = (CapCell*) c;
+                    Rect* rect = cap->getAvssConnectRect(p);
+                    this->add(rect);
+                }
+                        
+            }
+        }
+        
         
         this->updateBoundingRect();
     }
@@ -82,7 +99,6 @@ namespace cIcCells{
         if(inst){
             QList<Rect*> rects2 = inst->findRectanglesByNode("CTOP","");
             if(rects2.count() > 0){
-                qDebug() << rects2[0];
                 this->addPort("CTOP",rects2[0]);
                 
             }
