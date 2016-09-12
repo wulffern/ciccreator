@@ -596,19 +596,19 @@
           "class" : "Layout::LayoutDigitalCell",
           "rows" : 6,
           "beforeRoute" : {
-              "addDirectedRoutes" : [ ["M1","CP0","XA3:MN0:G>-|--XA2:MN0:D"],
-                                      ["M1","CN1","XA5:MN0:G>-|--XA4:MN0:D"],
+              "addDirectedRoutes" : [ ["M1","CP0","XA3:MN0:G-|--XA2:MN0:D"],
+                                      ["M1","CN1","XA5:MN0:G-|--XA4:MN0:D"],
                                       ["M1","CHL_OP","XA2:MP0:G--|-XA1:XA5:MP2:D"],
-                                      ["M2","CHL_ON","XA4:MN0:G>-|--XA1:XA4:MN2:D"]
+                                      ["M2","CHL_ON","XA4:MN0:G-|--XA1:XA4:MN2:D"]
                                     ]
           },
           "afterRoute" : {
               "addPortOnRects" : [ ["CMP_OP", "M1"], ["RST_N", "M1"] , ["EN", "M1"], ["CMP_ON", "M1"], ["ENO", "M1","XA1:XA1:MP1:S"] ],
               "addPortVias" : [
-                  ["M1","M4","CN1","XA3:MN0:G","1","2","-1","-0.5"],
-                  ["M1","M4","CP1","XA3:MN0:D","2","1","2","-0.5"],
-                  ["M1","M4","CP0","XA4:MN0:D","2","1","6","-0.5"],
-                  ["M1","M4","CN0","XA5:MN0:D","2","1","8","-0.5"]
+                  ["M1","M4","CN1","XA3:MN0:G",1,2,-1,-0.5],
+                  ["M1","M4","CP1","XA3:MN0:D",2,1,2,-0.5],
+                  ["M1","M4","CP0","XA4:MN0:D",2,1,6,-0.5],
+                  ["M1","M4","CN0","XA5:MN0:D",2,1,8,-0.5]
               ]
           }
         },
