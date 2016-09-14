@@ -177,6 +177,9 @@ namespace cIcCore {
 
     void PatternTile::paint(){
 
+
+        qDebug() << xoffset_ << yoffset_ << widthoffset_;
+        
         if(horizontalGrid_ != 0){
             this->xspace_ = horizontalGrid_;
         }

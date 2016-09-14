@@ -174,6 +174,9 @@ namespace cIcGui{
         transformPainter(painter);
 
         if(this->c != 0){
+//            painter.setPen(QPen(QColor("red"),0.5/_zoom));
+//            painter.setBrush(QBrush(Qt::NoBrush));
+//            painter.drawRect(c->x1(),c->y1(),c->width(),c->height());
             this->drawCell(0,0,this->c,painter,0);
         }
 
@@ -206,10 +209,12 @@ namespace cIcGui{
                 }
 
                 //Draw instance boundary
-//                painter.setPen(QPen(QColor("red"),0.5/_zoom));
+//                painter.setPen(QPen(QColor("red"),/_zoom));
 //                painter.setBrush(QBrush(Qt::NoBrush));
 //                painter.drawRect(inst->x1(),inst->y1(),inst->width(),inst->height());
 
+                
+                
                 Point* p = inst->getCellPoint();
                 painter.translate(p->x,p->y);
                 //Paint with rotated transform
@@ -286,9 +291,9 @@ namespace cIcGui{
 
 
 
-                //painter.setPen(QPen(QColor("black"),0.5/_zoom));
-                //painter.setBrush(QBrush(Qt::NoBrush));
-                //painter.drawRect(c->x1(),c->y1(),c->width(),c->height());
+//                painter.setPen(QPen(QColor("red"),0.5/_zoom));
+//                painter.setBrush(QBrush(Qt::NoBrush));
+//                painter.drawRect(c->x1(),c->y1(),c->width(),c->height());
 
                 this->paintChildren(childcell,painter,level);
             }
@@ -329,9 +334,9 @@ namespace cIcGui{
         if(c==NULL){return;}
         painter.translate(x,y);
 //        if(level==0){
-        painter.setPen(QPen(QColor("black"),0.5/_zoom));
+        painter.setPen(QPen(QColor("red"),0.5/_zoom));
         painter.setBrush(QBrush(Qt::NoBrush));
-        painter.drawRect(0,0,c->width(),c->height());
+        painter.drawRect(c->x1(),c->y1(),c->width(),c->height());
         //      }
 
         this->paintChildren(c, painter, level);
