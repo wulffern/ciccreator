@@ -38,8 +38,10 @@ namespace cIcSpice{
 		SubcktInstance(QString buffer);
 		SubcktInstance(const SubcktInstance&);
 		~SubcktInstance();
+                virtual QString setName(QString val);
 		QString subcktName(){return _subckt_name;}
-		QString setSubcktName(QString val){ _subckt_name = val; return _subckt_name;}
+		QString setSubcktName(QString val){ _subckt_name = val;
+            return _subckt_name;}
 		QString groupName(){return _group_name;}
 		QString groupTag(){return _group_tag;}
 		 void parse(QString buffer,int line_number);
