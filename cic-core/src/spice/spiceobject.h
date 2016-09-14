@@ -41,7 +41,9 @@ namespace cIcSpice{
 		SpiceObject(const SpiceObject&);
 		~SpiceObject();
 
-		QString name();		QString setName(QString val);
+		QString name();
+
+        virtual QString setName(QString val);
 		
 		int lineNumber(); int setLineNumber(int val);
 		

@@ -96,11 +96,13 @@ namespace cIcSpice{
 	    if(inst->properties().contains("M")){
 				int count  = inst->properties()["M"].toInt();
 				for(int i=1;i<count;i++){
+
+                    
 					SubcktInstance * inst_mult = new SubcktInstance();
 					inst_mult->parse(line,instance_line_number);
-
-
 					inst_mult->setName(QString("%1%2").arg(inst->name()).arg(i));
+
+                    qDebug() << inst_mult->name();
 					if(this->_inst_index.contains(inst_mult->name())){
 						qWarning() << "Error: " << this->name() << " already contains an " << inst_mult->name();
 					}
