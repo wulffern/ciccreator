@@ -43,21 +43,21 @@ namespace cIcCore{
 
 
     void Port::mirrorY(int ax){
-        Rect::mirrorY(ax);
-        foreach(Rect* r, alternates_rectangles_){
-            if(!r) continue;
+//        Rect::mirrorY(ax);
+        //foreach(Rect* r, alternates_rectangles_){
+        //    if(!r) continue;
 //            r->mirrorY(ax);
             
-        }
+            //}
     }
 
     void Port::mirrorX(int ay){
-              Rect::mirrorX(ay);
-        foreach(Rect* r, alternates_rectangles_){
-            if(!r) continue;            
+        //            Rect::mirrorX(ay);
+        // foreach(Rect* r, alternates_rectangles_){
+        //  if(!r) continue;            
             //          r->mirrorX(ay);
             
-        }
+            //}
         
     }
     
@@ -72,6 +72,7 @@ namespace cIcCore{
         alternates_rectangles_.append(r);
         this->setLayer(l->name);
         rect_ = r;
+        connect(r,SIGNAL(updated()),this, SLOT(updateRect()));
         this->setRect(r->layer(),r->x1(),r->y1(),r->width(),r->height());
 
     }
