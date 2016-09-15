@@ -51,6 +51,9 @@ namespace cIcCore{
 	  virtual Rect* get();
 	  virtual Rect* get(QString layer);
       virtual QList<Rect*> getAll(QString layer);
+      virtual void mirrorX(int ay);
+      virtual void mirrorY(int ax);
+      
 	  void add(Rect* r);
 
 	  bool isInstancePort(){
