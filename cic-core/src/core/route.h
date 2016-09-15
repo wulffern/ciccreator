@@ -33,7 +33,7 @@ namespace cIcCore{
 	enum SortDirection {SORT_RIGHT, SORT_LEFT, SORT_BOTTOM, SORT_TOP};
 	enum Offset {LOW, HIGH,NO_OFFSET};
 	enum CutProperty { NO_START_CUT, NO_END_CUT, CENTER_CUT};
-	enum RouteType { LEFT, RIGHT, LEFT_DOWN_LEFT_UP, STRAIGHT,VERTICAL,U_RIGHT, U_LEFT, ROUTE_UNKNOWN};
+	enum RouteType { LEFT, RIGHT, LEFT_DOWN_LEFT_UP, STRAIGHT,VERTICAL,U_RIGHT, U_LEFT, ROUTE_UNKNOWN,LEFT_UP_LEFT_DOWN,STRAP};
 	
 	class Route : public Cell
 	{
@@ -83,6 +83,10 @@ namespace cIcCore{
 		void routeLeft();
 		void routeRight();
 		void routeVertical();
+        void routeLeftDownLeftUp();
+        void routeLeftUpLeftDown();
+        void routeStrap();
+        
 	};
 
 }
