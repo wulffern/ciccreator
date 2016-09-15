@@ -145,8 +145,6 @@ namespace cIcCore{
     {
 
         foreach(QString node, nodeGraph_.keys()){
-
-
             if(!node.contains(QRegularExpression(regex))) continue;
 
             Graph * g = nodeGraph_[node];
@@ -157,7 +155,7 @@ namespace cIcCore{
             }
             if(rects.count() > 0){
                 QList<Rect*> empty;
-                Route * r = new Route(regex,layer,empty,rects,options,routeType);
+                Route * r = new Route(node,layer,empty,rects,options,routeType);
                 this->add(r);
             }
         }
@@ -440,8 +438,16 @@ namespace cIcCore{
         int ygrid = this->rules->get("ROUTE","horizontalgrid")*10;
 
         RouteRing* rr = new RouteRing(layer,name,this->getCopy(),location,ygrid,xgrid,metalwidth);
-        QString rail = "power_" + name;
-        if(rr != 0) named_rects_[rail] = rr;
+
+        //Add to named rects
+        if(rr != 0){
+            QString rail = "power_" + name;
+            named_rects_[rail] = rr;
+            named_rects_[QString("RAIL_BOTTOM_" + name)] = rr->getPointer("bottom");
+            named_rects_[QString("RAIL_TOP_" + name)] =  rr->getPointer("top");
+            named_rects_[QString("RAIL_LEFT_" + name)] =  rr->getPointer("left");
+            named_rects_[QString("RAIL_RIGHT_" + name)] =  rr->getPointer("right");
+        }
 
         this->updatePort(name,rr->getDefault());
 
