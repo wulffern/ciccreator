@@ -225,6 +225,8 @@ namespace cIcCore{
         }else{
 
         }
+
+        //TODO: Figure out how to do straight
         this->addHorizontalTo(x,start_rects_,startOffset_);
         this->addHorizontalTo(x,stop_rects_,stopOffset_);
         this->updateBoundingRect();
@@ -285,35 +287,60 @@ namespace cIcCore{
     }
 
     void Route::routeStraight(){
-        if(start_rects_.count() != stop_rects_.count()){
-            qWarning() << "Can't route straight ";
-            return;
-        }
+        if(start_rects_.count() == stop_rects_.count()){
 
-        int count = start_rects_.count();
-        for(int x = 0;x < count;x++){
-            Rect *r1 = start_rects_[x];
-            Rect* r2 = stop_rects_[x];
-
-            //Use the lowest rectangle to route
-            int height = r1->height();
-            if(r1->height() > r2->height()){
+            int count = start_rects_.count();
+            for(int x = 0;x < count;x++){
+                Rect *r1 = start_rects_[x];
+                Rect* r2 = stop_rects_[x];
+                
+                //Use the lowest rectangle to route
+                int height = r1->height();
+                if(r1->height() > r2->height()){
                 height = r2->height();
-            }
-
-            int center = r1->centerY();
-            Rect * r = new Rect(routeLayer_, r1->x1(),center - height/2.0,r2->x2() - r1->x1(),height);
-            this->add(r);
-
-            //TODO: Relocate cuts for endcuts
-            foreach(Rect* r,endcuts){
-                r->moveCenter(r2->centerX(),center);
+                }
+                
+                int center = r1->centerY();
+                Rect * r = new Rect(routeLayer_, r1->x1(),center - height/2.0,r2->x2() - r1->x1(),height);
+                this->add(r);
+                
+                //TODO: Relocate cuts for endcuts
+                foreach(Rect* r,endcuts){
+                    r->moveCenter(r2->centerX(),center);
+                    
+                }
                 
             }
             
-        }
+        }else if(start_rects_.count() == 1){
+            Rect *r1 = start_rects_[0];
+            int count = stop_rects_.count();
+            for(int x = 0;x < count;x++){
+                Rect* r2 = stop_rects_[x];
+                
+                //Use the lowest rectangle to route
+                int height = r1->height();
+                if(r1->height() > r2->height()){
+                    height = r2->height();
+                }
+                
+                int center = r1->centerY();
+                Rect * r = new Rect(routeLayer_, r1->x1(),center - height/2.0,r2->x2() - r1->x1(),height);
+                this->add(r);
+                
+                //TODO: Relocate cuts for endcuts
+                foreach(Rect* r,endcuts){
+                    r->moveCenter(r2->centerX(),center);
+                    
+                }
+                
+            }
 
+        }
+        
+        
     }
+    
 
     void Route::routeU(){
         int width = rules->get(routeLayer_,"width");
