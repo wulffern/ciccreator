@@ -25,6 +25,8 @@ namespace cIcCore{
     Port::Port(){
         name_ = "";
         routeLayer_ = 0;
+        rect_ = 0;
+        
     }
 
     Port::~Port(){
@@ -33,7 +35,19 @@ namespace cIcCore{
     Port::Port(QString name){
         name_ = name;
         routeLayer_ = 0;
+        rect_ = 0;
     }
+
+    void Port::mirrorX(int ay)
+    {
+        updateRect();
+    }
+
+    void Port::mirrorY(int ax)
+    {
+        updateRect();
+    }
+
 
     QString Port::name(){return name_;}
 
@@ -41,32 +55,9 @@ namespace cIcCore{
 
     QString Port::pinLayer(){if(routeLayer_){return routeLayer_->pin;}else{return "";}}
 
-
-    void Port::mirrorY(int ax){
-//        Rect::mirrorY(ax);
-        //foreach(Rect* r, alternates_rectangles_){
-        //    if(!r) continue;
-//            r->mirrorY(ax);
-            
-            //}
-    }
-
-    void Port::mirrorX(int ay){
-        //            Rect::mirrorX(ay);
-        // foreach(Rect* r, alternates_rectangles_){
-        //  if(!r) continue;            
-            //          r->mirrorX(ay);
-            
-            //}
-        
-    }
-    
-
-    
-
     void Port::set(Rect * r ){
         if(!r){return;};
-        if(r == rect_){return;}            
+        if(r == rect_){return;}
         Layer * l = rules->getLayer(r->layer());
         routeLayer_ = l;
         alternates_rectangles_.append(r);
@@ -78,7 +69,10 @@ namespace cIcCore{
     }
 
     void Port::updateRect(){
-        this->setRect(rect_->x1(),rect_->y1(),rect_->width(),rect_->height());
+        if(rect_){
+            this->setRect(rect_->x1(),rect_->y1(),rect_->width(),rect_->height());
+        }
+        
     }
 
     Rect * Port::get(){
