@@ -186,9 +186,10 @@ namespace cIcCore{
     {
         Port* p = new Port(name);
         p->set(r);
+        p->spicePort = this->isASpicePort(name);
         this->add(p);
     }
-    
+
     void Cell::addAllPorts(){}
     QList<Port*> Cell::ports(){
         return  ports_.values();
@@ -218,6 +219,22 @@ namespace cIcCore{
         return 0    ;
     }
 
+    bool Cell::isASpicePort(QString name)
+    {
+        if(!_subckt){
+            return true;
+        }
+
+        if(_subckt->nodes().contains(name)){
+            return true;
+        }else{
+            return false;
+            
+                }
+    }
+
+
+
 
     Port * Cell::updatePort(QString name,Rect* r)
     {
@@ -225,9 +242,11 @@ namespace cIcCore{
         Port* p_ptr;
         if(ports_.contains(name)){
             p_ptr = ports_[name];
+            p_ptr->spicePort = this->isASpicePort(name);
             p_ptr->set(r);
         }else{
             p_ptr = new Port(name);
+            p_ptr->spicePort = this->isASpicePort(name);
             p_ptr->set(r);
             this->add(p_ptr);
         }
@@ -293,7 +312,7 @@ namespace cIcCore{
                 ports_[p->name()] = p;
                 allports_[p->name()].append(p);
             }
-            
+
             if(child->isRoute()){
                 routes_.append(child);
             }
@@ -316,7 +335,7 @@ namespace cIcCore{
 
     void Cell::mirrorY(int ax) {
         Rect::mirrorY(ax);
-        
+
         foreach(Rect * child, _children) {
             child->mirrorY(ax);
         }
@@ -325,7 +344,7 @@ namespace cIcCore{
             if(!p) continue;
             p->mirrorY(ax);
         }
-        
+
         this->updateBoundingRect();
         emit updated();
     }
@@ -333,7 +352,7 @@ namespace cIcCore{
     void Cell::mirrorX(int ay) {
 
         Rect::mirrorX(ay);
-        
+
 
         foreach(Rect* child, _children) {
             child->mirrorX(ay);
@@ -343,7 +362,7 @@ namespace cIcCore{
             if(!p) continue;
             p->mirrorX(ay);
         }
-        
+
         this->updateBoundingRect();
         emit updated();
     }
@@ -359,10 +378,10 @@ namespace cIcCore{
         int x = obj[0].toInt();
         int y = obj[1].toInt();
         this->moveTo(x,y);
-        
+
 
     }
-    
+
 
     void Cell::moveTo(int ax, int ay) {
         int x1 = this->x1();
@@ -414,10 +433,10 @@ namespace cIcCore{
 
             if(ignoreBoundaryRouting && (!cr->isInstance() || cr->isCut())) continue;
 
-            
 
-            
-            
+
+
+
             int cx1 = cr->x1();
             int cx2 = cr->x2();
             int cy1 = cr->y1();
@@ -449,7 +468,7 @@ namespace cIcCore{
     }
 
     Rect Cell::calcBoundingRect(){
-        
+
         return this->calcBoundingRect(this->children(),this->boundaryIgnoreRouting());
     }
 

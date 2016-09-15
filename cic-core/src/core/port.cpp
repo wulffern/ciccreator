@@ -26,7 +26,7 @@ namespace cIcCore{
         name_ = "";
         routeLayer_ = 0;
         rect_ = 0;
-        
+        spicePort = true;
     }
 
     Port::~Port(){
@@ -36,6 +36,7 @@ namespace cIcCore{
         name_ = name;
         routeLayer_ = 0;
         rect_ = 0;
+        spicePort = true;
     }
 
     void Port::mirrorX(int ay)
