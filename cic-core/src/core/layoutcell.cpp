@@ -890,7 +890,7 @@ namespace cIcCore{
         QString filterInstance = "";
         foreach(QString node,nodes){
             if(ports_.contains(node)) continue;
-            QList<Rect*> rects = this->findRectanglesByNode(node,filterChild,filterInstance);
+            QList<Rect*> rects = this->findRectanglesByNode(node+"$",filterChild,filterInstance);
             if(rects.count() > 0){
                 Port * p = new Port(node);
                 p->set(rects[0]);
