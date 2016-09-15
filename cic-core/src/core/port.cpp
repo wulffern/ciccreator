@@ -41,17 +41,37 @@ namespace cIcCore{
 
     QString Port::pinLayer(){if(routeLayer_){return routeLayer_->pin;}else{return "";}}
 
+
+    void Port::mirrorY(int ax){
+        Rect::mirrorY(ax);
+        foreach(Rect* r, alternates_rectangles_){
+            if(!r) continue;
+//            r->mirrorY(ax);
+            
+        }
+    }
+
+    void Port::mirrorX(int ay){
+              Rect::mirrorX(ay);
+        foreach(Rect* r, alternates_rectangles_){
+            if(!r) continue;            
+            //          r->mirrorX(ay);
+            
+        }
+        
+    }
     
+
     
 
     void Port::set(Rect * r ){
         if(!r){return;};
+        if(r == rect_){return;}            
         Layer * l = rules->getLayer(r->layer());
         routeLayer_ = l;
         alternates_rectangles_.append(r);
         this->setLayer(l->name);
         rect_ = r;
-        connect(r,SIGNAL(updated()),this, SLOT(updateRect()));
         this->setRect(r->layer(),r->x1(),r->y1(),r->width(),r->height());
 
     }
