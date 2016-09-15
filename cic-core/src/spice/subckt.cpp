@@ -95,12 +95,14 @@ namespace cIcSpice{
 
 	    if(inst->properties().contains("M")){
 				int count  = inst->properties()["M"].toInt();
+                QString name = inst->name();
+                inst->setName(inst->name() + "0");
 				for(int i=1;i<count;i++){
 
                     
 					SubcktInstance * inst_mult = new SubcktInstance();
 					inst_mult->parse(line,instance_line_number);
-					inst_mult->setName(QString("%1%2").arg(inst->name()).arg(i));
+					inst_mult->setName(QString("%1%2").arg(name).arg(i));
 
                     qDebug() << inst_mult->name();
 					if(this->_inst_index.contains(inst_mult->name())){
