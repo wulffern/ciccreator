@@ -457,8 +457,8 @@ namespace cIcCore{
         }
         QString layer = obj[0].toString();
         QString rectpath = obj[1].toString();
-        int x = (obj.size() > 3) ? obj[3].toInt(): 1;
-        QString name = (obj.size() > 4) ? obj[4].toString(): "";
+        int x = (obj.size() > 2) ? obj[2].toInt(): 1;
+        QString name = (obj.size() > 3) ? obj[3].toString(): "";
 
         this->addRouteHorizontalRect(layer,rectpath,x,name);
     }
