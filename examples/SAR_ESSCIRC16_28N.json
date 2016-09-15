@@ -78,7 +78,7 @@
 
           ]
         },
-        {"name" : "CAPR" , "inherit" : "CAP", "afterPaint" : { "mirrorCenterX" : 0 }},
+        {"name" : "CAPR" , "inherit" : "CAP", "afterPaint" : { "mirrorCenterY" : 0 }},
         { "name" : "DMOS" ,
           "class" : "Gds::GdsPatternTransistor",
           "yoffset": -0.5,
