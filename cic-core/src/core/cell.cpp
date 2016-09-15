@@ -321,7 +321,7 @@ namespace cIcCore{
         }
 
         foreach(Rect * child, _children) {
-            child->mirrorY(ax);
+            child->mirrorX(ax);
         }
         this->updateBoundingRect();
         emit updated();
@@ -339,12 +339,8 @@ namespace cIcCore{
         }
 
 
-        qDebug() << " Mirroring " << this->name();
-        
-
-
         foreach(Rect* child, _children) {
-            child->mirrorX(ay);
+            child->mirrorY(ay);
         }
         this->updateBoundingRect();
         emit updated();

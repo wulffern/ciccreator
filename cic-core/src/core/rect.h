@@ -108,11 +108,11 @@ namespace cIcCore{
         Rect* adjustedOnce(int xp1);
 
 		
-		//! Mirror around ax, will send "updated()" 
-		virtual void mirrorX(int ax);
+		//! Mirror around ax, will send "updated()"
+        void mirrorX(int ax);
 		
 		//! Mirror arround ay, will send "updated()" 
-        virtual void mirrorY(int ay);
+        void mirrorY(int ay);
 
 
 		void setPoint1(int x1, int y1){x1_ = x1;y1_ = y1;}
