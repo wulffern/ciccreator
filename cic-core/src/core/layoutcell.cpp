@@ -212,6 +212,9 @@ namespace cIcCore{
         double offset = (obj.size() > 5) ? obj[5].toDouble() : 0;
         QString name = (obj.size() > 6) ? obj[6].toString() : "";
 
+        qDebug() << name;
+        
+
         QList<Rect*> rects = this->findAllRectangles(path,startlayer);
 
         
@@ -445,6 +448,42 @@ namespace cIcCore{
         this->add(rr);
 
     }
+
+    void LayoutCell::addRouteHorizontalRect(QJsonArray obj)
+    {
+        if(obj.size() < 3){
+            qDebug() << "Error: addRouteHorizontalRects must contain at least 3 element\n";
+            return;
+        }
+        QString layer = obj[0].toString();
+        QString rectpath = obj[1].toString();
+        int x = (obj.size() > 3) ? obj[3].toInt(): 1;
+        QString name = (obj.size() > 4) ? obj[4].toString(): "";
+
+        this->addRouteHorizontalRect(layer,rectpath,x,name);
+    }
+
+    
+    
+    void LayoutCell::addRouteHorizontalRect(QString layer, QString rectpath, int x, QString name)
+    {
+        QList<Rect*> rects = this->findAllRectangles(rectpath,layer);
+        auto xgrid = this->getRules()->get("ROUTE","horizontalgrid");
+        auto mw = this->getRules()->get(layer,"width");
+        foreach(Rect* r, rects) {
+            auto p = new Rect(layer,r->x1(),r->y1(),xgrid*x,mw);
+
+            if(name != ""){
+                if(r != 0) named_rects_[name] = p;
+                else qDebug() << "Error: Unknown rect " << name;
+                
+            }
+            this->add(p);
+    }
+
+
+    }
+    
 
 
     void LayoutCell::addRouteRing(QJsonArray obj)

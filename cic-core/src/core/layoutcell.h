@@ -53,6 +53,10 @@ namespace cIcCore{
 		Q_INVOKABLE void addPowerConnection(QJsonArray obj);
         Q_INVOKABLE void trimRouteRing(QJsonArray obj);
         Q_INVOKABLE void addRectangle(QJsonArray obj);
+        Q_INVOKABLE void addRouteHorizontalRect(QString layer, QString rectpath, int x, QString name);
+
+        Q_INVOKABLE void addRouteHorizontalRect(QJsonArray obj);
+        
         
         QList<Graph*> getNodeGraphs(QString regex);
         void noPowerRoute();
