@@ -109,10 +109,10 @@ namespace cIcCore{
 
 		
 		//! Mirror around ax, will send "updated()"
-        void mirrorX(int ax);
+        virtual void mirrorX(int ax);
 		
 		//! Mirror arround ay, will send "updated()" 
-        void mirrorY(int ay);
+        virtual void mirrorY(int ay);
 
 
 		void setPoint1(int x1, int y1){x1_ = x1;y1_ = y1;}

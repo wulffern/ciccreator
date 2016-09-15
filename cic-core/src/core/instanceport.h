@@ -17,7 +17,8 @@ namespace cIcCore{
   public:
     InstancePort(QString name, Port * p, Rect * parent);
     ~InstancePort();
-
+      virtual void mirrorX(int ay);
+      virtual void mirrorY(int ax);
 
 
      QString childName();

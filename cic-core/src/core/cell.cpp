@@ -62,7 +62,11 @@ namespace cIcCore{
 
 
     void Cell::mirrorCenterX(){
-        this->mirrorX(this->centerX());
+        this->mirrorX(this->centerY());
+    }
+
+    void Cell::mirrorCenterY(){
+        this->mirrorY(this->centerX());
     }
 
     void Cell::paint(){
@@ -311,37 +315,35 @@ namespace cIcCore{
     }
 
     void Cell::mirrorY(int ax) {
-        this->setLeft(2*ax - this->left());
-        this->setRight(2*ax - this->right());
-
-        if (this->right() < this->left()) {
-            int tmp = this->left();
-            this->setLeft(this->right());
-            this->setRight(tmp);
-        }
-
+        Rect::mirrorY(ax);
+        
         foreach(Rect * child, _children) {
-            child->mirrorX(ax);
+            child->mirrorY(ax);
         }
+
+        foreach(Port* p, ports_){
+            if(!p) continue;
+            p->mirrorY(ax);
+        }
+        
         this->updateBoundingRect();
         emit updated();
     }
 
     void Cell::mirrorX(int ay) {
 
-        this->setTop(2 *  ay - this->top());
-        this->setBottom(2 *  ay - this->bottom());
-
-        if (this->bottom() < this->top()) {
-            int tmp = this->top();
-            this->setTop(this->bottom());
-            this->setTop(tmp);
-        }
-
+        Rect::mirrorX(ay);
+        
 
         foreach(Rect* child, _children) {
-            child->mirrorY(ay);
+            child->mirrorX(ay);
         }
+
+        foreach(Port* p, ports_){
+            if(!p) continue;
+            p->mirrorX(ay);
+        }
+        
         this->updateBoundingRect();
         emit updated();
     }
