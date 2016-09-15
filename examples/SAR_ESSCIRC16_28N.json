@@ -590,7 +590,7 @@
                                     ]
           },
           "afterRoute" : {
-              "addPortOnRects" : [ ["CMP_OP", "M1","XA4:MN0:G"], ["RST_N", "M1","XA5:RST_N"] , ["EN", "M2","XA1:MN0:G"], ["CMP_ON", "M1","XA5:MN0:G"], ["CHL_OP", "M1"], ["CHL_ON", "M1"] , ["ENO", "M1","XA1:MP1:S"] ]
+              "addPortOnRects" : [ ["CMP_OP", "M1","XA4:MN0:G"], ["RST_N", "M1","XA5:RST_N"] , ["EN", "M1","XA1:MN0:G"], ["CMP_ON", "M1","XA5:MN0:G"], ["CHL_OP", "M1"], ["CHL_ON", "M1"] , ["ENO", "M1","XA1:MP1:S"] ]
 
           }
         },
@@ -701,7 +701,7 @@
              ]
          },
          "afterRoute" : {
-             "addPortOnRects" : [ ["DONE", "M1"],["AVDD","M4"],["AVSS","M4"],["CMP_ON","M1"],["CMP_OP","M1"],["SAR_IP","M4"],["SAR_IN","M4"], ["RES_IP","M1"],["RES_IN","M1"]
+             "addPortOnRects" : [ ["DONE", "M1"],["AVDD","M4"],["AVSS","M4"],["SAR_IP","M4"],["SAR_IN","M4"], ["RES_IP","M1"],["RES_IN","M1"]
                                 ],
              "extendPortsToEdge" :[["D<","t"],["SAR_","b"]]
          }
