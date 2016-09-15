@@ -641,9 +641,6 @@ namespace cIcCore{
             QString group = ckt_inst->groupName();
 
 
-            qDebug() << ckt_inst->name() <<  group << ckt_inst->groupTag();
-
-            
             if(prev_group.compare(group) != 0  && prev_group.compare("")  != 0){
                 y = 0;
                 x = x + prev_width;
