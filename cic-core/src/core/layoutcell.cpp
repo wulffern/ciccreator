@@ -797,9 +797,19 @@ namespace cIcCore{
             if(parent && parent->isCell() ){
                 Cell *c = (Cell*) parent;
                 QString name = c->name();
-                if(excludeInstances == "" || !name.contains(QRegularExpression(excludeInstances))){
-                    rects.append(r);
+                bool skip = false;
+                
+                if(excludeInstances != "" && c->isInstance()){
+                    Instance* i = (Instance*) c;
+                    QString name = i->name();
+                    QString instName = i->instanceName();
+                    if(name.contains(QRegularExpression(excludeInstances))) skip = true;
+                    if(instName.contains(QRegularExpression(excludeInstances))) skip = true;
                 }
+                
+                if(!skip)
+                    rects.append(r);
+                
             }else{
                 rects.append(r);
             }
@@ -870,8 +880,8 @@ namespace cIcCore{
 
 
     void LayoutCell::routePower(){
-        this->addPowerRoute("AVDD","NCH");
-        this->addPowerRoute("AVSS","PCH");
+        this->addPowerRoute("AVDD","NCH|DMY");
+        this->addPowerRoute("AVSS","PCH|DMY");
     }
 
     void LayoutCell::addAllPorts(){
