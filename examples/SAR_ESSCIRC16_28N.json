@@ -668,7 +668,7 @@
                  ["CEIN","XB","bottom","M4"]
              ],
              "addDirectedRoutes" : [
-                 ["M3","CMP_OP","XA20$:CPO-|-XA8$:XA1:XA1:A","left,offsetlowend"],
+                 ["M3","CMP_OP","XA20$:CPO-|--XA8$:XA1:XA1:A","offsetlowend"],
                  ["M3","CMP_ON","XA20$:XA3a:MP0:D--|-XA8$:CMP_ON","offsethighend"],
                  ["M3","CK_SAMPLE","XA20$:XA11:MP0:G-|--XA8$:XA6:MN3:G"],
                  ["M3","CK_CMP","XA20$:XA12:MP0:G--|-XA8$:CEO"],
@@ -691,13 +691,13 @@
              ],
 
              "addConnectivityRoutes" : [
-                 ["M3","CEO[02468]","-|-","leftdownleftup","","SARDIG"],
+                 ["M3","CEO[02468]","-|--","leftdownleftup","","SARDIG"],
                  ["M3","CK_SAMPLE$","-|--","offsetlow,offsetlowend,novert","","SARDIG"],
-                 ["M2","CEO[13579]","-|-","leftdownleftup","","SARDIG"],
-                 ["M3","ENO[02468]","-|-","leftdownleftup","","SARDIG"],
-                 ["M3","ENO[13579]","-|-","leftupleftdown","","SARDIG"],
+                 ["M2","CEO[13579]","-|--","leftdownleftup","","SARDIG"],
+                 ["M3","ENO[02468]","-|--","leftdownleftup","","SARDIG"],
+                 ["M3","ENO[13579]","-|--","leftupleftdown,onTopL","","SARDIG"],
                  ["M3","CMP_O(P|N)","-|--","offsethigh,offsethighend,novert","","SARDIG"],
-                 ["M3","EN$","-","offsethigh,offsethighend","","SARDIG"]
+                 ["M3","EN$","-","offsethigh,onTopT","","SARDIG"]
              ]
          },
          "afterRoute" : {
