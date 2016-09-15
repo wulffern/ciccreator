@@ -558,7 +558,7 @@
                   ["M3", "GN","M4:G-|--XA4:GN"],
                   ["M4", "GNG","XCAPB1:XA1:A--|-CUST_GNG"],
                   ["M3", "VS","XA3:B-|--XCAPB0:XA1:B"],
-                  ["M4", "GNG","XCAPC0:A-|XCAPC:A","30space"],
+                  ["M4", "GNG","XCAPC0:A-|XCAPC:A","track20"],
                   ["M3", "VS","XCAPC0:B-|XCAPC:B"],
                   ["M1", "VO1", "M1:S-|M[234]:S"],
                   ["M1", "VO2", "M5:S-|M[678]:S"]
