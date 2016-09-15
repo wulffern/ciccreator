@@ -249,7 +249,7 @@ namespace cIcCells{
             auto ct_cmp =Cut::getInstance("M2","M3",2,1);
             auto cta_cmp =Cut::getInstance("M3","M4",2,1);
             auto ct1 =Cut::getInstance("M4","M5",1,2);
-            int ycc = sarn->y2() +ct2->height()*4;
+            int ycc = sarp->y2() +ct2->height()*4;
             auto ra = new Rect("M4",r->x2()+ms,ycc,mw,r->y1()-ycc);
             cta_cmp->moveTo(r->x2() + ms + mw - ct_cmp->width(),r->y1());
             ct_cmp->moveTo(r->x1(),r->y1());
