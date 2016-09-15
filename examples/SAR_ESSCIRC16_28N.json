@@ -141,7 +141,7 @@
           }
         },
         { "name" : "NCHDLR", "type" : "nch_lvt",
-          "inherit" : "NCHDL", "afterPaint" : { "mirrorCenterX" : 0 },
+          "inherit" : "NCHDL", "afterPaint" : { "mirrorCenterY" : 0 },
           "beforePlace" :{
               "addEnclosuresByRectangle" : [
                   ["OD",[0,0,22,5],["NW","HS"]]
