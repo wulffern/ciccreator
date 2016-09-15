@@ -499,12 +499,6 @@ namespace cIcCore{
                 Rect * r = new Rect(routeLayer_, r1->x1(),center - height/2.0,r2->x2() - r1->x1(),height);
                 this->add(r);
 
-                //TODO: Relocate cuts for endcuts
-                foreach(Rect* r,endcuts){
-                    r->moveCenter(r2->centerX(),center);
-
-                }
-
             }
 
         }
