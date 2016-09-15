@@ -516,7 +516,7 @@ namespace cIcCore{
         QStringList names = expandBus(name);
         foreach(QString n,names){
             RouteRing* rr = new RouteRing(layer,n,this->getCopy(),location,ygrid,xgrid,metalwidth);
-//            this->updatePort(n,rr->getDefault());
+            this->updatePort(n,rr->getDefault());
             QString rail = "rail_" + n;
             if(rr != 0) named_rects_[rail] = rr;
             this->add(rr);
