@@ -47,6 +47,9 @@ namespace cIcCore{
 	  void setName(QString name);
 	  QString pinLayer();
 
+      bool spicePort;
+      
+
 	  virtual void set(Rect * r );
 	  virtual Rect* get();
 	  virtual Rect* get(QString layer);

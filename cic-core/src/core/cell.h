@@ -118,6 +118,8 @@ namespace cIcCore{
         //! Get list of all children
         QList<Rect*> children(){return _children;}
 
+        bool isASpicePort(QString name);
+        
 
         //! Place children
         virtual void place();

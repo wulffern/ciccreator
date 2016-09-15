@@ -71,7 +71,10 @@ DesignPrinter::~DesignPrinter(){
             this->printReference((Instance*)child);
           }else if(child->isPort()){
             Port * p = (Port *) child;
-            this->printPort(p);
+            if(p->spicePort){
+                this->printPort(p);
+            }
+            
 		}else if(child->isText()){
             Text * p = (Text *) child;
             this->printText(p);
