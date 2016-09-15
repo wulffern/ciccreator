@@ -312,7 +312,7 @@
                                       ["M1","C","MN0:G||MN1:G"],
                                       ["M1","CN","MN2:G-|--MN0:S"],
                                       ["M1","C","MP0:G-|MP2:G"],
-                                      ["M4","NC","MP1:S--|--MP1:G"]
+                                      ["M4","NC","MP1:S-|--MP1:G"]
                                     ]			  
           },
           "afterRoute"  : {
