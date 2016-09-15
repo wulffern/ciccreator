@@ -97,11 +97,11 @@ namespace cIcCore{
 		virtual void moveTo(int x, int y);
 
 		//! Place center of this rectangel at x and y
-        void moveCenter(int x, int y);
+        virtual void moveCenter(int x, int y);
 
 		//! Increase the size of this rectangle by dx on all sides
-		void adjust(int dx);
-        void adjust(int dx1, int dy1, int dx2, int dy2);
+		virtual void adjust(int dx);
+        virtual void adjust(int dx1, int dy1, int dx2, int dy2);
 
 		//! Get a rectangele where each side is moved by xp1. Useful for generating a rectangle
 		//! to enclose this rectangle by a certain amount
@@ -109,10 +109,10 @@ namespace cIcCore{
 
 		
 		//! Mirror around ax, will send "updated()" 
-		void mirrorX(int ax);
+		virtual void mirrorX(int ax);
 		
 		//! Mirror arround ay, will send "updated()" 
-        void mirrorY(int ay);
+        virtual void mirrorY(int ay);
 
 
 		void setPoint1(int x1, int y1){x1_ = x1;y1_ = y1;}

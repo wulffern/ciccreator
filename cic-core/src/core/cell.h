@@ -59,10 +59,10 @@ namespace cIcCore{
         virtual void translate(int dx, int dy);
 
         //! Mirror this cell, and all children around ax
-        void mirrorX(int ax);
+        virtual void mirrorX(int ax);
 
         //! Mirror this cell, and all children around ay
-        void mirrorY(int ay);
+        virtual void mirrorY(int ay);
 
         //! Move this cell, and all children to ax and ay
         virtual void moveTo(int ax, int ay);

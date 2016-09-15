@@ -234,7 +234,7 @@ namespace cIcCore{
 
 
 
-    void Rect::mirrorY(int ax){
+    void Rect::mirrorX(int ax){
         this->setLeft(2.0*ax - this->left());
         this->setRight(2.0*ax - this->right());
 
@@ -248,7 +248,7 @@ namespace cIcCore{
     }
 
 
-    void Rect::mirrorX(int ay){
+    void Rect::mirrorY(int ay){
 
         this->setTop(2 *  ay - this->top());
         this->setBottom(2 *  ay - this->bottom());

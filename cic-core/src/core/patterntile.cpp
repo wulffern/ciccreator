@@ -178,8 +178,6 @@ namespace cIcCore {
     void PatternTile::paint(){
 
 
-        qDebug() << xoffset_ << yoffset_ << widthoffset_;
-        
         if(horizontalGrid_ != 0){
             this->xspace_ = horizontalGrid_;
         }
@@ -196,6 +194,7 @@ namespace cIcCore {
         foreach(QString layer, layerNames_){
 
             QList<QString> strs = layers_[layer];
+            qDebug() << strs;
             for(int y=0;y <= ymax_;y++){
                 currentHeight_ = yspace_;
                 for(int x=0;x <= xmax_;x++){
@@ -236,8 +235,10 @@ namespace cIcCore {
                         p = this->getPort(QString(c));
                         if(!p){
                             p = new Port(c);
+                            qDebug() << "adding port" << c;
+                            this->add(p);
                         }
-                        this->add(p);
+
                     case 'x':
                     case 'X':
                     case 'K':
