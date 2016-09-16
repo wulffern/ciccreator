@@ -259,7 +259,7 @@ namespace cIcCore{
 
         int x = 0;
 
-        x = start_bound.x2() + space;
+        x = start_bound.x2() + space*2;
 
         foreach(auto rect,start_rects_){
 
@@ -303,7 +303,7 @@ namespace cIcCore{
         int hgrid = this->rules->get("ROUTE","horizontalgrid");
 
         int x = 0;
-        x = start_bound.x2() + space;
+        x = start_bound.x2() + space*2;
 
         foreach(auto rect,start_rects_){
             qDebug() << rect->toString();
