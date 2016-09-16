@@ -684,7 +684,7 @@
                  ["M4","SARN","XB2:VO1-|--XDAC2:XC1$:CTOP","2cuts,antenna"],
                  ["M3","SARN","XB1:VO2-|--XB2:VO1","2cuts"],
                  ["M4","SARP","XB1:VO1-|--XB2:VO2","2cuts"],
-                 ["M3","EN","XA0:XA1:XA5:EN-XA0:RST_N","offsethigh"],
+                 ["M3","EN","XA0:XA1:XA5:EN-XA0:RST_N","offsethigh,noendcut"],
                  ["M2","AVSS","RAIL_LEFT_AVSS-|-XDAC1:X:AVSS","strap"],
                  ["M2","AVSS","XDAC2:X:AVSS-|-RAIL_RIGHT_AVSS","strap"]
              ],
