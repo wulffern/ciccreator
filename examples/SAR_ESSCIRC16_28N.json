@@ -581,7 +581,7 @@
           "rows" : 5,
           "beforeRoute" : {
               "addDirectedRoutes" : [ ["M1","RST_N","XA1:RST_N-|XA4:RST_N,XA5:RST_N"],
-                                      ["M1","ENO","XA2:MN:G-|--XA1:MN3:D"],
+                                      ["M1","ENO","XA2:MN:G-|--XA1:MN3:D","offsetlow"],
                                       ["M1","LCK_N","XA5:MN1:G-|--XA2:MN:D"],
                                       ["M1","LCK_N","XA4:MN1:G-|--XA2:MN:D"],
                                       ["M1","CMP_OP","XA1:MN1:G|-XA5:MN0:G"],
