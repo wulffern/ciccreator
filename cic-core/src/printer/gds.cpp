@@ -118,6 +118,10 @@ namespace cIcPrinter{
 
   void Gds::printRect(Rect * o){
 
+      //Don't print lines
+      if(o->x1() == o->x2() || o->y1() == o->y2()) return;
+      
+      
     gds_write_boundary( fd );       // write just the token
     gds_write_layer( fd, Rules::getRules()->layerToNumber(o->layer()) );       // layer 0, for example
     gds_write_datatype( fd, Rules::getRules()->layerToDataType(o->layer()) );    // datatype 1, for example
