@@ -636,7 +636,7 @@
 
           },
           "afterRoute" : {
-              "addPortOnRects" : [ ["CEIN", "M1","XA11:MN1:G"], ["CEO", "M1","XA12:MP0:D"] , ["CKS", "M1"],["DONE", "M1"], ["VREF", "M4" ,"XA2:VREF"] ]
+              "addPortOnRects" : [ ["CEIN", "M1","XA11:MN1:G"], ["CEO", "M1","XA12:MP0:D"] , ["CKS", "M1"],["DONE", "M1"], ["VREF", "M4" ,"XA2:VREF"],["ENO","M2","XA1$:ENO"] ]
           }
         },
         { "name": "SARDIGEX4_CV",
