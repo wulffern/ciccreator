@@ -624,8 +624,8 @@
                                       ["M1","ENO_N","XA8:MN0:G-|--XA7:MN0:D"],
                                       ["M1","ENO_N","XA8:MN0:G||XA9:MN0:G"],
                                       ["M2","CE","XA9:MN1:G-|--XA6:MN3:D"],
-                                      ["M1","CE1","XA10:MN0:G-|--XA9:MN1:D"],
-                                      ["M1","CE1_N","XA11:MN0:G-|--XA10:MN0:D"],
+                                      ["M1","CE1","XA10:MN0:G-|--XA9:MN1:D","offsetlowend"],
+                                      ["M1","CE1_N","XA11:MN0:G-|--XA10:MN0:D","offsetlowend"],
                                       ["M1","CEO1","XA12:MN0:G-|--XA11:MN1:S"],
                                       ["M1","CN0","XA5:MP0:D-|--XA6:MP0:G"],
                                       ["M2","CP1","XA3:MP0:D-|--XA6:MP2:G"]
