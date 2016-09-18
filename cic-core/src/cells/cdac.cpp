@@ -46,17 +46,20 @@ namespace cIcCells{
 
          //Find how many nets called CP
         QStringList nodes= subckt()->nodes();
-        int i=0;
+        int i=-1;
         foreach(QString s,nodes){
             if(s.contains("CP")){
                 i += 1;
             }
         }
 
+
+
         //Add the route rings
-        for(auto x=0;x<i;x++){
+        for(auto x=i;x >=0;x--){
             QString name = QString("CP<%1>").arg(x);
             this->addRouteRing("M2",name,"l",1,1);
+            
         }
 
         QList<Graph*> graphs = this->getNodeGraphs("AVSS");
@@ -85,7 +88,7 @@ namespace cIcCells{
 
     void CDAC::route()
     {
-        this->addRouteConnection("CP","","M1","left","");
+        this->addRouteConnection("CP","","M3","left","");
 
         if(firstinst){
             //Add ports
