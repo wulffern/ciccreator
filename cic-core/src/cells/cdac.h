@@ -33,6 +33,8 @@ namespace cIcCells{
     public:
         virtual void place();
         virtual void route();
+        virtual void paint();
+        
         
     private:
         cIcCore::Instance* firstinst;
