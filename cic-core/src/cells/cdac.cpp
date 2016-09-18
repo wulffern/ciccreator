@@ -56,7 +56,7 @@ namespace cIcCells{
 
 
         //Add the route rings
-        for(auto x=i;x >=0;x--){
+        for(auto x=0;x<i;x++){
             QString name = QString("CP<%1>").arg(x);
             this->addRouteRing("M2",name,"l",1,2,false);
             
