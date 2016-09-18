@@ -68,6 +68,7 @@ namespace cIcCore{
         void trimRouteRing(QString path, QString location,QString whichEndToTrim);
 
 		void addRouteRing(QString layer, QString name, QString location, int widthmult, int spacemult);
+        void addRouteRing(QString layer, QString name, QString location, int widthmult, int spacemult,bool useGridForSpace);
 		void addPowerRing(QString layer, QString name, QString location, int widthmult);
 		void addPowerConnection(QString name, QString includeInstances,  QString location);
 		void addRouteConnection(QString path, QString includeInstances, QString layer, QString location, QString options);
