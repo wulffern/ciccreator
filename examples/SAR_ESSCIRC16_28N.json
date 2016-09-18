@@ -652,7 +652,7 @@
               ["SWX2_CV","SWX4_CV"]
           ]
         },
-        { "name": "CDAC9_CV", "class" : "Layout::LayoutCDACSmall", "afterPlace" : { "moveTo" : [0,0]}},
+        { "name": "CDAC9_CV", "class" : "Layout::LayoutCDACSmall"},
         {"name": "SAR9B_CV",
          "class" : "Layout::LayoutSARCDAC",
          "ctrlOutside" : 0,
