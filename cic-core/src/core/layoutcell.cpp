@@ -509,9 +509,25 @@ namespace cIcCore{
 
     void LayoutCell::addRouteRing(QString layer, QString name, QString location, int widthmult, int spacemult)
     {
+        this->addRouteRing(layer,name,location,widthmult,spacemult,true);
+        
+    }
+
+
+    void LayoutCell::addRouteRing(QString layer, QString name, QString location, int widthmult, int spacemult,bool useGridForSpace)
+    {
         int metalwidth = this->rules->get(layer,"width")*widthmult;
-        int xgrid = this->rules->get("ROUTE","horizontalgrid")*spacemult + metalwidth;
-        int ygrid = this->rules->get("ROUTE","horizontalgrid")*spacemult + metalwidth;
+        int xgrid;
+        int ygrid;
+        if(useGridForSpace){
+            xgrid = this->rules->get("ROUTE","horizontalgrid")*spacemult + metalwidth;
+            ygrid = this->rules->get("ROUTE","horizontalgrid")*spacemult + metalwidth;
+        }else{
+            xgrid = this->rules->get(layer,"space")*spacemult + metalwidth;
+            ygrid = this->rules->get(layer,"space")*spacemult + metalwidth;
+
+        }
+
 
         QStringList names = expandBus(name);
         foreach(QString n,names){
