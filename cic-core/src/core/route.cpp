@@ -296,8 +296,6 @@ namespace cIcCore{
         int width = rules->get(routeLayer_,"width");
         int space = rules->get(routeLayer_,"space");
 
-        qDebug() << net_;
-
 
         Rect start_bound = this->calcBoundingRect(start_rects_);
         int hgrid = this->rules->get("ROUTE","horizontalgrid");

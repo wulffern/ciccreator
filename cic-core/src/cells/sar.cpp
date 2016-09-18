@@ -97,6 +97,10 @@ namespace cIcCells{
         int x = centerx - switchwidth;
         int y = 0;
 
+
+        qDebug() << centerx;
+                
+                
         //Place switches
         inst = this->placeAlternateMirror(groups,"XB",i,x,y,0);
         if(inst) y += inst->height() + msw*4;
