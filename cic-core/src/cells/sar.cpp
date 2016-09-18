@@ -92,28 +92,25 @@ namespace cIcCells{
         int cdacwidth = this->getCellWidth(groups,"XDAC");
         int switchwidth = this->getCellWidth(groups,"XB");
 
-        int centerx = (cdacwidth*2 + ms*5)/2;
+        int centerx = (cdacwidth*2 + ms*5 + mw*4)/2;
         int i = 1;
         int x = centerx - switchwidth;
         int y = 0;
 
-
-        qDebug() << centerx;
-                
-                
         //Place switches
         inst = this->placeAlternateMirror(groups,"XB",i,x,y,0);
-        if(inst) y += inst->height() + msw*4;
+        if(inst) y += inst->height() + msw;
 
         //Place CDAC
         x = 0; i = 1;
-        inst = this->placeAlternateMirror(groups,"XDAC",i,x,y,ms);
+        inst = this->placeAlternateMirror(groups,"XDAC",i,x,y,ms*5 + mw*2);
         if(inst) y = inst->y2();
 
         //Get routing height
         QList<Graph*> graphs = this->getNodeGraphs("CP<|CN<|D<");
         int yc = y + msw*2;
-        y += msw*graphs.count() + msw*10;
+        
+        y += msw*graphs.count() + msw*10- mw;
 
         //Get control width
         int ctrwidth = this->getCellWidth(groups,"XA");
@@ -169,24 +166,24 @@ namespace cIcCells{
             r0->setLeft(xmin);
 
             r0->setRight(xmax);
-            
-
         }
 
-        
+        this->updateBoundingRect();
         
     }
 
     int SAR::addSarRouting(int y,int msw,int mw)
     {
 
-        y += msw + mw;
+        int ms = this->rules->get("M3","space");
+
+        y += msw - mw;
         sarn = new Rect("M4",this->x1() + msw,y,this->width() - 2*msw,mw);
         this->add(sarn);
-        y += 2*msw + mw;
+        y += 2*msw ;
         sarp = new Rect("M4",this->x1() + msw,y,this->width() - 2*msw,mw);
         this->add(sarp);
-        y += msw + mw;
+        y += msw;
 
         if(ports_.contains("SARP")){
             ports_["SARP"]->set(sarp);
@@ -242,7 +239,7 @@ namespace cIcCells{
         }
 
 
-        int ms = this->rules->get("M3","space");
+
 
 
         //Add CMP SARP routing
@@ -266,7 +263,7 @@ namespace cIcCells{
         }
 
 
-        y += mw + ms*4;
+        y += msw ;
         return y;
         
     }

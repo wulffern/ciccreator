@@ -30,8 +30,22 @@ namespace cIcCells{
         this->noPowerRoute();
         this->setBoundaryIgnoreRouting(false);     
 
+        int xs = this->rules->get("M1","space");
+        int xw = this->rules->get("M1","width");
+        int xg = this->rules->get("ROUTE","horizontalgrid");
+
+                 //Find how many nets called CP
+        QStringList nodes= subckt()->nodes();
+        int i=-1;
+        foreach(QString s,nodes){
+            if(s.contains("CP")){
+                i += 1;
+            }
+        }
+
+        
         int prev_width = 0;
-        int x = 0;
+        int x =  (xw + xs*2)*(i+2);
         int y = 0;
         bool first = true;
         
@@ -44,19 +58,12 @@ namespace cIcCells{
             }
         }
 
-         //Find how many nets called CP
-        QStringList nodes= subckt()->nodes();
-        int i=-1;
-        foreach(QString s,nodes){
-            if(s.contains("CP")){
-                i += 1;
-            }
-        }
 
-
+        this->adjust(-xs*2+xw,0,0,0);
+        
 
         //Add the route rings
-        for(auto x=0;x<=i;x++){
+        for(auto x=i;x>=0;x--){
             QString name = QString("CP<%1>").arg(x);
             this->addRouteRing("M2",name,"l",1,2,false);
             
@@ -112,6 +119,14 @@ namespace cIcCells{
         this->updateBoundingRect();
     }
     
+    void CDAC::paint()
+    {
+        LayoutCell::paint();
+        int space = this->rules->get("M1","space");
+        int width = this->rules->get("M1","width")*2;
+        
+//        moveTo(width,0);
+    }
     
     
 
