@@ -82,6 +82,7 @@ namespace cIcCells{
                 if(c && strcmp(c->metaObject()->className(),"cIcCells::CapCell") == 0){
                     CapCell* cap = (CapCell*) c;
                     Rect* rect = cap->getAvssConnectRect(p);
+                    rect->translate(i->x1(),0);
                     this->add(rect);
                 }
                         
@@ -101,6 +102,7 @@ namespace cIcCells{
             //Add ports
             QList<Rect*> rects1 = firstinst->findRectanglesByNode("AVSS","");
             if(rects1.count() > 0 ){
+                
                 this->addPort("AVSS",rects1[0]);
             }
         }
