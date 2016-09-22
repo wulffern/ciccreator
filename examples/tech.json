@@ -35,7 +35,7 @@
         "VIA1" : { "number" : 16, "datatype" : 0, "material" : "cut", "previous" : "M1", "next" : "M2" },
         "VIA2" : { "number" : 18, "datatype" : 0, "material" : "cut", "previous" : "M2", "next" : "M3" },
         "VIA3" : { "number" : 20, "datatype" : 0, "material" : "cut", "previous" : "M3", "next" : "M4" },
-        "VIA4" : { "number" : 36, "datatype" : 0, "material" : "cut", "previous" : "M4", "next" : "M5" },
+        "VIA4" : { "number" : 22, "datatype" : 0, "material" : "cut", "previous" : "M4", "next" : "M5" },
         "VIA5" : { "number" : 37, "datatype" : 0, "material" : "cut", "previous" : "M5", "next" : "M6" },
         "PR" : { "number" : 62, "datatype" : 20 ,"fill" : "nofill"},
         "NW" : { "number" : 4, "datatype" : 0 , "material" : "implant", "color" : "red","fill" : "nofill"},
