@@ -181,7 +181,7 @@ Show: 1
 LayerEnd
 
 LayerStart: Via 4
-Layer: 36
+Layer: 22
 Height: 2120
 Thickness: 200
 Red: 0.93
