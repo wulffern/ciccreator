@@ -17,11 +17,22 @@
 ##   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ######################################################################
 
-#  /Users/wulff/pro/ciccreator/examples/devices.json   /Users/wulff/pro/ciccreator/examples/tech.json devices -v
-#   /Users/wulff/pro/cnano/examples/SAR_LPWR_ST28N/SAR_LPWR_ST28N.json   /Users/wulff/pro/cnano/examples/soi.json SAR_LPWR_ST28N -v	
-
 
 CMD=time ../bin/cic
+
+#- Figure out which platform we're running on
+ifeq ($(OS),Windows_NT)
+	#- Not compatible with windows yet
+GDS3D=WINDOWS
+else
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+GDS3D=GDS3D/mac/GDS3D.app/Contents/MacOS/GDS3D
+endif
+ifeq ($(UNAME_S),Linux)
+GDS3D=GDS3D/linux/GDS3D
+endif
+endif
 
 .PHONY: doxygen coverage
 
@@ -51,7 +62,7 @@ coverage:
 
 #- Run the program with the example json file
 EXAMPLE=../examples
-LIBNAME=devices
+LIBNAME=SAR_ESSCIRC_28N
 JSONFILE=${EXAMPLE}/${LIBNAME}.json
 TECHFILE=${EXAMPLE}/tech.json
 
@@ -74,10 +85,21 @@ esscirc_soi:
 sar_soi:
 	cd lay; make sar
 
-
-
 view:
 	cd lay; ../bin/cic-gui ${TECHFILE} ${LIBNAME}.json &
 
 view-routes:
 	cd lay; ../bin/cic-gui ${TECHFILE} routes.json &
+
+GDS3D:
+	wget https://sourceforge.net/projects/gds3d/files/GDS3D%201.8/GDS3D_1.8.tar.bz2/download
+	tar -zxvf download
+	ln -s GDS3D_1.8 GDS3D
+	rm download
+
+view3d: GDS3D
+	echo ${GDS3D}
+	 ${GDS3D} -p examples/tech_gds3d.txt -i lay/SAR_ESSCIRC16_28N.gds -t SAR9B_CV
+
+
+
