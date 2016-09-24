@@ -21,9 +21,10 @@
 
   CONFIG += qt console debug
   CONFIG += c++11
-  mac {
-    CONFIG -= app_bundle
-  }
+CONFIG += static
+mac {
+    mac::QMAKE_MAC_SDK = macosx10.12
+}
 
   TEMPLATE = app
 
