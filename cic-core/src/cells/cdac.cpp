@@ -124,8 +124,7 @@ namespace cIcCells{
     void CDAC::paint()
     {
         LayoutCell::paint();
-        int space = this->rules->get("M1","space");
-        int width = this->rules->get("M1","width")*2;
+  
         
 //        moveTo(width,0);
     }

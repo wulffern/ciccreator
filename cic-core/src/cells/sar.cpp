@@ -46,7 +46,7 @@ namespace cIcCells{
 
     Instance* SAR::placeAlternateMirror(SARgroup groups,QString group, int i, int x ,int y, int xoffset)
     {
-        Instance* inst;
+        Instance* inst = nullptr;
 
         if(groups.contains(group)){
             foreach(SubcktInstance* ckt, groups[group]){
