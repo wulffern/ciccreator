@@ -30,11 +30,12 @@
 
   CONFIG += qt console debug
   CONFIG += c++11
-  mac {
-    CONFIG -= app_bundle
-  }
 
   TEMPLATE = app
+
+mac {
+    mac::QMAKE_MAC_SDK = macosx10.12
+}
 
   osx:DESTDIR = ../bin/darwin
   linux:DESTDIR = ../bin/linux
