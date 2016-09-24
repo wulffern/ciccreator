@@ -35,7 +35,7 @@ Open GDSII file or open built in viewer
 
 Or you can use GDS3D from https://sourceforge.net/projects/gds3d/ 
 
-../../programs/GDS3D_1.8/mac/GDS3D.app/Contents/MacOS/GDS3D -p examples/tech_gds3d.txt -i lay/SAR_ESSCIRC16_28N.gds -t SAR9B_CV 
+    make view3d
 
 #cIcCreator in action
 
