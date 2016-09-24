@@ -23,10 +23,9 @@
   CONFIG += staticlib
   CONFIG += c++11
 
-  mac {
-    CONFIG -= app_bundle
-  }
-
+mac {
+    mac::QMAKE_MAC_SDK = macosx10.12
+}
   TEMPLATE = lib
 
   osx:DESTDIR = ../lib/darwin
