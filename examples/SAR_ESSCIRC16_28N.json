@@ -79,133 +79,112 @@
           ]
         },
         {"name" : "CAPR" , "inherit" : "CAP", "afterPaint" : { "mirrorCenterY" : 0 }},
-        { "name" : "DMOS" ,
+
+		{ "name" : "DMOSE" ,
           "class" : "Gds::GdsPatternTransistor",
-          "yoffset": -0.5,
-          "type": "pch",
+          "yoffset": -1.5,
+          "heightoffset": -2,
           "widthoffset" : -1,
+          "polyWidthAdjust" : 0,
           "fillCoordinatesFromStrings" : [
               [   "OD",
-                  "------------------xxxx",
-                  "----xxK-----------xCxC",
-                  "----xxx-----------xxxx",
-                  "----xxK-----------xCxC",
-                  "------------------xxxx"
+                  "-------------------xxxx",
+                  "-------------------xxxx",
+                  "-------------------xxxx",
+                  "-------------------xxxx",
+				  "-----xxxx----------xxxx",
+                  "-----xCxC----------xCxX",
+                  "-----xxxx----------xxxx",
+                  "-----xxxx----------xxxx",
+                  "-----xxxx----------xxxx",
+                  "-----xCxC----------xCxC",
+				  "-----xxxx----------xxxx",
+                  "-------------------xxxx",
+                  "-------------------xxxx",
+                  "-------------------xxxx",
+                  "-------------------xxxx"
               ],
               [   "PO",
-                  "-mmmmmmmmmmmmm--------",
-                  "----------------------",
-                  "-mmmmmmmmmmcxc--------",
-                  "----------------------",
-                  "-mmmmmmmmmmmmm--------"
+                  "-----------------------",
+                  "--mmmmmmmmmmmmm--------",
+                  "-----------------------",
+				  "-----------------------",
+                  "-----------------------",
+                  "-----------------------",
+                  "-----------------------",
+                  "--mmmmmmmmmmcmc--------",
+                  "-----------------------",
+				  "-----------------------",
+                  "-----------------------",
+                  "-----------------------",
+                  "-----------------------",
+                  "--mmmmmmmmmmmmm--------",
+                  "-----------------------"
               ],
               [   "M1",
-                  "------------------xxxx",
-                  "----wDww----------xxxx",
-                  "-----------wGww---xBxx",
-                  "----wSww----------xxxx",
-                  "------------------xxxx"
+                  "-------------------xxxx",
+                  "-------------------xxxx",
+                  "-------------------xxxx",
+                  "-------------------xxxx",
+				  "-------------------xxxx",
+                  "-----wDww----------xxxx",
+                  "-------------------xxxx",
+                  "------------wGww---xBxx",
+                  "-------------------xxxx",
+                  "-----wSww----------xxxx",
+                  "-------------------xxxx",
+				  "-------------------xxxx",
+                  "-------------------xxxx",
+                  "-------------------xxxx",
+                  "-------------------xxxx"
               ]
-          ],
-          "afterNew" : {
-              "copyColumns" :[
-                  { "count" : 0, "offset" : 4,"length" : 4}
-              ]
-          }
+          ]
         },
+
         { "name" : "PCHDL",
-          "inherit" : "DMOS",
-          "type" : "pch_lvt",
+          "inherit" : "DMOSE",
+          "type" : "pch_lvt_io",
           "beforePlace" :{
               "addEnclosures" : [
-                  ["OD",1,["PP","LVT","HS"]],
-                  ["OD",0,["PP","NSS"]]
+                  ["OD",1,["PPE","LVT","HS"]],
+                  ["OD",0,["PP","NS"]]
+              ],
+              "addEnclosuresByRectangle" : [
+                  ["OD",[0,0,"width","height"],["OD2"]],
+                  ["OD",[0,0,11,"height"],["HS"]]
               ]
           }
         },
+
+
+
         { "name" : "NCHDL",
-          "inherit" : "DMOS",
+          "inherit" : "DMOSE",
           "xoffset" : -2,
           "afterNew" : {
               "mirrorPatternString" : 1
           },
-          "type" : "nch_lvt",
+          "type" : "nch_lvt_io",
           "beforePlace" :{
               "addEnclosures" : [
                   ["OD",1,["LVT"]]
               ],
               "addEnclosuresByRectangle" : [
-                  ["OD",[0,0,20,5],["NW","HS"]],
-                  ["OD",[0,0,4,5],["NSSN"]]
+                  ["OD",[0,0,"width","height"],["NW","HS","OD2"]],
+                  ["OD",[0,0,4,"height"],["NSSN"]]
               ]
           }
-        },
-        { "name" : "NCHDLR", "type" : "nch_lvt",
-          "inherit" : "NCHDL", "afterPaint" : { "mirrorCenterY" : 0 },
-          "beforePlace" :{
-              "addEnclosuresByRectangle" : [
-                  ["OD",[0,0,22,5],["NW","HS"]]
-              ]
-          }
-        },
-        { "name" : "DMOS_BULK" ,
-          "class" : "Gds::GdsPatternTransistor",
-          "yoffset": -0.5,
-          "type" : "pch",
-          "widthoffset" : -0.5,
-          "fillCoordinatesFromStrings" : [
-              [   "OD",
-                  "----------------xxx",
-                  "----cxc---------xcx",
-                  "----xxx---------xxx",
-                  "----cxc---------xcx",
-                  "----------------xxx"
-              ],
-              [   "PO",
-                  "-mmmmmmmmmmmm------",
-                  "-------------------",
-                  "-mmmmmmmmmcxc------",
-                  "-------------------",
-                  "-mmmmmmmmmmmm------"
-              ],
-              [   "M1",
-                  "----------------xxx",
-                  "----wDw---------xxx",
-                  "----------wGw---xBx",
-                  "----wSw---------xxx",
-                  "----------------xxx"
-              ]
-          ]
         },
 
-        { "name" : "PCHDLDMY",
-          "inherit" : "DMOS_BULK",
-          "type" : "pch",
+		 { "name" : "NCHDLR", "type" : "nch_lvt_io",
+          "inherit" : "NCHDL", "afterPaint" : { "mirrorCenterX" : 0 },
           "beforePlace" :{
               "addEnclosuresByRectangle" : [
-                  ["OD",[0,0,18,5],["NWD"]],
-                  ["OD",[-2,-2,16,9],["PPD"]],
-                  ["OD",[14,-2,6,9],["NPD"]]
+                  ["OD",[0,0,22,15],["NW","HS"]]
               ]
           }
         },
-        { "name" : "NCHDLDMY",
-          "inherit" : "DMOS_BULK",
-          "xoffset" : -1.5,
-          "afterNew" : {
-              "mirrorPatternString" : 1
-          },
-          "type" : "nch",
-          "beforePlace" :{
-              "addEnclosuresByRectangle" : [
-                  ["OD",[-1,-2,6,9],["PPD"]],
-                  ["OD",[5,-2,16,9],["NPD"]]
-              ]
-          }
-        },
-        { "name" : "NCHDLRDMY", "type" : "nch_lvt",
-          "inherit" : "NCHDL", "afterPaint" : { "mirrorCenterX" : 0 }
-        },
+		
         { "name": "TIEH_CV",
           "symbol" : "tieh",
           "class" : "Layout::LayoutDigitalCell",
