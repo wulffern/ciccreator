@@ -4,7 +4,6 @@
 		"contact" : "carsten (at) wulff.no",
         "license" : [
             "Copyright (c) 2014 Carsten Wulff",
-			"Non-commercial use only, for commercial use contact license holder",
             "This program is free software: you can redistribute it and/or modify",
             "it under the terms of the GNU General Public License as published by",
             "the Free Software Foundation, either version 3 of the License, or",
@@ -79,9 +78,9 @@
           ]
         },
         {"name" : "CAPR" , "inherit" : "CAP", "afterPaint" : { "mirrorCenterY" : 0 }},
-
 		{ "name" : "DMOSE" ,
           "class" : "Gds::GdsPatternTransistor",
+		  "minPolyLength" : 36,
           "yoffset": -1.5,
           "heightoffset": -2,
           "widthoffset" : -1,
@@ -93,7 +92,7 @@
                   "-------------------xxxx",
                   "-------------------xxxx",
 				  "-----xxxx----------xxxx",
-                  "-----xCxC----------xCxX",
+                  "-----xCxC----------xCxC",
                   "-----xxxx----------xxxx",
                   "-----xxxx----------xxxx",
                   "-----xxxx----------xxxx",
@@ -185,7 +184,7 @@
           }
         },
 		
-        { "name": "TIEH_CV",
+        { "name": "TIEH_EV",
           "symbol" : "tieh",
           "class" : "Layout::LayoutDigitalCell",
           "beforeRoute" : {
@@ -196,7 +195,7 @@
               "addPortOnRects" : [  ["Y","M1", "MP0:D"] ]
           }
         },
-        { "name": "TIEL_CV",
+        { "name": "TIEL_EV",
           "symbol" : "tiel",
           "class" : "Layout::LayoutDigitalCell",
           "beforeRoute" : {
@@ -209,13 +208,13 @@
           }
         },
 
-        { "name": "CAPX1_CV" ,
+        { "name": "CAPX1_EV" ,
           "class" : "Layout::LayoutDigitalCell",
           "afterRoute"  : {
               "addPortOnRects" : [  ["A","M4", "XA1:A"] , ["B", "M3", "XB1:B"]]
           }
         },
-        { "name": "IVX1_CV" ,
+        { "name": "IVX1_EV" ,
           "symbol" : "inv",
           "class" : "Layout::LayoutDigitalCell",
           "beforeRoute" : {
@@ -226,7 +225,7 @@
               "addPortOnRects" : [  ["A","M1", "MN0:G"] , ["Y", "M1", "MN0:D"]]
           }
         },
-        { "name": "IVX2_CV" ,
+        { "name": "IVX2_EV" ,
           "class" : "Layout::LayoutDigitalCell",
           "symbol" : "inv",
           "setYoffsetHalf" :  "" ,
@@ -242,10 +241,10 @@
               "addPortOnRects" : [  ["A","M1", "MN0:G"] , ["Y", "M1", "MN0:D"]]
           }
         },
-        { "name": "SWX2_CV" ,
+        { "name": "SWX2_EV" ,
           "class" : "Layout::LayoutDigitalCell",
           "symbol" : "",
-          "inherit" : "IVX2_CV",
+          "inherit" : "IVX2_EV",
           "beforeRoute" : [
               {"addVias" :  [
                   ["M3","M4","MP1:D",2,1,8,"CUST_VREF"]
@@ -258,7 +257,7 @@
               "addPortOnRects" : [  ["VREF","M4","CUST_VREF"]]
           }
         },
-        { "name": "SWX4_CV" ,
+        { "name": "SWX4_EV" ,
           "class" : "Layout::LayoutDigitalCell",
           "symbol" : "",
           "setYoffsetHalf" :  "" ,
@@ -279,7 +278,7 @@
               "addPortOnRects" : [  ["A","M1", "MN0:G"] , ["Y", "M1", "MN0:D"],["VREF","M4","CUST_VREF"]]
           }
         },
-        { "name": "TGPD_CV" ,
+        { "name": "TGPD_EV" ,
           "class" : "Layout::LayoutDigitalCell",
           "setYoffsetHalf" : "",
           "rows": 3,
@@ -299,7 +298,7 @@
                                  ]
           }
         },
-        { "name": "IVX4_CV" ,
+        { "name": "IVX4_EV" ,
           "class" : "Layout::LayoutDigitalCell",
           "symbol" : "inv",
           "setYoffsetHalf" :  "" ,
@@ -316,7 +315,7 @@
           }
         },
 
-        { "name": "TAPCELL_CV",
+        { "name": "TAPCELL_EV",
           "class" : "Layout::LayoutDigitalCell",
           "beforeRoute" : {
               "addVias" : [ ["M1", "M4", "MN:D",2]],
@@ -334,7 +333,7 @@
               "addPortOnRects" : [ ["TAP", "M1","MN:D" ] ]
           }
         },
-        { "name": "TAPCELLB_CV",
+        { "name": "TAPCELLB_EV",
           "class" : "Layout::LayoutDigitalCell",
           "boundaryIgnoreRouting" : 1,
           "beforeRoute" : {
@@ -348,7 +347,7 @@
 
           }
         },
-        { "name": "NRX1_CV",
+        { "name": "NRX1_EV",
           "class" : "Layout::LayoutDigitalCell",
           "rows" : 2,
           "symbol" : "nor",
@@ -363,7 +362,7 @@
               "addPortOnRects" : [ ["A", "M1" ,"MN0:G"], ["B", "M1", "MN1:G"], ["Y", "M1", "MN1:S" ]]
           }
         },
-        { "name": "NDX1_CV" ,
+        { "name": "NDX1_EV" ,
           "class" : "Layout::LayoutDigitalCell",
           "rows" : 2,
           "symbol" : "nand",
@@ -378,7 +377,7 @@
               "addPortOnRects" : [ ["A", "M1" ,"MN0:G"], ["B", "M1", "MN1:G"], ["Y", "M1", "MN1:D" ]]
           }
         },
-        { "name": "SAREMX1_CV",
+        { "name": "SAREMX1_EV",
           "description" : "Enable propagation. ENO is 0 on RST. ENO = EN & (A | B) ",
           "class" : "Layout::LayoutDigitalCell",
           "rows" : 4,
@@ -399,7 +398,7 @@
               "addPortOnRects" : [ ["A", "M1"], ["B", "M1"], ["RST_N", "M1"] , ["EN", "M1"], ["ENO", "M1", "MP1:S"]  ]
           }
         },
-        { "name": "SARLTX1_CV",
+        { "name": "SARLTX1_EV",
           "description" : "Conditional pull down, DOWN = A & EN & LCK_N, UP = RST_N",
           "class" : "Layout::LayoutDigitalCell",
           "rows" : 3,
@@ -413,7 +412,7 @@
               "addPortOnRects" : [ ["A", "M1"], ["RST_N", "M1","MP2:G"] , ["EN", "M1"], ["LCK_N", "M1"], ["CHL", "M1"], ["AVDD","M4"], ["AVSS","M4"]  ]
           }
         },
-        { "name": "SARCEX1_CV",
+        { "name": "SARCEX1_EV",
           "description" : "Conditional pull up, UP = A | B, DOWN = RST",
           "class" : "Layout::LayoutDigitalCell",
           "rows" : 4,
@@ -429,7 +428,7 @@
               "addPortOnRects" : [ ["A", "M1","MP0:G"],["B", "M1","MP2:G"], ["RST", "M1","MN1:G"] , ["A", "M1"], ["Y", "M1"], ["AVDD","M4"], ["AVSS","M4"]  ]
           }
         },
-        { "name": "SARCMPHX1_CV",
+        { "name": "SARCMPHX1_EV",
           "description" : "Half a strong-arm comparator",
           "class" : "Layout::LayoutDigitalCell",
           "setYoffsetHalf" :  "" ,
@@ -451,7 +450,7 @@
               "addPortOnRects" : [ ["AVDD","M4" ],["N1","M1","MN4:D"],["N2","M1","MN5:D" ]]
           }
         },
-        { "name": "SARKICKHX1_CV",
+        { "name": "SARKICKHX1_EV",
           "description" : "Kick generator for SARCMP",
           "class" : "Layout::LayoutDigitalCell",
           "setYoffsetHalf" :  "" ,
@@ -471,7 +470,7 @@
               "addPortOnRects" : [ ["AVDD","M4"], ["CK","M1", "MN6:G" ],["CKN","M1","MN0:G"],["CI","M1","MN1:G"]]
           }
         },
-        { "name": "SARBSSWCTRL_CV" ,
+        { "name": "SARBSSWCTRL_EV" ,
           "class" : "Layout::LayoutDigitalCell",
           "setYoffsetHalf" : "",
           "rows": 2,
@@ -487,8 +486,8 @@
           }
 
         },
-        { "name": "CAP32C_CV" , "class" : "Layout::LayoutCapCellSmall","maxcap" : 32,"usem3" : 1},
-        { "name": "SARCMPX1_CV",
+        { "name": "CAP32C_EV" , "class" : "Layout::LayoutCapCellSmall","maxcap" : 32,"usem3" : 1},
+        { "name": "SARCMPX1_EV",
           "class" : "Layout::LayoutDigitalCell",
           "description" : "Strong-arm comparator",
           "symbol" : "SARCMP",
@@ -518,7 +517,7 @@
               "addPortOnRects" : [ ["CK_SAMPLE","M1"] ,["CK_CMP","M1"],["DONE","M1"],["CNO", "M1","XA3a:Y"], ["CPO","M1","XA2a:Y"] ,["CPI","M1","XA1$:MN5:G" ],["CNI","M1","XA3$:MN5:G" ] ]
           }
         },
-        { "name" : "SARBSSW_CV", "class" : "Layout::LayoutDigitalCell",
+        { "name" : "SARBSSW_EV", "class" : "Layout::LayoutDigitalCell",
           "composite" : 1,
           "beforeRoute" : [
               {"addVias" : [ ["M1","M3","XA4:GNG",2],
@@ -552,7 +551,7 @@
          ]
         },
 
-        { "name": "SARMRYX1_CV",
+        { "name": "SARMRYX1_EV",
           "description" : "Logic cell for a SAR BIT",
           "description" : "CHL_(OP|ON) goes 0 on CMP_(OP|ON) rising if EN, CHL_(OP|ON) go high on RST_N",
           "description" : "ENO goes 1 on CMP_(OP|ON) falling if EN",
@@ -573,7 +572,7 @@
 
           }
         },
-        { "name": "SARDIGX1_CV",
+        { "name": "SARDIGX1_EV",
           "description" : "Memory cell to be able to drive SAR CAPS",
           "class" : "Layout::LayoutDigitalCell",
           "rows" : 6,
@@ -594,9 +593,9 @@
               ]
           }
         },
-        { "name": "SARDIGEX2_CV",
+        { "name": "SARDIGEX2_EV",
           "description" : "Extention of SARDIG, it also gives an clock enable out (CEO) on C(N|P)(1|0) that can be used in the comparator delay loop. CEIN and CEO should be daisy chained (NOR chain)",
-          "inherit" : "SARDIGX1_CV",
+          "inherit" : "SARDIGX1_EV",
           "composite" : 1,
           "beforeRoute" : {
               "addDirectedRoutes" : [ ["M2","ENO","XA7:MP0:G-|--XA1$:ENO"],
@@ -625,14 +624,14 @@
                {"addPortOnRects" : [ ["CEIN", "M1","XA11:MN1:G"], ["CEO", "M1","XA12:MP0:D"] , ["CKS", "M1"],["DONE", "M1"], ["VREF", "M4" ,"XA2:VREF"]]}
           ]
         },
-        { "name": "SARDIGEX4_CV",
-          "inherit" : "SARDIGEX2_CV",
+        { "name": "SARDIGEX4_EV",
+          "inherit" : "SARDIGEX2_EV",
           "spiceRegex" : [
-              ["SWX2_CV","SWX4_CV"]
+              ["SWX2_EV","SWX4_EV"]
           ]
         },
-        { "name": "CDAC9_CV", "class" : "Layout::LayoutCDACSmall"},
-        {"name": "SAR9B_CV",
+        { "name": "CDAC9_EV", "class" : "Layout::LayoutCDACSmall"},
+        {"name": "SAR9B_EV",
          "class" : "Layout::LayoutSARCDAC",
          "ctrlOutside" : 0,
          "afterPlace" : [

@@ -86,7 +86,7 @@ namespace cIcCore{
         virtual Rect calcBoundingRect();
 
         int minPolyLength(){return minPolyLength_;}
-        int setMinPolyLength(int val){ minPolyLength_ = val; return minPolyLength_;  }
+        int setMinPolyLength(int val){ minPolyLength_ = val*this->rules->gamma(); return minPolyLength_;  }
 
 		int verticalGrid(){return verticalGrid_;}
         int setVerticalGrid(int val){ verticalGrid_ = val; return verticalGrid_;  }
