@@ -21,7 +21,7 @@
 
   CONFIG += qt console debug
   CONFIG += c++11
-CONFIG += static
+  CONFIG -= app_bundle
 mac {
     mac::QMAKE_MAC_SDK = macosx10.12
 }

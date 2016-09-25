@@ -1,0 +1,476 @@
+
+*-------------------------------------------------------------
+* RM1 (cIcCore::PatternResistor)
+*-------------------------------------------------------------
+.SUBCKT RM1 A B
+R1 A B mres
+
+.ENDS 
+
+*-------------------------------------------------------------
+* RM4 (cIcCore::PatternResistor)
+*-------------------------------------------------------------
+.SUBCKT RM4 A B
+R1 A B mres
+
+.ENDS 
+
+*-------------------------------------------------------------
+* CAP (cIcCore::PatternCapacitor)
+*-------------------------------------------------------------
+.SUBCKT CAP A B
+R10 A NC0 mres
+R11 B NC1 mres
+
+.ENDS 
+
+*-------------------------------------------------------------
+* CAPR (cIcCore::PatternCapacitor)
+*-------------------------------------------------------------
+.SUBCKT CAPR A B
+R10 A NC0 mres
+R11 B NC1 mres
+
+.ENDS 
+
+*-------------------------------------------------------------
+* DMOS (cIcCore::PatternTransistor)
+*-------------------------------------------------------------
+.SUBCKT DMOS D G S B
+M1 D G S B pch w=1.62u l=0.18u nf=1 M=1
+.ENDS 
+
+*-------------------------------------------------------------
+* PCHDL (cIcCore::PatternTransistor)
+*-------------------------------------------------------------
+.SUBCKT PCHDL D G S B
+M1 D G S B pch_lvt w=1.62u l=0.18u nf=1 M=1
+.ENDS 
+
+*-------------------------------------------------------------
+* NCHDL (cIcCore::PatternTransistor)
+*-------------------------------------------------------------
+.SUBCKT NCHDL D G S B
+M1 D G S B nch_lvt w=1.62u l=0.18u nf=1 M=1
+.ENDS 
+
+*-------------------------------------------------------------
+* NCHDLR (cIcCore::PatternTransistor)
+*-------------------------------------------------------------
+.SUBCKT NCHDLR D G S B
+M1 D G S B nch_lvt w=1.62u l=0.18u nf=1 M=1
+.ENDS 
+
+*-------------------------------------------------------------
+* DMOS_BULK (cIcCore::PatternTransistor)
+*-------------------------------------------------------------
+.SUBCKT DMOS_BULK D G S B
+M1 D G S B pch w=1.62u l=0.18u nf=1 M=1
+.ENDS 
+
+*-------------------------------------------------------------
+* PCHDLDMY (cIcCore::PatternTransistor)
+*-------------------------------------------------------------
+.SUBCKT PCHDLDMY D G S B
+M1 D G S B pch w=1.62u l=0.18u nf=1 M=1
+.ENDS 
+
+*-------------------------------------------------------------
+* NCHDLDMY (cIcCore::PatternTransistor)
+*-------------------------------------------------------------
+.SUBCKT NCHDLDMY D G S B
+M1 D G S B nch w=1.62u l=0.18u nf=1 M=1
+.ENDS 
+
+*-------------------------------------------------------------
+* NCHDLRDMY (cIcCore::PatternTransistor)
+*-------------------------------------------------------------
+.SUBCKT NCHDLRDMY D G S B
+M1 D G S B nch_lvt w=1.62u l=0.18u nf=1 M=1
+.ENDS 
+
+*-------------------------------------------------------------
+* TIEH_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT TIEH_CV Y AVDD AVSS
+XMN0 A A AVSS AVSS NCHDL
+XMP0 Y A AVDD AVSS PCHDL
+.ENDS 
+
+*-------------------------------------------------------------
+* TIEL_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT TIEL_CV Y AVDD AVSS
+XMN0 Y A AVSS AVSS NCHDL
+XMP0 A A AVDD AVSS PCHDL
+.ENDS 
+
+*-------------------------------------------------------------
+* CAPX1_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT CAPX1_CV A B
+XA1 A B CAPR
+XB1 A B CAP
+.ENDS 
+
+*-------------------------------------------------------------
+* IVX1_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT IVX1_CV A Y AVDD AVSS
+XMN0 Y A AVSS AVSS NCHDL
+XMP0 Y A AVDD AVSS PCHDL
+.ENDS 
+
+*-------------------------------------------------------------
+* IVX2_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT IVX2_CV A Y AVDD AVSS
+XMN0 Y A AVSS AVSS NCHDL
+XMN1 AVSS A Y AVSS NCHDL
+XMP0 Y A AVDD AVSS PCHDL
+XMP1 AVDD A Y AVSS PCHDL
+.ENDS 
+
+*-------------------------------------------------------------
+* SWX2_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT SWX2_CV A Y VREF AVSS
+XMN0 Y A AVSS AVSS NCHDL
+XMN1 AVSS A Y AVSS NCHDL
+XMP0 Y A VREF AVSS PCHDL
+XMP1 VREF A Y AVSS PCHDL
+.ENDS 
+
+*-------------------------------------------------------------
+* SWX4_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT SWX4_CV A Y VREF AVSS
+XMN0 Y A AVSS AVSS NCHDL
+XMN1 AVSS A Y AVSS NCHDL
+XMN2 Y A AVSS AVSS NCHDL
+XMN3 AVSS A Y AVSS NCHDL
+XMP0 Y A VREF AVSS PCHDL
+XMP1 VREF A Y AVSS PCHDL
+XMP2 Y A VREF AVSS PCHDL
+XMP3 VREF A Y AVSS PCHDL
+.ENDS 
+
+*-------------------------------------------------------------
+* TGPD_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT TGPD_CV C A B AVDD AVSS
+XMN0 AVSS C CN AVSS NCHDL
+XMN1 B C AVSS AVSS NCHDL
+XMN2 A CN B AVSS NCHDL
+XMP0 AVDD C CN AVSS PCHDL
+XMP1_DMY B AVDD AVDD AVSS PCHDL
+XMP2 A C B AVSS PCHDL
+.ENDS 
+
+*-------------------------------------------------------------
+* IVX4_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT IVX4_CV A Y AVDD AVSS
+XMN0 Y A AVSS AVSS NCHDL
+XMN1 AVSS A Y AVSS NCHDL
+XMN2 Y A AVSS AVSS NCHDL
+XMN3 AVSS A Y AVSS NCHDL
+XMP0 Y A AVDD AVSS PCHDL
+XMP1 AVDD A Y AVSS PCHDL
+XMP2 Y A AVDD AVSS PCHDL
+XMP3 AVDD A Y AVSS PCHDL
+.ENDS 
+
+*-------------------------------------------------------------
+* TAPCELL_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT TAPCELL_CV TAP
+XMN1 TAP TAP TAP TAP NCHDL
+XMP1 TAP TAP TAP TAP PCHDL
+.ENDS 
+
+*-------------------------------------------------------------
+* TAPCELLB_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT TAPCELLB_CV AVSS AVDD
+XMN1 AVSS AVSS AVSS AVSS NCHDL
+XMP1 AVDD AVDD AVDD AVDD PCHDL
+.ENDS 
+
+*-------------------------------------------------------------
+* NRX1_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT NRX1_CV A B Y AVDD AVSS
+XMN0 Y A AVSS AVSS NCHDL
+XMN1 AVSS B Y AVSS NCHDL
+XMP0 N1 A AVDD AVSS PCHDL
+XMP1 Y B N1 AVSS PCHDL
+.ENDS 
+
+*-------------------------------------------------------------
+* NDX1_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT NDX1_CV A B Y AVDD AVSS
+XMN0 N1 A AVSS AVSS NCHDL
+XMN1 Y B N1 AVSS NCHDL
+XMP0 Y A AVDD AVSS PCHDL
+XMP1 AVDD B Y AVSS PCHDL
+.ENDS 
+
+*-------------------------------------------------------------
+* SAREMX1_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT SAREMX1_CV A B EN ENO RST_N AVDD AVSS
+XMN0 N3 EN AM AVSS NCHDL
+XMN1 N3 B AVSS AVSS NCHDL
+XMN2 AVSS A N3 AVSS NCHDL
+XMN3 ENO AM AVSS AVSS NCHDL
+XMP0 AVDD RST_N AM AVSS PCHDL
+XMP1 N2 B ENO AVSS PCHDL
+XMP2 N1 A N2 AVSS PCHDL
+XMP3 AVDD AM N1 AVSS PCHDL
+.ENDS 
+
+*-------------------------------------------------------------
+* SARLTX1_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT SARLTX1_CV A CHL RST_N EN LCK_N AVDD AVSS
+XMN0 N1 A AVSS AVSS NCHDL
+XMN1 N3 LCK_N N1 AVSS NCHDL
+XMN2 CHL EN N3 AVSS NCHDL
+XMP0 NP2 RST_N AVDD AVSS PCHDL
+XMP1 NP1 RST_N NP2 AVSS PCHDL
+XMP2 CHL RST_N NP1 AVSS PCHDL
+.ENDS 
+
+*-------------------------------------------------------------
+* SARCEX1_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT SARCEX1_CV A B Y RST AVDD AVSS
+XMN0 N4 RST AVSS AVSS NCHDL
+XMN1 AVSS RST N4 AVSS NCHDL
+XMN2 N1 RST AVSS AVSS NCHDL
+XMN3 Y RST N1 AVSS NCHDL
+XMP0 N2 A Y AVSS PCHDL
+XMP1 AVDD A N2 AVSS PCHDL
+XMP2 N3 B AVDD AVSS PCHDL
+XMP3 Y B N3 AVSS PCHDL
+.ENDS 
+
+*-------------------------------------------------------------
+* SARCMPHX1_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT SARCMPHX1_CV CI CK CO VMR N1 N2 AVDD AVSS
+XMN0 N1 CK AVSS AVSS NCHDL
+XMN1 N2 CI N1 AVSS NCHDL
+XMN2 N1 CI N2 AVSS NCHDL
+XMN3 N2 CI N1 AVSS NCHDL
+XMN4 N1 CI N2 AVSS NCHDL
+XMN5 N2 CI N1 AVSS NCHDL
+XMN6 CO VMR N2 AVSS NCHDL
+XMP0 AVDD CK N1 AVSS PCHDL
+XMP1 N2 CK AVDD AVSS PCHDL
+XMP2 AVDD AVDD N2 AVSS PCHDL
+XMP3 CO CK AVDD AVSS PCHDL
+XMP4 AVDD VMR CO AVSS PCHDL
+XMP5 CO VMR AVDD AVSS PCHDL
+XMP6 AVDD VMR CO AVSS PCHDL
+.ENDS 
+
+*-------------------------------------------------------------
+* SARKICKHX1_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT SARKICKHX1_CV CI CK CKN AVDD AVSS
+XMN0 N1 CKN AVSS AVSS NCHDL
+XMN1 N1 CI N1 AVSS NCHDL
+XMN2 N1 CI N1 AVSS NCHDL
+XMN3 N1 CI N1 AVSS NCHDL
+XMN4 N1 CI N1 AVSS NCHDL
+XMN5 N1 CI N1 AVSS NCHDL
+XMN6 AVDD CK N1 AVSS NCHDL
+XMP0 AVDD CKN N1 AVSS PCHDL
+XMP1_DMY AVDD AVDD AVDD AVSS PCHDL
+XMP2_DMY AVDD AVDD AVDD AVSS PCHDL
+XMP3_DMY AVDD AVDD AVDD AVSS PCHDL
+XMP4_DMY AVDD AVDD AVDD AVSS PCHDL
+XMP5_DMY AVDD AVDD AVDD AVSS PCHDL
+XMP6 AVDD AVDD AVDD AVSS PCHDL
+.ENDS 
+
+*-------------------------------------------------------------
+* SARBSSWCTRL_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT SARBSSWCTRL_CV C GN GNG TIE_H AVDD AVSS
+XMN0 N1 C AVSS AVSS NCHDL
+XMN1 GN TIE_H N1 AVSS NCHDL
+XMP0 GNG C GN AVSS PCHDL
+XMP1 AVDD GN GNG AVSS PCHDL
+.ENDS 
+
+*-------------------------------------------------------------
+* CAP32C_CV (cIcCells::CapCell)
+*-------------------------------------------------------------
+.SUBCKT CAP32C_CV C1A C1B C2 C4 C8 C16 CTOP AVSS
+XRES1A C1A NC1 RM1
+XRES1B C1B NC2 RM1
+XRES2 C2 NC3 RM1
+XRES4 C4 NC4 RM1
+XRES8 C8 NC5 RM1
+XRES16 C16 NC6 RM1
+.ENDS 
+
+*-------------------------------------------------------------
+* SARCMPX1_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT SARCMPX1_CV CPI CNI CPO CNO CK_CMP CK_SAMPLE DONE AVDD AVSS
+XA0 AVSS TAPCELL_CV
+XA1 CPI CK_B CK_N AVDD AVSS SARKICKHX1_CV
+XA2 CPI CK_B CNO_I CPO_I N1 NC1 AVDD AVSS SARCMPHX1_CV
+XA2a CPO_I CPO AVDD AVSS IVX4_CV
+XA3a CNO_I CNO AVDD AVSS IVX4_CV
+XA3 CNI CK_B CPO_I CNO_I N1 NC2 AVDD AVSS SARCMPHX1_CV
+XA4 CNI CK_B CK_N AVDD AVSS SARKICKHX1_CV
+XA9 CK_N CK_B AVDD AVSS IVX1_CV
+XA10 DONE_N CK_A CK_N AVDD AVSS NDX1_CV
+XA11 CK_SAMPLE DONE DONE_N AVDD AVSS NRX1_CV
+XA12 CK_CMP CK_A AVDD AVSS IVX1_CV
+XA13 AVSS TAPCELL_CV
+.ENDS 
+
+*-------------------------------------------------------------
+* SARBSSW_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT SARBSSW_CV VI CK CKN TIE_L VO1 VO2 AVDD AVSS
+XM1 VI GN VO1 AVSS NCHDLR
+XM2 VI GN VO1 AVSS NCHDLR
+XM3 VI GN VO1 AVSS NCHDLR
+XM4 VI GN VO1 AVSS NCHDLR
+XM5 VI TIE_L VO2 AVSS NCHDLR
+XM6 VI TIE_L VO2 AVSS NCHDLR
+XM7 VI TIE_L VO2 AVSS NCHDLR
+XM8 VI TIE_L VO2 AVSS NCHDLR
+XA0 CK CKN AVDD AVSS IVX1_CV
+XA3 CKN VI VS AVDD AVSS TGPD_CV
+XA4 CKN GN GNG TIE_H AVDD AVSS SARBSSWCTRL_CV
+XA1 TIE_H AVDD AVSS TIEH_CV
+XA2 TIE_L AVDD AVSS TIEL_CV
+XA5 AVSS TAPCELL_CV
+XCAPB0 GNG VS CAPX1_CV
+XCAPB1 GNG VS CAPX1_CV
+XCAPB2 GNG VS CAPX1_CV
+XCAPB3 GNG VS CAPX1_CV
+XCAPB4 GNG VS CAPX1_CV
+XCAPB5 GNG VS CAPX1_CV
+XCAPB6 GNG VS CAPX1_CV
+XCAPC0 GNG VS CAPX1_CV
+XCAPC1 GNG VS CAPX1_CV
+XCAPC2 GNG VS CAPX1_CV
+XCAPC3 GNG VS CAPX1_CV
+XCAPC4 GNG VS CAPX1_CV
+XCAPC5 GNG VS CAPX1_CV
+XCAPC6 GNG VS CAPX1_CV
+.ENDS 
+
+*-------------------------------------------------------------
+* SARMRYX1_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT SARMRYX1_CV CMP_OP CMP_ON EN RST_N ENO CHL_OP CHL_ON AVDD AVSS
+XA0 AVSS TAPCELL_CV
+XA1 CMP_OP CMP_ON EN ENO RST_N AVDD AVSS SAREMX1_CV
+XA2 ENO LCK_N AVDD AVSS IVX1_CV
+XA4 CMP_OP CHL_OP RST_N EN LCK_N AVDD AVSS SARLTX1_CV
+XA5 CMP_ON CHL_ON RST_N EN LCK_N AVDD AVSS SARLTX1_CV
+.ENDS 
+
+*-------------------------------------------------------------
+* SARDIGX1_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT SARDIGX1_CV CMP_OP CMP_ON EN RST_N ENO CP0 CP1 CN0 CN1 VREF AVDD AVSS
+XA1 CMP_OP CMP_ON EN RST_N ENO CHL_OP CHL_ON AVDD AVSS SARMRYX1_CV
+XA2 CHL_ON CN1 VREF AVSS SWX2_CV
+XA3 CN1 CP1 VREF AVSS SWX2_CV
+XA4 CHL_OP CP0 VREF AVSS SWX2_CV
+XA5 CP0 CN0 VREF AVSS SWX2_CV
+XA6 AVSS TAPCELL_CV
+.ENDS 
+
+*-------------------------------------------------------------
+* SARDIGEX2_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT SARDIGEX2_CV CMP_OP CMP_ON EN RST_N ENO DONE CP0 CP1 CN0 CN1 CEIN CEO CKS VREF AVDD AVSS
+XA1 CMP_OP CMP_ON EN RST_N ENO CHL_OP CHL_ON AVDD AVSS SARMRYX1_CV
+XA2 CHL_ON CN1 VREF AVSS SWX2_CV
+XA3 CN1 CP1 VREF AVSS SWX2_CV
+XA4 CHL_OP CP0 VREF AVSS SWX2_CV
+XA5 CP0 CN0 VREF AVSS SWX2_CV
+XA6 CN0 CP1 CE CKS AVDD AVSS SARCEX1_CV
+XA7 ENO ENO_N AVDD AVSS IVX1_CV
+XA8 ENO_N DONE AVDD AVSS IVX1_CV
+XA9 ENO_N CE CE1 AVDD AVSS NDX1_CV
+XA10 CE1 CE1_N AVDD AVSS IVX1_CV
+XA11 CE1_N CEIN CEO1 AVDD AVSS NRX1_CV
+XA12 CEO1 CEO AVDD AVSS IVX1_CV
+XA13 AVSS TAPCELL_CV
+.ENDS 
+
+*-------------------------------------------------------------
+* SARDIGEX4_CV (cIcCore::LayoutCell)
+*-------------------------------------------------------------
+.SUBCKT SARDIGEX4_CV CMP_OP CMP_ON EN RST_N ENO DONE CP0 CP1 CN0 CN1 CEIN CEO CKS VREF AVDD AVSS
+XA1 CMP_OP CMP_ON EN RST_N ENO CHL_OP CHL_ON AVDD AVSS SARMRYX1_CV
+XA2 CHL_ON CN1 VREF AVSS SWX4_CV
+XA3 CN1 CP1 VREF AVSS SWX4_CV
+XA4 CHL_OP CP0 VREF AVSS SWX4_CV
+XA5 CP0 CN0 VREF AVSS SWX4_CV
+XA6 CN0 CP1 CE CKS AVDD AVSS SARCEX1_CV
+XA7 ENO ENO_N AVDD AVSS IVX1_CV
+XA8 ENO_N DONE AVDD AVSS IVX1_CV
+XA9 ENO_N CE CE1 AVDD AVSS NDX1_CV
+XA10 CE1 CE1_N AVDD AVSS IVX1_CV
+XA11 CE1_N CEIN CEO1 AVDD AVSS NRX1_CV
+XA12 CEO1 CEO AVDD AVSS IVX1_CV
+XA13 AVSS TAPCELL_CV
+.ENDS 
+
+*-------------------------------------------------------------
+* CDAC9_CV (cIcCells::CDAC)
+*-------------------------------------------------------------
+.SUBCKT CDAC9_CV CP<13> CP<12> CP<11> CP<10> CP<9> CP<8> CP<7> CP<6> CP<5> CP<4> CP<3> CP<2> CP<1> CP<0> CTOP AVSS
+XC1 CP<12> CP<12> CP<12> CP<12> CP<12> CP<12> CTOP AVSS CAP32C_CV
+XC256a<7> CP<13> CP<13> CP<13> CP<13> CP<13> CP<13> CTOP AVSS CAP32C_CV
+XC128b<3> CP<10> CP<10> CP<10> CP<10> CP<10> CP<10> CTOP AVSS CAP32C_CV
+XC64a<0> CP<8> CP<8> CP<8> CP<8> CP<8> CP<8> CTOP AVSS CAP32C_CV
+XC32a<0> CP<6> CP<6> CP<6> CP<6> CP<6> CP<7> CTOP AVSS CAP32C_CV
+XCS AVSS CP<0> CP<1> CP<2> CP<3> AVSS CTOP AVSS CAP32C_CV
+XC128a<1> CP<11> CP<11> CP<11> CP<11> CP<11> CP<11> CTOP AVSS CAP32C_CV
+XC256b<5> CP<12> CP<12> CP<12> CP<12> CP<12> CP<12> CTOP AVSS CAP32C_CV
+XC256a<5> CP<13> CP<13> CP<13> CP<13> CP<13> CP<13> CTOP AVSS CAP32C_CV
+XC256b<2> CP<12> CP<12> CP<12> CP<12> CP<12> CP<12> CTOP AVSS CAP32C_CV
+XC256a<2> CP<13> CP<13> CP<13> CP<13> CP<13> CP<13> CTOP AVSS CAP32C_CV
+XC128b<2> CP<10> CP<10> CP<10> CP<10> CP<10> CP<10> CTOP AVSS CAP32C_CV
+X16ab CP<5> CP<5> CP<5> CP<5> CP<4> AVSS CTOP AVSS CAP32C_CV
+XC64b<1> CP<9> CP<9> CP<9> CP<9> CP<9> CP<9> CTOP AVSS CAP32C_CV
+XC128a<0> CP<11> CP<11> CP<11> CP<11> CP<11> CP<11> CTOP AVSS CAP32C_CV
+XC256b<0> CP<12> CP<12> CP<12> CP<12> CP<12> CP<12> CTOP AVSS CAP32C_CV
+XC0 CP<13> CP<13> CP<13> CP<13> CP<13> CP<13> CTOP AVSS CAP32C_CV
+.ENDS 
+
+*-------------------------------------------------------------
+* SAR9B_CV (cIcCells::SAR)
+*-------------------------------------------------------------
+.SUBCKT SAR9B_CV SAR_IP SAR_IN SARN SARP DONE D<9> D<8> D<7> D<6> D<5> D<4> D<3> D<2> D<1> EN CK_SAMPLE CK_SAMPLE_BSSW VREF AVDD AVSS
+XB1 SAR_IP CK_SAMPLE_BSSW NCCA CEIN SARP SARN AVDD AVSS SARBSSW_CV
+XB2 SAR_IN CK_SAMPLE_BSSW NCCB CEIN SARN SARP AVDD AVSS SARBSSW_CV
+XDAC1 CP<13> CP<12> D<8> CP<10> D<7> CP<8> D<6> CP<6> D<5> CP<4> D<4> D<3> D<2> D<1> SARP AVSS CDAC9_CV
+XDAC2 D<9> CN<12> CN<11> CN<10> CN<9> CN<8> CN<7> CN<6> CN<5> CN<4> CN<3> CN<2> CN<1> CN<0> SARN AVSS CDAC9_CV
+XA0 CMP_OP CMP_ON EN EN ENO0 DONE0 CP<12> CP<13> CN<12> D<9> CEIN CEO0 CK_SAMPLE VREF AVDD AVSS SARDIGEX4_CV
+XA1 CMP_OP CMP_ON ENO0 EN ENO1 DONE1 CP<10> D<8> CN<10> CN<11> CEO0 CEO1 CK_SAMPLE VREF AVDD AVSS SARDIGEX4_CV
+XA2 CMP_OP CMP_ON ENO1 EN ENO2 DONE2 CP<8> D<7> CN<8> CN<9> CEO1 CEO2 CK_SAMPLE VREF AVDD AVSS SARDIGEX4_CV
+XA3 CMP_OP CMP_ON ENO2 EN ENO3 DONE3 CP<6> D<6> CN<6> CN<7> CEO2 CEO3 CK_SAMPLE VREF AVDD AVSS SARDIGEX4_CV
+XA4 CMP_OP CMP_ON ENO3 EN ENO4 DONE4 CP<4> D<5> CN<4> CN<5> CEO3 CEO4 CK_SAMPLE VREF AVDD AVSS SARDIGEX4_CV
+XA5 CMP_OP CMP_ON ENO4 EN ENO5 DONE5 NC3A D<4> CN<3> NC3B CEO4 CEO5 CK_SAMPLE VREF AVDD AVSS SARDIGEX4_CV
+XA6 CMP_OP CMP_ON ENO5 EN ENO6 DONE6 NC4A D<3> CN<2> NC4B CEO5 CEO6 CK_SAMPLE VREF AVDD AVSS SARDIGEX4_CV
+XA7 CMP_OP CMP_ON ENO6 EN ENO7 DONE7 NC5A D<2> CN<1> NC5B CEO6 CEO7 CK_SAMPLE VREF AVDD AVSS SARDIGEX4_CV
+XA8 CMP_OP CMP_ON ENO7 EN ENO8 DONE NC6A D<1> CN<0> NC6B CEO7 CK_CMP CK_SAMPLE VREF AVDD AVSS SARDIGEX4_CV
+XA20 SARP SARN CMP_OP CMP_ON CK_CMP CK_SAMPLE DONE AVDD AVSS SARCMPX1_CV
+.ENDS 

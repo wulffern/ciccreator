@@ -194,7 +194,6 @@ namespace cIcCore {
         foreach(QString layer, layerNames_){
 
             QList<QString> strs = layers_[layer];
-            qDebug() << strs;
             for(int y=0;y <= ymax_;y++){
                 currentHeight_ = yspace_;
                 for(int x=0;x <= xmax_;x++){
@@ -214,7 +213,13 @@ namespace cIcCore {
 
                     //- Set height
                     if(layer == "PO"){
+                        
                         currentHeight_ = this->rules->get(layer,"width");
+                        if(currentHeight_ < this->minPolyLength_){
+                            currentHeight_ = this->minPolyLength_;
+                        }
+                        
+                            
                     }else if( c== 'x'){
                         currentHeight_ = yspace_;
                     }
@@ -235,10 +240,8 @@ namespace cIcCore {
                         p = this->getPort(QString(c));
                         if(!p){
                             p = new Port(c);
-                            qDebug() << "adding port" << c;
                             this->add(p);
                         }
-
                     case 'x':
                     case 'X':
                     case 'K':
