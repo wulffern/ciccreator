@@ -46,7 +46,7 @@ lay:
 	mkdir lay
 
 qmake:
-	qmake -o qmake.make ciccreator.pro
+	qmake -o qmake.make ciccreator.pro -spec macx-g++
 
 xcode:
 	qmake -o qmake.make ciccreator.pro -spec  macx-xcode
