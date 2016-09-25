@@ -11,6 +11,10 @@ CONFIG += static
 
   TEMPLATE = app
 
+  mac {
+    CONFIG -= app_bundle
+  }
+  
 mac {
     mac::QMAKE_MAC_SDK = macosx10.12
 }
