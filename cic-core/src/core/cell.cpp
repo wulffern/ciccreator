@@ -493,7 +493,7 @@ namespace cIcCore{
     Rect* Cell::getBottomLeftRect(){
         int xmin = std::numeric_limits<int>::max();
         int ymin = std::numeric_limits<int>::max();
-        Rect * bottomLeft = nullptr;
+        Rect * bottomLeft;
         foreach(Rect * r, this->_children){
             if(r->x1() < xmin && r->y1() < ymin){
                 if(bottomLeft){
@@ -511,7 +511,7 @@ namespace cIcCore{
     Rect* Cell::getTopLeftRect(){
         int xmin = std::numeric_limits<int>::max();
         int ymax = -std::numeric_limits<int>::max();
-        Rect * topLeft = nullptr;
+        Rect * topLeft;
         foreach(Rect * r, this->_children){
             if(r->x1() < xmin && r->y2() > ymax){
                 if(topLeft){

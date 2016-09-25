@@ -58,6 +58,10 @@ compile:
 
 clean:
 	${MAKE} -f qmake.make clean
+	-rm cic/Makefile
+	-rm cic-core/Makefile
+	-rm cic-gui/Makefile
+	-rm cic-color/Makefile
 
 doxygen:
 	doxygen
