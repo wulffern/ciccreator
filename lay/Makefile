@@ -38,7 +38,7 @@ json:
 
 
 esscirc:
-	${cmd}   ../examples/SAR_ESSCIRC16_28N.json ../../cnano/examples/soi.json SAR_ESSCIRC16_28N ${OPT}
+	${cmd}   ../examples/SAR_ESSCIRC16_28N.json ../../cnano/examples/soi_io.json SAR_ESSCIRC16_28N ${OPT}
 	cat SAR_ESSCIRC16_28N.spi | perl -pe 'if(m/^\s*M\d+/ig){s/\n//ig;$$_ = $$_ . " p_la=0 \n";}' > SAR_ESSCIRC16_28N_tmp.spi;
 	rm SAR_ESSCIRC16_28N.spi;
 	mv SAR_ESSCIRC16_28N_tmp.spi SAR_ESSCIRC16_28N.spi

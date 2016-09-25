@@ -18,7 +18,6 @@
     },
     "disableCells" : "Reduce the cells in the GDS by skipping some of the cells defined below",
     "disableCells" : [
-        "DMY"
     ],
     "noPortTranslation" : 1,
     "cells":
@@ -80,11 +79,12 @@
         {"name" : "CAPR" , "inherit" : "CAP", "afterPaint" : { "mirrorCenterY" : 0 }},
 		{ "name" : "DMOSE" ,
           "class" : "Gds::GdsPatternTransistor",
-		  "minPolyLength" : 36,
+		  "afterNew" : {
+			  "minPolyLength" : 36
+		  },
           "yoffset": -1.5,
           "heightoffset": -2,
           "widthoffset" : -1,
-          "polyWidthAdjust" : 0,
           "fillCoordinatesFromStrings" : [
               [   "OD",
                   "-------------------xxxx",
@@ -146,7 +146,7 @@
           "beforePlace" :{
               "addEnclosures" : [
                   ["OD",1,["PPE","LVT","HS"]],
-                  ["OD",0,["PP","NS"]]
+                  ["OD",0,["PP","NSS"]]
               ],
               "addEnclosuresByRectangle" : [
                   ["OD",[0,0,"width","height"],["OD2"]],
@@ -176,7 +176,7 @@
         },
 
 		 { "name" : "NCHDLR", "type" : "nch_lvt_io",
-          "inherit" : "NCHDL", "afterPaint" : { "mirrorCenterX" : 0 },
+          "inherit" : "NCHDL", "afterPaint" : { "mirrorCenterY" : 0 },
           "beforePlace" :{
               "addEnclosuresByRectangle" : [
                   ["OD",[0,0,22,15],["NW","HS"]]
@@ -588,7 +588,7 @@
               "addPortVias" : [
                   ["M1","M4","CN1","XA3:MN0:G",1,2,-1,-0.5],
                   ["M1","M4","CP1","XA3:MN0:D",2,1,2,-0.5],
-                  ["M1","M4","CP0","XA4:MN0:D",2,1,6,-0.5],
+                  ["M1","M4","CP0","XA4:MN0:D",2,1,5,-0.5],
                   ["M1","M4","CN0","XA5:MN0:D",2,1,8,-0.5]
               ]
           }

@@ -118,6 +118,9 @@ namespace cIcCore {
         if(verticalGrid_ != 0){
             this->yspace_ = verticalGrid_;
         }
+        if( this->minPolyLength_ == 0 ){
+            this->minPolyLength_ = this->rules->get("PO","mingatelength");
+        }
         
 
         QMap<QString,QVariant> data = this->initFillCoordinates();
@@ -482,7 +485,7 @@ namespace cIcCore {
 
             QJsonValue w = rect[2];
             if(w.isString() && w.toString() == "width"){
-                e->width = this->ymax_ + 1;
+                e->width = this->xmax_ + 1;
             }else{
                 e->width = w.toInt();
                 if(this->copyColumn_.count() > 0){
@@ -502,7 +505,6 @@ namespace cIcCore {
                 e->height = this->ymax_ + 1;
             }else{
 
-                //TODO: Adjust for copy rows
 
                 e->height = h.toInt();
             }
