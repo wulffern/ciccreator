@@ -110,7 +110,7 @@ GDS3D:
 
 view3d: GDS3D
 	echo ${GDS3D}
-	 ${GDS3D} -p examples/tech_gds3d.txt -i lay/SAR_ESSCIRC16_28N.gds -t SAR9B_CV -f
+	 ${GDS3D} -p examples/tech_gds3d.txt -i lay/SAR_ESSCIRC16_28N.gds -t SAR9B_EV
 
 
 tar:
