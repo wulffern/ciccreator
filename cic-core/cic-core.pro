@@ -118,7 +118,6 @@ mac {
   src/core/instanceport.cpp \
   src/core/layoutrotatecell.cpp \
   src/core/text.cpp \
-  src/core/point.cpp \
   src/cells/sar.cpp\
   src/cells/cdac.cpp \
   src/cells/capcell.cpp

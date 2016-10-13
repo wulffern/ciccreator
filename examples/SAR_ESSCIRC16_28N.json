@@ -1,27 +1,34 @@
+//====================================================================
+//        Copyright (c) 2014 Carsten Wulff Software, Norway 
+// ===================================================================
+// Created       : wulff at 2014-05-09
+// Author        : Carsten Wulff
+// Contact       : carsten (at) wulff.no
+// ===================================================================
+//   This program is free software: you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
+// 
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details.
+// 
+//   You should have received a copy of the GNU General Public License
+//   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//====================================================================
 {
-    "header" : {
-        "author" : "Carsten Wulff",
-		"contact" : "carsten (at) wulff.no",
-        "license" : [
-            "Copyright (c) 2014 Carsten Wulff",
-            "This program is free software: you can redistribute it and/or modify",
-            "it under the terms of the GNU General Public License as published by",
-            "the Free Software Foundation, either version 3 of the License, or",
-            "(at your option) any later version.",
-            "This program is distributed in the hope that it will be useful,",
-            "but WITHOUT ANY WARRANTY; without even the implied warranty of",
-            "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the",
-            "GNU General Public License for more details.",
-            "You should have received a copy of the GNU General Public License",
-            "along with this program.  If not, see <http://www.gnu.org/licenses/>."
-        ]
-    },
-    "disableCells" : "Reduce the cells in the GDS by skipping some of the cells defined below",
+	//Add regex in here to disable certain cells
     "disableCells" : [
     ],
-    "noPortTranslation" : 1,
+
+	//All cells in the SAR
     "cells":
     [
+		//------------------------------------------------------------
+		// Unit cells
+		//------------------------------------------------------------
         { "name": "RM1" , "class" : "cIcCore::PatternResistor",
           "getRuleForHorizontalGrid" : ["M1","width"],
           "getRuleForVerticalGrid" : ["M1","width"],
@@ -183,7 +190,12 @@
               ]
           }
         },
-		
+
+		//------------------------------------------------------------
+		// Digital cells
+		//------------------------------------------------------------
+
+		//- Tie High
         { "name": "TIEH_EV",
           "symbol" : "tieh",
           "class" : "Layout::LayoutDigitalCell",
@@ -195,6 +207,8 @@
               "addPortOnRects" : [  ["Y","M1", "MP0:D"] ]
           }
         },
+
+		//- Tie Low
         { "name": "TIEL_EV",
           "symbol" : "tiel",
           "class" : "Layout::LayoutDigitalCell",
@@ -208,12 +222,15 @@
           }
         },
 
+		//- Unit capacitor
         { "name": "CAPX1_EV" ,
           "class" : "Layout::LayoutDigitalCell",
           "afterRoute"  : {
               "addPortOnRects" : [  ["A","M4", "XA1:A"] , ["B", "M3", "XB1:B"]]
           }
         },
+
+		//- Inverter 1x strength
         { "name": "IVX1_EV" ,
           "symbol" : "inv",
           "class" : "Layout::LayoutDigitalCell",
@@ -225,6 +242,8 @@
               "addPortOnRects" : [  ["A","M1", "MN0:G"] , ["Y", "M1", "MN0:D"]]
           }
         },
+
+		//- Inverter 2x strength
         { "name": "IVX2_EV" ,
           "class" : "Layout::LayoutDigitalCell",
           "symbol" : "inv",
@@ -241,6 +260,26 @@
               "addPortOnRects" : [  ["A","M1", "MN0:G"] , ["Y", "M1", "MN0:D"]]
           }
         },
+
+		//Inverter 4x strength
+		{ "name": "IVX4_EV" ,
+          "class" : "Layout::LayoutDigitalCell",
+          "symbol" : "inv",
+          "setYoffsetHalf" :  "" ,
+          "rows" : 4,
+          "beforeRoute" : {
+              "addDirectedRoutes" : [ ["M1","Y","MN0:D,MN2:D-|--MP0:D,MP2:D"],
+                                      ["PO","A","MN:G-MP:G"] ,
+                                      ["M1","A","MN0:G||MN3:G"] ,
+                                      ["M1","A","MP0:G||MP3:G"]
+                                    ]
+          },
+          "afterRoute"  : {
+              "addPortOnRects" : [  ["A","M1", "MN0:G"] , ["Y", "M1", "MN0:D"]]
+          }
+        },
+
+		//- Switch 2x strength
         { "name": "SWX2_EV" ,
           "class" : "Layout::LayoutDigitalCell",
           "symbol" : "",
@@ -257,6 +296,8 @@
               "addPortOnRects" : [  ["VREF","M4","CUST_VREF"]]
           }
         },
+
+		//- Switch 4x strength
         { "name": "SWX4_EV" ,
           "class" : "Layout::LayoutDigitalCell",
           "symbol" : "",
@@ -278,6 +319,8 @@
               "addPortOnRects" : [  ["A","M1", "MN0:G"] , ["Y", "M1", "MN0:D"],["VREF","M4","CUST_VREF"]]
           }
         },
+
+		//- Transmission gate with power down
         { "name": "TGPD_EV" ,
           "class" : "Layout::LayoutDigitalCell",
           "setYoffsetHalf" : "",
@@ -298,23 +341,8 @@
                                  ]
           }
         },
-        { "name": "IVX4_EV" ,
-          "class" : "Layout::LayoutDigitalCell",
-          "symbol" : "inv",
-          "setYoffsetHalf" :  "" ,
-          "rows" : 4,
-          "beforeRoute" : {
-              "addDirectedRoutes" : [ ["M1","Y","MN0:D,MN2:D-|--MP0:D,MP2:D"],
-                                      ["PO","A","MN:G-MP:G"] ,
-                                      ["M1","A","MN0:G||MN3:G"] ,
-                                      ["M1","A","MP0:G||MP3:G"]
-                                    ]
-          },
-          "afterRoute"  : {
-              "addPortOnRects" : [  ["A","M1", "MN0:G"] , ["Y", "M1", "MN0:D"]]
-          }
-        },
 
+		//- Tapcells, used for bulk connections
         { "name": "TAPCELL_EV",
           "class" : "Layout::LayoutDigitalCell",
           "beforeRoute" : {
@@ -347,6 +375,8 @@
 
           }
         },
+
+		//- NOR 1x strength
         { "name": "NRX1_EV",
           "class" : "Layout::LayoutDigitalCell",
           "rows" : 2,
@@ -362,6 +392,8 @@
               "addPortOnRects" : [ ["A", "M1" ,"MN0:G"], ["B", "M1", "MN1:G"], ["Y", "M1", "MN1:S" ]]
           }
         },
+
+		//- NAND 1x strength
         { "name": "NDX1_EV" ,
           "class" : "Layout::LayoutDigitalCell",
           "rows" : 2,
@@ -377,8 +409,13 @@
               "addPortOnRects" : [ ["A", "M1" ,"MN0:G"], ["B", "M1", "MN1:G"], ["Y", "M1", "MN1:D" ]]
           }
         },
+
+		//--------------------------------------------------------------------------------------
+		// SAR cells
+		//--------------------------------------------------------------------------------------
+		
+		//- Enable propagation. ENO is 0 on RST. ENO = EN & (A | B)
         { "name": "SAREMX1_EV",
-          "description" : "Enable propagation. ENO is 0 on RST. ENO = EN & (A | B) ",
           "class" : "Layout::LayoutDigitalCell",
           "rows" : 4,
           "beforeRoute" : {
@@ -398,8 +435,9 @@
               "addPortOnRects" : [ ["A", "M1"], ["B", "M1"], ["RST_N", "M1"] , ["EN", "M1"], ["ENO", "M1", "MP1:S"]  ]
           }
         },
+
+		//- Conditional pull down, DOWN = A & EN & LCK_N, UP = RST_N
         { "name": "SARLTX1_EV",
-          "description" : "Conditional pull down, DOWN = A & EN & LCK_N, UP = RST_N",
           "class" : "Layout::LayoutDigitalCell",
           "rows" : 3,
           "setYoffsetHalf" :  "" ,
@@ -412,8 +450,9 @@
               "addPortOnRects" : [ ["A", "M1"], ["RST_N", "M1","MP2:G"] , ["EN", "M1"], ["LCK_N", "M1"], ["CHL", "M1"], ["AVDD","M4"], ["AVSS","M4"]  ]
           }
         },
+
+		//- Conditional pull up, UP = A | B, DOWN = RST
         { "name": "SARCEX1_EV",
-          "description" : "Conditional pull up, UP = A | B, DOWN = RST",
           "class" : "Layout::LayoutDigitalCell",
           "rows" : 4,
           "setYoffsetHalf" :  "" ,
@@ -428,8 +467,9 @@
               "addPortOnRects" : [ ["A", "M1","MP0:G"],["B", "M1","MP2:G"], ["RST", "M1","MN1:G"] , ["A", "M1"], ["Y", "M1"], ["AVDD","M4"], ["AVSS","M4"]  ]
           }
         },
+
+		//- Half a strong-arm comparator
         { "name": "SARCMPHX1_EV",
-          "description" : "Half a strong-arm comparator",
           "class" : "Layout::LayoutDigitalCell",
           "setYoffsetHalf" :  "" ,
           "rows" : 7,
@@ -450,8 +490,9 @@
               "addPortOnRects" : [ ["AVDD","M4" ],["N1","M1","MN4:D"],["N2","M1","MN5:D" ]]
           }
         },
+
+		//- Comparator kick back compensator
         { "name": "SARKICKHX1_EV",
-          "description" : "Kick generator for SARCMP",
           "class" : "Layout::LayoutDigitalCell",
           "setYoffsetHalf" :  "" ,
           "rows" : 7,
@@ -470,6 +511,8 @@
               "addPortOnRects" : [ ["AVDD","M4"], ["CK","M1", "MN6:G" ],["CKN","M1","MN0:G"],["CI","M1","MN1:G"]]
           }
         },
+
+		//- Bootstrapped switch control
         { "name": "SARBSSWCTRL_EV" ,
           "class" : "Layout::LayoutDigitalCell",
           "setYoffsetHalf" : "",
@@ -486,38 +529,9 @@
           }
 
         },
-        { "name": "CAP32C_EV" , "class" : "Layout::LayoutCapCellSmall","maxcap" : 32,"usem3" : 1},
-        { "name": "SARCMPX1_EV",
-          "class" : "Layout::LayoutDigitalCell",
-          "description" : "Strong-arm comparator",
-          "symbol" : "SARCMP",
-          "composite" : 1,
-          "beforeRoute" : {
 
-			  "TaddDirectedRoutes" : [
-
-			  ],
-              "addDirectedRoutes" : [
-                  ["M1","CNO_I","XA2b?$:MP6:S-|--XA3b?$:MP4:G,XA3a:MP0:G"],
-                  ["M2","CPO_I","XA3b?$:MP4:S-|--XA2b?$:MP5:G,XA2a:MP0:G"],
-			      ["M2","CNI", "XA1$:MN5:G-|XA2$:MN1:G"],
-                  ["M2","CPI", "XA3$:MN5:G-|XA4$:MN1:G"],
-                  ["M1","CK_B","XA1$:MN6:G|-XA2b?$:MN0:G,XA3b?$:MN0:G,XA4$:MN6:G"],
-                  ["M1","CK_B","XA4$:MN6:G-|--XA9:Y"],
-                  ["M2","CK_N","XA1b?$:MN0:G|-XA4$:MN0:G,XA9:MN0:G"],
-                  ["M2","CK_N","XA9:MN0:G-|--XA10:MN1:D"],
-                  ["M1","DONE_N","XA11:Y--|-XA10:MN0:G"],
-                  ["M1","CK_A","XA12:MP0:D-|--XA10:MP1:G"],
-                  ["M1","N1","XA2b?$:MN4:D|-XA3b?$:MN4:D"]
-              ],
-			  "addConnectivityRoutes" : [
-			  ]
-          },
-          "afterRoute" : {
-              "addPortOnRects" : [ ["CK_SAMPLE","M1"] ,["CK_CMP","M1"],["DONE","M1"],["CNO", "M1","XA3a:Y"], ["CPO","M1","XA2a:Y"] ,["CPI","M1","XA1$:MN5:G" ],["CNI","M1","XA3$:MN5:G" ] ]
-          }
-        },
-        { "name" : "SARBSSW_EV", "class" : "Layout::LayoutDigitalCell",
+		//- Boostrapped switch
+		{ "name" : "SARBSSW_EV", "class" : "Layout::LayoutDigitalCell",
           "composite" : 1,
           "beforeRoute" : [
               {"addVias" : [ ["M1","M3","XA4:GNG",2],
@@ -550,11 +564,44 @@
               {"addPortOnRects" : [ ["CK","M1"],["CKN","M1","XA3:C" ], ["TIE_L","M2"],["VO1","M1","M4:S"],["VO2","M1","M8:S"]]}
          ]
         },
+		
+		//- CDAC unit capacitor cell
+        { "name": "CAP32C_EV" , "class" : "Layout::LayoutCapCellSmall","maxcap" : 32,"usem3" : 1},
 
+		//- CDAC
+        { "name": "CDAC9_EV", "class" : "Layout::LayoutCDACSmall"},
+		
+		//- Strong-arm comparator
+        { "name": "SARCMPX1_EV",
+          "class" : "Layout::LayoutDigitalCell",
+          "composite" : 1,
+          "beforeRoute" : {
+              "addDirectedRoutes" : [
+                  ["M1","CNO_I","XA2b?$:MP6:S-|--XA3b?$:MP4:G,XA3a:MP0:G"],
+                  ["M2","CPO_I","XA3b?$:MP4:S-|--XA2b?$:MP5:G,XA2a:MP0:G"],
+			      ["M2","CNI", "XA1$:MN5:G-|XA2$:MN1:G"],
+                  ["M2","CPI", "XA3$:MN5:G-|XA4$:MN1:G"],
+                  ["M1","CK_B","XA1$:MN6:G|-XA2b?$:MN0:G,XA3b?$:MN0:G,XA4$:MN6:G"],
+                  ["M1","CK_B","XA4$:MN6:G-|--XA9:Y"],
+                  ["M2","CK_N","XA1b?$:MN0:G|-XA4$:MN0:G,XA9:MN0:G"],
+                  ["M2","CK_N","XA9:MN0:G-|--XA10:MN1:D"],
+                  ["M1","DONE_N","XA11:Y--|-XA10:MN0:G"],
+                  ["M1","CK_A","XA12:MP0:D-|--XA10:MP1:G"],
+                  ["M1","N1","XA2b?$:MN4:D|-XA3b?$:MN4:D"]
+              ],
+			  "addConnectivityRoutes" : [
+			  ]
+          },
+          "afterRoute" : {
+              "addPortOnRects" : [ ["CK_SAMPLE","M1"] ,["CK_CMP","M1"],["DONE","M1"],["CNO", "M1","XA3a:Y"], ["CPO","M1","XA2a:Y"] ,["CPI","M1","XA1$:MN5:G" ],["CNI","M1","XA3$:MN5:G" ] ]
+          }
+        },
+
+
+		//- Logic cell for a SAR BIT
+		//- CHL_(OP|ON) goes 0 on CMP_(OP|ON) rising if EN, CHL_(OP|ON) go high on RST_N
+		//- ENO goes 1 on CMP_(OP|ON) falling if EN
         { "name": "SARMRYX1_EV",
-          "description" : "Logic cell for a SAR BIT",
-          "description" : "CHL_(OP|ON) goes 0 on CMP_(OP|ON) rising if EN, CHL_(OP|ON) go high on RST_N",
-          "description" : "ENO goes 1 on CMP_(OP|ON) falling if EN",
           "class" : "Layout::LayoutDigitalCell",
           "rows" : 5,
           "beforeRoute" : {
@@ -572,8 +619,9 @@
 
           }
         },
+
+		//- Memory cell to be able to drive SAR CAPS
         { "name": "SARDIGX1_EV",
-          "description" : "Memory cell to be able to drive SAR CAPS",
           "class" : "Layout::LayoutDigitalCell",
           "rows" : 6,
           "beforeRoute" : {
@@ -593,8 +641,10 @@
               ]
           }
         },
+
+		//- Extention of SARDIG, it also gives an clock enable out (CEO) on C(N|P)(1|0)
+		//- that can be used in the comparator delay loop. CEIN and CEO should be daisy chained (NOR chain)
         { "name": "SARDIGEX2_EV",
-          "description" : "Extention of SARDIG, it also gives an clock enable out (CEO) on C(N|P)(1|0) that can be used in the comparator delay loop. CEIN and CEO should be daisy chained (NOR chain)",
           "inherit" : "SARDIGX1_EV",
           "composite" : 1,
           "beforeRoute" : {
@@ -619,18 +669,20 @@
 				  ["M2","M3","EN","EN",1,2,-1,-0.5],
 				  ["M2","M3","CMP_OP","CMP_OP",1,2,-1,-0.5]
 			  ]},
-			  
-			   
                {"addPortOnRects" : [ ["CEIN", "M1","XA11:MN1:G"], ["CEO", "M1","XA12:MP0:D"] , ["CKS", "M1"],["DONE", "M1"], ["VREF", "M4" ,"XA2:VREF"]]}
           ]
         },
+
+		//- Extension of SARDIGEX2 with SW2X replaced with SW4X
         { "name": "SARDIGEX4_EV",
           "inherit" : "SARDIGEX2_EV",
           "spiceRegex" : [
               ["SWX2_EV","SWX4_EV"]
           ]
         },
-        { "name": "CDAC9_EV", "class" : "Layout::LayoutCDACSmall"},
+		
+
+		//- 9-bit SAR
         {"name": "SAR9B_EV",
          "class" : "Layout::LayoutSARCDAC",
          "ctrlOutside" : 0,
@@ -674,7 +726,6 @@
                  ["AVSS","XB","bottom"]
 
              ],
-
              "addConnectivityRoutes" : [
                  ["M3","CEO[02468]","-|--","leftdownleftup","","SARDIG"],
                  ["M3","CK_SAMPLE$","-|--","offsetlow,offsetlowend,novert","","SARDIG"],

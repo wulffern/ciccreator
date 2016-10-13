@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
         //Load rules
         cIcCore::Rules::loadRules(rules);
 
-
+		
 	QApplication app(argc, argv);
 	cIcGui::Window window;
 	window.loadFile(file);

@@ -444,10 +444,22 @@ namespace cIcCore{
 
         QFile file;
         file.setFileName(filename);
-        file.open(QIODevice::ReadOnly | QIODevice::Text);
+        ;
         QString val;
-        val = file.readAll();
-        file.close();
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+{
+    QTextStream in(&file);      
+   while (!in.atEnd())
+   {
+      QString line = in.readLine();
+      if(line.contains(QRegularExpression("^\\s*//"))) continue;
+      val.append(line);
+   }
+   
+   file.close();
+}
+        //val = file.readAll();
+        //file.close();
         QJsonParseError err;
         QJsonDocument d = QJsonDocument::fromJson(val.toUtf8(),&err);
         if(QJsonParseError::NoError != err.error ){
