@@ -21,8 +21,9 @@
 
 namespace cIcPrinter{
 
-    void Tikz::printPort(Port *){
-
+    void Tikz::printPort(Port * port){
+      QTextStream ts(&file);
+      ts << "\\ifthenelse{\\boolean{cicaddtext}}{\\draw ("<< toTikz(port->x1()) << ","<< toTikz(port->y1()) << ") node [anchor=north] {$"<< port->name() <<"$};}{}\n";
     }
 
     double Tikz::toTikz(int angstrom){
@@ -33,15 +34,15 @@ namespace cIcPrinter{
         QTextStream ts(&file);
         if(!o->isInstance()) return;
         Instance * i = (Instance *) o;
-	
-	int lcount = count;
-	count ++;
 
-	ts << " % TBD :  ";
+	ts << "\\begin{scope}[shift={("<< toTikz(i->x1()) << "," << toTikz(i->y1()) << ")}]\n";
+	ts << "\\setboolean{cicaddtext}{false}\n";
         double x = toTikz(o->x1());
         double y = toTikz(o->y1());
-	ts << " (" <<  x << ", " << y << ")";
-	ts << " node[ " << o->name() << "]\n";
+	ts << "\\fig" << this->getCellName(o->name()) << "\n";
+	ts << "\\setboolean{cicaddtext}{true}\n";
+	ts << "\\end{scope}\n";
+
     }
 
 
@@ -56,47 +57,46 @@ namespace cIcPrinter{
 	Layer *l = Rules::getRules()->getLayer(o->layer());
 	
 	if( l->color == "" ){return;}
-	ts << " \\filldraw [" << l->color <<",opacity=0.5 ] ";
+	if( l->nofill){
+	  ts << " \\draw [" << l->color <<"] ";
+	}else{
+	  ts << " \\filldraw [" << l->color <<"] ";
+	}
 
 	
         ts << " (" << x << "," << y << ") rectangle (" << x2 << "," << y2 << ");\n";
-	//        QString map = "blocks.oak";
-        //if(block_map.contains(o->layer())){
-        //    map = block_map[o->layer()];
-
-        //    int height = 0;
-        //    if(height_map.contains(o->layer())){
-        //        height = height_map.indexOf(o->layer());
-        //    }
-        //    ts << ".up(" << height << ")";
-        //    ts <<  ".box(" << map << "," << toMine(o->width())  << ",1," << toMine(o->height()) << ")";
-        //}
-
-        //ts << ".move('r" << count << "');\n";
-	//	count++;
     };
 
+  QString Tikz::getCellName(QString name){
+    QString n = name;
+    n.replace("_","");
+    n.replace("0","ten");
+    n.replace("1","one");
+    n.replace("2","two");
+    n.replace("3","three");
+    n.replace("4","four");
+    n.replace("5","five");
+    n.replace("6","six");
+    n.replace("7","seven");
+    n.replace("8","eight");
+    n.replace("9","nine");
+    return n;
+  }
 
-    void Tikz::startCell(Cell *cell){
+
+
+  
+  void Tikz::startCell(Cell *cell){
         DesignPrinter::startCell(cell);
         if(cell == NULL) return;
+	cellname = this->getCellName(cell->name());
         QTextStream ts(&file);
-        cellname = cell->name();
-	cellname.replace("_","");
-	cellname.replace("0","ten");
-	cellname.replace("1","one");
-	cellname.replace("2","two");
-	cellname.replace("3","three");
-	cellname.replace("4","four");
-	cellname.replace("5","five");
-	cellname.replace("6","six");
-	cellname.replace("7","seven");
-	cellname.replace("8","eight");
-	cellname.replace("9","nine");
         ts << "\n\n";
 	ts << "\\newcommand{\\fig"<<cellname <<"}{\n";
 
     }
+
+
   
   void Tikz::startLib(QString name){
     DesignPrinter::startLib(name);
