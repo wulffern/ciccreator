@@ -1,40 +1,41 @@
 
 {
     "layers" : {
-        "CO"  : { "number" : 14, "datatype" : 0,  "material" : "cut",       "previous" : "PO",  "next" : "M1", "color" : "black"},
-        "OD"  : { "number" : 2,  "datatype" : 0,  "material" : "diffusion", "previous" : "",  "next" : "CO", "pin" : "OD_pin", "color" : "gray, opacity=0.2" },
+        "CO"  : { "number" : 14, "datatype" : 0,  "material" : "cut",       "previous" : "PO",  "next" : "M1", "color" : "yellow"},
+        "OD"  : { "number" : 2,  "datatype" : 0,  "material" : "diffusion", "previous" : "",  "next" : "CO", "pin" : "OD_pin", "color" : "green,opacity=0.5"},
         "OD2" : { "number" : 12, "datatype" : 43, "material" : "diffusion", "previous" : "",  "next" : "CO", "pin" : "OD_pin" , "color" : "nofill" },
-        "PO"  : { "number" : 7,  "datatype" : 0,  "material" : "poly",      "previous" : "",  "next" : "CO", "pin" : "PO_pin" , "color" : "gray"},
+        "PO"  : { "number" : 7,  "datatype" : 0,  "material" : "poly",      "previous" : "",  "next" : "CO", "pin" : "PO_pin" , "color" : "red"},
+	"POD"  : { "number" : 7,  "datatype" : 0,  "material" : "poly",      "previous" : "",  "next" : "CO", "pin" : "PO_pin" , "color" : "red"},
         "PO_pin" : { "number" : 7, "datatype" : 20 },
-        "M1" : { "number" : 15, "datatype" : 0, "material" : "metal", "previous" : "CO",  "next" : "VIA1", "pin" : "M1_pin" , "res" : "M1_res", "color" : "black, pattern=north west lines, opacity=0.5" },
+        "M1" : { "number" : 15, "datatype" : 0, "material" : "metal", "previous" : "CO",  "next" : "VIA1", "pin" : "M1_pin" , "res" : "M1_res", "color" : "blue, opacity=0.3" },
         "M1_pin" : { "number" : 15, "datatype" : 20, "material" : "metalres"},
         "M1_res" : { "number" : 15, "datatype" : 22, "material" : "metalres"},
 
-        "M2" : { "number" : 17, "datatype" : 0, "material" : "metal", "previous" : "VIA1",  "next" : "VIA2", "pin" : "M2_pin" , "res" : "M2_res", "color" : "gray, pattern=north east lines, opacity=0.5" },
+        "M2" : { "number" : 17, "datatype" : 0, "material" : "metal", "previous" : "VIA1",  "next" : "VIA2", "pin" : "M2_pin" , "res" : "M2_res", "color" : "goldenrod, opacity=0.3" },
         "M2_pin" : { "number" : 17, "datatype" : 20, "material" : "metalres"},
         "M2_res" : { "number" : 17, "datatype" : 22, "material" : "metalres"},
 
-        "M3" : { "number" : 19, "datatype" : 0, "material" : "metal", "previous" : "VIA2",  "next" : "VIA3", "pin" : "M3_pin" , "res" : "M3_res", "color" : "gray,pattern=north west lines, opacity=0.5"},
+        "M3" : { "number" : 19, "datatype" : 0, "material" : "metal", "previous" : "VIA2",  "next" : "VIA3", "pin" : "M3_pin" , "res" : "M3_res", "color" : "aqua, opacity=0.3"},
         "M3_pin" : { "number" : 19, "datatype" : 20, "material" : "metalres"},
         "M3_res" : { "number" : 19, "datatype" : 22, "material" : "metalres"},
 
-        "M4" : { "number" : 21, "datatype" : 0, "material" : "metal", "previous" : "VIA3",  "next" : "VIA4", "pin" : "M4_pin" , "res" : "M4_res", "color" : "black", "fill" : "nofill"},
+        "M4" : { "number" : 21, "datatype" : 0, "material" : "metal", "previous" : "VIA3",  "next" : "VIA4", "pin" : "M4_pin" , "res" : "M4_res", "color" : "teal,opacity=0.2"},
         "M4_pin" : { "number" : 21, "datatype" : 20, "material" : "metalres"},
         "M4_res" : { "number" : 21, "datatype" : 22, "material" : "metalres"},
 
-        "M5" : { "number" : 31, "datatype" : 0, "material" : "metal", "previous" : "VIA4",  "next" : "VIA5", "pin" : "M5_pin", "res" : "M5_res", "color" : "brown, opacity=0.5" },
+        "M5" : { "number" : 31, "datatype" : 0, "material" : "metal", "previous" : "VIA4",  "next" : "VIA5", "pin" : "M5_pin", "res" : "M5_res", "color" : "" },
         "M5_pin" : { "number" : 31, "datatype" : 20, "material" : "metalres"},
         "M5_res" : { "number" : 31, "datatype" : 22, "material" : "metalres"},
 
-        "M6" : { "number" : 24, "datatype" : 0, "material" : "metal", "previous" : "VIA5",  "next" : "VIA6", "pin" : "M6_pin", "res" : "M6_res", "color" : "darkviolet, opacity=0.5" },
+        "M6" : { "number" : 24, "datatype" : 0, "material" : "metal", "previous" : "VIA5",  "next" : "VIA6", "pin" : "M6_pin", "res" : "M6_res", "color" : "" },
         "M6_pin" : { "number" : 24, "datatype" : 20, "material" : "metalres"},
         "M6_res" : { "number" : 24, "datatype" : 22, "material" : "metalres"},
 
         "VIA1" : { "number" : 16, "datatype" : 0, "material" : "cut", "previous" : "M1", "next" : "M2" , "color": "grey"},
         "VIA2" : { "number" : 18, "datatype" : 0, "material" : "cut", "previous" : "M2", "next" : "M3" , "color": "grey"},
         "VIA3" : { "number" : 20, "datatype" : 0, "material" : "cut", "previous" : "M3", "next" : "M4" , "color": "grey"},
-        "VIA4" : { "number" : 22, "datatype" : 0, "material" : "cut", "previous" : "M4", "next" : "M5" , "Tcolor": "grey"},
-        "VIA5" : { "number" : 37, "datatype" : 0, "material" : "cut", "previous" : "M5", "next" : "M6" , "Tcolor": "grey"},
+        "VIA4" : { "number" : 22, "datatype" : 0, "material" : "cut", "previous" : "M4", "next" : "M5" , "color": "grey"},
+        "VIA5" : { "number" : 37, "datatype" : 0, "material" : "cut", "previous" : "M5", "next" : "M6" , "color": "grey"},
         "PR" : { "number" : 62, "datatype" : 20 ,"fill" : "nofill"},
         "NW" : { "number" : 4, "datatype" : 0 , "material" : "implant", "color" : "","fill" : "nofill"},
         "PP" : { "number" : 10, "datatype" : 0 , "material" : "implant", "color" : "","fill" : "nofill"},

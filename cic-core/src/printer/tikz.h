@@ -32,6 +32,22 @@ namespace cIcPrinter{
   class Tikz : public DesignPrinter{
     public:
         Tikz(QString filename):DesignPrinter(filename){
+      			height_map.append("OD");
+			height_map.append("PO");
+			height_map.append("M1");
+			height_map.append("CO");
+			height_map.append("VIA1");
+			height_map.append("M2");
+			height_map.append("VIA2");
+			height_map.append("M3");
+			height_map.append("VIA3");
+			height_map.append("M4");
+			height_map.append("VIA4");
+			height_map.append("M5");
+			height_map.append("VIA5");
+			height_map.append("M6");
+			height_map.append("VIA6");
+
         }
         ~Tikz(){
         }
@@ -47,7 +63,6 @@ namespace cIcPrinter{
 	
 	double toTikz(int angstrom);
 	QString getCellName(QString name);
-	QHash<QString,QString> block_map;
 	QList<QString> height_map;
 
 	QString cellname;

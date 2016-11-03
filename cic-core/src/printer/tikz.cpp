@@ -23,7 +23,7 @@ namespace cIcPrinter{
 
     void Tikz::printPort(Port * port){
       QTextStream ts(&file);
-      ts << "\\ifthenelse{\\boolean{cicaddtext}}{\\draw ("<< toTikz(port->x1()) << ","<< toTikz(port->y1()) << ") node [anchor=north] {$"<< port->name() <<"$};}{}\n";
+      ts << "\\ifthenelse{\\boolean{cicaddtext}}{\\draw ("<< toTikz(port->x1()) << ","<< toTikz(port->y1()) << ") node [anchor=north west] {\\textbf{$"<< port->name() <<"$}};}{}\n";
     }
 
     double Tikz::toTikz(int angstrom){
@@ -55,21 +55,29 @@ namespace cIcPrinter{
 	double y2 = toTikz(o->y2());
 
 	Layer *l = Rules::getRules()->getLayer(o->layer());
-	
+
+
 	if( l->color == "" ){return;}
+	
+	if(height_map.contains(o->layer()))
+	  ts << "\\begin{pgfonlayer}{" << o->layer() << "}\n";
+
+	
 	if( l->nofill){
 	  ts << " \\draw [" << l->color <<"] ";
 	}else{
 	  ts << " \\filldraw [" << l->color <<"] ";
 	}
-
-	
         ts << " (" << x << "," << y << ") rectangle (" << x2 << "," << y2 << ");\n";
+
+	if(height_map.contains(o->layer()))
+	  ts << "\\end{pgfonlayer}\n";
     };
 
   QString Tikz::getCellName(QString name){
     QString n = name;
     n.replace("_","");
+    n.replace(".","");
     n.replace("0","ten");
     n.replace("1","one");
     n.replace("2","two");
@@ -101,6 +109,22 @@ namespace cIcPrinter{
   void Tikz::startLib(QString name){
     DesignPrinter::startLib(name);
     QTextStream ts(&file);
+    ts << "\\newcommand{\\lib"<<this->getCellName(name) <<"}{\n";
+
+    ts << " \\newboolean{cicaddtext} \n \\setboolean{cicaddtext}{true}  ";
+
+    
+    foreach(QString s,height_map){
+      ts << "\\pgfdeclarelayer{" << s << "}\n";
+    }
+
+    ts << "\\pgfsetlayers{";
+    for(int i=0;i < height_map.count();i++){
+      QString s = height_map[i];
+      ts  << s << ",";
+    }
+    ts << "main" << "}\n";
+    ts << "}\n";
     
   }
 
