@@ -48,7 +48,8 @@ mac {
   HEADERS +=  src/core/rules.h  \
   src/core/rect.h \
   src/printer/minecraft.h \
-      src/printer/tikz.h \
+  src/printer/tikz.h \
+        src/printer/eps.h \
     src/core/graph.h \
   src/core/cell.h \
   src/core/instance.h \
@@ -93,6 +94,7 @@ mac {
   src/core/cell.cpp   \
   src/printer/minecraft.cpp \
   src/printer/tikz.cpp \
+    src/printer/eps.cpp \
   src/core/patterntile.cpp \
   src/core/patterntransistor.cpp \
   src/core/patterncapacitor.cpp \

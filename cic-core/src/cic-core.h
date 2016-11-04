@@ -6,3 +6,4 @@
 #include "core/consoleoutput.h"
 #include "printer/minecraft.h"
 #include "printer/tikz.h"
+#include "printer/eps.h"

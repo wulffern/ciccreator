@@ -28,6 +28,7 @@ TEMPLATE=subdirs
   SUBDIRS = cic-core \
   cic \
   cic-gui \
+  cic2eps \
   cic-color
 
   cic.depends = cic-core

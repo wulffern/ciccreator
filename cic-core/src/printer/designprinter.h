@@ -38,6 +38,7 @@ namespace cIcPrinter{
         Cell * current_cell;
         QString filename;
         QFile  file;
+	QString stopcell;
 
     public:
         DesignPrinter(QString filename);
@@ -45,6 +46,7 @@ namespace cIcPrinter{
         char * toChar(QString str);
         bool isEmpty(Cell * c);
         void print(Design * o);
+	void print(Design * o,QString stopcell);
 
         virtual void openFile(QString file);
         virtual void closeFile();

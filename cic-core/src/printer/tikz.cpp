@@ -23,7 +23,10 @@ namespace cIcPrinter{
 
     void Tikz::printPort(Port * port){
       QTextStream ts(&file);
-      ts << "\\ifthenelse{\\boolean{cicaddtext}}{\\draw ("<< toTikz(port->x1()) << ","<< toTikz(port->y1()) << ") node [anchor=north west] {\\textbf{$"<< port->name() <<"$}};}{}\n";
+
+      QString name = port->name();
+      name = name.replace("_","\\_");
+      ts << "\\ifthenelse{\\boolean{cicaddtext}}{\\draw ("<< toTikz(port->x1()) << ","<< toTikz(port->y1()) << ") node [anchor=north west] {\\textbf{$"<< name <<"$}};}{}\n";
     }
 
     double Tikz::toTikz(int angstrom){
@@ -35,7 +38,20 @@ namespace cIcPrinter{
         if(!o->isInstance()) return;
         Instance * i = (Instance *) o;
 
-	ts << "\\begin{scope}[shift={("<< toTikz(i->x1()) << "," << toTikz(i->y1()) << ")}]\n";
+
+	double ix = i->x1();
+	double iy = i->y1();
+	
+	QString angle;
+	if(i->angle() == "R90"){
+	  
+	}else if(i->angle() == "MX"){
+	  angle = ", yscale=-1";
+	}else if(i->angle() == "MY"){
+	  angle = ", xscale=-1";
+	  ix += i->width();
+	}
+	ts << "\\begin{scope}[shift={("<< toTikz(ix) << "," << toTikz(iy) << ")} " << angle << "]\n";
 	ts << "\\setboolean{cicaddtext}{false}\n";
         double x = toTikz(o->x1());
         double y = toTikz(o->y1());
@@ -109,6 +125,9 @@ namespace cIcPrinter{
   void Tikz::startLib(QString name){
     DesignPrinter::startLib(name);
     QTextStream ts(&file);
+
+    
+    
     ts << "\\newcommand{\\lib"<<this->getCellName(name) <<"}{\n";
 
     ts << " \\newboolean{cicaddtext} \n \\setboolean{cicaddtext}{true}  ";
