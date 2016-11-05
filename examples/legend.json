@@ -1,0 +1,60 @@
+{
+    "header" : {
+        "comment" : "------------------------------------------------------------",
+        "author" : "Carsten Wulff",
+        "license" : [ 
+            "Copyright (c) 2015 Carsten Wulff",
+			"This program is free software: you can redistribute it and/or modify",
+			"it under the terms of the GNU General Public License as published by",
+			"the Free Software Foundation, either version 3 of the License, or",
+			"(at your option) any later version.",
+			
+			"This program is distributed in the hope that it will be useful,",
+			"but WITHOUT ANY WARRANTY; without even the implied warranty of",
+			"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the",
+			"GNU General Public License for more details.",
+			"You should have received a copy of the GNU General Public License",
+			"along with this program.  If not, see <http://www.gnu.org/licenses/>."
+        ],
+        "comment" : "------------------------------------------------------------"
+    },
+    "cells":
+    [
+        { "name" : "B_OD","class" : "cIcCore::PatternTile", "fillCoordinatesFromStrings" : [[ "OD","A---"]], "spice" : [ ".subckt B_OD A",".ends"]     },
+	{ "name" : "B_CO","class" : "cIcCore::PatternTile", "fillCoordinatesFromStrings" : [[ "CO","A---"]], "spice" : [ ".subckt B_CO A",".ends"]     },
+	{ "name" : "B_PO","class" : "cIcCore::PatternTile", "fillCoordinatesFromStrings" : [[ "POD","A---"]], "spice" : [ ".subckt B_PO A",".ends"]     },
+	{ "name" : "B_M1","class" : "cIcCore::PatternTile", "fillCoordinatesFromStrings" : [[ "M1","A---"]], "spice" : [ ".subckt B_M1 A",".ends"]     },
+	{ "name" : "B_M2","class" : "cIcCore::PatternTile", "fillCoordinatesFromStrings" : [[ "M2","A---"]], "spice" : [ ".subckt B_M2 A",".ends"]     },
+	{ "name" : "B_M3","class" : "cIcCore::PatternTile", "fillCoordinatesFromStrings" : [[ "M3","A---"]], "spice" : [ ".subckt B_M3 A",".ends"]     },
+	{ "name" : "B_M4","class" : "cIcCore::PatternTile", "fillCoordinatesFromStrings" : [[ "M4","A---"]] , "spice" : [ ".subckt B_M4 A",".ends"]    },
+	{ "name" : "LEGENDM4",
+          "boundaryIgnoreRouting" : 0,
+          "spice" : [
+              ".subckt LEGENDM4 CO OD PO M1 M2 M3 M4",
+              "XA2 OD B_OD",
+	      "XB2 CO B_CO",
+	      "XC2 PO B_PO",
+	      "XD2 M1 B_M1",
+	      "XE2 M2 B_M2",
+	      "XF2 M3 B_M3",
+	      "XG2 M4 B_M4",
+              ".ends"
+          ],
+          "rotateAngle" : "MY"
+        },
+	{ "name" : "LEGENDM1",
+          "boundaryIgnoreRouting" : 0,
+          "spice" : [
+              ".subckt LEGENDM1 CO OD PO M1 M2 M3 M4",
+              "XA2 OD B_OD",
+	      "XB2 CO B_CO",
+	      "XC2 PO B_PO",
+	      "XD2 M1 B_M1",
+              ".ends"
+          ],
+          "rotateAngle" : "MY"
+        }
+
+
+    ]
+}

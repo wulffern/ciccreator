@@ -110,16 +110,41 @@ DesignPrinter::~DesignPrinter(){
        this->closeFile();
   }
 
-  void DesignPrinter::print(Design * d ){
 
+
+    
+
+  void DesignPrinter::print(Design * d ){
+    this->print(d,"");
+  }
+
+    void DesignPrinter::print(Design * d, QString stopcell ){
+
+      ConsoleOutput* console = new ConsoleOutput();
+      this->stopcell = stopcell;
   this->startLib(this->filename);
-    QList<QString> cells = d->cellNames();
-    for(int i=0;i<cells.count();i++){
-        Cell * c = Cell::getCell(cells[i]);
-        if(c){
-            this->printCell(c);
-          }
-      }
+  bool skip = false;
+  QList<QString> cells = d->cellNames();
+
+  for(int i=0;i<cells.count();i++){
+    if(skip) {
+
+      continue;
+    }
+
+
+    Cell * c = Cell::getCell(cells[i]);
+        if(c ){
+	  this->printCell(c);
+	}
+	if("" != stopcell && cells[i] == stopcell){
+
+	  skip = true;
+	}
+
+  }
+
+        console->comment("Written " + stopcell + " to " + this->filename,ConsoleOutput::green);
     this->endLib();
 
   }

@@ -23,93 +23,41 @@
 #include <QDebug>
 #include <QString>
 
-#ifndef _XOPEN_SOURCE
-#define _XOPEN_SOURCE
-#endif
-
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE
-#endif
-#ifndef __USE_GNU
-#define __USE_GNU
-#endif
-
-#include <execinfo.h>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ucontext.h>
-#include <unistd.h>
-
-
-
-
-
 int main(int argc, char *argv[])
 {
 
-
-
     try
     {
-
-
 
         if(argc >=  3){
 
             QString file = argv[1];
             QString rules = argv[2];
-            QString library = argv[3];
+            QString cell = argv[3];
 
-            if(library == ""){
+            if(cell == ""){
                 QRegularExpression re("/?([^\\/]+)\\.json");
                 QRegularExpressionMatch m = re.match(file);
-                library = m.captured(1);
+                cell = m.captured(1);
             }
 
             //Load rules
             cIcCore::Rules::loadRules(rules);
 
             //Load design, this is where the magic happens
-            cIcCore::Design * d = new cIcCore::Design();
+            cIcCore::Design * d= new cIcCore::Design();
             d->read(file);
 
-            //Print SVG file
-            cIcPrinter::Svg * pr = new cIcPrinter::Svg("test");
-			pr->print(d);
 
-            //Minecraft JavaScript
-            cIcPrinter::Minecraft * m = new cIcPrinter::Minecraft(library + ".js");
-            m->print(d);
-
-	    cIcPrinter::Tikz * tikz = new cIcPrinter::Tikz(library + ".tex");
-            tikz->print(d);
-
-            //Print SPICE file
-            cIcPrinter::Spice * spice = new cIcPrinter::Spice(library);
-            spice->print(d);
-
-            delete(spice);
-
-            //Write GDS
-            cIcCore::ConsoleOutput console;
-            console.comment("Writing GDS");
-            cIcPrinter::Gds * gd = new cIcPrinter::Gds(library);
-            gd->print(d);
-            delete(gd);
-
-            //Write JSON
-            d->writeJsonFile(library + ".json");
-
-
+	    cIcPrinter::Eps * eps = new cIcPrinter::Eps(cell);
+            eps->print(d,cell);
 
         }else{
             qWarning() << "Wrong number of arguments " << argc;
         }
 
     }catch(...){
-
+      
         return -1;
     }
 

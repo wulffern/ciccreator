@@ -96,6 +96,9 @@ esscirc_soi: lay
 sar_soi: lay
 	cd lay; make sar
 
+sar_eps:
+	cd lay; ../bin/cic2eps ../examples/SAR_ESSCIRC16_28N.json ../examples/tech_eps.json ${CELL}
+
 view: lay
 	cd lay; ../bin/cic-gui ${TECHFILE} ${LIBNAME}.json &
 
