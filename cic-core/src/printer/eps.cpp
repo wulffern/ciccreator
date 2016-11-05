@@ -105,20 +105,22 @@ namespace cIcPrinter{
   void Eps::startLib(QString name){
     DesignPrinter::startLib(name + ".eps");
     QTextStream ts(&file);
-    ts << "%!PS-Adobe-2.0 EPSF-2.0\n";
-
+    ts << "%!PS-Adobe-3.0 EPSF-3.0\n";
+    ts << "%%Creator: cic2eps \n";
     Cell * c = Cell::getCell(name);
     c->updateBoundingRect();
     if(c){
-      ts << "%%BoundingBox: " << toEps(c->x1()) << " "
-	<< toEps(c->y1()) << " "
-	<< toEps(c->x2()) << " " 
+      ts << "%%BoundingBox: " << int(toEps(c->x1())) << " "
+	 << int(toEps(c->y1())) << " "
+	 << int(toEps(c->x2())) << " " 
+	 << int(toEps(c->y2())) << "\n";
+      ts << "%%HiResBoundingBox: " << toEps(c->x1()) << " "
+	 << toEps(c->y1()) << " "
+	 << toEps(c->x2()) << " " 
 	 << toEps(c->y2()) << "\n";
     }
 
     ts << "%%BeginProlog\n";
-
-
   }
 
   void Eps::endLib(){
