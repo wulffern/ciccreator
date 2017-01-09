@@ -19,7 +19,7 @@
 
 QMAKE_CFLAGS += $$(CFLAGS)  -g
 CONFIG += c++11
-CONFIG += debug
+#CONFIG += debug
 CONFIG += static
 
 
@@ -29,7 +29,15 @@ TEMPLATE=subdirs
   cic \
   cic-gui \
   cic2eps \
+  cic2tikz \
+  cic2png \
+  cic2scriptcraft \
   cic-color
 
   cic.depends = cic-core
   cic-gui.depends = cic-core
+  cic2eps.depends = cic-core
+  cic2tikz.depends = cic-core
+  cic2png.depends = cic-core
+  cic2scriptcraft.depends = cic-core
+

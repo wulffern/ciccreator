@@ -43,15 +43,24 @@ namespace cIcPainter{
 
         virtual void startCell(QPainter &painter,Cell*);
         virtual void endCell(QPainter &painter);
-        virtual void paintChildren(QPainter &painter, QList<Rect*> children);
+        virtual void paintChildren(QPainter &painter, QList<Rect*> children,QString hierarchy);
+        
         virtual void paintPort(QPainter &painter,Port *);
         virtual void paintText(QPainter &painter,Text *);
+        virtual void paint(QPainter &painter, Cell *,int x, int y, int width, int height,QString instanceName);
         virtual void paint(QPainter &painter, Cell *,int x, int y, int width, int height);
-        virtual void paintCell(QPainter &painter, Cell *);
+        virtual void paintCell(QPainter &painter, Cell *,QString hierarchy);
         virtual void paintRect(QPainter &painter, Rect * rect);
-        virtual void paintReference(QPainter &painter,Instance *);
+        virtual void paintReference(QPainter &painter,Instance *,QString hiearchy);
         double toUnit(int angstrom);
         int unit;
+
+    private:
+        QString _instanceName;
+        bool _paint;
+        QString _hasPainted;
+        
+        
         
 
 

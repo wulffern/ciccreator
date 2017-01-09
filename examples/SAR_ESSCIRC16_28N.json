@@ -680,12 +680,16 @@
               ["SWX2_EV","SWX4_EV"]
           ]
         },
-		
 
+		
+		{"name": "SAR9B_EV_NOROUTE",
+		 "class" : "Layout::LayoutSARCDAC"
+		},
+		 
 		//- 9-bit SAR
         {"name": "SAR9B_EV",
          "class" : "Layout::LayoutSARCDAC",
-         "ctrlOutside" : 0,
+		 "inherit" : "SAR9B_EV_NOROUTE",
          "afterPlace" : [
 
              {"addPowerRings" :[
@@ -737,8 +741,7 @@
              ]
          },
          "afterRoute" : {
-             "addPortOnRects" : [ ["DONE", "M1"],["AVDD","M4"],["AVSS","M4"],["SAR_IP","M4"],["SAR_IN","M4"], ["RES_IP","M1"],["RES_IN","M1"]
-                                ],
+             "addPortOnRects" : [ ["DONE", "M1"],["AVDD","M4"],["AVSS","M4"],["SAR_IP","M4"],["SAR_IN","M4"]],
              "extendPortsToEdge" :[["D<","t"],["SAR_","b"]]
          }
         }

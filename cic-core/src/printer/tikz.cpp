@@ -26,7 +26,7 @@ namespace cIcPrinter{
 
       QString name = port->name();
       name = name.replace("_","\\_");
-      ts << "\\ifthenelse{\\boolean{cicaddtext}}{\\draw ("<< toTikz(port->x1()) << ","<< toTikz(port->y1()) << ") node [anchor=north west] {\\textbf{$"<< name <<"$}};}{}\n";
+      ts << "\\ifthenelse{\\boolean{cicaddtext}}{\\draw ("<< toTikz(port->x1()) << ","<< toTikz(port->y1()) << ") node [anchor=north west,cicfill] {\\textbf{$"<< name <<"$}};}{}\n";
     }
 
     double Tikz::toTikz(int angstrom){
@@ -40,6 +40,8 @@ namespace cIcPrinter{
 
 
 	double ix = i->x1();
+    double icenterx = i->centerX();
+    double icentery = i->centerY();
 	double iy = i->y1();
 	
 	QString angle;
@@ -50,6 +52,7 @@ namespace cIcPrinter{
 	}else if(i->angle() == "MY"){
 	  angle = ", xscale=-1";
 	  ix += i->width();
+      icenterx += i->width();
 	}
 	ts << "\\begin{scope}[shift={("<< toTikz(ix) << "," << toTikz(iy) << ")} " << angle << "]\n";
 	ts << "\\setboolean{cicaddtext}{false}\n";
@@ -58,6 +61,9 @@ namespace cIcPrinter{
 	ts << "\\fig" << this->getCellName(o->name()) << "\n";
 	ts << "\\setboolean{cicaddtext}{true}\n";
 	ts << "\\end{scope}\n";
+
+    ts << "\\ifthenelse{\\boolean{cicaddref}}{\\draw ("<< toTikz(icenterx) << ","<< toTikz(icentery) << ") node [anchor=center,cicfill] {\\textbf{$"<< i->instanceName() <<"$}};}{}\n";
+    
 
     }
 
@@ -130,7 +136,10 @@ namespace cIcPrinter{
     
     ts << "\\newcommand{\\lib"<<this->getCellName(name) <<"}{\n";
 
-    ts << " \\newboolean{cicaddtext} \n \\setboolean{cicaddtext}{true}  ";
+    ts << " \\newboolean{cicaddtext} \n \\setboolean{cicaddtext}{true}  \n";
+    ts << " \\newboolean{cicaddref} \n \\setboolean{cicaddref}{false}  \n";
+//    ts << "\\tikzstyle{stuff_fill}=[rectangle,fill=white,minimum size=1.4em,opacity=0.7]\n";
+    
 
     
     foreach(QString s,height_map){

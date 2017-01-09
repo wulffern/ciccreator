@@ -109,7 +109,7 @@ namespace cIcCells{
         //Get routing height
         QList<Graph*> graphs = this->getNodeGraphs("CP<|CN<|D<");
         int yc = y + msw*2;
-        
+
         y += msw*graphs.count() + msw*10- mw;
 
         //Get control width
@@ -130,15 +130,15 @@ namespace cIcCells{
         this->updateBoundingRect();
 
         yc = this->addSarRouting(yc,msw,mw);
-        
+
         Instance* c;
         foreach(Graph* graph, graphs){
 
-            int xmin = 1e32;
-            int xmax = -1e32;
             auto r0 = new Rect("M3",this->x1(),yc,this->width(),mw);
             yc += msw;
-            this->add(r0);
+            double xfmin = 1e32;
+            double xfmax = -1e32;
+
             QList<Rect*> rects = graph->getRectangles("","SARDIG","");
             foreach(Rect* r,rects){
                 auto r1 = new Rect("M4",r->x1(),r0->y2(),mw,r->y1()  - r0->y2());
@@ -147,9 +147,8 @@ namespace cIcCells{
                 this->add(c);
                 this->add(r1);
                 this->addPort(graph->name,r1);
-                xmin =  xmin > c->x1() ? c->x1(): xmin;
-                xmax=  xmax < c->x2() ? c->x2(): xmax;
-                
+                xfmin =  (xfmin > r1->x1()) ? r1->x1(): xfmin;
+                xfmax=  (xfmax < r1->x2()) ? r1->x2(): xfmax;
             }
 
             QList<Rect*> rects_cdac = graph->getRectangles("","CDAC","");
@@ -159,17 +158,17 @@ namespace cIcCells{
                 auto r1 = new Rect("M2",r->x1(),r->y2(),mw,r0->y1()  - r->y2());
                 this->add(c);
                 this->add(r1);
-                xmin =  xmin > c->x1() ? c->x1(): xmin;
-                xmax=  xmax < c->x2() ? c->x2(): xmax;
+                xfmin =  (xfmin > r1->x1()) ? r1->x1() : xfmin;
+                xfmax=  (xfmax < r1->x2()) ? r1->x2() : xfmax;
             }
 
-            r0->setLeft(xmin);
-
-            r0->setRight(xmax);
+            r0->setLeft(xfmin);
+            r0->setRight(xfmax);
+            this->add(r0);
         }
 
         this->updateBoundingRect();
-        
+
     }
 
     int SAR::addSarRouting(int y,int msw,int mw)
@@ -237,14 +236,10 @@ namespace cIcCells{
             QList<Rect*> rects = QList<Rect*>() << ct_cmp << rb_cmp << ra << ct2 << ct1<< rb_cmp;
             this->add(rects);
         }
-
-
-
-
-
+        
         //Add CMP SARP routing
         QList<Rect*> sarn_cmp = this->findRectanglesByNode("SARN","","SARCMP");
-         r = sarn_cmp[0];
+        r = sarn_cmp[0];
         if(r){
             auto ct2 = Cut::getInstance("M4","M5",2,1);
             auto ct_cmp =Cut::getInstance("M2","M3",2,1);
@@ -261,20 +256,13 @@ namespace cIcCells{
             QList<Rect*> rects = QList<Rect*>() << cta_cmp <<  ct_cmp << rb_cmp << ra << ct2 << ct1<< rb_cmp;
             this->add(rects);
         }
-
-
         y += msw ;
         return y;
-        
+
     }
-
-
-
 
     void SAR::route()
     {
-
-
         LayoutCell::route();
 
     }

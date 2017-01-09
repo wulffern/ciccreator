@@ -38,6 +38,11 @@ namespace cIcCore{
         ~Instance();
         Cell * cell(){return _cell;}
         QString instanceName(){return instanceName_;}
+        QString id()
+        {
+            return name()  + instanceName_;
+        }
+        
         virtual Rect calcBoundingRect();
         QString angle(){return angle_;}
         void setAngle(QString angle);

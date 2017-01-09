@@ -24,6 +24,7 @@
 #include "cell.h"
 #include "instance.h"
 #include "route.h"
+#include "guard.h"
 #include "routering.h"
 #include "graph.h"
 
@@ -56,6 +57,11 @@ namespace cIcCore{
         Q_INVOKABLE void addRouteHorizontalRect(QString layer, QString rectpath, int x, QString name);
 
         Q_INVOKABLE void addRouteHorizontalRect(QJsonArray obj);
+        Q_INVOKABLE void addGuard(QJsonArray obj);
+        
+
+ 
+       void addGuard(QString port, double gridMultiplier, QList<QString> layers);
         
         
         QList<Graph*> getNodeGraphs(QString regex);
@@ -94,7 +100,7 @@ namespace cIcCore{
 
 	private:
         bool useHalfHeight;
-		QHash<QString,Graph*> nodeGraph_;
+		QMap<QString,Graph*> nodeGraph_;
 
         bool noPowerRoute_;
 

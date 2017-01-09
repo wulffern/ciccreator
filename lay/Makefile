@@ -44,6 +44,13 @@ esscirc:
 	mv SAR_ESSCIRC16_28N_tmp.spi SAR_ESSCIRC16_28N.spi
 
 
+esscirc_core:
+	${cmd}   ~/pro/analogicus/ip/SAR_CORE_ESSCIRC16_28N/SAR_CORE_ESSCIRC16_28N.json ../../cnano/examples/soi_io.json SAR_CORE_ESSCIRC16_28N ${OPT}
+	cat SAR_ESSCIRC16_28N.spi | perl -pe 'if(m/^\s*M\d+/ig){s/\n//ig;$$_ = $$_ . " p_la=0 \n";}' > SAR_ESSCIRC16_28N_tmp.spi;
+	rm SAR_ESSCIRC16_28N.spi;
+	mv SAR_ESSCIRC16_28N_tmp.spi SAR_ESSCIRC16_28N.spi
+
+
 #--------------------------------------------------------------------
 # Sections below are used for testing of ADC compile, which is not public (yet)
 #--------------------------------------------------------------------

@@ -36,10 +36,12 @@ namespace cIcCore{
         qRegisterMetaType<cIcCells::CapCell>("cIcCells::CapCell");
         qRegisterMetaType<cIcCells::CDAC>("cIcCells::CDAC");
         qRegisterMetaType<cIcCore::PatternResistor>("cIcCore::PatternResistor");
+        qRegisterMetaType<cIcCore::PatternHighResistor>("cIcCore::PatternHighResistor");
 
 
         //Translate from Perl names to c++ names
         cellTranslator["Gds::GdsPatternTransistor"] = "cIcCore::PatternTransistor";
+        cellTranslator["Gds::GdsPatternHighResistor"] = "cIcCore::PatternHighResistor";
         cellTranslator["Gds::GdsPatternCapacitor"] = "cIcCore::PatternCapacitor";
         cellTranslator["Gds::GdsPatternCapacitorGnd"] = "cIcCore::PatternCapacitorGnd";
         cellTranslator["Layout::LayoutDigitalCell"] = "cIcCore::LayoutCell";
@@ -444,22 +446,32 @@ namespace cIcCore{
 
         QFile file;
         file.setFileName(filename);
-        ;
+        if(!file.exists()){
+            console->comment("Could not find file '" + filename + "'",ConsoleOutput::red);
+            
+            QJsonObject obj;
+
+            return obj;
+            
+
+        }
+        
         QString val;
+        QStringList valList;
         if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-{
-    QTextStream in(&file);      
-   while (!in.atEnd())
-   {
-      QString line = in.readLine();
-      if(line.contains(QRegularExpression("^\\s*//"))) continue;
-      val.append(line);
-   }
-   
-   file.close();
-}
-        //val = file.readAll();
-        //file.close();
+        {
+            QTextStream in(&file);
+            while (!in.atEnd())
+            {
+                QString line = in.readLine();
+                if(line.contains(QRegularExpression("^\\s*//"))) continue;
+                val.append(line);
+                valList.append(line);
+            }
+
+            file.close();
+        }
+
         QJsonParseError err;
         QJsonDocument d = QJsonDocument::fromJson(val.toUtf8(),&err);
         if(QJsonParseError::NoError != err.error ){
@@ -473,16 +485,17 @@ namespace cIcCore{
                 index = verr.indexOf("\n",position+1);
             }
 
-            QString error("%1%2%3%4");
+            QString error("%1%2%3%4\n%5\n%6\n%7");
+            qDebug() << valList.count();
+            
             console->comment(error.arg("JSON ERROR (line ")
                              .arg(line_count)
                              .arg("): ")
                              .arg(err.errorString())
+                             .arg("   " + valList[line_count])
+                             .arg("-> " + valList[line_count+1])
+                             .arg("   " + valList[line_count+2])
                              ,ConsoleOutput::red);
-            //QTextStream out(stdout);
-            //console->startComment(out,ConsoleOutput::red);
-            //out << "JSON ERROR: " << err.errorString() << " at line " << line_count ;
-            //console->endComment(out);
         }
         QJsonObject obj = d.object();
         return obj;

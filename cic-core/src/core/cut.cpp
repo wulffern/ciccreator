@@ -24,8 +24,7 @@ namespace cIcCore {
         this->setName(this->makeName(layers.first()->name,layers.last()->name,horizontal_cuts,vertical_cuts));
 
         foreach(Layer * l, layers){
-            if(l->material == Layer::metal || l->material == Layer::poly){
-                int width = rules->get(l->name,"width");
+            if(l->material == Layer::metal || l->material == Layer::poly|| l->material == Layer::diffusion ){
                 QString encRule = l->next  + "encOpposite";
                 int encOpposite = rules->get(l->name,encRule);
                 int enclosure = rules->get(l->name,"enclosure");
@@ -49,6 +48,7 @@ namespace cIcCore {
 
                 Rect * r = new Rect(l->name,0,0,r_width,r_height);
                 this->add(r);
+                
 
             }else if(l->material == Layer::cut){
                 QString encRule = l->name  + "encOpposite";
@@ -81,12 +81,94 @@ namespace cIcCore {
                     ya1 = enc_y;
                     xa1 += cut_width + cut_space;
                 }
+
+                
             }
         }
 
         this->updateBoundingRect();
+
         
     }
+
+    Cut::Cut(QString layer1, QString layer2, Rect* r):Cell()
+    {
+        Rules * rules = Rules::getRules();
+        QList<Layer*> layers = rules->getConnectStack(layer1,layer2);
+
+        if(layers.count() == 0){
+            qDebug() << "No layers to cut for " << layer1 << layer2;
+            return;
+        }
+
+        this->setName("fillCut");
+
+        foreach(Layer * l, layers){
+            if(l->material == Layer::metal || l->material == Layer::poly|| l->material == Layer::diffusion ){
+
+                
+                this->add(new Rect(l->name,0,0,r->width(),r->height()));
+            }else if(l->material == Layer::cut){
+                QString encRule = l->name  + "encOpposite";
+                int encOpposite = rules->get(l->previous,encRule);
+                int enclosure = rules->get(l->previous,"enclosure");
+                int cut_width = rules->get(l->name,"width");
+                int cut_height = rules->get(l->name,"height");
+                int cut_space = rules->get(l->name,"space");
+
+                int enc_x = encOpposite;
+                int enc_y = enclosure;
+                if(r->isHorizontal() && r->isVertical()){
+                    enc_x = encOpposite;
+                    enc_y = encOpposite;
+                }else if(r->isVertical()){
+                    enc_x = enclosure;
+                    enc_y = encOpposite;
+                }else if(r->isHorizontal()){
+                    enc_x = encOpposite;
+                    enc_y = enclosure;
+                }
+                
+
+                int width = r->width() - enc_x*2;
+                int horizontal_cuts = width/(cut_width  + cut_space);
+                int height = r->height() - enc_y*2;
+                int vertical_cuts = height/(cut_height  + cut_space);
+
+                if(vertical_cuts == 0) {
+                    vertical_cuts = height/(cut_height);
+                }
+                
+                if(horizontal_cuts == 0) {
+                    horizontal_cuts = width/(cut_width);
+                }
+
+                this->setName(this->makeName(layers.first()->name,layers.last()->name,horizontal_cuts,vertical_cuts));
+                
+
+                int xa1 = enc_x;
+                int ya1 = enc_y;
+                for(int x = 0;x < horizontal_cuts; x++){
+                    for( int y = 0;y < vertical_cuts; y++){
+                        Rect * r = new Rect(l->name,xa1,ya1,cut_width,cut_height);
+                        this->add(r);
+                        ya1 += cut_height + cut_space;
+                    }
+                    ya1 = enc_y;
+                    xa1 += cut_width + cut_space;
+                }
+
+                
+            }
+        }
+
+        this->updateBoundingRect();
+        this->moveTo(r->x1(),r->y1());
+        this->updateBoundingRect();
+        
+    }
+
+    
 
     Cut::~Cut()
     {
@@ -99,6 +181,9 @@ namespace cIcCore {
 
     }
 
+   
+    
+    
     QList<Rect*> Cut::getVerticalFillCutsForRects(QString layer1, QList<Rect*> rects, int horizontal_cuts)
     {
 
@@ -110,7 +195,7 @@ namespace cIcCore {
             if(r == NULL) continue;
             if(layer1 == r->layer()) continue;
 
-
+            
 
         }
 

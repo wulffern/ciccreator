@@ -469,6 +469,55 @@ namespace cIcCore{
         this->addRouteHorizontalRect(layer,rectpath,x,name);
     }
 
+    void LayoutCell::addGuard(QJsonArray obj)
+    {
+        if(obj.size() < 3){
+            qDebug() << "Error: addRouteHorizontalRects must contain at least 3 element\n";
+            return;
+        }
+        QString layer = obj[0].toString();
+        double enc = obj[1].toDouble();
+        QList<QString> layers;
+        QJsonArray encl = obj[2].toArray();
+
+        foreach(QJsonValue enc, encl){
+            layers.append(enc.toString());
+        }
+
+
+        this->addGuard(layer,enc,layers);
+    }
+
+    void LayoutCell::addGuard(QString port, double gridMultiplier, QList<QString> layers)
+    {
+        Rect* r = this->getCopy();
+        int yenc = this->rules->get("ROUTE","verticalgrid")*gridMultiplier;
+        int xenc = this->rules->get("ROUTE","verticalgrid")*gridMultiplier;
+        
+        r->adjust(-xenc,-yenc,xenc,yenc);
+
+        Guard* g = new Guard(r,layers);
+        this->add(g);
+        Port * p;
+        p = this->getPort(port);
+        if(!p){
+            p = new Port(port);
+            this->add(p);
+        }
+
+//        Rect* m1 = g->getRect("M1");
+        
+//        if(p && m1){
+//                      p->set(m1);
+//        }
+
+
+  
+
+    }
+    
+
+
     
     
     void LayoutCell::addRouteHorizontalRect(QString layer, QString rectpath, int x, QString name)
@@ -700,24 +749,64 @@ namespace cIcCore{
         int y = 0;
         foreach(cIcSpice::SubcktInstance * ckt_inst,_subckt->instances()){
             QString group = ckt_inst->groupName();
-
-
             if(prev_group.compare(group) != 0  && prev_group.compare("")  != 0){
                 y = 0;
                 x = x + prev_width;
+                prev_width = 0;
             }
 
             prev_group = group;
 
+            
+
+            auto properties = ckt_inst->properties();
+
+
+            if(properties.contains("xoffset")){
+                QString offset = properties["xoffset"];
+                if(offset == "width")
+                {
+                    //Not implemented
+                }else{
+                    int xoffset = offset.toInt();
+                    x = x +this->rules->get("ROUTE","horizontalgrid")*xoffset;
+                }
+            }
+
+            if(properties.contains("yoffset")){
+                
+                QString offset = properties["yoffset"];
+                if(offset == "height"){
+                    //Not implemented
+                }else{
+                    int yoffset = offset.toInt();
+                    y = y + this->rules->get("ROUTE","verticalgrid")*yoffset;
+                    
+                }
+            }
+            
+            
+            
             Instance* inst = this->addInstance(ckt_inst,x,y);
+            
 
+            if(properties.contains("angle")){
+                
+                QString angle = properties["angle"];
 
-            prev_width = inst->width();
+                if(angle == "180"){
+                    inst->translate(-inst->width(),0);
+                    
+                    inst->setAngle("MY");
+                }
+            }            
 
+            if(prev_width < inst->width()) prev_width = inst->width();
+            
             if(useHalfHeight){
-                y += inst->height()/2;
+                y += (inst->y2() - y)/2;
             }else{
-                y += inst->height();
+                y += (inst->y2() - y);
             }
         }
 
@@ -882,7 +971,7 @@ namespace cIcCore{
                 Instance * i = new Instance();
                 i->fromJson(co);
                 this->add(i);
-            }else if(cl == "Cell" || cl== "cIcCore::Route" || cl == "cIcCore::RouteRing"){
+            }else if(cl == "Cell" || cl== "cIcCore::Route" || cl == "cIcCore::RouteRing" || cl == "cIcCore::Guard" || cl == "cIcCore::Cell"){
                 LayoutCell * l = new LayoutCell();
                 l->fromJson(co);
                 this->add(l);

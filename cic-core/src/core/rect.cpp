@@ -30,6 +30,7 @@ namespace cIcCore{
         y1_ = 0;
         x2_ = 0;
         y2_ = 0;
+        _layer = "PR";
         rules = Rules::getRules();
     }
 
@@ -185,6 +186,17 @@ namespace cIcCore{
         r->setNet(this->net());
         return r;
     }
+
+    Rect Rect::getScaled(Rect* r, int unit){
+        Rect ro;
+        ro.setPoint1(r->x1()/unit,r->y1()/unit);
+        ro.setPoint2(r->x2()/unit,r->y2()/unit);
+        ro.setLayer(r->layer());
+        
+        return ro;
+        
+    }
+    
 
 
     Rect* Rect::getCopy(const QString layer){
@@ -389,6 +401,17 @@ namespace cIcCore{
         return false;
     }
 
+    //! Check if this is a cIcCore::LayoutCell object
+    bool Rect::isLayoutCell(){
+        if(this->metaObject()->className() == "cIcCore::LayoutCell" ){
+            return true;
+        }else  if(this->inherits("cIcCore::LayoutCell")){
+            return true;
+        }
+        return false;
+    }
+
+
     //! Check if this is a cIcCore::Port object
     bool Rect::isPort(){
         if(this->metaObject()->className() == "cIcCore::Port" ){
@@ -410,5 +433,7 @@ namespace cIcCore{
         return false;
 
     }
+
+    
 
 }

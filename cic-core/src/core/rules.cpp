@@ -119,8 +119,13 @@ namespace cIcCore{
     }else if(this->isLayerBeforeLayer(layer2,layer1)){
         start = layer2;
         stop = layer1;
-
-      }else{
+    }else if(layer1 == "OD"){
+        start = layer1;
+        stop = layer2;
+    }else if(layer2 == "OD"){
+        start = layer2;
+        stop = layer1;
+    } else{
         qDebug() << "No connect rules that tie " << layer1 << " to " << layer2;
         return stack;
     }

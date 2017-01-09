@@ -76,7 +76,7 @@ namespace cIcPrinter{
 
 	
   void Gds::printReference(Cell * o){
-    if(this->isEmpty(o)){return ;}
+      if(Cell::isEmpty(o)){return ;}
     if(!o->isInstance()){return;}
 
     Instance * inst = (Instance *) o;

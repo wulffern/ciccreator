@@ -107,6 +107,8 @@ namespace cIcCore{
 		//! to enclose this rectangle by a certain amount
         Rect* adjustedOnce(int xp1);
 
+        static Rect getScaled(Rect* r,int unit);
+        
 		
 		//! Mirror around ax, will send "updated()"
         virtual void mirrorX(int ax);
@@ -128,6 +130,9 @@ namespace cIcCore{
         
         //! Check if this is a cIcCore::Cell object
         bool isCell();
+
+        //! Check if this is a cIcCore::LayoutCell object
+        bool isLayoutCell();
 
 		//! Check if this is a cIcCore::Port object
         bool isPort();

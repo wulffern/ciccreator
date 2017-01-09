@@ -24,19 +24,36 @@
 #include <QString>
 
 
-
 using namespace cIcCore;
 using namespace std;
 
-#define UNIT 4000.0
+struct CellHier
+{
+    double x;
+    double y;
+    double yshear;
+    double xshear;
+    double width;
+    double height;
+    
+    Cell * cell;
+    QString name;
+
+    QStringList subcells;
+};
+
+double unit = 2000;
+
 
 double toUnit(int angstrom){
-    return angstrom/UNIT;
+    return angstrom/unit;
     ;}
 
 
 int main(int argc, char *argv[])
 {
+
+    ConsoleOutput * console = new ConsoleOutput();
 
     try
     {
@@ -45,113 +62,112 @@ int main(int argc, char *argv[])
 
             QString file = argv[1];
             QString rules = argv[2];
-            QString cell = argv[3];
-
-            if(cell == ""){
-                QRegularExpression re("/?([^\\/]+)\\.json");
+            QString filename = argv[3];
+            QString outfilename = "outfile";
+            
+            if(filename == ""){
+                QRegularExpression re("^(.*)\\.json");
                 QRegularExpressionMatch m = re.match(file);
-                cell = m.captured(1);
+                filename = m.captured(1) + ".hier";
             }
+
+            QRegularExpression re1("/?([^\\/]+)\\.json");
+            QRegularExpressionMatch m1 = re1.match(file);
+            outfilename = m1.captured(1);
 
             //Load rules
             cIcCore::Rules::loadRules(rules);
 
+
             //Load design, this is where the magic happens
             cIcCore::Design * d= new cIcCore::Design();
+            console->comment("Reading JSON: " + file,ConsoleOutput::green);
+
             d->read(file);
 
-            Cell * c = Cell::getCell(cell);
+            //Load hiearchy file
+            QJsonObject obj = d->readJson(filename);
+            console->comment("Reading hierarchy file:" + filename,ConsoleOutput::green);
+            Cell * boundary = new Cell();
+            QList<CellHier> cells;
+            QJsonValue unitValue = obj["unit"];
 
-            Qt::BrushStyle bstyle = Qt::SolidPattern;
+            unit = unitValue.toInt();
+            
+            QJsonValue hierarchy = obj["hierarchy"];
+            QJsonArray cellArray  = hierarchy.toArray();
+            foreach (const QJsonValue & value, cellArray) {
+                QJsonObject c = value.toObject();
+                CellHier ch;
+                ch.yshear = c["yshear"].toDouble();
+                ch.xshear = c["xshear"].toDouble();
+                ch.name = c["name"].toString();
+                QJsonArray subcells = c["subcells"].toArray();
+                foreach (const QJsonValue & subcell, subcells){
+                    ch.subcells.append("|" + subcell.toString() + "|");
+                }
 
-            if(c->name() == ""){
-                qDebug() << "Could not find cell " << cell << "\n";
-                return -1;}
+                
+                Cell * cell = Cell::getCell(ch.name);
+                if(cell->name() == ""){
+                    console->comment("Error: Could not find cell " + ch.name+ "\n",ConsoleOutput::red);
+                }else{
+                    cell->setBoundaryIgnoreRouting(false);
+                    cell->updateBoundingRect();
+                    ch.cell = cell;
+                    ch.width = toUnit(cell->width());
+                    ch.height = toUnit(cell->height());
+                    ch.x = c["x"].toDouble()*ch.width;
+                    ch.y = c["y"].toDouble()*ch.height;
 
-            c->setBoundaryIgnoreRouting(false);
-            c->updateBoundingRect();
 
-            double xmargin = c->width()*0.01;
-            double ymargin = c->height()*0.01;
-            double margin = ymargin < xmargin ? ymargin: xmargin;
-            double width = toUnit(c->width() + margin*2);
-            double height = toUnit(c->height() + margin*2);
-            QImage * image = new QImage(width,height,QImage::Format_ARGB32_Premultiplied );
+                    double lx2 = ch.x + ch.width  + abs(ch.height*ch.xshear);
+                    double ly2 = ch.y + ch.height + abs(ch.width*ch.yshear);
+                    Rect *r = new Rect();
+                    r->setPoint1(ch.x,ch.y);
+                    r->setPoint2(lx2,ly2);
+                    boundary->add(r);                    
+                    cells.append(ch);
+
+                }
+            }
+
+
+            Rect r = boundary->calcBoundingRect();
+            
+            
+            QImage * image = new QImage(r.width(),r.height(),QImage::Format_ARGB32_Premultiplied );
             QImage &im = *image;
 
             QPainter painter;
             painter.begin(image);
-
+            
             //Draw background
-            painter.setBrush(QBrush("white",bstyle));
-            painter.drawRect(0,0,width,height);
-
-            //Add margin
-            painter.translate(toUnit(margin),toUnit(margin));
-
+            painter.setBrush(QBrush("white",Qt::SolidPattern));
+            painter.drawRect(0,0,r.width(),r.height());
 
 
             cIcPainter::CellPainter *cp = new cIcPainter::CellPainter();
 
-            painter.save();
-            //Scale and paint cell
-            QTransform trans;
-//            trans.scale(0.8,0.8);
-            trans.translate(width*0.1*5,height*0.1*5);
-            trans.shear(0,-0.4);
-//            painter.setTransform(trans);
-            painter.scale(1/UNIT,1/UNIT);
-            cp->paint(painter,c,-c->x1(),-c->y1(),c->width(),c->height());
-            painter.restore();
+            foreach(const CellHier &  ch,cells){
 
+                painter.save();
 
-
-            QString prev_group = "";
-
-            if(c->isLayoutCell()){
-                LayoutCell * cc = (LayoutCell*) c;
-
-                foreach(cIcSpice::SubcktInstance * ckt_inst,c->subckt()->instances()){
-                    QString group = ckt_inst->groupName();
-
-                    if(prev_group.compare(group) != 0){
-
-
-                        Instance* i = cc->getInstanceFromInstanceName(ckt_inst->name());
-                        if(i){
-
-                            //TODO: Need to figure out how to use paintReference
-                            painter.save();
-                            //Scale and paint cell
-                            QTransform trans;
-                            trans.scale(0.8,0.8);
-                            trans.translate(width*0.1*5,height*0.1*5);
-                            trans.shear(0,-0.4);
-                            painter.setTransform(trans);
-                            painter.scale(1/UNIT,1/UNIT);
-                            Point* p = i->getCellPoint();
-//                            painter.translate(-p->x,p->y);
-                            
-//                            cp->paint(painter,i->cell(),-p->x-c->x1(),-p->y-c->y1(),c->width(),c->height());
-                            painter.restore();
-
-                        }
-
-
-
-                    }
-
-                    prev_group = group;
-
-                }
-
+                //Scale and paint cell
+                QTransform trans;
+                trans.translate(ch.x  + abs(ch.height*ch.xshear),ch.y + abs(ch.width*ch.yshear));
+                trans.shear(ch.xshear,ch.yshear);
+                painter.setTransform(trans);
+                painter.scale(1/unit,1/unit);
+                cp->paint(painter,ch.cell,-ch.cell->x1(),-ch.cell->y1(),ch.cell->width(),ch.cell->height(),ch.subcells.join(","));
+                painter.restore();
             }
 
 
-            painter.end();
+//             painter.end();
 
 
-            QImageWriter writer(cell + ".png");
+            QImageWriter writer(outfilename + ".png");
             writer.setFormat("png");
             writer.write(im);
 

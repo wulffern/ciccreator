@@ -57,6 +57,8 @@ namespace cIcCore{
         Q_PROPERTY(int heightoffset READ heightoffset WRITE setHeightoffset)
 		Q_PROPERTY(int verticalGrid READ verticalGrid WRITE setVerticalGrid)
         Q_PROPERTY(int horizontalGrid READ horizontalGrid WRITE setHorizontalGrid)
+        Q_PROPERTY(double verticalGridMultiplier READ verticalGridMultiplier WRITE setVerticalGridMultiplier)
+        Q_PROPERTY(double horizontalGridMultiplier READ horizontalGridMultiplier WRITE setHorizontalGridMultiplier)
         Q_PROPERTY(qreal yoffset READ yoffset WRITE setYoffset)
         Q_PROPERTY(qreal xoffset READ xoffset WRITE setXoffset)
         Q_PROPERTY(int mirrorPatternString READ mirrorPatternString WRITE setMirrorPatternString)
@@ -91,8 +93,14 @@ namespace cIcCore{
 		int verticalGrid(){return verticalGrid_;}
         int setVerticalGrid(int val){ verticalGrid_ = val; return verticalGrid_;  }
 
+        double verticalGridMultiplier(){return verticalGridMultiplier_;}
+        double setVerticalGridMultiplier(double val){ verticalGridMultiplier_ = val; return verticalGridMultiplier_;  }
+
 		int horizontalGrid(){return horizontalGrid_;}
         int setHorizontalGrid(int val){ horizontalGrid_ = val; return horizontalGrid_;  }
+
+        double horizontalGridMultiplier(){return horizontalGridMultiplier_;}
+        double setHorizontalGridMultiplier(double val){ horizontalGridMultiplier_ = val; return horizontalGridMultiplier_;  }
 
         qreal widthoffset(){return widthoffset_;}
         qreal setWidthoffset(qreal widthoffset){widthoffset_ = widthoffset; return widthoffset_;}
@@ -119,6 +127,8 @@ namespace cIcCore{
         int currentHeight_;
 		int horizontalGrid_;
 		int verticalGrid_;
+        double horizontalGridMultiplier_;
+		double verticalGridMultiplier_;
         int xmax_;
         int ymax_;
         qreal yoffset_;

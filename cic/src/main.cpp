@@ -75,16 +75,7 @@ int main(int argc, char *argv[])
             cIcCore::Design * d = new cIcCore::Design();
             d->read(file);
 
-            //Print SVG file
-            cIcPrinter::Svg * pr = new cIcPrinter::Svg("test");
-			pr->print(d);
 
-            //Minecraft JavaScript
-            cIcPrinter::Minecraft * m = new cIcPrinter::Minecraft(library + ".js");
-            m->print(d);
-
-	    cIcPrinter::Tikz * tikz = new cIcPrinter::Tikz(library + ".tex");
-            tikz->print(d);
 
             //Print SPICE file
             cIcPrinter::Spice * spice = new cIcPrinter::Spice(library);

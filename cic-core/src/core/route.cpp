@@ -304,13 +304,12 @@ namespace cIcCore{
         x = start_bound.x2() + space*2;
 
         foreach(auto rect,start_rects_){
-            qDebug() << rect->toString();
             auto r = new Rect(routeLayer_,rect->x1(),rect->y1(),x-rect->x1(),width);
             this->applyOffset(width,r,startOffset_);
             this->add(r);
 
         }
-        int yca = -1e32;
+        double yca = -1e32;
 
         foreach(auto rect,stop_rects_) {
 

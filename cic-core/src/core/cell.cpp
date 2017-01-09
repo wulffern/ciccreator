@@ -260,6 +260,7 @@ namespace cIcCore{
     // Children handling
     //-------------------------------------------------------------
 
+    
     QList<Rect*> Cell::getChildren(QString type)
     {
 
@@ -548,5 +549,34 @@ namespace cIcCore{
         o["children"] = ar;
         return o;
     }
+
+    bool Cell::isEmpty(Cell * c){
+        if(c->name() == ""){
+            Cell * r = (Cell * ) c->parent();
+            return true;
+        }
+        return false;
+    }
+
+    void Cell::addEnclosingLayers(QList<QString> layers)
+    {
+        
+        foreach(QString lay, layers){
+
+            int enc = 0;
+            if(rules->hasRule(lay,this->layer() + "enclosure")){
+                cout << lay.toStdString() << "\n";
+                enc = this->rules->get(lay,this->layer() + "enclosure");
+            }else{
+                enc = this->rules->get(lay,"enclosure");
+            }
+            Rect* r = this->getCopy();
+            r->adjust(enc);
+            Rect * r_enc = new Rect(r);
+            r_enc->setLayer(lay);
+            this->add(r_enc);
+        }
+    }
+    
 
 }

@@ -34,6 +34,9 @@ namespace cIcCore {
         mirrorPatternString_ = 0;
         verticalGrid_ = 0;
         horizontalGrid_ = 0;
+        verticalGridMultiplier_ = 1;
+        horizontalGridMultiplier_ = 1;
+        
 
         prev_rect_  = 0;
     }
@@ -108,9 +111,12 @@ namespace cIcCore {
 
 
         //Load rules
-        this->xspace_ = this->rules->get("ROUTE","horizontalgrid");
-        this->yspace_ = this->rules->get("ROUTE","verticalgrid");
+        this->xspace_ = this->rules->get("ROUTE","horizontalgrid")*horizontalGridMultiplier_;
+        this->yspace_ = this->rules->get("ROUTE","verticalgrid")*verticalGridMultiplier_;
 
+        cout << this->name().toStdString() << " xspace = " << this->xspace_ << " yspace = " << this->yspace_ << " xmult = " << horizontalGridMultiplier_ << " ymult = " << verticalGridMultiplier_ <<"\n";
+        
+        
         if(horizontalGrid_ != 0){
             this->xspace_ = horizontalGrid_;
         }
@@ -237,6 +243,8 @@ namespace cIcCore {
                         //Create ports
                     case 'B':
                     case 'A':
+                    case 'P':
+                    case 'N':
                     case 'D':
                     case 'S':
                     case 'G':

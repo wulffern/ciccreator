@@ -9,6 +9,7 @@ namespace cIcCore{
     {
     public:
         Cut(QString layer1,QString layer2,int horizontal_cuts, int vertical_cuts);
+        Cut(QString layer1,QString layer2,Rect* r);
 
 
         static QString makeName(QString layer1, QString layer2, int horizontal_cuts, int vertical_cuts);
@@ -25,6 +26,7 @@ namespace cIcCore{
 
     protected:
         static QMap<QString,Cut*> cuts_;
+        
     };
 
 }

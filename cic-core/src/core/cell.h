@@ -88,6 +88,9 @@ namespace cIcCore{
         static Rect calcBoundingRect(QList<Rect*> children);
         static Rect calcBoundingRect(QList<Rect*> children,bool ignoreBoundaryRouting);
 
+        static bool isEmpty(Cell *c);
+        
+        
         //! Convert cell to a human readable format, useful for debug
         QString toString();
 
@@ -181,7 +184,8 @@ namespace cIcCore{
         void fromJson(QJsonObject o);
         QList<Rect*> getChildren(QString type);
         
-
+        void addEnclosingLayers(QList<QString> layers);
+        
 
     protected:
         QList<Rect*> routes_;

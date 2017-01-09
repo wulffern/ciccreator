@@ -40,8 +40,8 @@ namespace cIcPrinter{
 			height_map.append("M2");
 			height_map.append("VIA2");
 			height_map.append("M3");
-			height_map.append("VIA3");
 			height_map.append("M4");
+            height_map.append("VIA3");
 			height_map.append("VIA4");
 			height_map.append("M5");
 			height_map.append("VIA5");

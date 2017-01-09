@@ -89,7 +89,7 @@ void ConsoleOutput::commentInvokeMethod(QString cell, QString theme, QString met
 void ConsoleOutput::commentSetProperty(QString cell, QString theme, QString property){
   QTextStream out(stdout);
   this->startComment(out);
-  out <<  cell << theme << property;
+  out <<  cell << theme << ("Property: " + property);
   this->endComment(out);
 }
 

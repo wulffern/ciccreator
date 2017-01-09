@@ -6,7 +6,7 @@ LayerStart: Substrate
 Layer: 255
 Height: -900
 Thickness: 1200
-Red: 0.0
+Red: 1.0
 Green: 1.0
 Blue: 1.0
 Filter: 0.5

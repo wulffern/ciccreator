@@ -78,7 +78,7 @@ namespace cIcPainter{
         return angstrom/unit;
         ;}
 
-    void CellPainter::paintReference(QPainter &painter, Instance * inst){
+    void CellPainter::paintReference(QPainter &painter, Instance * inst,QString hierarchy){
 
         QTransform trans;
 
@@ -101,7 +101,29 @@ namespace cIcPainter{
         //Paint with rotated transform
         QTransform old_trans = painter.transform();
         painter.setTransform(trans,true);
-        this->paintCell(painter,inst->cell());
+
+        hierarchy.append(":" + inst->instanceName());
+        
+        bool isPainting = false;
+        if(_instanceName != "" && inst->instanceName() != ""){
+
+            if(_instanceName.contains("|" + hierarchy + "|")){
+
+                _paint = true;
+                isPainting = true;
+            }
+        }
+
+        
+
+        
+        this->paintCell(painter,inst->cell(),hierarchy);
+
+        if(isPainting){
+            _paint = false;
+        }
+
+        
         painter.setTransform(old_trans,false);
         painter.translate(-p->x,-p->y);
 
@@ -131,96 +153,113 @@ namespace cIcPainter{
             painter.setBrush(QBrush(color,bstyle));
         }
 
-        painter.drawRect(r->x1(),r->y1(),r->width(),r->height());
+        if(_paint)  painter.drawRect(r->x1(),r->y1(),r->width(),r->height());
 
 
-};
+    };
 
-void CellPainter::startCell(QPainter & painter,Cell *c){
-    if(Cell::isEmpty(c)) return;
+    void CellPainter::startCell(QPainter & painter,Cell *c){
+        if(Cell::isEmpty(c)) return;
 
-
-}
-
-void CellPainter::endCell(QPainter & painter){
-}
-
-    void CellPainter::paint(QPainter & painter, Cell *c,int x, int y,int width, int height)
-{
-    if(Cell::isEmpty(c)) return;
-
-//        painter.setRenderHint(QPainter::Antialiasing);
-//        painter.fillRect(, QBrush(Qt::white));
-    painter.save();
-
-    //Calculate unit factor
-    int w1 = c->width();
-    int h1 = c->height();
-    int size1 = w1 > h1 ? w1 : h1;
-
-    int h2 = height;
-    int w2 = width;
-    int size2 = w2 > h2 ? w2 : h2;
-
-    unit = floor(size1/size2);
-
-    //Invert axis
-    painter.scale(1,-1);
-    painter.translate(0,-h2);
-//        painter.translate(-toUnit(c->x1()),-toUnit(c->y1()));
-    //  painter.translate(-c->x1(),-c->y1());
-    painter.translate(x,y);
-    
-
-    this->paintCell(painter,c);
-
-    painter.restore();
-
-
-
-}
-
-
-void CellPainter::paintCell(QPainter & painter,Cell * c){
-
-    if(Cell::isEmpty(c)){return ;}
-
-    this->startCell(painter,c);
-
-    this->paintChildren(painter,c->children());
-
-
-    this->endCell(painter);
-}
-
-
-void CellPainter::paintChildren(QPainter &painter,QList<Rect*> children){
-    foreach(Rect * child,children){
-        if(!child){continue;}
-        if(child->isInstance()){
-            Instance * inst = (Instance*)child;
-            if(inst->name() == ""){continue;}
-            this->paintReference(painter,(Instance*)child);
-        }else if(child->isPort()){
-            Port * p = (Port *) child;
-            if(p->spicePort){
-                this->paintPort(painter,p);
-            }
-
-        }else if(child->isText()){
-            Text * p = (Text *) child;
-            this->paintText(painter,p);
-        }else if (child->isCell()){
-            Cell * c = (Cell * ) child;
-            this->paintChildren(painter,c->children());
-
-        }else{
-            this->paintRect(painter,child);
-        }
 
     }
 
-}
+    void CellPainter::endCell(QPainter & painter){
+    }
+
+    void CellPainter::paint(QPainter & painter, Cell *c, int x, int y,int width, int height,QString instanceName)
+    {
+
+        _instanceName = instanceName ;
+        if(_instanceName == ""){
+            _paint = true;
+        }else{
+            _instanceName += ",";
+            
+            _paint = false;
+        }
+
+        _hasPainted = "";
+        
+            if(Cell::isEmpty(c)) return;
+
+
+        painter.save();
+
+        //Calculate unit factor
+        int w1 = c->width();
+        int h1 = c->height();
+        int size1 = w1 > h1 ? w1 : h1;
+
+        int h2 = height;
+        int w2 = width;
+        int size2 = w2 > h2 ? w2 : h2;
+
+        unit = floor(size1/size2);
+
+        //Invert axis
+        painter.scale(1,-1);
+        painter.translate(0,-h2);
+        painter.translate(x,y);
+
+//        painter.setPen(QPen(QColor("black"),100,Qt::SolidLine));
+//        painter.setBrush(QBrush(Qt::NoBrush));
+        painter.drawRect(c->x1(),c->y1(),c->width(),c->height());
+        
+        this->paintCell(painter,c,"");
+
+        painter.restore();
+
+    }
+
+    void CellPainter::paint(QPainter & painter, Cell *c,int x, int y,int width, int height)
+    {
+        this->paint(painter,c,x,y,width,height,"");
+    }
+
+
+    void CellPainter::paintCell(QPainter & painter,Cell * c,QString hierarchy){
+
+        if(Cell::isEmpty(c)){return ;}
+
+        this->startCell(painter,c);
+
+        this->paintChildren(painter,c->children(),hierarchy);
+
+
+        this->endCell(painter);
+    }
+
+
+
+
+    void CellPainter::paintChildren(QPainter &painter,QList<Rect*> children,QString hierarchy){
+        foreach(Rect * child,children){
+            if(!child){continue;}
+            if(child->isInstance()){
+                Instance * inst = (Instance*)child;
+                if(inst->name() == ""){continue;}
+                this->paintReference(painter,(Instance*)child,hierarchy);
+            }else if(child->isPort()){
+                Port * p = (Port *) child;
+                if(p->spicePort){
+                    this->paintPort(painter,p);
+                }
+
+            }else if(child->isText()){
+                Text * p = (Text *) child;
+                this->paintText(painter,p);
+            }else if (child->isCell()){
+                Cell * c = (Cell * ) child;
+                this->paintChildren(painter,c->children(),hierarchy);
+
+            }else{
+                this->paintRect(painter,child);
+            }
+
+        }
+
+    }
 
 
 

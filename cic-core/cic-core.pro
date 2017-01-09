@@ -19,7 +19,7 @@
 
   QT += core
 
-  CONFIG += qt console debug
+  CONFIG += qt console 
   CONFIG += staticlib
   CONFIG += c++11
 
@@ -46,22 +46,27 @@ mac {
 
   # Input
   HEADERS +=  src/core/rules.h  \
+  src/core/console.h \
   src/core/rect.h \
   src/printer/minecraft.h \
   src/printer/tikz.h \
-        src/printer/eps.h \
-    src/core/graph.h \
+  src/printer/eps.h \
+  src/painter/cellpainter.h \
+  src/core/graph.h \
   src/core/cell.h \
   src/core/instance.h \
+    src/core/guard.h \
   src/core/layoutcell.h \
   src/core/patterntile.h \
   src/core/patterntransistor.h \
   src/spice/spiceobject.h \
   src/spice/mosfet.h \
   src/spice/capacitor.h \
-    src/spice/resistor.h \
+  src/spice/resistor.h \
+      src/spice/resistor3.h \
     src/core/patterncapacitor.h \
     src/core/patternresistor.h \
+    src/core/patternhighresistor.h \
   src/core/design.h \
   src/printer/gds.h \
   src/printer/designprinter.h \
@@ -88,18 +93,22 @@ mac {
     src/cells/capcell.h
 
 
-  SOURCES +=         src/printer/gds.cpp \
+    SOURCES +=         src/printer/gds.cpp \
+    src/core/console.cpp \
   src/core/rules.cpp \
   src/core/rect.cpp \
   src/core/cell.cpp   \
   src/printer/minecraft.cpp \
   src/printer/tikz.cpp \
-    src/printer/eps.cpp \
+  src/printer/eps.cpp \
+  src/painter/cellpainter.cpp \
   src/core/patterntile.cpp \
   src/core/patterntransistor.cpp \
   src/core/patterncapacitor.cpp \
-      src/core/patternresistor.cpp \
+  src/core/patternresistor.cpp \
+  src/core/patternhighresistor.cpp \
   src/core/design.cpp \
+  src/core/guard.cpp \
   src/printer/designprinter.cpp \
   src/printer/svg.cpp \
   src/spice/spiceparser.cpp \
@@ -116,6 +125,7 @@ mac {
   src/spice/mosfet.cpp\
   src/spice/capacitor.cpp \
   src/spice/resistor.cpp \
+  src/spice/resistor3.cpp \
   src/core/route.cpp \
   src/core/routering.cpp \
   src/core/cut.cpp \
