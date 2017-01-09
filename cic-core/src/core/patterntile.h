@@ -62,6 +62,7 @@ namespace cIcCore{
         Q_PROPERTY(qreal yoffset READ yoffset WRITE setYoffset)
         Q_PROPERTY(qreal xoffset READ xoffset WRITE setXoffset)
         Q_PROPERTY(int mirrorPatternString READ mirrorPatternString WRITE setMirrorPatternString)
+        Q_PROPERTY(int polyWidthAdjust READ polyWidthAdjust WRITE setPolyWidthAdjust)
 
     public:
 
@@ -111,6 +112,11 @@ namespace cIcCore{
         qreal xoffset(){return xoffset_;}
         qreal setXoffset(qreal xoffset){xoffset_ = xoffset; return xoffset_;}
 
+
+        int polyWidthAdjust(){return polyWidthAdjust_;}
+        int setPolyWidthAdjust(int val){polyWidthAdjust_ = val; return val;}
+
+        
         qreal yoffset(){return yoffset_;}
         qreal setYoffset(qreal yoffset){yoffset_ = yoffset; return yoffset_;}
 
@@ -129,6 +135,7 @@ namespace cIcCore{
 		int verticalGrid_;
         double horizontalGridMultiplier_;
 		double verticalGridMultiplier_;
+        int polyWidthAdjust_;
         int xmax_;
         int ymax_;
         qreal yoffset_;

@@ -32,6 +32,8 @@ namespace cIcCore {
         widthoffset_ = 0;
         heightoffset_ = 0;
         mirrorPatternString_ = 0;
+        polyWidthAdjust_ = 1;
+        
         verticalGrid_ = 0;
         horizontalGrid_ = 0;
         verticalGridMultiplier_ = 1;
@@ -39,7 +41,7 @@ namespace cIcCore {
         
         
         prev_rect_  = 0;
-
+        _has_pr = true;
         
     }
 
@@ -236,7 +238,7 @@ namespace cIcCore {
                     }
 
 
-                    if(c == 'X'){
+                    if(c == 'X' || polyWidthAdjust_ == 0){
                         currentHeight_ = yspace_;
                     }
 
