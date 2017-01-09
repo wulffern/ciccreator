@@ -220,13 +220,13 @@ namespace cIcCore{
     protected:
         QString instanceName_;
         bool boundaryIgnoreRouting_;
-        
+        bool _has_pr;        
 
     private:
         //! Cell name
         QString _name;
 
-        bool _has_pr;
+
 
     signals:
 

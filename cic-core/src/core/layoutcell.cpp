@@ -745,23 +745,26 @@ namespace cIcCore{
 
         QString prev_group = "";
         int prev_width = 0;
+        int next_x = 0;
+        int next_y = 0;
         int x = 0;
         int y = 0;
         foreach(cIcSpice::SubcktInstance * ckt_inst,_subckt->instances()){
             QString group = ckt_inst->groupName();
             if(prev_group.compare(group) != 0  && prev_group.compare("")  != 0){
                 y = 0;
-                x = x + prev_width;
+                x = next_x;
                 prev_width = 0;
             }
 
             prev_group = group;
 
+
+            int instance_x = x;
+            int instance_y = y;
             
 
             auto properties = ckt_inst->properties();
-
-
             if(properties.contains("xoffset")){
                 QString offset = properties["xoffset"];
                 if(offset == "width")
@@ -769,7 +772,7 @@ namespace cIcCore{
                     //Not implemented
                 }else{
                     int xoffset = offset.toInt();
-                    x = x +this->rules->get("ROUTE","horizontalgrid")*xoffset;
+                    instance_x = instance_x + this->rules->get("ROUTE","horizontalgrid")*xoffset;
                 }
             }
 
@@ -780,33 +783,33 @@ namespace cIcCore{
                     //Not implemented
                 }else{
                     int yoffset = offset.toInt();
-                    y = y + this->rules->get("ROUTE","verticalgrid")*yoffset;
+                    instance_y = instance_y + this->rules->get("ROUTE","verticalgrid")*yoffset;
+                    
                     
                 }
             }
             
             
             
-            Instance* inst = this->addInstance(ckt_inst,x,y);
+            Instance* inst = this->addInstance(ckt_inst,instance_x,instance_y);
             
-
             if(properties.contains("angle")){
-                
                 QString angle = properties["angle"];
-
                 if(angle == "180"){
-                    inst->translate(-inst->width(),0);
-                    
                     inst->setAngle("MY");
                 }
             }            
 
-            if(prev_width < inst->width()) prev_width = inst->width();
+            next_x = inst->x2();
+            next_y = inst->y2();
+
+            x = inst->x1();
+            
             
             if(useHalfHeight){
-                y += (inst->y2() - y)/2;
+                y += (inst->y2() - instance_y)/2;
             }else{
-                y += (inst->y2() - y);
+                y = next_y;
             }
         }
 

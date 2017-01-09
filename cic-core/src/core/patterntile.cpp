@@ -37,8 +37,10 @@ namespace cIcCore {
         verticalGridMultiplier_ = 1;
         horizontalGridMultiplier_ = 1;
         
-
+        
         prev_rect_  = 0;
+
+        
     }
 
     Rect PatternTile::calcBoundingRect(){
