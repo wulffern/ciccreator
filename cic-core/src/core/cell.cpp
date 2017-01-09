@@ -560,22 +560,24 @@ namespace cIcCore{
 
     void Cell::addEnclosingLayers(QList<QString> layers)
     {
+
         
+        Rect* r = this->getCopy();
         foreach(QString lay, layers){
 
             int enc = 0;
             if(rules->hasRule(lay,this->layer() + "enclosure")){
-                cout << lay.toStdString() << "\n";
                 enc = this->rules->get(lay,this->layer() + "enclosure");
             }else{
                 enc = this->rules->get(lay,"enclosure");
             }
-            Rect* r = this->getCopy();
+
             r->adjust(enc);
             Rect * r_enc = new Rect(r);
             r_enc->setLayer(lay);
             this->add(r_enc);
         }
+        
     }
     
 

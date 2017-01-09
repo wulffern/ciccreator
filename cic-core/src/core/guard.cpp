@@ -30,11 +30,6 @@ namespace cIcCore{
         auto d1 = new Cut("OD","M1",2,1);
         if(!d1) return;
         
-        d1->addEnclosingLayers(layers);
-
-        r->adjust(d1->height());
-
-        
         auto od = d1->getRect("OD");
 
         if(!od){
@@ -49,6 +44,16 @@ namespace cIcCore{
         int yod = od->y1() - d1->y1();
         int odw = od->height();
         
+        d1->addEnclosingLayers(layers);
+
+        r->adjust(d1->height());
+
+
+//        this->add(d1);
+        
+        
+
+        
         QList<Rect*> rects;
         rects.append(new Rect("OD",r->x1() + xod, r->y1() + yod, r->width() - xod*2,odw));
         
@@ -56,7 +61,10 @@ namespace cIcCore{
         rects.append(new Rect("OD",r->x1() + xod, r->y1() + r->height() - yod - odw, r->width() - xod*2,odw));
         rects.append(new Rect("OD",r->x1() + r->width()  - xod - odw, r->y1() + yod, odw, r->height() - yod*2));
 
-
+        Rect * b = new Rect("M1",r->x1() + xod, r->y1() + yod, r->width() - xod*2,odw);
+        this->add(b);
+        
+            
         foreach( Rect* r2, rects){
 
             //Need to write a fill-cut function to add cuts

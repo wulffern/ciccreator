@@ -21,6 +21,9 @@ namespace cIcCore {
             return;
         }
 
+        //TODO: OD -> M1 contact is not generated correctly, should
+        //fix at some point
+
         this->setName(this->makeName(layers.first()->name,layers.last()->name,horizontal_cuts,vertical_cuts));
 
         foreach(Layer * l, layers){
@@ -66,7 +69,6 @@ namespace cIcCore {
                 }else if(horizontal_cuts == vertical_cuts){
                     enc_x = enclosure;
                     enc_y = encOpposite;
-
                 }
                 
 
@@ -143,11 +145,25 @@ namespace cIcCore {
                     horizontal_cuts = width/(cut_width);
                 }
 
+                
+
                 this->setName(this->makeName(layers.first()->name,layers.last()->name,horizontal_cuts,vertical_cuts));
                 
 
                 int xa1 = enc_x;
                 int ya1 = enc_y;
+
+                
+                if(r->isHorizontal()){
+                    xa1 = int((r->width() - horizontal_cuts*(cut_width + cut_space) + cut_space)/2/10)*10;
+                }
+                
+                if(r->isVertical()){
+                    ya1 = int((r->height() - vertical_cuts*(cut_height + cut_space) + cut_space)/2/10)*10;
+                }
+                
+
+                
                 for(int x = 0;x < horizontal_cuts; x++){
                     for( int y = 0;y < vertical_cuts; y++){
                         Rect * r = new Rect(l->name,xa1,ya1,cut_width,cut_height);

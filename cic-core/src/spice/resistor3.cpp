@@ -46,7 +46,7 @@ namespace cIcSpice{
         cIcCore::Rules * rules = cIcCore::Rules::getRules();
         cIcCore::Device * mtype = rules->getDevice(this->deviceName());
 
-        ts << "X" << instance << " N P B " << mtype->name << "\n";
+        ts << "R" << instance << " N P B " << mtype->name << "\n";
 
         return s;
     }
