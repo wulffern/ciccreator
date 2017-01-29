@@ -105,6 +105,7 @@ namespace cIcCore{
         //! Get all ports on this cell
         QList<Port *>  ports();
         QMap<QString,QList<Port*>> allports();
+        QList<QString> allPortNames();
 
         //! Update rectangle of port, if port does not exist a new one
         //! is created
@@ -195,6 +196,8 @@ namespace cIcCore{
         //! Ports in this cell
         QMap<QString,Port*> ports_;
 
+        QList<QString> allPortNames_;
+        
         QMap<QString,QList<Port*>> allports_;
 
         //! Named Rects in this cell

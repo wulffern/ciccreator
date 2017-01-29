@@ -77,6 +77,8 @@ namespace cIcCore{
 		QList<Rect*> stop_rects_;
         QList<Rect*> startcuts;
         QList<Rect*> endcuts;
+        bool leftAlignCut;
+        
         
         
 		void routeStraight();

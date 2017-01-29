@@ -48,6 +48,7 @@ namespace cIcCore{
         fillhcut_ = false;
         antenna_ = false;
         hasTrack_= false;
+        leftAlignCut = true;
         start_rects_ = start;
         stop_rects_ = stop;
         this->setName(net);
@@ -123,6 +124,9 @@ namespace cIcCore{
             routeType_ = STRAP;
         }
 
+
+        
+
     }
 
     Route::Route(const Route&){
@@ -150,6 +154,9 @@ namespace cIcCore{
         if(routeLayer_ == "PO"){
             return;
         }
+
+        
+        
         QList<Rect*>  cuts = Cut::getCutsForRects(routeLayer_,rects,cuts_,vcuts_);
         foreach(Rect* r,cuts){
             allcuts.append(r);
@@ -160,6 +167,24 @@ namespace cIcCore{
     }
 
     void Route::route(){
+
+        //Take a copy of all routerects to ensure we don't change the originals
+        QList<Rect*> start_rects_org = start_rects_;
+        QList<Rect*> stop_rects_org = stop_rects_;
+        stop_rects_.clear();
+        start_rects_.clear();
+        
+        foreach(Rect* r, start_rects_org){
+            start_rects_.append(r->getCopy());
+        }
+        foreach(Rect* r, stop_rects_org){
+            stop_rects_.append(r->getCopy());
+        }
+        
+        
+
+        
+        
         this->addStartCuts();
         this->addEndCuts();
         switch(routeType_){
@@ -167,6 +192,7 @@ namespace cIcCore{
             this->routeOne();
             break;
         case RIGHT:
+            leftAlignCut = false;
             this->routeOne();
             break;
         case STRAIGHT:
@@ -176,6 +202,7 @@ namespace cIcCore{
             this->routeVertical();
             break;
         case U_RIGHT:
+            leftAlignCut = false;
             this->routeU();
             break;
         case U_LEFT:
@@ -196,11 +223,6 @@ namespace cIcCore{
             break;
 
         }
-
-//      this->updateBoundingRect();
-//      Text *t = new Text(this->name());
-//      t->moveTo(this->x1(), this->y1());
-//      this->add(t);
 
     }
 
@@ -228,11 +250,13 @@ namespace cIcCore{
         int space = rules->get(routeLayer_,"space");
 
         Rect start_bound = this->calcBoundingRect(start_rects_);
+        
         int hgrid = this->rules->get("ROUTE","horizontalgrid");
 
         int x = 0;
         if(routeType_ == RIGHT){
-            x = start_bound.left() - space - width;
+            x = start_bound.left() - space - width;                
+            
             if(hasTrack_)
                 x = x - hgrid*track_ - space;
 
@@ -302,14 +326,21 @@ namespace cIcCore{
 
         int x = 0;
         x = start_bound.x2() + space*2;
-
+        int y = 0;
+        
         foreach(auto rect,start_rects_){
             auto r = new Rect(routeLayer_,rect->x1(),rect->y1(),x-rect->x1(),width);
             this->applyOffset(width,r,startOffset_);
             this->add(r);
 
+            Rect* rc = new Rect(routeLayer_,r->x2(),r->y1(),width,space+width);
+            this->add(rc);
+            if(rc->y2() > y)
+                y = rc->y2();
         }
         double yca = -1e32;
+
+        
 
         foreach(auto rect,stop_rects_) {
 
@@ -317,12 +348,12 @@ namespace cIcCore{
             Rect* ra;
             Rect* rb;
             if (x1 > x) {
-                ra = new Rect(routeLayer_,x,rect->y1()+space+width,x1-x + width ,width);
+                ra = new Rect(routeLayer_,x,y,x1-x + width ,width);
             } else {
-                ra = new Rect(routeLayer_,x1,rect->y1()+space+width,x-x1 + width ,width);
+                ra = new Rect(routeLayer_,x1,y,x-x1 + width ,width);
             }
 
-            rb = new Rect(routeLayer_,rect->x1(),rect->y2(),width,ra->y1() - rect->y2());
+            rb = new Rect(routeLayer_,rect->x1(),rect->y2(),width,ra->y2() - rect->y2());
 
             if (yca < ra->y1()) {
                 yca = ra->y1();
@@ -335,8 +366,8 @@ namespace cIcCore{
         this->updateBoundingRect();
 
 
-        auto r = new Rect(routeLayer_,x,yca,width,this->y2() - yca);
-        this->add(r);
+//        auto r = new Rect(routeLayer_,x,yca,width,this->y2() - yca);
+//        this->add(r);
 
     }
 

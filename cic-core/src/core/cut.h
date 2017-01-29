@@ -18,6 +18,7 @@ namespace cIcCore{
         ~Cut();
 
         static QList<Rect*> getCutsForRects(QString layer1, QList<Rect*>, int horizontal_cuts,int vertical_cuts);
+        static QList<Rect*> getCutsForRects(QString layer1, QList<Rect*>, int horizontal_cuts,int vertical_cuts,bool alignLeft);
 
         static QList<Rect*> getVerticalFillCutsForRects(QString layer1, QList<Rect*> rects, int horizontal_cuts);
         

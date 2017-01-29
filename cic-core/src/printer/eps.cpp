@@ -39,6 +39,10 @@ namespace cIcPrinter{
 
         QString angle;
         if(i->angle() == "R90"){
+            angle = "90 rotate\n";
+//            ix += -i->height() - i->cell()->y1();
+            ix += i->cell()->y2();
+            
 
         }else if(i->angle() == "MX"){
             angle = "";
@@ -46,6 +50,7 @@ namespace cIcPrinter{
             angle = "-1 1 scale\n";
             ix += i->width() + i->cell()->x1();
         }
+        
 
         ix = toEps(ix);
         iy = toEps(iy);

@@ -82,12 +82,13 @@
         "M1"   : { "space" : 18, "width" : 12 , "enclosure" : 1, "VIA1encOpposite" : 15},
         "M2"   : { "space" : 18, "width" : 12 , "enclosure" : 1, "VIA1enclosure" : 1, "VIA1encOpposite" : 15, "VIA2encOpposite" : 15},
         "M3"   : { "space" : 18, "width" : 12 , "enclosure" : 1, "VIA2enclosure" : 1, "VIA2encOpposite" : 15, "VIA3encOpposite" : 15},
-        "M4"   : { "space" : 18, "width" : 12 , "enclosure" : 1, "VIA3enclosure" : 1, "VIA3encOpposite" : 15, "VIA4encOpposite" : 15, "capspace" : 30},
+        "M4"   : { "space" : 18, "width" : 12 , "enclosure" : 1, "VIA3enclosure" : 1, "VIA3encOpposite" : 15, "VIA4encOpposite" : 15, "capspace" : 30, "dcapspace" : 20},
         "M5"   : { "space" : 18, "width" : 12 , "enclosure" : 1, "VIA3enclosure" : 1, "VIA3encOpposite" : 15, "VIA5encOpposite" : 15, "capspace" : 30},
         "M6"   : { "space" : 18, "width" : 12 , "enclosure" : 1, "VIA3enclosure" : 1, "VIA3encOpposite" : 15, "VIA6encOpposite" : 15, "capspace" : 30},
         "LVT" : { "enclosure": 24, "ODenclosure" : 24, "OD2enclosure" : 50},
         "SVT" : { "enclosure" : 16, "ODenclosure" : 16},
         "NW"   : { "enclosure" : 24, "digitalspace" : 72}
+	
 
     }
 }

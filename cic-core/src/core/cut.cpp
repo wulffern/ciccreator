@@ -217,8 +217,14 @@ namespace cIcCore {
 
     }
 
-
     QList<Rect*> Cut::getCutsForRects(QString layer1, QList<Rect*> rects, int horizontal_cuts,int vertical_cuts){
+
+        return Cut::getCutsForRects(layer1,rects,horizontal_cuts,vertical_cuts,true);
+        }
+    
+    
+
+    QList<Rect*> Cut::getCutsForRects(QString layer1, QList<Rect*> rects, int horizontal_cuts,int vertical_cuts, bool alignLeft){
 
         QList<Rect*> cuts;
         foreach(Rect *r, rects){
@@ -235,11 +241,23 @@ namespace cIcCore {
                         inst= Cut::getInstance(layer1,r->layer(),vertical_cuts,horizontal_cuts);
                         
                     }
-                    
-                    inst->moveTo(r->x1(),r->y1());
 
-//Don't think this is a good idea
-//r->setWidth(inst->width());
+//                    if(alignLeft){
+//                        inst->moveTo(r->x2() - inst->width(),r->y1());
+//                    }
+//                    else{
+                        inst->moveTo(r->x1(),r->y1());
+//                    }
+                    
+
+                        int xc = r->centerX();
+
+                        //Resize rectangle if the center of rect is not
+                        //contained in the instance
+                        if(inst->x1() > xc || inst->x2() < xc){
+                            r->setWidth(inst->width());                            
+                        }
+                        
 
                     cuts.append(inst);
                 }

@@ -502,8 +502,8 @@ namespace cIcCore {
                 e->width = w.toInt();
                 if(this->copyColumn_.count() > 0){
                     foreach(CopyColumn c,copyColumn_){
-                        if(e->x1 < c.offset && (e->y1 + e->width) > c.offset){
-                            e->width += (c.length +1)*c.count;
+                        if(e->x1 < c.offset && (e->x1 + e->width) > c.offset){
+                            e->width += (c.length)*c.count;
                         }
                     }
 

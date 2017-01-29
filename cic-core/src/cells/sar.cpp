@@ -107,7 +107,10 @@ namespace cIcCells{
         if(inst) y = inst->y2();
 
         //Get routing height
-        QList<Graph*> graphs = this->getNodeGraphs("CP<|CN<|D<");
+        QList<Graph*> graphs = this->getNodeGraphs("CN<|D<|CP<");
+
+       
+        
         int yc = y + msw*2;
 
         y += msw*graphs.count() + msw*10- mw;
@@ -131,6 +134,29 @@ namespace cIcCells{
 
         yc = this->addSarRouting(yc,msw,mw);
 
+
+
+         //Scramble routing
+        qSort(graphs.begin(), graphs.end(), [](Graph* a, Graph* b) -> bool
+              {
+
+
+                  QList<Rect*> rect_a = a->getRectangles("","SARDIG","");
+                  QList<Rect*> rect_b = b->getRectangles("","SARDIG","");
+//Return if they are the same
+                  if(rect_a.count() == 0 || rect_b.count() == 0) return false;
+                  
+                  QList<Rect*> rect_sorted_a = Rect::sortLeftOnTop(rect_a);
+                  QList<Rect*> rect_sorted_b = Rect::sortLeftOnTop(rect_b);
+                  Rect* ra = rect_sorted_a.first();
+                  Rect* rb = rect_sorted_b.first();
+                  int xa = ra->y2();
+                  int xb = rb->y2();
+                  
+                  return xa < xb;
+                  
+              });
+        
         Instance* c;
         foreach(Graph* graph, graphs){
 

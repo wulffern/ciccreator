@@ -88,6 +88,9 @@ namespace cIcCore{
         virtual  void addAllPorts();
         virtual void routePower();
         virtual void paint();
+        QList<QString> nodeGraphList();
+        
+        
 
 		QStringList expandBus(QString name);
 
@@ -100,7 +103,8 @@ namespace cIcCore{
 
 	private:
         bool useHalfHeight;
-		QMap<QString,Graph*> nodeGraph_;
+        QList<QString> nodeGraphList_;
+		QHash<QString,Graph*> nodeGraph_;
 
         bool noPowerRoute_;
 

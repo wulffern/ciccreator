@@ -199,6 +199,10 @@ namespace cIcCore{
         return allports_;
     }
 
+    QList<QString> Cell::allPortNames(){
+        return allPortNames_;
+    }
+
     Port * Cell::getPort(QString name){
 
         Port * p = NULL;
@@ -311,6 +315,7 @@ namespace cIcCore{
 //                    allports_.remove(p->name());
 //                }
                 ports_[p->name()] = p;
+                allPortNames_.append(p->name());
                 allports_[p->name()].append(p);
             }
 

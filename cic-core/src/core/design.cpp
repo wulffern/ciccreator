@@ -96,6 +96,20 @@ namespace cIcCore{
             foreach(QJsonValue v,ar){
                 strlist.append(v.toString());
             }
+
+            //Apply spice-regex
+            if(jobj.contains("spiceRegex")){
+
+                QJsonArray jarr = jobj["spiceRegex"].toArray();
+                foreach(QJsonValue rval, jarr){
+                    QJsonArray reg_arr = rval.toArray();
+                    QString from = reg_arr[0].toString();
+                    QString to = reg_arr[1].toString();
+                    strlist.replaceInStrings(QRegularExpression(from),to);
+                }
+
+            }
+
             _spice_parser.parseSubckt(0,strlist);
             ckt = _spice_parser.getSubckt(name);
         }
@@ -110,26 +124,12 @@ namespace cIcCore{
 
                 if(ckt_parent == NULL) continue;
 
-
-
                 QStringList strlist = ckt_parent->spiceStr();
                 strlist.replaceInStrings(parent["name"].toString(),name);
 
-                //Apply spice-regex
-                if(jobj.contains("spiceRegex")){
-
-                    QJsonArray jarr = jobj["spiceRegex"].toArray();
-                    foreach(QJsonValue rval, jarr){
-                        QJsonArray reg_arr = rval.toArray();
-                        QString from = reg_arr[0].toString();
-                        QString to = reg_arr[1].toString();
-                        strlist.replaceInStrings(QRegularExpression(from),to);
-                    }
-
-                }
-
                 _spice_parser.parseSubckt(0,strlist);
                 ckt = _spice_parser.getSubckt(name);
+                            qDebug() << strlist;
 
                 if(ckt){
                     break;
@@ -138,14 +138,37 @@ namespace cIcCore{
 
         }
 
+        //Apply spice-regex
+        if(ckt && jobj.contains("spiceRegex")){
 
+            QStringList strlist = ckt->spiceStr();
 
+            QJsonArray jarr = jobj["spiceRegex"].toArray();
+            foreach(QJsonValue rval, jarr){
+                QJsonArray reg_arr = rval.toArray();
+                QString from = reg_arr[0].toString();
+                QString to = reg_arr[1].toString();
+                strlist.replaceInStrings(QRegularExpression(from),to);
+            }
+
+            _spice_parser.parseSubckt(0,strlist);
+            ckt = _spice_parser.getSubckt(name);
+            qDebug() << strlist;
+            
+
+        }
+
+        
 
         if(ckt == NULL){
             ckt = new cIcSpice::Subckt();
             //cerr << "Error: Could not find any subckt to match " << name.toStdString() << ", skipping\n";
 
         }
+
+
+
+
 
         return ckt;
     }
@@ -448,14 +471,14 @@ namespace cIcCore{
         file.setFileName(filename);
         if(!file.exists()){
             console->comment("Could not find file '" + filename + "'",ConsoleOutput::red);
-            
+
             QJsonObject obj;
 
             return obj;
-            
+
 
         }
-        
+
         QString val;
         QStringList valList;
         if (file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -487,7 +510,7 @@ namespace cIcCore{
 
             QString error("%1%2%3%4\n%5\n%6\n%7");
             qDebug() << valList.count();
-            
+
             console->comment(error.arg("JSON ERROR (line ")
                              .arg(line_count)
                              .arg("): ")

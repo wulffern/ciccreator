@@ -53,7 +53,7 @@ namespace cIcCore{
     {
         QList<Graph*> graphs;
 
-        foreach(QString node, nodeGraph_.keys()){
+        foreach(QString node, nodeGraphList()){
             if(!node.contains(QRegularExpression(regex))) continue;
             graphs.append(nodeGraph_[node]);
         }
@@ -144,7 +144,7 @@ namespace cIcCore{
     void LayoutCell::addConnectivityRoute(QString layer,QString regex, QString routeType,QString options,QString cuts,QString excludeInstances, QString includeInstances)
     {
 
-        foreach(QString node, nodeGraph_.keys()){
+        foreach(QString node, nodeGraphList()){
             if(!node.contains(QRegularExpression(regex))) continue;
 
             Graph * g = nodeGraph_[node];
@@ -259,13 +259,18 @@ namespace cIcCore{
         QString startlayer = obj[0].toString();
         QString stoplayer = obj[1].toString();
         QString name = obj[2].toString();
-        int grid = obj[3].toInt();
+        double gridMultiplier = obj[3].toDouble();
         int vcuts = obj[4].toInt();
         int hcuts =  (obj.size() > 5) ? obj[5].toInt() : 1;
         double xoffset = (obj.size() > 6) ? obj[6].toDouble() : 0;
         double yoffset = (obj.size() > 7) ? obj[7].toDouble() : 0;
         QString netname = (obj.size() > 8) ? obj[8].toString() : "";
 
+        int grid = this->rules->get("ROUTE","horizontalgrid");
+        grid = int(grid*gridMultiplier/10)*10;
+
+        
+        
         QList<Rect*> rects = this->findAllRectangles(name,startlayer);
         int xgrid = 0;
         bool setPort = true;
@@ -367,9 +372,11 @@ namespace cIcCore{
             int width = r->width();
             if(cuts > 0){
                 Instance * inst= Cut::getInstance("M1",layer,cuts,1);
-                if((r->width() - inst->width()) < this->rules->get("M1","width")/2.0){
+                //TODO: Not sure why it can't be the cut size?
+//                if((r->width() - inst->width()) < this->rules->get("M1","width")/2.0){
                     width = inst->width();
-                }
+                    // }
+                
 
             }
             Rect * rn = new Rect(layer,r->x1(), this->y1(),width,this->height());
@@ -668,7 +675,7 @@ namespace cIcCore{
             routeType = "-";
         }
 
-        foreach(QString node, nodeGraph_.keys()){
+        foreach(QString node, nodeGraphList()){
             if(!node.contains(QRegularExpression(path))) continue;
             if(!named_rects_.contains("rail_" + node)) continue;
             
@@ -837,22 +844,45 @@ namespace cIcCore{
         if(inst == NULL) return;
 
         auto allp = inst->allports();
-        foreach(QString s, allp.keys()){
+
+//        qDebug() << allp.keys();
+//        qDebug() << inst->allPortNames();
+        auto keys = inst->allPortNames();
+        
+        foreach(QString s, keys){
 
             foreach(Port * p,allp[s]){
                 if(p == NULL) continue;
                 if(nodeGraph_.contains(p->name())){
+
                     nodeGraph_[p->name()]->append(p);
+                    
                 }else{
                     Graph *g = new Graph();
                     g->name = p->name();
                     g->append(p);
+                    nodeGraphList_.append(p->name());
                     nodeGraph_[p->name()] = g;
                 }
+                                    
             }
         }
 
     }
+
+    QList<QString> LayoutCell::nodeGraphList()
+        {
+
+//            qDebug() << nodeGraph_.keys();
+//            qDebug() << nodeGraphList_;
+//            qDebug() << "\n";
+            
+            
+//            return nodeGraph_.keys();
+            return nodeGraphList_;
+
+        }
+
 
     void LayoutCell::route(){
 
