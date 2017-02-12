@@ -82,15 +82,15 @@ namespace cIcGui{
 
     QSize RenderArea::minimumSizeHint() const
     {
-        return QSize(4000 , 4000);
+        return QSize(100 , 100);
     }
 
 
 
     QSize RenderArea::sizeHint() const
     {
-        int w = 4000;
-        int h = 4000;
+        int w = 1200;
+        int h = 800;
         if(!c)
             return QSize(w,h);
 

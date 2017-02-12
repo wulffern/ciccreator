@@ -16,7 +16,6 @@ int main(int argc, char *argv[])
 	QApplication app(argc, argv);
 	cIcGui::Window window;
 	window.loadFile(file);
-//	window.loadDesign(d);
 	window.show();
 
 	return app.exec();
