@@ -54,15 +54,26 @@ namespace cIcCore{
 
     }
 
-    void Design::read(QString filename){
-        QString val;
-
-
+    bool Design::readCells(QString filename)
+    {
+        // Read file
         QString spice_file = filename;
         spice_file.replace(".json",".spi");
         _spice_parser.parseFile(spice_file);
         QJsonObject obj = this->readJson( filename);
 
+        //Read includes
+        QJsonValue include = obj["include"];
+        if(include.isArray()){
+            QJsonArray includeArray  = include.toArray();
+            foreach (const QJsonValue & value, includeArray) {
+                QString incfile = value.toString();
+                this->readCells(incfile);
+            }
+
+            
+        }
+        
         QJsonValue cells = obj["cells"];
         if(cells.isArray()){
             //Run through the array of design cells, and try an match objects
@@ -74,6 +85,16 @@ namespace cIcCore{
                 this->createCell(c);
             }
 
+        }else{
+            qWarning() << "Could not find 'cells' array in json file\n";
+        }
+
+    }
+    
+    
+    void Design::read(QString filename){
+            
+        if(readCells(filename)){
             //Import all cuts, and put them on top
             foreach(Cut* cut,Cut::getCuts()){
                 Cell::addCell(cut);
@@ -81,10 +102,9 @@ namespace cIcCore{
                 _cell_names.insert(0,cut->name());
             }
 
-        }else{
-            qWarning() << "Could not find 'cells' array in json file\n";
         }
-
+        
+        
     }
 
     Subckt * Design::getSpiceSubckt(QJsonObject jobj, QList<QJsonObject>* reverse_parents, QString name)
@@ -471,12 +491,8 @@ namespace cIcCore{
         file.setFileName(filename);
         if(!file.exists()){
             console->comment("Could not find file '" + filename + "'",ConsoleOutput::red);
-
             QJsonObject obj;
-
             return obj;
-
-
         }
 
         QString val;
@@ -499,25 +515,29 @@ namespace cIcCore{
         QJsonDocument d = QJsonDocument::fromJson(val.toUtf8(),&err);
         if(QJsonParseError::NoError != err.error ){
             QString verr = val.mid(0,err.offset);
-            int position = 0;
-            int index = verr.indexOf("\n",position+1);
-            int line_count = 1;
-            while(index > 0){
-                position = index;
-                line_count++;
-                index = verr.indexOf("\n",position+1);
+            int charcount =0;
+            int line_count = 0;
+            
+            foreach(QString s, valList){
+                charcount += s.length();
+                if(charcount < err.offset){
+                    line_count += 1;
+                }
+                
             }
+            line_count -=3;
+            
 
-            QString error("%1%2%3%4\n%5\n%6\n%7");
-            qDebug() << valList.count();
-
+            QString error("%1%2%3%4\n%5\n%6\n%7\n%8\n%9");
             console->comment(error.arg("JSON ERROR (line ")
                              .arg(line_count)
                              .arg("): ")
                              .arg(err.errorString())
                              .arg("   " + valList[line_count])
-                             .arg("-> " + valList[line_count+1])
-                             .arg("   " + valList[line_count+2])
+                             .arg("   " + valList[line_count+1])
+                             .arg("-> " + valList[line_count+2])
+                             .arg("   " + valList[line_count+3])
+                             .arg("   " + valList[line_count+4])
                              ,ConsoleOutput::red);
         }
         QJsonObject obj = d.object();

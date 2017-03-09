@@ -18,7 +18,7 @@
 //====================================================================
 
 #include "window.h"
-#include "glwidget.h"
+
 
 namespace cIcGui{
 
@@ -41,20 +41,18 @@ namespace cIcGui{
         QVBoxLayout *top = new QVBoxLayout();
         splitter->addWidget(leftSide);
 
-        openGL = new GLWidget( this);
-        openGL->resize(this->size()*0.7);
+        widget = new Widget( this);
+        widget->resize(this->size()*0.7);
 
         //- Add renderer
-        splitter->addWidget(openGL);
+        splitter->addWidget(widget);
         top->addWidget(splitter);
         setLayout(top);
 
         connect(listCells,SIGNAL(currentRowChanged(int)),this,SLOT(shapeSelected(int)));
         connect(listLayers,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(layerClicked(QModelIndex)));
 
-        setWindowTitle(tr("Custom IC Creator Viewer"));
-
-
+        setWindowTitle(tr("Custom IC Creator Viewer: Zoom In = Shift+Z, Zoom Out = Z, Fit = F, Move = Arrows"));
         shift_r= new QShortcut(QKeySequence(Qt::SHIFT + Qt::Key_R),this);
 
         connect(shift_r,SIGNAL(activated()),this,SLOT(reloadFile()));
@@ -126,7 +124,7 @@ namespace cIcGui{
             item->setBackgroundColor(QColor("gray"));
         }
         //- TODO: Update renderer
-        openGL->update();
+        widget->update();
     }
 
     void Window::shapeSelected(int index)
@@ -137,68 +135,66 @@ namespace cIcGui{
         if(list.count() > index && index >= 0){
 
             Cell * c = designs->getAllCells().at(index);
-            openGL->setCell(c);
-            openGL->update();
+            widget->setCell(c);
+            widget->update();
 
             //-TODO: Set cell
         }
     }
 
-    bool isSHIFT;
+    // bool Window::eventFilter(QObject *obj, QEvent *event)
+    // {
 
-
-    bool Window::eventFilter(QObject *obj, QEvent *event)
-    {
-
-//        if (obj != openGL) return false;
+        
+    //     if (obj != widget) return false;
         
         
-        Qt::KeyboardModifiers keyMod = QApplication::keyboardModifiers ();
-        isSHIFT = keyMod.testFlag(Qt::ShiftModifier);
-        bool isCTRL = keyMod.testFlag(Qt::ControlModifier);
+    //     Qt::KeyboardModifiers keyMod = QApplication::keyboardModifiers ();
+    //     isSHIFT = keyMod.testFlag(Qt::ShiftModifier);
+    //     bool isCTRL = keyMod.testFlag(Qt::ControlModifier);
 
-        if(event->type() == QEvent::KeyPress){
+    //     if(event->type() == QEvent::KeyPress){
 
-            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+    //         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 
-            int keyInt = keyEvent->key();
+    //         int keyInt = keyEvent->key();
 
-            Qt::Key key = static_cast<Qt::Key>(keyInt);
+    //         Qt::Key key = static_cast<Qt::Key>(keyInt);
 
-            if(keyEvent->key() == Qt::Key_Z){
-                if (isSHIFT)
-                {
-                    openGL->zoomIn();
-                    return true;
-                }else{
-                    openGL->zoomOut();
-                    return true;
-                }
-            }
+    //         if(keyEvent->key() == Qt::Key_Z){
+    //             if (isSHIFT)
+    //             {
+    //                 widget->zoomIn();
+    //                 return true;
+    //             }else{
+    //                 widget->zoomOut();
+    //                 return true;
+    //             }
+    //         }
 
-            if (keyEvent->key() == Qt::Key_Up)
-            {
-                openGL->moveUp();
-                 return true;
-            }
-            else if(keyEvent->key() == Qt::Key_Down)
-            {
-                openGL->moveDown();
-                return true;
-            }else if(keyEvent->key() == Qt::Key_Left)
-            {
-                openGL->moveLeft();
-                return true;
-            }
-            else if(keyEvent->key() == Qt::Key_Right)
-            {
-                openGL->moveRight();
-                return true;
-            }
-        } 
+    //         if (keyEvent->key() == Qt::Key_Up)
+    //         {
+    //             widget->moveUp();
+    //              return true;
+    //         }
+    //         else if(keyEvent->key() == Qt::Key_Down)
+    //         {
+    //             widget->moveDown();
+    //             return true;
+    //         }else if(keyEvent->key() == Qt::Key_Left)
+    //         {
+    //             widget->moveLeft();
+    //             return true;
+    //         }
+    //         else if(keyEvent->key() == Qt::Key_Right)
+    //         {
+    //             widget->moveRight();
+    //             return true;
+    //         }
+    //     } 
 
-        return QObject::eventFilter(obj, event);
+    //     return QObject::eventFilter(obj, event);
 
-    }
+    // }
 
 }

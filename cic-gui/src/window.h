@@ -33,7 +33,7 @@
 #include <QShortcut>
 #include <QKeyEvent>
 #include "cic-core.h"
-#include "glwidget.h"
+#include "widget.h"
 
 QT_BEGIN_NAMESPACE
 class QComboBox;
@@ -63,10 +63,10 @@ namespace cIcGui{
         void reloadFile();
 
     protected:
-        bool eventFilter(QObject *obj, QEvent *event);
+//        bool eventFilter(QObject *obj, QEvent *event);
     private:
 
-        GLWidget *openGL;
+        Widget *widget;
         QComboBox *shapeComboBox;
         QListWidget * listCells;
         QListWidget * listLayers;
