@@ -187,24 +187,10 @@ namespace cIcPainter{
         painter.save();
 
         //Calculate unit factor
-        int w1 = c->width();
-        int h1 = c->height();
-        int size1 = w1 > h1 ? w1 : h1;
-
-        int h2 = height;
-        int w2 = width;
-        int size2 = w2 > h2 ? w2 : h2;
-
-        unit = floor(size1/size2);
-
-        //Invert axis
         painter.scale(1,-1);
-        painter.translate(0,-h2);
+        painter.translate(0,-height);
         painter.translate(x,y);
-
-//        painter.setPen(QPen(QColor("black"),100,Qt::SolidLine));
-//        painter.setBrush(QBrush(Qt::NoBrush));
-        painter.drawRect(c->x1(),c->y1(),c->width(),c->height());
+//        painter.drawRect(c->x1(),c->y1(),c->width(),c->height());
         
         this->paintCell(painter,c,"");
 

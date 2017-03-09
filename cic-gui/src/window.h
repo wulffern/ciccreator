@@ -24,13 +24,16 @@
 #include <QWidget>
 #include <QComboBox>
 #include <QListWidget>
+#include <QApplication>
 #include <QSlider>
 #include <QGridLayout>
 #include <QSplitter>
 #include <QScrollArea>
+#include <QDesktopWidget>
 #include <QShortcut>
+#include <QKeyEvent>
 #include "cic-core.h"
-#include "renderarea.h"
+#include "widget.h"
 
 QT_BEGIN_NAMESPACE
 class QComboBox;
@@ -40,7 +43,8 @@ QT_END_NAMESPACE
 
 namespace cIcGui{
     using namespace cIcCore;
-    //using cIcCore;
+    using namespace cIcPainter;
+
 
     class Window : public QWidget
     {
@@ -55,30 +59,24 @@ namespace cIcGui{
 
     public slots:
         void shapeSelected(int index);
-        void zoomChanged(int zoom);
         void layerClicked(QModelIndex index);
         void reloadFile();
-		void saveRenderImage();
 
     protected:
-        bool eventFilter(QObject *obj, QEvent *event);
+//        bool eventFilter(QObject *obj, QEvent *event);
     private:
 
-        RenderArea *originalRenderArea;
-        QScrollArea *scroll;
+        Widget *widget;
         QComboBox *shapeComboBox;
         QListWidget * listCells;
         QListWidget * listLayers;
-        QSlider *zoom;
         Design * designs;
         QSplitter * splitter;
         QString filename;
         QWidget * leftside;
-        QPushButton *saveImage;
-        QShortcut *shift_z;
-        QShortcut *ctrl_z;
-        QShortcut *shift_r;
 
+        QShortcut *shift_r;
+        CellPainter *cellPainter;
 
     };
 

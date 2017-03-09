@@ -36,6 +36,8 @@ namespace cIcPainter{
     class CellPainter : public QObject{
     public:
         CellPainter(){
+            _instanceName = "";
+            _paint = true;
 
         }
         ~CellPainter(){

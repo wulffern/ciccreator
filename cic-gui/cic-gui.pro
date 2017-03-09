@@ -37,11 +37,11 @@ mac {
 
 
 SOURCES += src/main.cpp\
-src/renderarea.cpp\
+src/widget.cpp\
 src/window.cpp
 
 
-HEADERS  += src/renderarea.h \
+HEADERS  += src/widget.h \
 src/window.h 
 
 #FORMS    += cicgui.ui

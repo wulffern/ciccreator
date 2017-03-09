@@ -19,66 +19,41 @@
 
 #include "window.h"
 
+
 namespace cIcGui{
 
     Window::Window(QWidget *parent) : QWidget(parent)
     {
-
-
         qApp->installEventFilter(this);
-        originalRenderArea = new RenderArea;
-        originalRenderArea->setRenderLevel(0);
+        resize(QDesktopWidget().availableGeometry(this).size() * 0.7);
 
         shapeComboBox = new QComboBox;
         listCells = new QListWidget();
         listLayers = new QListWidget();
         splitter = new QSplitter();
-        zoom = new QSlider;
-        scroll = new QScrollArea();
-
-        scroll->setWidget(originalRenderArea);
-
-        saveImage = new QPushButton("Save PNG", this);
 
         QWidget * leftSide = new QWidget;
         leftSide->resize(150,200);
         QGridLayout *layout = new QGridLayout;
-
-        layout->addWidget(zoom,1,0);
-        layout->addWidget(saveImage,2,0);
         layout->addWidget(listCells,3,0);
         layout->addWidget(listLayers, 4, 0);
         leftSide->setLayout(layout);
-
         QVBoxLayout *top = new QVBoxLayout();
-
         splitter->addWidget(leftSide);
-        splitter->addWidget(scroll);
-        top->addWidget(splitter);
 
+        widget = new Widget( this);
+        widget->resize(this->size()*0.7);
+
+        //- Add renderer
+        splitter->addWidget(widget);
+        top->addWidget(splitter);
         setLayout(top);
 
-        zoom->setMaximum(300);
-        zoom->setMinimum(1);
-        zoom->setValue(100);
-        zoom->setOrientation(Qt::Horizontal);
-
         connect(listCells,SIGNAL(currentRowChanged(int)),this,SLOT(shapeSelected(int)));
-
-        connect(zoom,SIGNAL(valueChanged(int)),this,SLOT(zoomChanged(int)));
-
-
         connect(listLayers,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(layerClicked(QModelIndex)));
 
-        setWindowTitle(tr("Custom IC Creator"));
-
-        shift_z= new QShortcut(QKeySequence(Qt::SHIFT + Qt::Key_Z),this);
-        ctrl_z= new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Z),this);
+        setWindowTitle(tr("Custom IC Creator Viewer: Zoom In = Shift+Z, Zoom Out = Z, Fit = F, Move = Arrows"));
         shift_r= new QShortcut(QKeySequence(Qt::SHIFT + Qt::Key_R),this);
-
-        connect(saveImage,SIGNAL(pressed()),this,SLOT(saveRenderImage()));
-        connect(shift_z,SIGNAL(activated()),originalRenderArea,SLOT(zoomIn()));
-        connect(ctrl_z,SIGNAL(activated()),originalRenderArea,SLOT(zoomOut()));
 
         connect(shift_r,SIGNAL(activated()),this,SLOT(reloadFile()));
         listLayers->clear();
@@ -88,13 +63,12 @@ namespace cIcGui{
         QList<Layer *> layerList = layers.values();
         qSort(layerList);
         foreach(Layer * l, layerList){
-            //if(l->material == Layer::metalres || l->material == Layer::marker || l->material == Layer::metalres){
-            //    l->visible = false;
-            //    continue;
-            //  }
+            if(l->material == Layer::metalres || l->material == Layer::marker || l->material == Layer::metalres){
+                l->visible = false;
+                continue;
+            }
             QListWidgetItem * item = new QListWidgetItem(l->name);
             item->setIcon(l->icon());
-
             listLayers->addItem(item);
         }
 
@@ -105,30 +79,7 @@ namespace cIcGui{
 
     }
 
-    void Window::saveRenderImage(){
-
-        QList<QListWidgetItem*> selection = listCells->selectedItems();
-        if(selection.size() == 0) return;
-
-        int index = listCells->row(selection[0]);
-
-        QList<Cell*> list = designs->getAllCells();
-        if(list.count() > index && index >= 0){
-            Cell * c = designs->getAllCells().at(index);
-            originalRenderArea->setCell(c);
-            QPixmap pixmap(scroll->size());
-            originalRenderArea->render(&pixmap);
-            pixmap.save(c->name() + ".png");
-        }
-    }
-
-
-
     void Window::loadFile(QString f){
-
-        //    if(designs)
-        //        delete(designs);
-
         filename = f;
         Design *d  = new Design();
         d->readJsonFile(f);
@@ -147,21 +98,13 @@ namespace cIcGui{
             loadFile(filename);
             listCells->setCurrentRow(index);
             this->shapeSelected(index);
-//          originalRenderArea->setZoom(zoom->sliderPosition()/100.0/Rules::getRules()->gamma());
-            //QModelIndex modelIndex = listCells->rootIndex(); // u have to find the model index of the first item here
-            //listCells->setCurrentIndex(modelIndex);
-            //shapeSelected(index);
         }
     }
 
     void Window::loadDesign(Design *d ){
         designs = d;
-
         listCells->clear();
-
         foreach(Cell* c ,d->getAllCells()){
-//xs            c->mirrorY(0);
-//          c->moveTo(0,0);
             listCells->addItem(c->name());
         }
 
@@ -180,7 +123,8 @@ namespace cIcGui{
         }else{
             item->setBackgroundColor(QColor("gray"));
         }
-        originalRenderArea->update();
+        //- TODO: Update renderer
+        widget->update();
     }
 
     void Window::shapeSelected(int index)
@@ -191,64 +135,66 @@ namespace cIcGui{
         if(list.count() > index && index >= 0){
 
             Cell * c = designs->getAllCells().at(index);
-            originalRenderArea->setCell(c);
-            
-            Rect* r = originalRenderArea->getCellRect();
-            
-            scroll->ensureVisible(r->x1(),r->y1() );
-            
+            widget->setCell(c);
+            widget->update();
+
+            //-TODO: Set cell
         }
-
-
     }
 
-    bool Window::eventFilter(QObject *obj, QEvent *event)
-    {
-        //   qDebug()<< obj->metaObject()->className();
+    // bool Window::eventFilter(QObject *obj, QEvent *event)
+    // {
 
-        if (event->type() == QEvent::KeyPress )
-        {
-            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-            if(keyEvent->key() == Qt::Key_0)
-               originalRenderArea->setRenderLevel(100);
-            if(keyEvent->key() == Qt::Key_1)
-               originalRenderArea->setRenderLevel(0);
-            if(keyEvent->key() == Qt::Key_2)
-               originalRenderArea->setRenderLevel(1);
-            if(keyEvent->key() == Qt::Key_3)
-               originalRenderArea->setRenderLevel(2);
-            if(keyEvent->key() == Qt::Key_4)
-               originalRenderArea->setRenderLevel(3);
-            if(keyEvent->key() == Qt::Key_5)
-               originalRenderArea->setRenderLevel(4);
-            if(keyEvent->key() == Qt::Key_6)
-               originalRenderArea->setRenderLevel(5);
-            if(keyEvent->key() == Qt::Key_7)
-               originalRenderArea->setRenderLevel(6);
-            if(keyEvent->key() == Qt::Key_8)
-               originalRenderArea->setRenderLevel(7);
-            if(keyEvent->key() == Qt::Key_9)
-                originalRenderArea->setRenderLevel(8);
-            if(keyEvent->key() == Qt::Key_F)
-                originalRenderArea->fit();
-            if(keyEvent->key() == Qt::Key_Z)
-                originalRenderArea->zoomOut();
-            
-            
+        
+    //     if (obj != widget) return false;
+        
+        
+    //     Qt::KeyboardModifiers keyMod = QApplication::keyboardModifiers ();
+    //     isSHIFT = keyMod.testFlag(Qt::ShiftModifier);
+    //     bool isCTRL = keyMod.testFlag(Qt::ControlModifier);
 
+    //     if(event->type() == QEvent::KeyPress){
 
+    //         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 
-            
-        }
-        return QObject::eventFilter(obj, event);
-    }
+    //         int keyInt = keyEvent->key();
 
-    void Window::zoomChanged(int zoom){
-        if(!designs)
-            return;
-        Rules * rules = Rules::getRules();
-        //originalRenderAre->asetBa
-        originalRenderArea->setZoom(zoom/100.0/rules->gamma());
-    }
+    //         Qt::Key key = static_cast<Qt::Key>(keyInt);
+
+    //         if(keyEvent->key() == Qt::Key_Z){
+    //             if (isSHIFT)
+    //             {
+    //                 widget->zoomIn();
+    //                 return true;
+    //             }else{
+    //                 widget->zoomOut();
+    //                 return true;
+    //             }
+    //         }
+
+    //         if (keyEvent->key() == Qt::Key_Up)
+    //         {
+    //             widget->moveUp();
+    //              return true;
+    //         }
+    //         else if(keyEvent->key() == Qt::Key_Down)
+    //         {
+    //             widget->moveDown();
+    //             return true;
+    //         }else if(keyEvent->key() == Qt::Key_Left)
+    //         {
+    //             widget->moveLeft();
+    //             return true;
+    //         }
+    //         else if(keyEvent->key() == Qt::Key_Right)
+    //         {
+    //             widget->moveRight();
+    //             return true;
+    //         }
+    //     } 
+
+    //     return QObject::eventFilter(obj, event);
+
+    // }
 
 }
