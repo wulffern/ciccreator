@@ -558,6 +558,7 @@ namespace cIcCore {
                     Rect * r_enc = new Rect(r);
                     r_enc->setLayer(lay);
                     this->add(r_enc);
+                    this->onPaintEnclosure(r_enc);
                 }
 
 
@@ -586,11 +587,16 @@ namespace cIcCore {
                 }
 
                 r->adjust(-opposide_enc,-enc, opposide_enc, enc);
-
+                this->onPaintEnclosure(r);
             }
         }
 
 
     }
+
+    void PatternTile::onPaintEnclosure(Rect* r)
+    {
+    }
+    
 
 }

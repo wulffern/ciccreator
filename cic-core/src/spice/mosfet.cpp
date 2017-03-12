@@ -24,6 +24,7 @@ namespace cIcSpice{
     Mosfet::Mosfet(){
         this->setDeviceName("nch");
         this->setSpiceType("M");
+        this->setName("M1");
         QStringList n;
         n << "D" << "G" << "S" << "B";
         this->setNodes(n);

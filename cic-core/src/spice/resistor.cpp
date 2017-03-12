@@ -26,6 +26,7 @@ namespace cIcSpice{
         this->deviceName_ = "mres";
         this->spiceType_ = "X";
         this->setNodes(n);
+        this->setName("R1");
     }
 
     Resistor::Resistor(const Resistor& cap){

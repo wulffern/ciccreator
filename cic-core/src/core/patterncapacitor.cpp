@@ -25,6 +25,8 @@ namespace cIcCore{
     {
         res1 = new Resistor(QStringList() << "A" << "NC1");
         res2 = new Resistor(QStringList() << "B" << "NC2");
+        res1->setName("R1");
+        res2->setName("R2");
         
         Subckt * ckt = new Subckt();
         
@@ -62,8 +64,8 @@ namespace cIcCore{
         
         if(ckt){
             res3 = new Resistor(QStringList() << "D" << "NC2");
-            
-            ckt->add(res2);
+            res3->setName("R3");
+            ckt->add(res3);
             QStringList n;            
             n << "A" << "B" << "D" ;
             ckt->setNodes(n);

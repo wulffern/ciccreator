@@ -30,6 +30,30 @@ namespace cIcPrinter{
     {
     }
 
+
+    void Cics::startLib(QString name)
+    {
+        DesignPrinter::startLib(name);
+
+                
+    }
+
+    void Cics::endLib()
+    {
+
+        QTextStream ts(&file);
+        QJsonDocument  d(ar);
+
+        ts << d.toJson();
+        DesignPrinter::endLib();
+        
+
+
+        
+
+    }
+    
+    
     void Cics::startCell(Cell * cell){
 
         if(!cell){return;}
@@ -38,21 +62,15 @@ namespace cIcPrinter{
 
         if(!ckt){return;}
 
-        //I think these are devices
-        //    if(ckt->name() == ""){return;}
         QTextStream ts(&file);
-        ts << "\n";
-        ts << "//-------------------------------------------------------------\n";
-        ts << "// " << cell->name() << " (" << cell->metaObject()->className() <<")\n";
-        ts << "//-------------------------------------------------------------\n";
-//        if(ckt->name() != ""){
-            QJsonObject o = ckt->toJson();
-            o["class"] = cell->metaObject()->className();
-            QJsonDocument  d(o);
-            ts << d.toJson();
-//        }
+        QJsonObject o = ckt->toJson();
+        o["class"] = cell->metaObject()->className();
+        ar.append(o);
         this->subcktInPrint = true;
-
+//        qDebug() << o["class"];
+        
+        
+            
     }
 
     void Cics::endCell(){

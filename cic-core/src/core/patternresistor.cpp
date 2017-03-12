@@ -29,7 +29,7 @@ namespace cIcCore{
         ckt->add(res);
         this->setSubckt(ckt);
 
-        
+
     }
 
     QMap<QString,QVariant> PatternResistor::initFillCoordinates(){
@@ -43,13 +43,15 @@ namespace cIcCore{
 
     void PatternResistor::onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data){
 
-            int pofinger = data["pofinger"].toInt();
-            if(pofinger < x){
-                data["nf"] = data["nf"].toInt() +  1;
-                data["pofinger"] = x;
-            }
+        int pofinger = data["pofinger"].toInt();
+        if(pofinger < x){
+            data["nf"] = data["nf"].toInt() +  1;
+            data["pofinger"] = x;
+        }
 
         if(layer == "PO"){
+            qDebug() << "PO";
+            
             res->setProperty("width",this->rules->toMicron(xspace_));
         }
     }
@@ -60,12 +62,12 @@ namespace cIcCore{
 
 
 
-    
+
     PatternResistor::PatternResistor(const PatternResistor& mos)
     {
     }
-    
-    
+
+
     PatternResistor::~PatternResistor()
     {
 
