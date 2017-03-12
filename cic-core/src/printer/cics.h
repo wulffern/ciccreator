@@ -17,34 +17,32 @@
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //====================================================================
 
-#ifndef CIC_SPICE_MOSFET
-#define CIC_SPICE_MOSFET
+#ifndef CIC_PRINTER_CICS_H
+#define CIC_PRINTER_CICS_H
 
-#include <QString>
-#include "core/rules.h"
-#include "spice/spicedevice.h"
+#include "designprinter.h"
+#include "core/cell.h"
 
+namespace cIcPrinter{
 
-namespace cIcSpice{
+class Cics : public DesignPrinter
+{
+public:
+  Cics(QString name);
+    ~Cics();
 
-    class Mosfet : public SpiceDevice
-    {
-        Q_OBJECT
-
-    public:
-        Mosfet();
-        Mosfet(const Mosfet& mos);
-        ~Mosfet();
-        virtual QString toSpice( QString instance, QStringList nodes);
-        virtual QJsonObject toJson();
-        virtual QString toSpice();
-        
-    };
+  virtual void startCell(Cell * cell);
+  virtual void endCell();
+  virtual void printRect(Rect *rect);
+  virtual void printReference(Cell *c);
+  virtual void printPort(Port *);
 
 
+protected:
+  bool subcktInPrint;
+
+};
 
 }
 
-Q_DECLARE_METATYPE(cIcSpice::Mosfet)
-
-#endif // MOSFET
+#endif // SPICE_H

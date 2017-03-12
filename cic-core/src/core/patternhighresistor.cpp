@@ -23,8 +23,14 @@ namespace cIcCore{
 
     PatternHighResistor::PatternHighResistor()
     {
-        res_ = new Resistor3();
-        this->spiceObject_ = res_;
+        res = new Resistor();
+        res->setDeviceName("rppo");
+        res->setNodes(QStringList() << "N" << "P" << "B") ;
+        Subckt * ckt = new Subckt();        
+        ckt->setNodes(res->nodes());
+        ckt->add(res);
+        this->setSubckt(ckt);
+
 
     }
 

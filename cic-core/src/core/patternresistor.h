@@ -42,9 +42,13 @@ namespace cIcCore{
         PatternResistor();
         PatternResistor(const PatternResistor& mos);
         ~PatternResistor();
+        virtual QMap<QString,QVariant>  initFillCoordinates();
+        virtual void onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data);
+        virtual void endFillCoordinate(QMap<QString, QVariant> &data);
+
 
     protected:
-        Resistor * res_;
+        Resistor * res;
     };
 
 }

@@ -23,8 +23,18 @@ namespace cIcCore{
 
     PatternCapacitor::PatternCapacitor()
     {
-        cap_ = new Capacitor();
-        this->spiceObject_ = cap_;
+        res1 = new Resistor(QStringList() << "A" << "NC1");
+        res2 = new Resistor(QStringList() << "B" << "NC2");
+        
+        Subckt * ckt = new Subckt();
+        
+        QStringList n;            
+        n << "A" << "B" ;
+        ckt->setNodes(n);
+        ckt->add(res1);
+        ckt->add(res2);
+
+        this->setSubckt(ckt);
 
     }
 
@@ -46,13 +56,19 @@ namespace cIcCore{
     }
 
 
-    PatternCapacitorGnd::PatternCapacitorGnd()
+    PatternCapacitorGnd::PatternCapacitorGnd():PatternCapacitor()
     {
-        cap_ = new Capacitor();
-		QStringList n ;
-		n << "A" << "B" << "D" ;
-		cap_->setNodes(n);
-        this->spiceObject_ = cap_;
+        Subckt* ckt = this->subckt();
+        
+        if(ckt){
+            res3 = new Resistor(QStringList() << "D" << "NC2");
+            
+            ckt->add(res2);
+            QStringList n;            
+            n << "A" << "B" << "D" ;
+            ckt->setNodes(n);
+		}
+        
 
     }
 

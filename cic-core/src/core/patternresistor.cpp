@@ -23,11 +23,44 @@ namespace cIcCore{
 
     PatternResistor::PatternResistor()
     {
-        res_ = new Resistor();
-        this->spiceObject_ = res_;
+        res = new Resistor(QStringList() << "A" << "B");
+        Subckt * ckt = new Subckt();
+        ckt->setNodes(res->nodes());
+        ckt->add(res);
+        this->setSubckt(ckt);
+
+        
+    }
+
+    QMap<QString,QVariant> PatternResistor::initFillCoordinates(){
+        QMap<QString,QVariant> data;
+        data["wmin"] = std::numeric_limits<int>::max();
+        data["wmax"] = -std::numeric_limits<int>::max();
+        data["nf"] = 0;
+        data["pofinger"] = 0;
+        return data;
+    }
+
+    void PatternResistor::onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data){
+
+            int pofinger = data["pofinger"].toInt();
+            if(pofinger < x){
+                data["nf"] = data["nf"].toInt() +  1;
+                data["pofinger"] = x;
+            }
+
+        if(layer == "PO"){
+            res->setProperty("width",this->rules->toMicron(xspace_));
+        }
+    }
+
+    void PatternResistor::endFillCoordinate(QMap<QString,QVariant> &data){
 
     }
 
+
+
+    
     PatternResistor::PatternResistor(const PatternResistor& mos)
     {
     }

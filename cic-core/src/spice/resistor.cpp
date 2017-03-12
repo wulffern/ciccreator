@@ -22,11 +22,9 @@
 #include "spice/resistor.h"
 namespace cIcSpice{
 
-    Resistor::Resistor(){
+    Resistor::Resistor(QStringList n){
         this->deviceName_ = "mres";
         this->spiceType_ = "X";
-        QStringList n;
-        n << "A" << "B";
         this->setNodes(n);
     }
 
@@ -38,6 +36,9 @@ namespace cIcSpice{
 
     }
 
+    QString Resistor::toSpice( ){
+        return toSpice("1",nodes());
+   } 
 
     QString Resistor::toSpice( QString instance, QStringList nodes){
         QString s;
@@ -46,9 +47,37 @@ namespace cIcSpice{
         cIcCore::Rules * rules = cIcCore::Rules::getRules();
         cIcCore::Device * mtype = rules->getDevice(this->deviceName());
 
-        ts << "R" << instance << " A B " << mtype->name << "\n";
+        ts << "R" << instance << " " << nodes.join(" ") << " "<< mtype->name << "\n";
 
         return s;
     }
+
+    QJsonObject Resistor::toJson()
+    {
+
+
+        cIcCore::Rules * rules = cIcCore::Rules::getRules();
+        cIcCore::Device * mtype = rules->getDevice(this->deviceName());
+
+        QList<SubcktInstance*> instances;
+        SubcktInstance* ins = new SubcktInstance();
+        QStringList sn;
+        sn.append("A");
+        sn.append("B");
+        ins->setNodes(sn);
+        ins->setName("R1");
+        ins->setDeviceName("resistor");
+        ins->setSubcktName(mtype->name);
+        instances.append(ins);
+
+
+        QJsonObject o = SpiceDevice::toJson();        
+
+        return o;
+
+
+
+    }
+    
 
 }

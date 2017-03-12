@@ -24,7 +24,7 @@
 #include <QObject>
 #include "cell.h"
 #include "patterntile.h"
-#include "spice/capacitor.h"
+#include "spice/resistor.h"
 
 
 
@@ -42,7 +42,9 @@ namespace cIcCore{
         ~PatternCapacitor();
 
     protected:
-        Capacitor * cap_;
+        Resistor * res1;
+        Resistor * res2;
+        
     };
 
 	class PatternCapacitorGnd : public PatternCapacitor
@@ -53,7 +55,8 @@ namespace cIcCore{
 
         PatternCapacitorGnd();
         ~PatternCapacitorGnd();
-
+    protected:
+        Resistor * res3;
     };
 }
 

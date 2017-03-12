@@ -51,4 +51,39 @@ namespace cIcSpice{
         return s;
     }
 
+    QJsonObject Resistor3::toJson()
+    {
+        QJsonObject o = SpiceObject::toJson();
+
+        cIcCore::Rules * rules = cIcCore::Rules::getRules();
+        cIcCore::Device * mtype = rules->getDevice(this->deviceName());
+
+        QList<SubcktInstance*> instances;
+        SubcktInstance* ins = new SubcktInstance();
+        
+        QStringList sn;
+        sn.append("A");
+        sn.append("B");
+        ins->setNodes(sn);
+        ins->setName("R1");
+        ins->setDeviceName("resistor");
+        ins->setSubcktName(mtype->name);
+        instances.append(ins);
+
+        QJsonArray ar;
+        foreach(SubcktInstance* i, instances){
+            QJsonObject oi = i->toJson();
+            ar.append(oi);
+        }
+        o["instances"] = ar;
+//        o["name"] = name();
+        o.remove("deviceName");            
+
+        return o;
+
+
+
+    }
+
+
 }

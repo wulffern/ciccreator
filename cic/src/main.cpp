@@ -42,10 +42,6 @@
 #include <ucontext.h>
 #include <unistd.h>
 
-
-
-
-
 int main(int argc, char *argv[])
 {
 
@@ -75,14 +71,16 @@ int main(int argc, char *argv[])
             cIcCore::Design * d = new cIcCore::Design();
             d->read(file);
 
-
-
             //Print SPICE file
             cIcPrinter::Spice * spice = new cIcPrinter::Spice(library);
             spice->print(d);
-
             delete(spice);
 
+            cIcPrinter::Cics * cics = new cIcPrinter::Cics(library);
+            cics->print(d);
+            delete(cics);
+
+            
             //Write GDS
             cIcCore::ConsoleOutput console;
             console.comment("Writing GDS");
@@ -91,7 +89,7 @@ int main(int argc, char *argv[])
             delete(gd);
 
             //Write JSON
-            d->writeJsonFile(library + ".json");
+            d->writeJsonFile(library + ".cicl");
 
 
 

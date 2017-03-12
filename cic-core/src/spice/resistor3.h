@@ -24,11 +24,12 @@
 
 #include <QString>
 #include "core/rules.h"
-#include "spice/spiceobject.h"
+#include "spice/spicedevice.h"
+#include "spice/subcktinstance.h"
 
 namespace cIcSpice{
 
-    class Resistor3 : public SpiceObject
+    class Resistor3 : public SpiceDevice
     {
         Q_OBJECT
 
@@ -37,7 +38,8 @@ namespace cIcSpice{
         Resistor3(const Resistor3& mos);
         ~Resistor3();
         virtual QString toSpice( QString instance, QStringList nodes);
-
+        virtual QJsonObject toJson();
+        
     };
 
 }

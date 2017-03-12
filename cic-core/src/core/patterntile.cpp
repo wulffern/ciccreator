@@ -118,8 +118,6 @@ namespace cIcCore {
         this->xspace_ = this->rules->get("ROUTE","horizontalgrid")*horizontalGridMultiplier_;
         this->yspace_ = this->rules->get("ROUTE","verticalgrid")*verticalGridMultiplier_;
 
-        cout << this->name().toStdString() << " xspace = " << this->xspace_ << " yspace = " << this->yspace_ << " xmult = " << horizontalGridMultiplier_ << " ymult = " << verticalGridMultiplier_ <<"\n";
-        
         
         if(horizontalGrid_ != 0){
             this->xspace_ = horizontalGrid_;

@@ -37,15 +37,16 @@ public:
     PatternTransistor();
     ~PatternTransistor();
 
-    QString mosType(){return mos_->deviceName();}
-    void setMosType(QString mosType){mos_->setDeviceName( mosType); }
+    QString mosType(){return mos->deviceName();}
+    void setMosType(QString mosType){mos->setDeviceName( mosType); }
 
     virtual QMap<QString,QVariant>  initFillCoordinates();
     virtual void onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data);
     virtual void endFillCoordinate(QMap<QString, QVariant> &data);
 	virtual void paintRect(Rect *r, QChar c,int x,int y);
 private:
-    Mosfet * mos_;
+    Mosfet * mos;
+    
 };
 }
 

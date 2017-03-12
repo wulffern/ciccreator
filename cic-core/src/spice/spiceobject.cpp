@@ -42,7 +42,7 @@ namespace cIcSpice{
     QStringList SpiceObject::nodes(){return _nodes;}
     QStringList SpiceObject::setNodes(QStringList val){ _nodes = val; return _nodes;}
 
-    QMap<QString,QString> SpiceObject::properties(){
+    QVariantMap SpiceObject::properties(){
         return _properties;
     }
 
@@ -56,4 +56,81 @@ namespace cIcSpice{
     int SpiceObject::lineNumber(){return _line_number;}
     int SpiceObject::setLineNumber(int val){ _line_number = val; return _line_number;}
 
+
+
+    void SpiceObject::setProperty(QString key, int val)
+    {
+        QVariant n(val);
+        _properties[key] = n;
+    }
+
+    void SpiceObject::setProperty(QString key, QString val)
+    {
+        QVariant n(val);
+        _properties[key] = n;
+    }
+
+
+    void SpiceObject::setSpiceType(QString key)
+    {
+        spiceType_ = key;        
+    }
+    
+
+    void SpiceObject::setProperty(QString key, double val)
+    {
+        QVariant n(val);
+        _properties[key] = n;
+    }
+
+    bool SpiceObject::hasProperty(QString key)
+    {
+        if(_properties.contains(key)){
+            return true;
+        }
+        return false;
+        
+    }
+
+    
+    
+
+    QString SpiceObject::getPropertyString(QString key)
+    {
+        QString str;
+        if(_properties.contains(key))
+        {
+            str = _properties[key].toString();
+        }
+        return str;
+    }
+    
+
+
+    QJsonObject SpiceObject::toJson()
+    {
+        QJsonObject o;
+        o["name"] = name();
+        o["deviceName"] = deviceName_;
+
+        QJsonArray ar;        
+        foreach(QString n,nodes()){
+            ar.append(n);
+        }
+        o["nodes"] = ar;
+
+        QJsonObject p;
+        p = p.fromVariantMap(_properties);
+        o["properties"]  = p;
+
+        
+        o["class"] =this->metaObject()->className();         
+        
+            
+        return o;
+        
+    }
+    
+
+    
 }

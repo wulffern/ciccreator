@@ -25,7 +25,7 @@
 #include <QObject>
 #include "cell.h"
 #include "patterntile.h"
-#include "spice/resistor3.h"
+#include "spice/resistor.h"
 
 
 
@@ -44,7 +44,7 @@ namespace cIcCore{
         ~PatternHighResistor();
 
     protected:
-        Resistor3 * res_;
+        Resistor * res;
     };
 
 }

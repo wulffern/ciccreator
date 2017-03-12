@@ -25,6 +25,7 @@
 #include <QObject>
 #include "spiceobject.h"
 #include "subcktinstance.h"
+#include "spicedevice.h"
 #include <QString>
 #include <QMap>
 #include <iostream>
@@ -42,10 +43,31 @@ namespace cIcSpice{
         Subckt(const Subckt&);
         ~Subckt();
 
+        virtual QJsonObject toJson();
+        
+
         static Subckt* getInstanceSubckt(SubcktInstance*);
         void parse(QList<QString> buffer, int line);
         QList<SubcktInstance*> instances(){ return _instances;}
+        QList<SpiceDevice*> devices(){ return _devices;}
 
+        void add(SubcktInstance* s)
+        {
+            _instances.append(s);
+        }
+
+        void add(SpiceDevice* s)
+        {
+            _devices.append(s);
+        }
+
+        void addSubckt()
+        {
+            _allsubckt[this->name()] = this;            
+        }
+        
+
+        
 
 
     protected:
@@ -54,6 +76,7 @@ namespace cIcSpice{
     private:
         QHash<QString,int> _inst_index;
         QList<SubcktInstance*> _instances;
+        QList<SpiceDevice*> _devices;
 
 		
     };

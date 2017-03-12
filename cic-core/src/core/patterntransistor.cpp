@@ -22,8 +22,12 @@
 namespace cIcCore{
     PatternTransistor::PatternTransistor():PatternTile()
     {
-        mos_ = new Mosfet();
-        this->spiceObject_ = mos_;
+        
+        mos = new Mosfet();
+        Subckt * ckt = new Subckt();
+        ckt->setNodes(mos->nodes());
+        ckt->add(mos);
+        this->setSubckt(ckt);
     }
 
     PatternTransistor::~PatternTransistor()
@@ -96,21 +100,19 @@ namespace cIcCore{
         if(data["isTransistor"].toBool()){
 
             int width = (data["wmax"].toInt() - data["wmin"].toInt() + 1)*this->xspace_;
-            mos_->width = this->rules->toMicron(width);
-//            if(data["useMinLength"].toBool()){
-                int minlength = this->minPolyLength_;
-                if(minlength == 0){
-                    minlength  = this->rules->get("PO","mingatelength");
-                }
-                mos_->length = this->rules->toMicron(minlength);
-                qDebug() << mos_->length;
-                
-                //          }else{
-                //  mos_->length = this->rules->toMicron(rules->get("PO","mingatelength"));
-                //  }
-            mos_->numberOfFingers = data["nf"].toInt();
-            mos_->drainWidth = this->rules->toMicron(this->yspace_);
-            mos_->sourceWidth = this->rules->toMicron(this->yspace_);
+
+            
+
+            int minlength = this->minPolyLength_;
+            if(minlength == 0){
+                minlength  = this->rules->get("PO","mingatelength");
+            }
+            
+            mos->setProperty("width",this->rules->toMicron(width));
+            mos->setProperty("length",this->rules->toMicron(minlength));
+            mos->setProperty("nf",data["nf"].toInt());
+            mos->setProperty("drainWidth",this->rules->toMicron(this->yspace_));
+            mos->setProperty("sourceWidth",this->rules->toMicron(this->yspace_));
         }
     }
 }
