@@ -74,30 +74,21 @@ coverage:
 #- Run the program with the example json file
 EXAMPLE=../examples
 LIBNAME=SAR_ESSCIRC16_28N
+CELL=SAR9B_EV
 JSONFILE=${EXAMPLE}/${LIBNAME}.json
 TECHFILE=${EXAMPLE}/tech.json
 
 minecraft: lay
 	cd lay; ${CMD} ${JSONFILE} ${EXAMPLE}/tech_minecraft.json minecraft ${OPT}
 
-devices: lay
-	cd lay; ${CMD} ${JSONFILE} ${TECHFILE} ${LIBNAME} ${OPT}
-
 routes: lay
 	cd lay; ${CMD} ${EXAMPLE}/routes.json ${TECHFILE} routes ${OPT}
 
 esscirc: lay
-	cd lay; ${CMD} ${EXAMPLE}/SAR_ESSCIRC16_28N.json ${TECHFILE} SAR_ESSCIRC16_28N ${OPT}
-
-
-esscirc_soi: lay
-	cd lay; make esscirc
-
-sar_soi: lay
-	cd lay; make sar
-
-sar_eps:
-	cd lay; ../bin/cic2eps ../examples/SAR_ESSCIRC16_28N.json ../examples/tech_eps.json ${CELL}
+	cd lay; ${CMD} ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
+	./scripts/cics2spice  lay/SAR_ESSCIRC16_28N.cics  lay/SAR_ESSCIRC16_28N.spice
+	cd lay	; ../bin/cic2eps ${EXAMPLE}/${LIBNAME}.json ${EXAMPLE}/tech_eps.json ${CELL}
+	cd lay	; ../bin/cic2png ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${EXAMPLE}/${LIBNAME}.hier 
 
 view: lay
 	cd lay; ../bin/cic-gui ${TECHFILE} ${LIBNAME}.cicl &

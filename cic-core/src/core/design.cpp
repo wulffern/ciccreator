@@ -28,14 +28,12 @@ namespace cIcCore{
         qRegisterMetaType<cIcCore::PatternTile>("cIcCore::PatternTile");
         qRegisterMetaType<cIcCore::PatternTransistor>("cIcCore::PatternTransistor");
         qRegisterMetaType<cIcCore::PatternCapacitor>("cIcCore::PatternCapacitor");
-        qRegisterMetaType<cIcCore::PatternCapacitorGnd>("cIcCore::PatternCapacitorGnd");
         qRegisterMetaType<cIcCore::LayoutCell>("cIcCore::LayoutCell");
         qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
         qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
         qRegisterMetaType<cIcCells::SAR>("cIcCells::SAR");
         qRegisterMetaType<cIcCells::CapCell>("cIcCells::CapCell");
         qRegisterMetaType<cIcCells::CDAC>("cIcCells::CDAC");
-        qRegisterMetaType<cIcCore::PatternResistor>("cIcCore::PatternResistor");
         qRegisterMetaType<cIcCore::PatternHighResistor>("cIcCore::PatternHighResistor");
 
 
@@ -43,7 +41,8 @@ namespace cIcCore{
         cellTranslator["Gds::GdsPatternTransistor"] = "cIcCore::PatternTransistor";
         cellTranslator["Gds::GdsPatternHighResistor"] = "cIcCore::PatternHighResistor";
         cellTranslator["Gds::GdsPatternCapacitor"] = "cIcCore::PatternCapacitor";
-        cellTranslator["Gds::GdsPatternCapacitorGnd"] = "cIcCore::PatternCapacitorGnd";
+        cellTranslator["Gds::GdsPatternCapacitorGnd"] = "cIcCore::PatternCapacitor";
+        cellTranslator["cIcCore::PatternCapacitorGnd"] = "cIcCore::PatternCapacitor";
         cellTranslator["Layout::LayoutDigitalCell"] = "cIcCore::LayoutCell";
         cellTranslator["Layout::LayoutRotateCell"] = "cIcCore::LayoutRotateCell";
         cellTranslator["Layout::LayoutSARCDAC"] = "cIcCells::SAR";

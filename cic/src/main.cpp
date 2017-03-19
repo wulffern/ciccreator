@@ -50,8 +50,6 @@ int main(int argc, char *argv[])
     try
     {
 
-
-
         if(argc >=  3){
 
             QString file = argv[1];
@@ -80,7 +78,7 @@ int main(int argc, char *argv[])
             cics->print(d);
             delete(cics);
 
-            
+
             //Write GDS
             cIcCore::ConsoleOutput console;
             console.comment("Writing GDS");
@@ -94,7 +92,9 @@ int main(int argc, char *argv[])
 
 
         }else{
-            qWarning() << "Wrong number of arguments " << argc;
+            qWarning() << "Usage: cic <JSON file> <Technology file> [<Output name>]";
+            qWarning() << "Example: cic ALGIC003_STDLIB.json ST_28NM_FDSOI.tech";
+            qWarning() << "About: cIcCreator reads a JSON object definition file, technology rule file\n and a SPICE netlist (assumes same name as object definition file)\n and outputs a; SPICE netlist, connectivity description (*.cics),\n a layout description (*.cicl), and a GDSII file.";
         }
 
     }catch(...){

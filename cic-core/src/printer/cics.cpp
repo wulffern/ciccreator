@@ -45,11 +45,7 @@ namespace cIcPrinter{
         QJsonDocument  d(ar);
 
         ts << d.toJson();
-        DesignPrinter::endLib();
-        
-
-
-        
+        DesignPrinter::endLib();        
 
     }
     
@@ -67,9 +63,6 @@ namespace cIcPrinter{
         o["class"] = cell->metaObject()->className();
         ar.append(o);
         this->subcktInPrint = true;
-//        qDebug() << o["class"];
-        
-        
             
     }
 

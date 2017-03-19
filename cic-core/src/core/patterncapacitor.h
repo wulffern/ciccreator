@@ -40,27 +40,16 @@ namespace cIcCore{
         virtual void paintRect(Rect*, QChar ,int , int );
         PatternCapacitor();
         ~PatternCapacitor();
+        void onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data);
+
 
     protected:
-        Resistor * res1;
-        Resistor * res2;
-        
-    };
-
-	class PatternCapacitorGnd : public PatternCapacitor
-    {
-        Q_OBJECT
-
-    public:
-
-        PatternCapacitorGnd();
-        ~PatternCapacitorGnd();
-    protected:
-        Resistor * res3;
+        QList<Resistor*> resistors;
+        int rindex;
+        int rcounter;
+        QStringList nodes;
     };
 }
-
 Q_DECLARE_METATYPE(cIcCore::PatternCapacitor)
-Q_DECLARE_METATYPE(cIcCore::PatternCapacitorGnd)
 
 #endif // PATTERNCAPACITOR_H

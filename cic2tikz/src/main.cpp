@@ -56,7 +56,8 @@ int main(int argc, char *argv[])
             
 
         }else{
-            qWarning() << "Wrong number of arguments " << argc;
+            qWarning() << "Usage: cic2tikz <JSON file> <Technology file> [<Output Library>]";
+ 
         }
 
     }catch(...){

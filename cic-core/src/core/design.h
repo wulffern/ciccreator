@@ -33,7 +33,6 @@
 #include "core/layoutcell.h"
 #include "core/layoutrotatecell.h"
 #include "spice/spiceparser.h"
-#include "core/patternresistor.h"
 #include "core/patternhighresistor.h"
 #include "cells/sar.h"
 #include "cells/cdac.h"

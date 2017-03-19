@@ -23,60 +23,87 @@ namespace cIcCore{
 
     PatternCapacitor::PatternCapacitor()
     {
-        res1 = new Resistor(QStringList() << "A" << "NC1");
-        res2 = new Resistor(QStringList() << "B" << "NC2");
-        res1->setName("R1");
-        res2->setName("R2");
-        
+        //res1 = new Resistor(QStringList() << "A" << "NC1");
+        //res2 = new Resistor(QStringList() << "B" << "NC2");
+        //res1->setName("R1");
+        //res2->setName("R2");
+
         Subckt * ckt = new Subckt();
-        
-        QStringList n;            
-        n << "A" << "B" ;
-        ckt->setNodes(n);
-        ckt->add(res1);
-        ckt->add(res2);
+
+        //QStringList n;
+//        n << "A" << "B" ;
+        //      ckt->setNodes(n);
+        //ckt->add(res1);
+        //ckt->add(res2);
+        rindex = 0;
+        rcounter = 0;
 
         this->setSubckt(ckt);
 
     }
+
+    void PatternCapacitor::onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data){
+
+        switch(c.unicode()){
+            //Create ports
+        case 'B':
+        case 'A':
+        case 'P':
+        case 'N':
+        case 'D':
+        case 'S':
+        case 'G':
+            Resistor *res = new Resistor(QStringList() << c << QString("NC%1").arg(rindex));
+            rindex +=1;
+            res->setName(QString("%1%2").arg("R").arg(rindex));
+            nodes << c;
+            this->subckt()->setNodes(nodes);
+            
+            this->subckt()->add(res);
+            resistors.append(res);
+            break;
+
+        }
+    }
+
+
+
+
 
     PatternCapacitor::~PatternCapacitor()
     {
 
     }
 
+
+
+
     void PatternCapacitor::paintRect(Rect* r, QChar c  ,int x , int y ){
 
         if(c != 'r' || r == 0) return;
 
         Layer* l = this->rules->getLayer(r->layer());
-        QString res = l->res;
-        if(res == "") return; //Return if resistor layer is undefined
+        QString reslayer = l->res;
+        if(reslayer == "") return; //Return if resistor layer is
+                                   //undefined
 
-        Rect * rc = new Rect(res,translateX(x),translateY(y),xspace_,currentHeight_);
+        Rect * rc = new Rect(reslayer,translateX(x),translateY(y),xspace_,currentHeight_);
+        
+        if(c =='r'){
+            if(resistors.count() > rcounter){
+
+                resistors[rcounter]->setProperty("width",this->rules->toMicron( currentHeight_ ) );
+                resistors[rcounter]->setProperty("length",this->rules->toMicron( xspace_ ) );
+                resistors[rcounter]->setProperty("layer",r->layer());
+                
+                rcounter +=1;
+            }
+        }
+
+
+
+
         this->add(rc);
-    }
-
-
-    PatternCapacitorGnd::PatternCapacitorGnd():PatternCapacitor()
-    {
-        Subckt* ckt = this->subckt();
-        
-        if(ckt){
-            res3 = new Resistor(QStringList() << "D" << "NC2");
-            res3->setName("R3");
-            ckt->add(res3);
-            QStringList n;            
-            n << "A" << "B" << "D" ;
-            ckt->setNodes(n);
-		}
-        
-
-    }
-
-    PatternCapacitorGnd::~PatternCapacitorGnd()
-    {
-
     }
 
 
