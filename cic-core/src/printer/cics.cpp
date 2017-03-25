@@ -1,7 +1,7 @@
 //====================================================================
 //        Copyright (c) 2015 Carsten Wulff Software, Norway
 // ===================================================================
-// Created       : wulff at 2015-4-19
+// Created       : wulff at 2015-8-20
 // ===================================================================
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -17,55 +17,68 @@
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //====================================================================
 
+#include "cics.h"
 
-#include "cic-core.h"
-#include <iostream>
-#include <QDebug>
-#include <QString>
+namespace cIcPrinter{
 
-int main(int argc, char *argv[])
-{
-
-    try
+    Cics::Cics(QString name):DesignPrinter(name + ".cics")
     {
+        subcktInPrint = false;
+    }
 
-
-        
-        if(argc >=  3){
-
-            QString file = argv[1];
-            QString rules = argv[2];
-            QString library = argv[3];
-
-            if(library == ""){
-                QRegularExpression re("/?([^\\/]+)\\.json");
-                QRegularExpressionMatch m = re.match(file);
-                library = m.captured(1);
-            }
-            
-            //Load rules
-            cIcCore::Rules::loadRules(rules);
-
-            //Load design, this is where the magic happens
-            cIcCore::Design * d= new cIcCore::Design();
-            d->read(file);
-
-
-            cIcPrinter::Tikz * tikz = new cIcPrinter::Tikz(library + ".tex");
-            tikz->print(d);
-            
-
-        }else{
-            qWarning() << "Usage: cic2tikz <JSON file> <Technology file> [<Output Library>]";
- 
-        }
-
-    }catch(...){
-      
-        return -1;
+    Cics::~Cics()
+    {
     }
 
 
+    void Cics::startLib(QString name)
+    {
+        DesignPrinter::startLib(name);
+
+                
+    }
+
+    void Cics::endLib()
+    {
+
+        QTextStream ts(&file);
+        QJsonDocument  d(ar);
+
+        ts << d.toJson();
+        DesignPrinter::endLib();        
+
+    }
+    
+    
+    void Cics::startCell(Cell * cell){
+
+        if(!cell){return;}
+        if(cell->isCut()){return;};
+        cIcSpice::Subckt * ckt = cell->subckt();
+
+        if(!ckt){return;}
+
+        QTextStream ts(&file);
+        QJsonObject o = ckt->toJson();
+        o["class"] = cell->metaObject()->className();
+        ar.append(o);
+        this->subcktInPrint = true;
+            
+    }
+
+    void Cics::endCell(){
+        subcktInPrint = false;
+
+    }
+
+    void Cics::printRect(Rect *rect){
+    }
+
+    void Cics::printPort(Port *){
+    }
+
+    void Cics::printReference(Cell *c){
+    }
 
 
 

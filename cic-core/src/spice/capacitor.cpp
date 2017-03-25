@@ -21,13 +21,31 @@
 #include "spice/capacitor.h"
 namespace cIcSpice{
 
-    Capacitor::Capacitor(){
+
+        
+
+
+    Capacitor::Capacitor(QStringList nodes){
         this->deviceName_ = "mres";
         this->spiceType_ = "X";
-        QStringList n;
-        n << "A" << "B";
-        this->setNodes(n);
+        this->setNodes(nodes);
+
+        SubcktInstance* ins ;
+        for(int i=0;i< nodes.count();i++){
+            QString node = _nodes[i];
+            ins = new SubcktInstance();
+
+            QStringList sn;
+            sn.append(node);
+            sn.append(QString("%1%2").arg("NC").arg(i));
+            ins->setNodes(sn);
+            ins->setName(QString("%1%2").arg("R1").arg(i));
+            ins->setDeviceName("resistor");
+            instances.append(ins);
+        }
+
     }
+
 
     Capacitor::Capacitor(const Capacitor& cap){
 
@@ -46,16 +64,34 @@ namespace cIcSpice{
         cIcCore::Device * mtype = rules->getDevice(this->deviceName());
 
 
-		for(int i=0;i< nodes.count();i++){
-			QString node = nodes[i];
+        for(int i=0;i< nodes.count();i++){
+            QString node = nodes[i];
 
-			ts << "R" << instance << i << " " << node << " NC" << i << " " << mtype->name << "\n";
+            ts << "R" << instance << i << " " << node << " NC" << i << " " << mtype->name << "\n";
 
 
-		}
-
-		
+        }
         return s;
     }
+
+    QJsonObject Capacitor::toJson()
+    {
+
+
+        cIcCore::Rules * rules = cIcCore::Rules::getRules();
+        cIcCore::Device * mtype = rules->getDevice(this->deviceName());
+
+
+        foreach(SubcktInstance* ins,instances){
+            ins->setSubcktName(mtype->name);
+        }
+        
+        
+        QJsonObject o = SpiceDevice::toJson();
+
+
+        return o;
+    }
+
 
 }

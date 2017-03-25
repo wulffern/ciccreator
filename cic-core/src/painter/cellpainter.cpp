@@ -95,6 +95,9 @@ namespace cIcPainter{
         }
 
 
+        
+        
+
         Point* p = inst->getCellPoint();
         painter.translate(p->x,p->y);
 
@@ -103,12 +106,13 @@ namespace cIcPainter{
         painter.setTransform(trans,true);
 
         hierarchy.append(":" + inst->instanceName());
+
+
         
         bool isPainting = false;
         if(_instanceName != "" && inst->instanceName() != ""){
 
             if(_instanceName.contains("|" + hierarchy + "|")){
-
                 _paint = true;
                 isPainting = true;
             }
@@ -133,6 +137,7 @@ namespace cIcPainter{
         if(r->layer() == "PR") return;
 
         Layer *l = Rules::getRules()->getLayer(r->layer());
+        if(!_paint) return;
         if(l->nofill || l->color == "" || l->visible == false) return;
         if(!(l->material == Layer::poly ||
              l->material == Layer::metal ||
@@ -152,8 +157,9 @@ namespace cIcPainter{
         }else{
             painter.setBrush(QBrush(color,bstyle));
         }
-
-        if(_paint)  painter.drawRect(r->x1(),r->y1(),r->width(),r->height());
+        
+        painter.drawRect(r->x1(),r->y1(),r->width(),r->height());
+        
 
 
     };
@@ -181,7 +187,7 @@ namespace cIcPainter{
 
         _hasPainted = "";
         
-            if(Cell::isEmpty(c)) return;
+        if(Cell::isEmpty(c)) return;
 
 
         painter.save();
@@ -190,7 +196,7 @@ namespace cIcPainter{
         painter.scale(1,-1);
         painter.translate(0,-height);
         painter.translate(x,y);
-//        painter.drawRect(c->x1(),c->y1(),c->width(),c->height());
+        painter.drawRect(c->x1(),c->y1(),c->width(),c->height());
         
         this->paintCell(painter,c,"");
 
@@ -200,6 +206,7 @@ namespace cIcPainter{
 
     void CellPainter::paint(QPainter & painter, Cell *c,int x, int y,int width, int height)
     {
+
         this->paint(painter,c,x,y,width,height,"");
     }
 

@@ -24,13 +24,11 @@ namespace cIcCore{
     QMap<QString,Cell*> Cell::_allcells;
 
     Cell::Cell(): Rect(){
-        spiceObject_ = NULL;
         _subckt = NULL;
         boundaryIgnoreRouting_ = false;
     }
 
     Cell::Cell(const Cell&){
-        spiceObject_ = NULL;
         _subckt = NULL;
         boundaryIgnoreRouting_ = false;
     }

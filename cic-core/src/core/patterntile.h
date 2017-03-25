@@ -80,6 +80,7 @@ namespace cIcCore{
 
         virtual QMap<QString,QVariant> initFillCoordinates();
         virtual void onFillCoordinate(QChar , QString , int , int , QMap<QString,QVariant> &){};
+        virtual void onPaintEnclosure(Rect*);
 
         virtual void endFillCoordinate(QMap<QString,QVariant> &){};
         virtual void paintRect(Rect*, QChar ,int , int ){};

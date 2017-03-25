@@ -23,20 +23,54 @@ namespace cIcCore{
 
     PatternHighResistor::PatternHighResistor()
     {
-        res_ = new Resistor3();
-        this->spiceObject_ = res_;
+        res = new Resistor();
+        res->setDeviceName("rppo");
+        res->setNodes(QStringList() << "N" << "P" << "B") ;
+        Subckt * ckt = new Subckt();
+        ckt->setNodes(res->nodes());
+        ckt->add(res);
+        this->setSubckt(ckt);
+
 
     }
 
     PatternHighResistor::PatternHighResistor(const PatternHighResistor& mos)
     {
     }
-    
-    
+
+
     PatternHighResistor::~PatternHighResistor()
     {
 
     }
+
+    void PatternHighResistor::onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data){
+
+
+
+        if(layer == "PO"){
+
+            int pofinger = data["pofinger"].toInt();
+            if(pofinger < x){
+                data["nf"] = data["nf"].toInt() +  1;
+
+                data["pofinger"] = x;
+            }
+
+
+            res->setProperty("width",this->rules->toMicron(xspace_));
+        }
+    }
+
+
+    void PatternHighResistor::onPaintEnclosure(Rect* r)
+    {
+        if(r->layer() == "OP"){
+            res->setProperty("length",this->rules->toMicron( r->height() ) );
+        }
+
+    }
+
 
     void PatternHighResistor::paintRect(Rect* r, QChar c  ,int x , int y ){
 
@@ -49,4 +83,17 @@ namespace cIcCore{
         Rect * rc = new Rect(res,translateX(x),translateY(y),xspace_,currentHeight_);
         this->add(rc);
     }
+
+    void PatternHighResistor::endFillCoordinate(QMap<QString,QVariant> &data)
+    {
+
+        if(data.contains("nf")){
+
+            //-2 is for the dummies
+            int nf = data["nf"].toInt() - 1;
+            res->setProperty("nf",nf);
+        }
+
+    }
+
 }

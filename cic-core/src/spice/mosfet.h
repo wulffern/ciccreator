@@ -22,15 +22,13 @@
 
 #include <QString>
 #include "core/rules.h"
-#include "spice/spiceobject.h"
+#include "spice/spicedevice.h"
+
 
 namespace cIcSpice{
 
-    class Mosfet : public SpiceObject
+    class Mosfet : public SpiceDevice
     {
-
-
-
         Q_OBJECT
 
     public:
@@ -38,40 +36,11 @@ namespace cIcSpice{
         Mosfet(const Mosfet& mos);
         ~Mosfet();
         virtual QString toSpice( QString instance, QStringList nodes);
-
-        int numberOfFingers;
-        double drainWidth;
-        double sourceWidth;
-        double width;
-        double length;
-        int multiplier;
-
-
-
+        virtual QJsonObject toJson();
+        virtual QString toSpice();
+        
     };
 
-//	  double su = rules->spiceUnit();
-	  
-
-//      if(mtype){
-//            ts << "M" << instance << " " << nodes.join(' ') <<  " " << mtype->name << " w=" << width*su << " l=" << length*su << " nf=" << numberOfFingers << " M=" << multiplier;
-//        }else{
-//                ts << "M" << instance << " " << nodes.join(' ') <<  " " << this->deviceName() << " w=" << width*su << " l=" << length*su << " nf=" << numberOfFingers << " M=" << multiplier;
-//        }
-
-//    return s;
-//    }
-
-
-//    int numberOfFingers;
-//    double drainWidth;
-//    double sourceWidth;
-//    double width;
-//    double length;
-//    int multiplier;
-
-
-//  };
 
 
 }

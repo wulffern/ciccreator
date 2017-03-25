@@ -42,10 +42,6 @@
 #include <ucontext.h>
 #include <unistd.h>
 
-
-
-
-
 int main(int argc, char *argv[])
 {
 
@@ -53,8 +49,6 @@ int main(int argc, char *argv[])
 
     try
     {
-
-
 
         if(argc >=  3){
 
@@ -75,13 +69,15 @@ int main(int argc, char *argv[])
             cIcCore::Design * d = new cIcCore::Design();
             d->read(file);
 
-
-
             //Print SPICE file
             cIcPrinter::Spice * spice = new cIcPrinter::Spice(library);
             spice->print(d);
-
             delete(spice);
+
+            cIcPrinter::Cics * cics = new cIcPrinter::Cics(library);
+            cics->print(d);
+            delete(cics);
+
 
             //Write GDS
             cIcCore::ConsoleOutput console;
@@ -91,12 +87,14 @@ int main(int argc, char *argv[])
             delete(gd);
 
             //Write JSON
-            d->writeJsonFile(library + ".json");
+            d->writeJsonFile(library + ".cicl");
 
 
 
         }else{
-            qWarning() << "Wrong number of arguments " << argc;
+            qWarning() << "Usage: cic <JSON file> <Technology file> [<Output name>]";
+            qWarning() << "Example: cic ALGIC003_STDLIB.json ST_28NM_FDSOI.tech";
+            qWarning() << "About: cIcCreator reads a JSON object definition file, technology rule file\n and a SPICE netlist (assumes same name as object definition file)\n and outputs a; SPICE netlist, connectivity description (*.cics),\n a layout description (*.cicl), and a GDSII file.";
         }
 
     }catch(...){

@@ -96,7 +96,11 @@ namespace cIcCore{
 
         //! Name of this cell
         QString name(){return _name;}
-        QString setName(QString val){ _name = val; return _name;}
+        QString setName(QString val){ _name = val;
+            if(_subckt){
+                _subckt->setName(val);
+            }
+            return _name;}
 
         //! Get the port linked to net name (name)
         Port * getPort(QString name);
@@ -115,9 +119,6 @@ namespace cIcCore{
         cIcSpice::Subckt * subckt(){return _subckt;}
         cIcSpice::Subckt * setSubckt(cIcSpice::Subckt * val){ _subckt = val; return _subckt;}
 
-        // TODO: Why do I have both spiceObject and subckt?
-        virtual cIcSpice::SpiceObject * spiceObject(){return spiceObject_;}
-        virtual void setSpiceObject(cIcSpice::SpiceObject* si){spiceObject_ =  si;}
 
         //! Get list of all children
         QList<Rect*> children(){return _children;}
@@ -210,10 +211,6 @@ namespace cIcCore{
         Rect* getBottomLeftRect();
         //! Find top left rectangle in the cell
         Rect* getTopLeftRect();
-
-        //TODO: Why do I have both spiceObject_ and subckt?
-        //! SPICE object
-        cIcSpice::SpiceObject * spiceObject_;
 
         //! Children of this cell
         QList<Rect*> _children;

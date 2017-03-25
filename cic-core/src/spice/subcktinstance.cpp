@@ -22,15 +22,20 @@
 namespace cIcSpice{
 
     QString SubcktInstance::setName(QString val){
-            QRegularExpression re_group("^([^\\d]+)(\\S+)?$");
-            QRegularExpressionMatch m_group = re_group.match(val);
-            if(m_group.hasMatch()){
-                this->_group_name = m_group.captured(1);
-                this->_group_tag = m_group.captured(2);                
-                
-            }
-            return SpiceObject::setName(val);}
-    
+        QRegularExpression re_group("^([^\\d]+)(\\S+)?$");
+        QRegularExpressionMatch m_group = re_group.match(val);
+        if(m_group.hasMatch()){
+            this->_group_name = m_group.captured(1);
+            this->_group_tag = m_group.captured(2);
+
+        }
+
+        setDeviceName("subckt");
+        spiceType_ = "X";
+        
+        return SpiceObject::setName(val);
+    }
+
     SubcktInstance::SubcktInstance(){
 
 
@@ -59,10 +64,10 @@ namespace cIcSpice{
         while (it.hasNext()) {
 
             QRegularExpressionMatch m_params = it.next();
-//			cout << m_params.captured(1).toStdString() << " " << m_params.captured(2).toStdString() <<"\n";
-           _properties[m_params.captured(1)] = m_params.captured(2);
+//          cout << m_params.captured(1).toStdString() << " " << m_params.captured(2).toStdString() <<"\n";
+            _properties[m_params.captured(1)] = m_params.captured(2);
         }
-		
+
 
         buffer.replace(re_params,"");
 
@@ -73,7 +78,7 @@ namespace cIcSpice{
         //First element should be instance name
         this->setName(nodes.first());
         nodes.removeFirst();
-        
+
         //Last element should be subckt name
         this->_subckt_name = nodes.last();
         nodes.removeLast();
@@ -82,5 +87,18 @@ namespace cIcSpice{
         //The rest should be nodes
         this->setNodes(nodes);
     }
+
+    QJsonObject SubcktInstance::toJson()
+    {
+        QJsonObject o = SpiceObject::toJson();
+        o["subcktName"] = _subckt_name;
+        o["groupName"] = _group_name;
+//        o["groupTag"] = _group_name;
+
+        return o;
+        
+        
+    }
+    
 
 }

@@ -22,22 +22,25 @@
 #define CIC_SPICE_CAPACITOR
 
 #include <QString>
+#include <QStringList>
+#include "spice/subcktinstance.h"
 #include "core/rules.h"
-#include "spice/spiceobject.h"
+#include "spice/spicedevice.h"
 
 namespace cIcSpice{
 
-    class Capacitor : public SpiceObject
+    class Capacitor : public SpiceDevice
     {
 
         Q_OBJECT
 
     public:
-        Capacitor();
+        Capacitor(QStringList n);
+        Capacitor():Capacitor(QStringList()<< "A" << "B"){}
         Capacitor(const Capacitor& mos);
         ~Capacitor();
         virtual QString toSpice( QString instance, QStringList nodes);
-
+        virtual QJsonObject toJson();
     };
 
 }

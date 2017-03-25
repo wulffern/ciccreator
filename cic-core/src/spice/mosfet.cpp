@@ -1,5 +1,5 @@
 //====================================================================
-//        Copyright (c) 2015 Carsten Wulff Software, Norway 
+//        Copyright (c) 2015 Carsten Wulff Software, Norway
 // ===================================================================
 // Created       : wulff at 2015-8-20
 // ===================================================================
@@ -7,12 +7,12 @@
 //   it under the terms of the GNU General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
-// 
+//
 //   This program is distributed in the hope that it will be useful,
 //   but WITHOUT ANY WARRANTY; without even the implied warranty of
 //   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //   GNU General Public License for more details.
-// 
+//
 //   You should have received a copy of the GNU General Public License
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //====================================================================
@@ -21,48 +21,63 @@
 
 namespace cIcSpice{
 
-	Mosfet::Mosfet(){
-      numberOfFingers = 1;
-      drainWidth = 0;
-      sourceWidth = 0;
-      width = 0;
-      length = 0;
-      multiplier = 1;
-      this->deviceName_ = "nch";
-      this->spiceType_ = "M";
-      QStringList n;
-      n << "D" << "G" << "S" << "B";
-      this->setNodes(n);
+    Mosfet::Mosfet(){
+        this->setDeviceName("nch");
+        this->setSpiceType("M");
+        this->setName("M1");
+        QStringList n;
+        n << "D" << "G" << "S" << "B";
+        this->setNodes(n);
+        setProperty("width",1);
+        setProperty("length",1);
+        setProperty("nf",1);
+        setProperty("multiplier",1);
     }
 
-	Mosfet::Mosfet(const Mosfet& mos){
-
-    }
-
-	Mosfet::~Mosfet(){
+    Mosfet::Mosfet(const Mosfet& mos){
 
     }
 
+    Mosfet::~Mosfet(){
 
-     QString Mosfet::toSpice( QString instance, QStringList nodes){
-      QString s;
-      QTextStream ts(&s);
+    }
 
-      cIcCore::Rules * rules = cIcCore::Rules::getRules();
-      cIcCore::Device * mtype = rules->getDevice(this->deviceName());
 
-	  
+    QString Mosfet::toSpice(){
+        return this->toSpice("1",nodes());
+    }
 
-      if(mtype){
-            ts << "M" << instance << " " << nodes.join(' ') <<  " " << mtype->name << " w=" << width << "u l=" << length << "u nf=" << numberOfFingers << " M=" << multiplier;
+
+    QString Mosfet::toSpice( QString instance, QStringList nodes){
+        QString s;
+        QTextStream ts(&s);
+
+        cIcCore::Rules * rules = cIcCore::Rules::getRules();
+        cIcCore::Device * mtype = rules->getDevice(this->deviceName());
+
+
+
+        if(mtype){
+            ts << "M" << instance << " " << nodes.join(' ') <<  " " << mtype->name ;
+
         }else{
-                ts << "M" << instance << " " << nodes.join(' ') <<  " " << this->deviceName() << " w=" << width << "u l=" << length << "u nf=" << numberOfFingers << " M=" << multiplier;
+            ts << "M" << instance << " " << nodes.join(' ') <<  " " << this->deviceName() ;
+
         }
 
-    return s;
+        ts << " w=" << getPropertyString("width") << "u l=" << getPropertyString("length") << "u nf=" << getPropertyString("nf") << " M=" << getPropertyString("multiplier") << "\n";
+
+        return s;
+    }
+
+    QJsonObject Mosfet::toJson()
+    {
+
+        cIcCore::Rules * rules = cIcCore::Rules::getRules();
+        cIcCore::Device * mtype = rules->getDevice(this->deviceName());
+        QJsonObject o = SpiceDevice::toJson();
+        return o;
+
     }
 
 }
-
-
-

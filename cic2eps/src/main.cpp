@@ -49,11 +49,11 @@ int main(int argc, char *argv[])
             d->read(file);
 
 
-	    cIcPrinter::Eps * eps = new cIcPrinter::Eps(cell);
+            cIcPrinter::Eps * eps = new cIcPrinter::Eps(cell);
             eps->print(d,cell);
-
+            
         }else{
-            qWarning() << "Wrong number of arguments " << argc;
+            qWarning() << "Usage: cic2eps <JSON file> <Technology file> [<Cell>]";
         }
 
     }catch(...){

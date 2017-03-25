@@ -28,14 +28,12 @@ namespace cIcCore{
         qRegisterMetaType<cIcCore::PatternTile>("cIcCore::PatternTile");
         qRegisterMetaType<cIcCore::PatternTransistor>("cIcCore::PatternTransistor");
         qRegisterMetaType<cIcCore::PatternCapacitor>("cIcCore::PatternCapacitor");
-        qRegisterMetaType<cIcCore::PatternCapacitorGnd>("cIcCore::PatternCapacitorGnd");
         qRegisterMetaType<cIcCore::LayoutCell>("cIcCore::LayoutCell");
         qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
         qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
         qRegisterMetaType<cIcCells::SAR>("cIcCells::SAR");
         qRegisterMetaType<cIcCells::CapCell>("cIcCells::CapCell");
         qRegisterMetaType<cIcCells::CDAC>("cIcCells::CDAC");
-        qRegisterMetaType<cIcCore::PatternResistor>("cIcCore::PatternResistor");
         qRegisterMetaType<cIcCore::PatternHighResistor>("cIcCore::PatternHighResistor");
 
 
@@ -43,7 +41,8 @@ namespace cIcCore{
         cellTranslator["Gds::GdsPatternTransistor"] = "cIcCore::PatternTransistor";
         cellTranslator["Gds::GdsPatternHighResistor"] = "cIcCore::PatternHighResistor";
         cellTranslator["Gds::GdsPatternCapacitor"] = "cIcCore::PatternCapacitor";
-        cellTranslator["Gds::GdsPatternCapacitorGnd"] = "cIcCore::PatternCapacitorGnd";
+        cellTranslator["Gds::GdsPatternCapacitorGnd"] = "cIcCore::PatternCapacitor";
+        cellTranslator["cIcCore::PatternCapacitorGnd"] = "cIcCore::PatternCapacitor";
         cellTranslator["Layout::LayoutDigitalCell"] = "cIcCore::LayoutCell";
         cellTranslator["Layout::LayoutRotateCell"] = "cIcCore::LayoutRotateCell";
         cellTranslator["Layout::LayoutSARCDAC"] = "cIcCells::SAR";
@@ -88,7 +87,7 @@ namespace cIcCore{
         }else{
             qWarning() << "Could not find 'cells' array in json file\n";
         }
-
+        return true;
     }
     
     
@@ -149,7 +148,6 @@ namespace cIcCore{
 
                 _spice_parser.parseSubckt(0,strlist);
                 ckt = _spice_parser.getSubckt(name);
-                            qDebug() << strlist;
 
                 if(ckt){
                     break;
@@ -173,22 +171,9 @@ namespace cIcCore{
 
             _spice_parser.parseSubckt(0,strlist);
             ckt = _spice_parser.getSubckt(name);
-            qDebug() << strlist;
-            
-
         }
 
         
-
-        if(ckt == NULL){
-            ckt = new cIcSpice::Subckt();
-            //cerr << "Error: Could not find any subckt to match " << name.toStdString() << ", skipping\n";
-
-        }
-
-
-
-
 
         return ckt;
     }
@@ -291,6 +276,13 @@ namespace cIcCore{
             this->add(c);
             Cell::addCell(c);
             _cell_names.append(c->name());
+            ckt = c->subckt();
+
+            //Make sure this subckt is added to all subckts
+            if(ckt){
+                ckt->addSubckt();
+            }
+            
             console->decreaseIndent();
         }
     }

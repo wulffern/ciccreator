@@ -42,24 +42,25 @@ struct CellHier
     QStringList subcells;
 };
 
-double unit = 2000;
+double unit;
 
 
 double toUnit(int angstrom){
-    return angstrom/unit;
+    return ((double)angstrom)/unit;
+    
     ;}
 
 
 int main(int argc, char *argv[])
 {
-
+    unit  = 2000.0;
+    
     ConsoleOutput * console = new ConsoleOutput();
 
     try
     {
 
         if(argc >=  3){
-
             QString file = argv[1];
             QString rules = argv[2];
             QString filename = argv[3];
@@ -90,9 +91,11 @@ int main(int argc, char *argv[])
             console->comment("Reading hierarchy file:" + filename,ConsoleOutput::green);
             Cell * boundary = new Cell();
             QList<CellHier> cells;
-            QJsonValue unitValue = obj["unit"];
-
-            unit = unitValue.toInt();
+            if(obj.contains("unit")){
+                QJsonValue unitValue = obj["unit"];
+                unit = unitValue.toDouble();
+            }
+            
             
             QJsonValue hierarchy = obj["hierarchy"];
             QJsonArray cellArray  = hierarchy.toArray();
@@ -102,6 +105,7 @@ int main(int argc, char *argv[])
                 ch.yshear = c["yshear"].toDouble();
                 ch.xshear = c["xshear"].toDouble();
                 ch.name = c["name"].toString();
+                
                 QJsonArray subcells = c["subcells"].toArray();
                 foreach (const QJsonValue & subcell, subcells){
                     ch.subcells.append("|" + subcell.toString() + "|");
@@ -119,8 +123,6 @@ int main(int argc, char *argv[])
                     ch.height = toUnit(cell->height());
                     ch.x = c["x"].toDouble()*ch.width;
                     ch.y = c["y"].toDouble()*ch.height;
-
-
                     double lx2 = ch.x + ch.width  + abs(ch.height*ch.xshear);
                     double ly2 = ch.y + ch.height + abs(ch.width*ch.yshear);
                     Rect *r = new Rect();
@@ -137,6 +139,7 @@ int main(int argc, char *argv[])
             
             
             QImage * image = new QImage(r.width(),r.height(),QImage::Format_ARGB32_Premultiplied );
+            
             QImage &im = *image;
 
             QPainter painter;
@@ -158,7 +161,7 @@ int main(int argc, char *argv[])
                 trans.translate(ch.x  + abs(ch.height*ch.xshear),ch.y + abs(ch.width*ch.yshear));
                 trans.shear(ch.xshear,ch.yshear);
                 painter.setTransform(trans);
-                painter.scale(1/unit,1/unit);
+                painter.scale(1.0/unit,1.0/unit);
                 cp->paint(painter,ch.cell,-ch.cell->x1(),-ch.cell->y1(),ch.cell->width(),ch.cell->height(),ch.subcells.join(","));
                 painter.restore();
             }
@@ -174,7 +177,8 @@ int main(int argc, char *argv[])
 
 
         }else{
-            qWarning() << "Wrong number of arguments " << argc;
+           qWarning() << "Usage: cic2png <JSON file> <Technology file> [<Hierarchy description>]";
+      
         }
 
     }catch(...){
