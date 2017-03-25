@@ -78,7 +78,6 @@ namespace cIcCore{
             options = obj[3].toString();
         }
 
-
         QString startRegex;
         QString routeType;
         QString stopRegex;
