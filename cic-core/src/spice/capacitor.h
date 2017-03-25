@@ -36,7 +36,10 @@ namespace cIcSpice{
 
     public:
         Capacitor(QStringList n);
-        Capacitor():Capacitor(QStringList()<< "A" << "B"){}
+        Capacitor();
+        
+        void init(QStringList n);
+         
         Capacitor(const Capacitor& mos);
         ~Capacitor();
         virtual QString toSpice( QString instance, QStringList nodes);

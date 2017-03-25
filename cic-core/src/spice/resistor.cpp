@@ -23,15 +23,27 @@
 namespace cIcSpice{
 
     Resistor::Resistor(QStringList n){
+        init(n);
+    }
+
+    Resistor::Resistor(){
+        init(QStringList() << "A" << "B");
+    }
+
+
+    Resistor::Resistor(const Resistor& cap){
+        
+    } 
+
+    void Resistor::init(QStringList n)
+    {
         this->deviceName_ = "mres";
         this->spiceType_ = "X";
         this->setNodes(n);
         this->setName("R1");
-    }
-
-    Resistor::Resistor(const Resistor& cap){
 
     }
+    
 
     Resistor::~Resistor(){
 

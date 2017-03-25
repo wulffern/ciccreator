@@ -137,25 +137,7 @@ namespace cIcCells{
 
 
          //Scramble routing
-        qSort(graphs.begin(), graphs.end(), [](Graph* a, Graph* b) -> bool
-              {
-
-
-                  QList<Rect*> rect_a = a->getRectangles("","SARDIG","");
-                  QList<Rect*> rect_b = b->getRectangles("","SARDIG","");
-//Return if they are the same
-                  if(rect_a.count() == 0 || rect_b.count() == 0) return false;
-                  
-                  QList<Rect*> rect_sorted_a = Rect::sortLeftOnTop(rect_a);
-                  QList<Rect*> rect_sorted_b = Rect::sortLeftOnTop(rect_b);
-                  Rect* ra = rect_sorted_a.first();
-                  Rect* rb = rect_sorted_b.first();
-                  int xa = ra->y2();
-                  int xb = rb->y2();
-                  
-                  return xa < xb;
-                  
-              });
+        qSort(graphs.begin(), graphs.end(), sortGraph);
         
         Instance* c;
         foreach(Graph* graph, graphs){
@@ -186,7 +168,7 @@ namespace cIcCells{
                 this->add(r1);
                 xfmin =  (xfmin > r1->x1()) ? r1->x1() : xfmin;
                 xfmax=  (xfmax < r1->x2()) ? r1->x2() : xfmax;
-            }
+            } 
 
             r0->setLeft(xfmin);
             r0->setRight(xfmax);
@@ -197,6 +179,27 @@ namespace cIcCells{
 
     }
 
+    bool SAR::sortGraph(Graph * a, Graph* b)
+    {
+        
+                  QList<Rect*> rect_a = a->getRectangles("","SARDIG","");
+                  QList<Rect*> rect_b = b->getRectangles("","SARDIG","");
+//Return if they are the same
+                  if(rect_a.count() == 0 || rect_b.count() == 0) return false;
+                  
+                  QList<Rect*> rect_sorted_a = Rect::sortLeftOnTop(rect_a);
+                  QList<Rect*> rect_sorted_b = Rect::sortLeftOnTop(rect_b);
+                  Rect* ra = rect_sorted_a.first();
+                  Rect* rb = rect_sorted_b.first();
+                  int xa = ra->y2();
+                  int xb = rb->y2();
+                  
+                  return xa < xb;
+
+    }
+    
+            
+    
     int SAR::addSarRouting(int y,int msw,int mw)
     {
 
