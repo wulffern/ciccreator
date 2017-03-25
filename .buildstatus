@@ -1,28 +1,4 @@
-Date: Sat Mar 25 21:21:00 CET 2017
+Date: Sat Mar 25 21:22:49 CET 2017
 Error: 1 
 Error Message: 
-Failed to compile
-src/widget.h:83: error: ISO C++ forbids initialization of member 'step'
-
-src/widget.h:83: error: making 'step' static
-
-src/widget.h:83: error: ISO C++ forbids in-class initialization of non-const static member 'step'
-
-src/widget.h:85: error: ISO C++ forbids initialization of member 'xcenter'
-
-src/widget.h:85: error: making 'xcenter' static
-
-src/widget.h:85: error: ISO C++ forbids in-class initialization of non-const static member 'xcenter'
-
-src/widget.h:86: error: ISO C++ forbids initialization of member 'ycenter'
-
-src/widget.h:86: error: making 'ycenter' static
-
-src/widget.h:86: error: ISO C++ forbids in-class initialization of non-const static member 'ycenter'
-
-make[2]: *** [build/main.o] Error 1
-
-make[1]: *** [sub-cic-gui-make_first-ordered] Error 2
-
-make: *** [compile] Error 2
 
