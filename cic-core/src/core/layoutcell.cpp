@@ -59,7 +59,7 @@ namespace cIcCore{
         }
         return graphs;
     }
-
+  
 
 
     void LayoutCell::addDirectedRoute(QJsonArray obj){
