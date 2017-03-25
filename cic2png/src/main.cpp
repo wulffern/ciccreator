@@ -92,9 +92,15 @@ int main(int argc, char *argv[])
             Cell * boundary = new Cell();
             QList<CellHier> cells;
             if(obj.contains("unit")){
+                qDebug() << "testing";
+                
                 QJsonValue unitValue = obj["unit"];
                 unit = unitValue.toDouble();
+                console->comment("Found unit = " + QString("%1").arg(unit),ConsoleOutput::green);
+            }else{
+                console->comment("Unit not found using default, unit= " + QString("%1").arg(unit),ConsoleOutput::green);
             }
+            
             
             
             QJsonValue hierarchy = obj["hierarchy"];
@@ -170,6 +176,8 @@ int main(int argc, char *argv[])
 //             painter.end();
 
 
+
+            console->comment("Writing " + outfilename + ".png",ConsoleOutput::green);
             QImageWriter writer(outfilename + ".png");
             writer.setFormat("png");
             writer.write(im);
