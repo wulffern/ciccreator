@@ -210,8 +210,6 @@ namespace cIcCore{
         double offset = (obj.size() > 5) ? obj[5].toDouble() : 0;
         QString name = (obj.size() > 6) ? obj[6].toString() : "";
 
-        qDebug() << name;
-        
 
         QList<Rect*> rects = this->findAllRectangles(path,startlayer);
 
@@ -771,9 +769,8 @@ namespace cIcCore{
             int instance_y = y;
             
 
-            auto properties = ckt_inst->properties();
-            if(properties.contains("xoffset")){
-                QString offset = properties["xoffset"];
+            if(ckt_inst->hasProperty("xoffset")){
+                QString offset = ckt_inst->getPropertyString("xoffset");
                 if(offset == "width")
                 {
                     //Not implemented
@@ -783,9 +780,9 @@ namespace cIcCore{
                 }
             }
 
-            if(properties.contains("yoffset")){
-                
-                QString offset = properties["yoffset"];
+            if(ckt_inst->hasProperty("yoffset")){
+                QString offset = ckt_inst->getPropertyString("yoffset");
+
                 if(offset == "height"){
                     //Not implemented
                 }else{
@@ -799,9 +796,10 @@ namespace cIcCore{
             
             
             Instance* inst = this->addInstance(ckt_inst,instance_x,instance_y);
-            
-            if(properties.contains("angle")){
-                QString angle = properties["angle"];
+
+
+            if(ckt_inst->hasProperty("angle")){
+                QString angle = ckt_inst->getPropertyString("angle");
                 if(angle == "180"){
                     inst->setAngle("MY");
                 }
@@ -844,9 +842,6 @@ namespace cIcCore{
         if(inst == NULL) return;
 
         auto allp = inst->allports();
-
-//        qDebug() << allp.keys();
-//        qDebug() << inst->allPortNames();
         auto keys = inst->allPortNames();
         
         foreach(QString s, keys){
@@ -954,6 +949,8 @@ namespace cIcCore{
 
         }
 
+        //TODO: If there are multiple rectangles horizontally this
+        //method makes a sheet, should really make it better
         if(rects.length() > 0){
             QList<Rect*>  cuts = Cut::getCutsForRects("M4",rects,2,1);
             Rect * rp = NULL;

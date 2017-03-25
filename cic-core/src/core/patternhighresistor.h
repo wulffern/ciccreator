@@ -25,7 +25,7 @@
 #include <QObject>
 #include "cell.h"
 #include "patterntile.h"
-#include "spice/resistor3.h"
+#include "spice/resistor.h"
 
 
 
@@ -42,9 +42,12 @@ namespace cIcCore{
         PatternHighResistor();
         PatternHighResistor(const PatternHighResistor& mos);
         ~PatternHighResistor();
-
+        virtual void onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data);
+        void onPaintEnclosure(Rect* r);
+        void endFillCoordinate(QMap<QString,QVariant> &data);
+        
     protected:
-        Resistor3 * res_;
+        Resistor * res;
     };
 
 }

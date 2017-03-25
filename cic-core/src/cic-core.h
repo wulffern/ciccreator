@@ -4,6 +4,7 @@
 #include "printer/svg.h"
 #include "printer/gds.h"
 #include "printer/spice.h"
+#include "printer/cics.h"
 #include "painter/cellpainter.h"
 #include "core/consoleoutput.h"
 #include "printer/minecraft.h"

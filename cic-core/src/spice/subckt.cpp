@@ -46,6 +46,32 @@ namespace cIcSpice{
         return ckt;
     }
 
+    QJsonObject Subckt::toJson()
+    {
+        QJsonObject o = SpiceObject::toJson();
+        QJsonArray ar;        
+        foreach(SubcktInstance* i, _instances){
+            QJsonObject oi = i->toJson();
+            ar.append(oi);
+        }
+
+        QJsonArray ar1;        
+        foreach(SpiceDevice* i, _devices){
+            QJsonObject oi = i->toJson();
+            ar1.append(oi);
+        }
+
+        
+        o.remove("deviceName");            
+            
+        o["name"] = name();
+        o["instances"] = ar;
+        o["devices"] = ar1;
+        return o;
+        
+    }
+    
+
     void Subckt::parse(QList<QString> subckt_buffer,int line){
         _spice_str = subckt_buffer;
         this->setLineNumber(line);
@@ -97,14 +123,11 @@ namespace cIcSpice{
 				int count  = inst->properties()["M"].toInt();
                 QString name = inst->name();
                 inst->setName(inst->name() + "0");
-				for(int i=1;i<count;i++){
-
-                    
+				for(int i=1;i<count;i++){                    
 					SubcktInstance * inst_mult = new SubcktInstance();
 					inst_mult->parse(line,instance_line_number);
 					inst_mult->setName(QString("%1%2").arg(name).arg(i));
 
-                    qDebug() << inst_mult->name();
 					if(this->_inst_index.contains(inst_mult->name())){
 						qWarning() << "Error: " << this->name() << " already contains an " << inst_mult->name();
 					}
@@ -112,10 +135,6 @@ namespace cIcSpice{
 					this->_inst_index[inst_mult->name()] = this->_instances.count() -1;
 				}
 			}
-
-
-
-
             instance_line_number++;
         }
     }

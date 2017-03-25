@@ -1,7 +1,7 @@
 //====================================================================
-//        Copyright (c) 2016 Carsten Wulff Software, Norway 
+//        Copyright (c) 2017 Carsten Wulff Software, Norway 
 // ===================================================================
-// Created       : wulff at 2016-9-4
+// Created       : wulff at 2017-3-11
 // ===================================================================
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -16,32 +16,45 @@
 //   You should have received a copy of the GNU General Public License
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //====================================================================
+#ifndef CIC_SPICE_DEVICE_H
+#define CIC_SPICE_DEVICE_H
 
-
-
-#ifndef CIC_SPICE_RESISTOR3
-#define CIC_SPICE_RESISTOR3
-
-#include <QString>
-#include "core/rules.h"
+#include <QObject>
+#include <QTextStream>
+#include <QRegularExpression>
+#include <QJsonObject>
+#include <QJsonArray>
 #include "spice/spiceobject.h"
+#include "spice/subcktinstance.h"
 
 namespace cIcSpice{
 
-    class Resistor3 : public SpiceObject
+    class SpiceDevice: public SpiceObject
     {
+
         Q_OBJECT
 
     public:
-        Resistor3();
-        Resistor3(const Resistor3& mos);
-        ~Resistor3();
+        SpiceDevice();
+        SpiceDevice(const SpiceDevice&);
+        ~SpiceDevice();
+
+        virtual QJsonObject toJson();
         virtual QString toSpice( QString instance, QStringList nodes);
+        virtual QString toSpice();
+        
+
+    protected:
+        QList<SubcktInstance*> instances;
+
+    private:
 
     };
 
+
 }
 
-Q_DECLARE_METATYPE(cIcSpice::Resistor3)
+Q_DECLARE_METATYPE(cIcSpice::SpiceDevice)
 
-#endif 
+
+#endif

@@ -118,8 +118,6 @@ namespace cIcCore {
         this->xspace_ = this->rules->get("ROUTE","horizontalgrid")*horizontalGridMultiplier_;
         this->yspace_ = this->rules->get("ROUTE","verticalgrid")*verticalGridMultiplier_;
 
-        cout << this->name().toStdString() << " xspace = " << this->xspace_ << " yspace = " << this->yspace_ << " xmult = " << horizontalGridMultiplier_ << " ymult = " << verticalGridMultiplier_ <<"\n";
-        
         
         if(horizontalGrid_ != 0){
             this->xspace_ = horizontalGrid_;
@@ -560,6 +558,7 @@ namespace cIcCore {
                     Rect * r_enc = new Rect(r);
                     r_enc->setLayer(lay);
                     this->add(r_enc);
+                    this->onPaintEnclosure(r_enc);
                 }
 
 
@@ -588,11 +587,16 @@ namespace cIcCore {
                 }
 
                 r->adjust(-opposide_enc,-enc, opposide_enc, enc);
-
+                this->onPaintEnclosure(r);
             }
         }
 
 
     }
+
+    void PatternTile::onPaintEnclosure(Rect* r)
+    {
+    }
+    
 
 }

@@ -127,14 +127,10 @@ namespace cIcCore{
 
         if(cell == NULL){ qWarning() << "Error: Could find cell" << inst->subcktName(); return;}
 
-        cIcSpice::SpiceObject * sobj = NULL;
-        if(cell){ sobj= cell->spiceObject();}
-
         if(ckt){
             cktNodes = ckt->nodes();
-        }else if(sobj){
-            cktNodes = sobj->nodes();
-        }else{
+        }
+        else{
             qWarning() << "Warning: Subckt " << inst->subcktName() << " not found";
             return;
         }
