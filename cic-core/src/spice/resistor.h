@@ -26,7 +26,7 @@
 #include "core/rules.h"
 #include "spice/spicedevice.h"
 #include "spice/subcktinstance.h"
-
+ 
 namespace cIcSpice{
 
     class Resistor : public SpiceDevice
@@ -37,8 +37,10 @@ namespace cIcSpice{
     public:
 
         Resistor(QStringList n );
+        Resistor();
         
-        Resistor():Resistor(QStringList() << "A" << "B"){};
+        void init(QStringList n);
+        
         Resistor(const Resistor& mos);
         ~Resistor();
         virtual QString toSpice( QString instance, QStringList nodes);

@@ -66,6 +66,7 @@
   src/spice/resistor.h \
   src/core/patterncapacitor.h \
   src/core/patternhighresistor.h \
+  src/core/patternresistor.h \
   src/core/design.h \
   src/printer/gds.h \
   src/printer/designprinter.h \
@@ -106,6 +107,7 @@
   src/core/patterntransistor.cpp \
   src/core/patterncapacitor.cpp \
   src/core/patternhighresistor.cpp \
+  src/core/patternresistor.cpp \
   src/core/design.cpp \
   src/core/guard.cpp \
   src/printer/designprinter.cpp \

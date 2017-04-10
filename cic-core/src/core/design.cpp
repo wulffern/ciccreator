@@ -35,11 +35,13 @@ namespace cIcCore{
         qRegisterMetaType<cIcCells::CapCell>("cIcCells::CapCell");
         qRegisterMetaType<cIcCells::CDAC>("cIcCells::CDAC");
         qRegisterMetaType<cIcCore::PatternHighResistor>("cIcCore::PatternHighResistor");
+        qRegisterMetaType<cIcCore::PatternResistor>("cIcCore::PatternResistor");
 
 
         //Translate from Perl names to c++ names
         cellTranslator["Gds::GdsPatternTransistor"] = "cIcCore::PatternTransistor";
         cellTranslator["Gds::GdsPatternHighResistor"] = "cIcCore::PatternHighResistor";
+        cellTranslator["Gds::GdsPatternResistor"] = "cIcCore::PatternResistor";
         cellTranslator["Gds::GdsPatternCapacitor"] = "cIcCore::PatternCapacitor";
         cellTranslator["Gds::GdsPatternCapacitorGnd"] = "cIcCore::PatternCapacitor";
         cellTranslator["cIcCore::PatternCapacitorGnd"] = "cIcCore::PatternCapacitor";

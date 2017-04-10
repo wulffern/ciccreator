@@ -25,7 +25,7 @@
 #define CIC_CELLS_SAR_H
 
 #include "core/layoutcell.h"
-
+ 
 
 typedef QMap<QString,QList<cIcSpice::SubcktInstance*>>  SARgroup;
 
@@ -45,6 +45,9 @@ namespace cIcCells{
         int getCellWidth(SARgroup groups,QString group);
         cIcCore::Instance* placeAlternateMirror(SARgroup groups,QString group, int i, int x ,int y, int xoffset);
         int addSarRouting(int y,int msw,int mw);
+
+        static bool sortGraph(cIcCore::Graph* a, cIcCore:: Graph *b);
+        
         
     private:
 

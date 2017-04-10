@@ -9,14 +9,16 @@ CONFIG += qt console debug
 CONFIG += c++11
 CONFIG += static
 
+
   TEMPLATE = app
 
-  mac {
-    CONFIG -= app_bundle
-  }
+#  mac {
+  #CONFIG -= app_bundle
+#  }
   
 mac {
-    mac::QMAKE_MAC_SDK = macosx10.12
+mac::QMAKE_MAC_SDK = macosx10.12
+ICON = ALGIC003_STDLIB.icns
 }
   
   osx:DESTDIR = ../bin/darwin

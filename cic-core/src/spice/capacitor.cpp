@@ -24,8 +24,19 @@ namespace cIcSpice{
 
         
 
-
+    Capacitor::Capacitor()
+    {
+        init(QStringList()<< "A" << "B");
+    }
+    
     Capacitor::Capacitor(QStringList nodes){
+        init(nodes);
+        
+    } 
+
+    void Capacitor::init(QStringList nodes)
+    {
+        
         this->deviceName_ = "mres";
         this->spiceType_ = "X";
         this->setNodes(nodes);

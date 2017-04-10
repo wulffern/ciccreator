@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
 
 		
 	QApplication app(argc, argv);
+    app.setWindowIcon(QIcon(":/ALGIC003_STLIB.icns"));
 	cIcGui::Window window;
 	window.loadFile(file);
 	window.show();

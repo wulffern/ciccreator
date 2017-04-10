@@ -1,7 +1,7 @@
 //====================================================================
 //        Copyright (c) 2016 Carsten Wulff Software, Norway 
 // ===================================================================
-// Created       : wulff at 2016-5-19
+// Created       : wulff at 2016-9-4
 // ===================================================================
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -18,36 +18,41 @@
 //====================================================================
 
 
-#ifndef CIC_SPICE_CAPACITOR
-#define CIC_SPICE_CAPACITOR
 
-#include <QString>
-#include <QStringList>
-#include "spice/subcktinstance.h"
-#include "core/rules.h"
-#include "spice/spicedevice.h"
+#ifndef CIC_CORE_PATTERNRESISTOR_H
+#define CIC_CORE_PATTERNRESISTOR_H
 
-namespace cIcSpice{
+#include <QObject>
+#include "cell.h"
+#include "patterntile.h"
+#include "spice/resistor.h"
 
-    class Capacitor : public SpiceDevice
+
+
+namespace cIcCore{
+
+    using namespace cIcSpice;
+
+    class PatternResistor : public PatternTile
     {
-
         Q_OBJECT
 
     public:
-        Capacitor(QStringList n);
-        Capacitor();
-        
-        void init(QStringList n);
-         
-        Capacitor(const Capacitor& mos);
-        ~Capacitor();
-        virtual QString toSpice( QString instance, QStringList nodes);
-        virtual QJsonObject toJson();
+        virtual void paintRect(Rect*, QChar ,int , int );
+        PatternResistor();
+        PatternResistor(const PatternResistor& mos);
+        ~PatternResistor();
+        virtual QMap<QString,QVariant>  initFillCoordinates();
+        virtual void onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data);
+        virtual void endFillCoordinate(QMap<QString, QVariant> &data);
+
+
+    protected:
+        Resistor * res;
     };
 
 }
 
-Q_DECLARE_METATYPE(cIcSpice::Capacitor)
+Q_DECLARE_METATYPE(cIcCore::PatternResistor)
 
-#endif // MOSFET
+#endif

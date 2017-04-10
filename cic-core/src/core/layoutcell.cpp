@@ -59,7 +59,7 @@ namespace cIcCore{
         }
         return graphs;
     }
-
+  
 
 
     void LayoutCell::addDirectedRoute(QJsonArray obj){
@@ -77,7 +77,6 @@ namespace cIcCore{
         if(obj.size() > 3){
             options = obj[3].toString();
         }
-
 
         QString startRegex;
         QString routeType;

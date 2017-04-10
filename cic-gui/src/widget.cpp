@@ -28,9 +28,10 @@ Widget::Widget( QWidget *parent)
     cellPainter = new CellPainter();
     ycenter = 0;
     xcenter = 0;
-
+    step = 20;
+    
     QPalette pal = palette();
- 
+  
 // set black background
     pal.setColor(QPalette::Background, Qt::white);
     this->setAutoFillBackground(true);

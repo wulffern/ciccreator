@@ -27,6 +27,10 @@ namespace cIcGui{
         qApp->installEventFilter(this);
         resize(QDesktopWidget().availableGeometry(this).size() * 0.7);
 
+//        setWindowIcon(
+//        setWindowIcon();
+        
+        
         shapeComboBox = new QComboBox;
         listCells = new QListWidget();
         listLayers = new QListWidget();

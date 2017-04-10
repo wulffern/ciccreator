@@ -80,10 +80,10 @@ private:
     QRubberBand* rubberBand;
     
     
-    int step = 20;
+    int step;
 
-    double xcenter = 0;
-    double ycenter = 0;
+    double xcenter;
+    double ycenter; 
     QPoint  origin;
     
     

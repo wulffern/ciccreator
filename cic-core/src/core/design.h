@@ -34,6 +34,7 @@
 #include "core/layoutrotatecell.h"
 #include "spice/spiceparser.h"
 #include "core/patternhighresistor.h"
+#include "core/patternresistor.h"
 #include "cells/sar.h"
 #include "cells/cdac.h"
 #include "cells/capcell.h"
