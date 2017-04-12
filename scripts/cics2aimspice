@@ -1,0 +1,167 @@
+#!/usr/bin/perl
+######################################################################
+##        Copyright (c) 2017 Carsten Wulff Software, Norway
+## ###################################################################
+## Created       : wulff at 2017-3-12
+## ###################################################################
+##   This program is free software: you can redistribute it and/or modify
+##   it under the terms of the GNU General Public License as published by
+##   the Free Software Foundation, either version 3 of the License, or
+##   (at your option) any later version.
+##
+##   This program is distributed in the hope that it will be useful,
+##   but WITHOUT ANY WARRANTY; without even the implied warranty of
+##   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##   GNU General Public License for more details.
+##
+##   You should have received a copy of the GNU General Public License
+##   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+######################################################################
+use FindBin;
+use lib "$FindBin::Bin";
+use JSON::Tiny;
+use Data::Dumper;
+use strict;
+
+my $file = shift;
+my $fo  = shift;
+
+my $unitcap = 0.2;
+
+my %deviceMap = (
+
+                );
+
+
+
+
+open(fo,"> $fo") or die "Could not close $fo";
+
+sub getDeviceName{
+  my $name = shift;
+  if (exists($deviceMap{$name})) {
+    return $deviceMap{$name};
+  }
+  return $name;
+
+}
+
+sub printMosfet{
+  my $m = shift;
+  my $deviceName = $m->{deviceName};
+  my %properties = %{$m->{properties}};
+
+  print fo " ".getDeviceName($deviceName)." ";
+
+  print fo " w=".$properties{width}."u ";
+  print fo " l=".$properties{length}."u ";
+  print fo " nf=".$properties{nf}." ";
+#  print fo " M=".$properties{multiplier}." ";
+
+}
+
+sub printResistor{
+  my $r = shift;
+  my $deviceName = $r->{deviceName};
+  my %p = %{$r->{properties}};
+
+  if ($deviceName eq "rppo") {
+
+    #- rppo unit resistor
+    my $unitr = 1.2191;
+
+    my $r= 0;
+    if (exists($p{length}) && exists($p{width})) {
+      $r = $p{length}/$p{width}*$unitr;
+      print fo " r=".$r."K";
+    }
+
+    if (exists($p{length})) {
+      print fo " l=".$p{length}."u";
+    }
+
+    if (exists($p{width})) {
+      print fo " width=".$p{width}."u";
+    }
+  } elsif ($deviceName eq "mres") {
+
+    print fo " 0.1 ";
+  }
+
+
+}
+
+sub printInstance{
+  my $instance = shift;
+  my @inodes = @{$instance->{nodes}};
+  my $name = $instance->{name};
+  my $subcktName = $instance->{subcktName};
+  if (!($name =~ m/^X/)) {
+    $name = "X".$name;
+  }
+
+  print fo $name." ".join(' ',@inodes)." $subcktName \n";
+}
+
+my $json = new JSON::Tiny;
+
+open(f,"<$file") or die "Could not open $file";
+my $buffer;
+while (<f>) {
+  next if m/\/\//ig;
+  $buffer .= $_;
+}
+close(f) or die "Could not close $file";
+my $arr = $json->decode($buffer);
+my $err  = $json->error;
+die $err if $err;
+
+foreach my $cell (@{$arr}) {
+
+  my @nodes = @{$cell->{nodes}};
+  print fo ".SUBCKT ".$cell->{name}." ".join(' ',@nodes)."\n";
+  my @devices = @{$cell->{devices}};
+
+  if ($cell->{class} =~ m/Capacitor/) {
+	print fo "C1 ".join(' ',@nodes)." 6f \n";
+	print fo "R1 A 0 1e12\n";
+	  print fo "R2 B 0 1e12\n";
+
+  } elsif ($cell->{class} =~ m/CapCell/) {
+	foreach my $n (@nodes){
+	  next if $n =~ m/CTOP/;
+	  next if $n =~ m/AVSS/;
+	  my ($name,$count,$post) = $n =~ m/([^\d]+)(\d+)(\w*)/;
+
+#	  for(my $i=0;$i<$count;$i++){
+	  print fo "${n} $n CTOP ".($unitcap*$count)."f\n";
+	  print fo "CAVSS_${n} AVSS CTOP ".($unitcap/2)."f\n";
+	  #	  }
+	  print fo "R${n} $n 0 1e12\n";
+	}
+
+  } else {
+
+    foreach my $device (@devices) {
+      my $class = $device->{class};
+      my @snodes = @{$device->{nodes}};
+
+      if ($class =~ m/Resistor/ig) {
+        print fo "R".$device->{name}." ".join(' ',@snodes);
+        printResistor($device);
+      } elsif ($class =~ m/Mosfet/ig) {
+        print fo $device->{name}." ".join(' ',@snodes);
+        printMosfet($device);
+      }
+      print fo " \n";
+    }
+    my @instances = @{$cell->{instances}};
+    foreach my $instance (@instances) {
+      printInstance($instance);
+    }
+  }
+
+  print fo ".ENDS\n\n";
+}
+
+close(fo) or die "Could not close $fo";

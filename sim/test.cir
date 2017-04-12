@@ -1,0 +1,34 @@
+
+*Top level TB
+
+
+*-------------------------------------------------------------
+* SARBSSW_EV
+*-------------------------------------------------------------
+.include tb_sar9b.cir
+.plot v(SAR_IP) v(SARP) v(SAR_IN) v(SARN)
+.plot v(CK_SAMPLE) v(EN)
+.plot v(D<9>) 
+.plot v(D<8>) 
+.plot v(D<7>) 
+.plot v(D<6>) 
+.plot v(D<5>) 
+.plot v(D<4>) 
+.plot v(D<3>) 
+.plot v(D<2> 
+.plot v(D<1>) 
+
+*-------------------------------------------------------------
+* SARBSSW_EV
+*-------------------------------------------------------------
+*.include tb_sar_bssw.cir
+*.plot v(SAR_IP) v(SARP) v(SAR_IN) v(SARN)
+*.plot v(CK_SAMPLE)
+
+
+*-------------------------------------------------------------
+* SARBSSW_EV
+*-------------------------------------------------------------
+*.include tb_sarcmp.cir
+*.plot v(SAR_IP) v(SAR_IN) v(CMP_OP) v(CMP_ON)
+*.plot v(CK_CMP)
