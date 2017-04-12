@@ -55,7 +55,7 @@ sub printMosfet{
 
   print fo " w=".$properties{width}."u ";
   print fo " l=".$properties{length}."u ";
-#  print fo " nf=".$properties{nf}." ";
+  print fo " nf=".$properties{nf}." ";
 #  print fo " M=".$properties{multiplier}." ";
 
 }
