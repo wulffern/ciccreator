@@ -37,7 +37,7 @@ VCK CK_SAMPLE 0 pulse(0 vdd 0 risefall risefall sample_width sample_period) dc 0
 * DUT
 *----------------------------------------------------------------------------
 XIV CK_SAMPLE EN AVDD AVSS IVX1_EV
-XDUT SAR_IP SAR_IN SARN SARP DONE D<9> D<8> D<7> D<6> D<5> D<4> D<3> D<2> D<1> EN CK_SAMPLE CK_SAMPLE AVDD AVDD AVSS CMP_OP CMP_ON SAR9B_EV
+XDUT SAR_IP SAR_IN SARN SARP DONE D<9> D<8> D<7> D<6> D<5> D<4> D<3> D<2> D<1> EN CK_SAMPLE CK_SAMPLE AVDD AVDD AVSS SAR9B_EV
 
 
 *----------------------------------------------------------------------------
