@@ -1,5 +1,9 @@
-
 *Top level TB
+
+
+.include aimspice_model.spi
+
+*.include eldo_model.spi
 
 
 *-------------------------------------------------------------
@@ -21,7 +25,7 @@
 *-------------------------------------------------------------
 * SARBSSW_EV
 *-------------------------------------------------------------
-*.include tb_sar_bssw.cir
+*.include tb_sarbssw.cir
 *.plot v(SAR_IP) v(SARP) v(SAR_IN) v(SARN)
 *.plot v(CK_SAMPLE)
 
