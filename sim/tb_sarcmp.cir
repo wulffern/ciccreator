@@ -16,10 +16,19 @@
 .param cmp_width=200n
 .param cmp_period=400n
 .param risefall = 1n
+
 *----------------------------------------------------------------------------
-* INCLUDES
+* INCULDE
 *----------------------------------------------------------------------------
-.include ../lay/SAR_ESSCIRC16_28N.spice
+.include model.spi
+
+
+*----------------------------------------------------------------------------
+* DUT
+*----------------------------------------------------------------------------
+XA20 SAR_IP SAR_IN CMP_OP CMP_ON CK_CMP CK_SAMPLE DONE AVDD AVSS SARCMPX1_EV 
+
+
 
 *----------------------------------------------------------------------------
 * FORCE
@@ -34,11 +43,6 @@ VCK CK_SAMPLE 0 dc 0
 VDONE DONE 0 dc 0
 VCMP CK_CMP 0 pulse(0 vdd 0 risefall risefall cmp_width cmp_period) dc 0
 
-*----------------------------------------------------------------------------
-* DUT
-*----------------------------------------------------------------------------
-XA20 SAR_IP SAR_IN CMP_OP CMP_ON CK_CMP CK_SAMPLE DONE AVDD AVSS SARCMPX1_EV 
-
 
 
 
@@ -46,6 +50,12 @@ XA20 SAR_IP SAR_IN CMP_OP CMP_ON CK_CMP CK_SAMPLE DONE AVDD AVSS SARCMPX1_EV
 * ANALYSIS
 *----------------------------------------------------------------------------
 .tran 1n 10u
+
+*----------------------------------------------------------------------------
+* PLOTS AND EXTRACTS
+*----------------------------------------------------------------------------
+.plot v(SAR_IP) v(SAR_IN) v(CMP_OP) v(CMP_ON)
+.plot v(CK_CMP)
 
 
 

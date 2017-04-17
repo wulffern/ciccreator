@@ -1,12 +1,12 @@
 *Test model for use with aimspice and cIcCreator
 
-.model nch NMOS level=33 
-.model nch_lvt NMOS level=33 
-.model nch_io NMOS level=33 
-.model nch_lvt_io NMOS level=33 
+.model nch NMOS level=33 version=4.7
+.model nch_lvt NMOS level=33  version=4.7
+.model nch_io NMOS level=33  version=4.7
+.model nch_lvt_io NMOS level=33  version=4.7
 
-.model pch PMOS level=33 
-.model pch_lvt PMOS level=33 
-.model pch_io PMOS level=33 
-.model pch_lvt_io PMOS level=33 
+.model pch PMOS level=33  version=4.7
+.model pch_lvt PMOS level=33  version=4.7
+.model pch_io PMOS level=33  version=4.7
+.model pch_lvt_io PMOS level=33  version=4.7
 
