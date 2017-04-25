@@ -55,21 +55,54 @@ namespace cIcCore{
 
     }
 
+    bool fexists(const char *filename)
+    {
+        if (FILE *file = fopen(filename, "r")) {
+            fclose(file);
+            return true;
+        } else {
+            return false;
+        } 
+
+    }
+
+    void Design::addIncludePath(QString filename)
+    {
+        _includePaths.append(filename);
+    }
+    
+
     bool Design::readCells(QString filename)
     {
         // Read file
         QString spice_file = filename;
         spice_file.replace(".json",".spi");
         _spice_parser.parseFile(spice_file);
+
+        console->comment("Reading '" + filename + "'",ConsoleOutput::green);
         QJsonObject obj = this->readJson( filename);
 
         //Read includes
         QJsonValue include = obj["include"];
         if(include.isArray()){
             QJsonArray includeArray  = include.toArray();
-            foreach (const QJsonValue & value, includeArray) {
+            foreach (const QJsonValue & value, includeArray) { 
                 QString incfile = value.toString();
-                this->readCells(incfile);
+                qDebug() << incfile;
+                
+                if(fexists(incfile.toStdString().c_str())){
+                    this->readCells(incfile);
+                }
+                
+                foreach (QString incpath,_includePaths){
+                    QString incf = QString("%1/%2").arg(incpath).arg(incfile);
+                    qDebug() << incf;
+                    if(fexists(incf.toStdString().c_str())){
+                        this->readCells(incf);
+                    }
+
+                }
+                
             }
 
             

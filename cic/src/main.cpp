@@ -50,11 +50,27 @@ int main(int argc, char *argv[])
     try
     {
 
+        QStringList includePaths;
+        
         if(argc >=  3){
+            QStringList arguments;
 
-            QString file = argv[1];
-            QString rules = argv[2];
-            QString library = argv[3];
+            //Parse options
+            for(int i=0;i<argc;i++){
+                QString arg = argv[i];
+                
+                if(arg == "--I" && (i+1)< argc){
+                    includePaths.append(argv[i+1]);
+                    i  = i+1;
+                }else{
+                    arguments.append(arg);
+                }
+            }
+            
+            
+            QString file = arguments[1];
+            QString rules = arguments[2];
+            QString library = arguments[3];
 
             if(library == ""){
                 QRegularExpression re("/?([^\\/]+)\\.json");
@@ -67,6 +83,10 @@ int main(int argc, char *argv[])
 
             //Load design, this is where the magic happens
             cIcCore::Design * d = new cIcCore::Design();
+            foreach(QString path,includePaths){
+                d->addIncludePath(path);
+            }
+            
             d->read(file);
 
             //Print SPICE file
