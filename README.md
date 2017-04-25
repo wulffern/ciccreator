@@ -24,9 +24,8 @@ Install > Qt5.4 (i.e http://download.qt.io/archive/qt/5.4/5.4.2/qt-opensource-li
     make
 
 #Test
-    cd lay
-    make
-	make devices
+
+    make esscirc
 
 #Viewing
 Open GDSII file or open built in viewer
