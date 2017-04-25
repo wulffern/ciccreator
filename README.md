@@ -6,7 +6,7 @@ Back in 2013 I started playing with the thought of generating a SAR ADC with a s
 
 :white_check_mark: Tapeout SAR ADC in 28nm FDSOI (Jan 2015)
 
-:white_check_mark: Demonstrate effectiveness of compiled approach ([ESSCIRC 2016](http://ieeexplore.ieee.org/document/7598271/)) (Sept 2016)
+:white_check_mark: Demonstrate effectiveness of compiled approach ([ESSCIRC 2016](http://ieeexplore.ieee.org/document/7598271/),[JSSC 2017](http://ieeexplore.ieee.org/document/7906479/)) (Sept 2016, April 2017)
 
 :white_check_mark: Rewrite the compiler in C++ under a GPL license and compile equivalent GDS with Perl compiler (Nov 2016)
 
