@@ -91,6 +91,8 @@ routes: lay
 	cd lay; ${CMD} ${EXAMPLE}/routes.json ${TECHFILE} routes ${OPT}
 
 esscircbulk:
+	cd examples; cp ${LIBNAME}.json SAR_ESSCIRC16_28NBULK.json
+	cd examples; cp ${LIBNAME}.hier SAR_ESSCIRC16_28NBULK.hier
 	${MAKE}	esscirc LIBNAME=SAR_ESSCIRC16_28NBULK
 
 esscirc: lay
