@@ -25,7 +25,7 @@ On Linux or Mac:
     source bashrc.config
     make
 
-On Windows, make sure you install MinGW > 4.9.2 with the Qt installation
+On Windows, make sure you install MinGW > 4.9.2 with the Qt installation. Open console (Start - Qt - 5.x - MinGW  - Qt5.x for Desktop).
 
     mingw32-make
 
@@ -35,7 +35,7 @@ On Linux or Mac:
 
     make esscirc
 
-On Windows, open console (Start - Qt - 5.x - MinGW  - Qt5.x for Desktop). Navigate to ciccreator clone:
+On Windows:
 
     mingw32-make esscirc
 
