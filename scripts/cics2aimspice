@@ -32,11 +32,9 @@ my %deviceMap = (
 
                 );
 
-
-
-
-open(fo,"> $fo") or die "Could not close $fo";
-
+#----------------------------------------------------------------------------
+# Translate names
+#----------------------------------------------------------------------------
 sub getDeviceName{
   my $name = shift;
   if (exists($deviceMap{$name})) {
@@ -46,69 +44,18 @@ sub getDeviceName{
 
 }
 
-sub printMosfet{
-  my $m = shift;
-  my $deviceName = $m->{deviceName};
-  my %properties = %{$m->{properties}};
+#----------------------------------------------------------------------------
+# Open and read *.cics file
+#----------------------------------------------------------------------------
+#- Open output file
+open(fo,"> $fo") or die "Could not close $fo";
 
-  print fo " ".getDeviceName($deviceName)." ";
-
-  print fo " w=".$properties{width}."u ";
-  print fo " l=".$properties{length}."u ";
-  print fo " nf=".$properties{nf}." ";
-#  print fo " M=".$properties{multiplier}." ";
-
-}
-
-sub printResistor{
-  my $r = shift;
-  my $deviceName = $r->{deviceName};
-  my %p = %{$r->{properties}};
-
-  if ($deviceName eq "rppo") {
-
-    #- rppo unit resistor
-    my $unitr = 1.2191;
-
-    my $r= 0;
-    if (exists($p{length}) && exists($p{width})) {
-      $r = $p{length}/$p{width}*$unitr;
-      print fo " r=".$r."K";
-    }
-
-    if (exists($p{length})) {
-      print fo " l=".$p{length}."u";
-    }
-
-    if (exists($p{width})) {
-      print fo " width=".$p{width}."u";
-    }
-  } elsif ($deviceName eq "mres") {
-
-    print fo " 0.1 ";
-  }
-
-
-}
-
-sub printInstance{
-  my $instance = shift;
-  my @inodes = @{$instance->{nodes}};
-  my $name = $instance->{name};
-  my $subcktName = $instance->{subcktName};
-  if (!($name =~ m/^X/)) {
-    $name = "X".$name;
-  }
-
-  print fo $name." ".join(' ',@inodes)." $subcktName \n";
-}
-
+#- Read json
 my $json = new JSON::Tiny;
-
 open(f,"<$file") or die "Could not open $file";
 my $buffer;
 while (<f>) {
-  next if m/\/\//ig;
+  next if m/\/\//ig;            #- Remove comments
   $buffer .= $_;
 }
 close(f) or die "Could not close $file";
@@ -116,48 +63,104 @@ my $arr = $json->decode($buffer);
 my $err  = $json->error;
 die $err if $err;
 
+#----------------------------------------------------------------------------
+# Write spice file
+#----------------------------------------------------------------------------
+#- Parse all cells, and write spice
 foreach my $cell (@{$arr}) {
-
   my @nodes = @{$cell->{nodes}};
   print fo ".SUBCKT ".$cell->{name}." ".join(' ',@nodes)."\n";
   my @devices = @{$cell->{devices}};
 
+  #----------------------------------------------------------------------------
+  # Write standard capacitors
+  #----------------------------------------------------------------------------
   if ($cell->{class} =~ m/Capacitor/) {
-	print fo "C1 ".join(' ',@nodes)." 6f \n";
-	print fo "R1 A 0 1e12\n";
-	  print fo "R2 B 0 1e12\n";
+    print fo "C1 ".join(' ',@nodes)." 6f \n";
+    print fo "R1 A 0 1e12\n";
+    print fo "R2 B 0 1e12\n";
 
+	#----------------------------------------------------------------------------
+	# Write CDAC cells
+	#----------------------------------------------------------------------------
   } elsif ($cell->{class} =~ m/CapCell/) {
-	foreach my $n (@nodes){
-	  next if $n =~ m/CTOP/;
-	  next if $n =~ m/AVSS/;
-	  my ($name,$count,$post) = $n =~ m/([^\d]+)(\d+)(\w*)/;
+    foreach my $n (@nodes) {
+      next if $n =~ m/CTOP/;
+      next if $n =~ m/AVSS/;
+      my ($name,$count,$post) = $n =~ m/([^\d]+)(\d+)(\w*)/;
 
-#	  for(my $i=0;$i<$count;$i++){
-	  print fo "${n} $n CTOP ".($unitcap*$count)."f\n";
-	  print fo "CAVSS_${n} AVSS CTOP ".($unitcap/2)."f\n";
-	  #	  }
-	  print fo "R${n} $n 0 1e12\n";
-	}
+      print fo "${n} $n CTOP ".($unitcap*$count)."f\n";
+      print fo "CAVSS_${n} AVSS CTOP ".($unitcap/2)."f\n";
+      print fo "R${n} $n 0 1e12\n";
+    }
 
-  } else {
-
+  } else {        #- If it's not a capacitance, then print the devices
+	
     foreach my $device (@devices) {
       my $class = $device->{class};
       my @snodes = @{$device->{nodes}};
 
-      if ($class =~ m/Resistor/ig) {
+
+	  #----------------------------------------------------------------------------
+	  # Write Resistors
+	  #----------------------------------------------------------------------------
+	  if ($class =~ m/Resistor/ig) {
         print fo "R".$device->{name}." ".join(' ',@snodes);
-        printResistor($device);
+        my $deviceName = $device->{deviceName};
+        my %p = %{$device->{properties}};
+
+        if ($deviceName eq "rppo") {
+
+          #- rppo unit resistor
+          my $unitr = 1.2191;
+
+          my $r= 0;
+          if (exists($p{length}) && exists($p{width})) {
+            $r = $p{length}/$p{width}*$unitr;
+            print fo " r=".$r."K";
+          }
+
+          if (exists($p{length})) {
+            print fo " l=".$p{length}."u";
+          }
+
+          if (exists($p{width})) {
+            print fo " width=".$p{width}."u";
+          }
+        } elsif ($deviceName eq "mres") {
+
+          print fo " 0.1 ";
+        }
+
+		#----------------------------------------------------------------------------
+		# Write Mosfets
+		#----------------------------------------------------------------------------
       } elsif ($class =~ m/Mosfet/ig) {
         print fo $device->{name}." ".join(' ',@snodes);
-        printMosfet($device);
+        my $deviceName = $device->{deviceName};
+        my %properties = %{$device->{properties}};
+        print fo " ".getDeviceName($deviceName)." ";
+        print fo " w=".$properties{width}."u ";
+        print fo " l=".$properties{length}."u ";
+        print fo " nf=".$properties{nf}." ";
       }
       print fo " \n";
     }
+
+	#----------------------------------------------------------------------------
+	# Write Instances
+	#----------------------------------------------------------------------------
     my @instances = @{$cell->{instances}};
     foreach my $instance (@instances) {
-      printInstance($instance);
+
+      my @inodes = @{$instance->{nodes}};
+      my $name = $instance->{name};
+      my $subcktName = $instance->{subcktName};
+      if (!($name =~ m/^X/)) {
+        $name = "X".$name;
+      }
+
+      print fo $name." ".join(' ',@inodes)." $subcktName \n";
     }
   }
 
