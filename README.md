@@ -6,7 +6,7 @@ Back in 2013 I started playing with the thought of generating a SAR ADC with a s
 
 :white_check_mark: Tapeout SAR ADC in 28nm FDSOI (Jan 2015)
 
-:white_check_mark: Demonstrate effectiveness of compiled approach ([ESSCIRC 2016](http://ieeexplore.ieee.org/document/7598271/)) (Sept 2016)
+:white_check_mark: Demonstrate effectiveness of compiled approach ([ESSCIRC 2016](http://ieeexplore.ieee.org/document/7598271/),[JSSC 2017](http://ieeexplore.ieee.org/document/7906479/)) (Sept 2016, April 2017)
 
 :white_check_mark: Rewrite the compiler in C++ under a GPL license and compile equivalent GDS with Perl compiler (Nov 2016)
 
@@ -14,21 +14,20 @@ Back in 2013 I started playing with the thought of generating a SAR ADC with a s
 
 The vision is that "Custom IC Creator" will be a rapid layout generation tool for SAR ADCs. 
 
-#Dependencies
+# Dependencies
 - Qt 5.4
 
-#Compile
+# Compile
 Install > Qt5.4 (i.e http://download.qt.io/archive/qt/5.4/5.4.2/qt-opensource-linux-x64-5.4.2.run), and edit bashrc.config to point to your Qt5.4 path, then
 
     source bashrc.config
     make
 
-#Test
-    cd lay
-    make
-	make devices
+# Test
 
-#Viewing
+    make esscirc
+
+# Viewing
 Open GDSII file or open built in viewer
 
     make view
@@ -37,7 +36,7 @@ Or you can use GDS3D from https://sourceforge.net/projects/gds3d/
 
     make view3d
 
-#cIcCreator in action
+# cIcCreator in action
 
 Minecraft video - https://youtu.be/J9lhEt0f3Wk 
 
