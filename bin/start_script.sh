@@ -47,8 +47,14 @@ if [ $platform == "darwin" ]; then
 	else
 		$dirname/${platform}/${appname} "$@"
 	fi
-fi
 
+else
+    execfile=$dirname/windows/${appname}.exe
+    if [ -f "$execfile" ]; then
+	$execfile "$@"
+    fi
+
+fi
 
 
 

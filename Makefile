@@ -88,10 +88,15 @@ esscircbulk:
 	${MAKE}	esscirc LIBNAME=SAR_ESSCIRC16_28NBULK
 
 esscirc: lay
+
+#ifeq ($(OS),Windows_NT)
+#	cd lay; ../bin/windows/cic.exe ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
+#else
 	cd lay; ${CMD} ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
-	./scripts/cics2aimspice  lay/${LIBNAME}.cics  lay/${LIBNAME}.spice
+	-./scripts/cics2aimspice  lay/${LIBNAME}.cics  lay/${LIBNAME}.spice
 	cd lay	; ../bin/cic2eps ${EXAMPLE}/${LIBNAME}.json ${EXAMPLE}/tech_eps.json ${CELL}
-	cd lay	; ../bin/cic2png ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${EXAMPLE}/${LIBNAME}.hier 
+	cd lay	; ../bin/cic2png ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${EXAMPLE}/${LIBNAME}.hier
+#endif
 
 view: lay
 	cd lay; ../bin/cic-gui ${TECHFILE} ${LIBNAME}.cicl &

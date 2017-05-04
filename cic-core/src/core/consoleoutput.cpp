@@ -37,7 +37,9 @@ void ConsoleOutput::startComment(QTextStream &out,AnsiColor color){
   out.setFieldAlignment(QTextStream::AlignRight);
   out << " ";
   out.setFieldWidth(0);
+#ifndef _WIN32
   out << "\033[0;" << color << "m";
+#endif
   out.setFieldAlignment(QTextStream::AlignLeft);
   out.setFieldWidth(20);
   out.setPadChar(' ');
@@ -45,20 +47,26 @@ void ConsoleOutput::startComment(QTextStream &out,AnsiColor color){
 
 void ConsoleOutput::endComment(QTextStream &out){
   out.setFieldWidth(1);
+#ifndef _WIN32
   out << "\033[0m" ;
+#endif
   out << endl;
 }
 
  void ConsoleOutput::commentStartClass(QString cell){
    QTextStream out(stdout);
    out.setFieldWidth(0);
+#ifndef _WIN32
    out << "\033[1;" << green << "m";
+#endif
    out.setFieldAlignment(QTextStream::AlignLeft);
    out.setFieldWidth(20);
    out.setPadChar(' ');
    out <<  cell;
    out.setFieldWidth(1);
+#ifndef _WIN32
     out << "\033[0m" ;
+#endif
    out << endl;
 
  }
@@ -69,7 +77,9 @@ void ConsoleOutput::endComment(QTextStream &out){
    out.setFieldAlignment(QTextStream::AlignRight);
    out << " ";
    out.setFieldWidth(0);
+#ifndef _WIN32
    out << "\033[0;" << color << "m";
+#endif
    out.setFieldAlignment(QTextStream::AlignLeft);
    out.setFieldWidth(0);
    out.setPadChar(' ');
