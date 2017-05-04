@@ -35,7 +35,7 @@ On Linux or Mac:
 
     make esscirc
 
-On Windows:
+On Windows, open console (Start - Qt - 5.x - MinGW  - Qt5.x for Desktop). Navigate to ciccreator clone:
 
     mingw32-make esscirc
 
@@ -46,7 +46,7 @@ On Linux or Mac:
 
     make view
 
-On Windows, open console (Start - Qt - 5.x - MinGW  - Qt5.x for Desktop). Navigate to ciccreator clone.
+On Windows:
 
     mingw32-make view
 
