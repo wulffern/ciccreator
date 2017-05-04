@@ -48,6 +48,9 @@ lay:
 qmake:
 	qmake -o qmake.make ciccreator.pro 
 
+windeploy:
+	windeployqt bin/windows/cic-gui.exe
+
 xcode:
 	qmake -o qmake.make ciccreator.pro -spec  macx-xcode
 
