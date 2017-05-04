@@ -46,7 +46,7 @@ On Linux or Mac:
 
     make view
 
-On Windows:
+On Windows, open console (Start - Qt - 5.x - MinGW  - Qt5.x for Desktop). Navigate to ciccreator clone.
 
     mingw32-make view
 
