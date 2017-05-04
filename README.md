@@ -20,19 +20,37 @@ The vision is that "Custom IC Creator" will be a rapid layout generation tool fo
 # Compile
 Install > Qt5.4 (i.e http://download.qt.io/archive/qt/5.4/5.4.2/qt-opensource-linux-x64-5.4.2.run), and edit bashrc.config to point to your Qt5.4 path, then
 
+On Linux or Mac:
+
     source bashrc.config
     make
 
+On Windows, make sure you install MinGW > 4.9.2 with the Qt installation
+
+    mingw32-make
+
+
 # Test
+On Linux or Mac:
 
     make esscirc
+
+On Windows:
+
+    mingw32-make esscirc
 
 # Viewing
 Open GDSII file or open built in viewer
 
+On Linux or Mac:
+
     make view
 
-Or you can use GDS3D from https://sourceforge.net/projects/gds3d/ 
+On Windows:
+
+    mingw32-make view
+
+Or on Linux or Mac you can use GDS3D from https://sourceforge.net/projects/gds3d/ 
 
     make view3d
 
