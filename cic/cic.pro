@@ -30,6 +30,7 @@ mac {
 
   osx:DESTDIR = ../bin/darwin
   linux:DESTDIR = ../bin/linux
+  windows:DESTDIR = ../bin/windows
 
   #- Add coverage information
   QMAKE_CFLAGS += $$(CFLAGS) --coverage
@@ -49,8 +50,7 @@ mac {
   SOURCES +=         src/main.cpp
 
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../lib/darwin/release/ -lcic
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../lib/darwin/debug/ -lcic
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../lib/windows/ -lcic
 else:linux: LIBS += -L$$PWD/../lib/linux/ -lcic
 else:mac: LIBS += -L$$PWD/../lib/darwin/ -lcic
 
@@ -62,5 +62,9 @@ mac:DEPENDPATH += $$PWD/../lib/darwin
                    
 linux:PRE_TARGETDEPS += ../lib/linux/libcic$${LIBSUFFIX}.a
 linux:INCLUDEPATH += $$PWD/../lib/linux
-                   linux:DEPENDPATH += $$PWD/../lib/linux
+linux:DEPENDPATH += $$PWD/../lib/linux
+
+win32:PRE_TARGETDEPS += ../lib/windows/libcic$${LIBSUFFIX}.a
+win32:INCLUDEPATH += $$PWD/../lib/windows
+win32:DEPENDPATH += $$PWD/../lib/windows
 

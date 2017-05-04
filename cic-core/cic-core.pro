@@ -30,6 +30,7 @@
 
   osx:DESTDIR = ../lib/darwin
   linux:DESTDIR = ../lib/linux
+  win32:DESTDIR = ../lib/windows
 
   #- Add coverage information
   QMAKE_CFLAGS += $$(CFLAGS)

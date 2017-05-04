@@ -23,35 +23,15 @@
 #include <QDebug>
 #include <QString>
 
-#ifndef _XOPEN_SOURCE
-#define _XOPEN_SOURCE
-#endif
 
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE
-#endif
-#ifndef __USE_GNU
-#define __USE_GNU
-#endif
-
-#include <execinfo.h>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ucontext.h>
-#include <unistd.h>
 
 int main(int argc, char *argv[])
 {
-
-
-
     try
     {
 
         QStringList includePaths;
-        
+
         if(argc >=  3){
             QStringList arguments;
 
@@ -108,8 +88,6 @@ int main(int argc, char *argv[])
 
             //Write JSON
             d->writeJsonFile(library + ".cicl");
-
-
 
         }else{
             qWarning() << "Usage: cic <JSON file> <Technology file> [<Output name>]";
