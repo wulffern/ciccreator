@@ -118,6 +118,9 @@ namespace cIcCore{
         ConsoleOutput * console;
 
 
+        bool readError;
+        bool ignoreSetYoffsetHalf;
+        
 
     signals:
 

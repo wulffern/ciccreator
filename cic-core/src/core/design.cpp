@@ -52,7 +52,9 @@ namespace cIcCore{
         cellTranslator["Layout::LayoutCapCellSmall"] = "cIcCells::CapCell";
         nameTranslator["type"] = "mosType";
         console = new ConsoleOutput();
-
+        readError = false;
+        ignoreSetYoffsetHalf = false;
+        
     }
 
     bool fexists(const char *filename)
@@ -82,6 +84,21 @@ namespace cIcCore{
         console->comment("Reading '" + filename + "'",ConsoleOutput::green);
         QJsonObject obj = this->readJson( filename);
 
+        if(readError){
+            return false;
+        }
+
+        //Read options
+        QJsonValue options = obj["options"];
+        if(options.isObject()){
+            QJsonObject opt = options.toObject();
+            if(opt.contains("ignoreSetYoffsetHalf")){
+                ignoreSetYoffsetHalf = opt["ignoreSetYoffsetHalf"].toBool();
+            }
+        }
+        
+        
+
         //Read includes
         QJsonValue include = obj["include"];
         if(include.isArray()){
@@ -91,7 +108,12 @@ namespace cIcCore{
                 qDebug() << incfile;
                 
                 if(fexists(incfile.toStdString().c_str())){
-                    this->readCells(incfile);
+                    if(!this->readCells(incfile))
+                    {
+                        return false;
+                        
+                    }
+                    
                 }
                 
                 foreach (QString incpath,_includePaths){
@@ -423,7 +445,10 @@ namespace cIcCore{
 
         foreach( QString key, jobj.keys()){
             if(re.match(key).hasMatch()){ continue;}
-
+            if( ignoreSetYoffsetHalf && key == "setYoffsetHalf"){continue;}
+            
+            
+                
             QString method_key = key;
             if(nameTranslator.contains(key)){
                 method_key = nameTranslator[key];
@@ -541,6 +566,8 @@ namespace cIcCore{
         QJsonParseError err;
         QJsonDocument d = QJsonDocument::fromJson(val.toUtf8(),&err);
         if(QJsonParseError::NoError != err.error ){
+            readError = true;
+            
             QString verr = val.mid(0,err.offset);
             int charcount =0;
             int line_count = 0;
