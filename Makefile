@@ -104,8 +104,11 @@ esscirc: lay
 
 
 view: lay
+ifeq ($(UNAME_S),Darwin)
+	cd lay; ../bin/darwin/cic-gui.app/Contents/MacOS/cic-gui ${TECHFILE} ${LIBNAME}.cicl &
+else
 	cd lay; ../bin/${OSBIN}/cic-gui ${TECHFILE} ${LIBNAME}.cicl &
-
+endif
 view-routes: lay
 	cd lay; ../bin/${OSBIN}/cic-gui ${TECHFILE} routes.json &
 
