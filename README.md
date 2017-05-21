@@ -10,7 +10,7 @@ Back in 2013 I started playing with the thought of generating a SAR ADC with a s
 
 :white_check_mark: Rewrite the compiler in C++ under a GPL license and compile equivalent GDS with Perl compiler (Nov 2016)
 
-:x: Encourage development of open source, free IP blocks for academic use 
+:white_check_mark: Encourage development of open source, free IP blocks for academic use ([Open Source Custom IC Creator packages](https://github.com/wulffern/oscic))
 
 The vision is that "Custom IC Creator" will be a rapid layout generation tool for SAR ADCs. 
 
