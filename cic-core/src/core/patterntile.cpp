@@ -490,14 +490,14 @@ namespace cIcCore {
             e->height = this->ymax_ + 1;
 
         }else{
-            e->x1 = rect[0].toInt();
-            e->y1 = rect[1].toInt();
+            e->x1 = rect[0].toDouble();
+            e->y1 = rect[1].toDouble();
 
             QJsonValue w = rect[2];
             if(w.isString() && w.toString() == "width"){
                 e->width = this->xmax_ + 1;
             }else{
-                e->width = w.toInt();
+                e->width = w.toDouble();
                 if(this->copyColumn_.count() > 0){
                     foreach(CopyColumn c,copyColumn_){
                         if(e->x1 < c.offset && (e->x1 + e->width) > c.offset){
@@ -516,7 +516,7 @@ namespace cIcCore {
             }else{
 
 
-                e->height = h.toInt();
+                e->height = h.toDouble();
             }
         }
 
