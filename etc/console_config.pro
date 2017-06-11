@@ -17,10 +17,44 @@
 ##   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ######################################################################
 
-CONFIG += qt console
-CONFIG += static
-TEMPLATE = app
-TARGET = cic
+  QT += core
+  CONFIG += c++11
+  
+  mac {
+    mac::QMAKE_MAC_SDK = macosx10.12
+    }
+  osx:DESTDIR = ../bin/darwin
+  linux:DESTDIR = ../bin/linux
+  win32:DESTDIR = ../bin/windows
 
-include(../etc/console_config.pro)
+  #- Add coverage information
+  QMAKE_CFLAGS += $$(CFLAGS) --coverage
+  QMAKE_LFLAGS += $$(LDFLAGS) --coverage
+
+  OBJECTS_DIR=build
+  MOC_DIR=build
+
+  DEPENDPATH +=.
+
+  INCLUDEPATH += src/ ../cic-core/external/libgds_dist/ ../cic-core/src
+
+  # Input
+  SOURCES +=         src/main.cpp
+win32: LIBS += -L$$PWD/../lib/windows/ -lcic
+else:linux: LIBS += -L$$PWD/../lib/linux/ -lcic
+else:mac: LIBS += -L$$PWD/../lib/darwin/ -lcic
+
+
+mac:PRE_TARGETDEPS += ../lib/darwin/libcic$${LIBSUFFIX}.a
+mac:INCLUDEPATH += $$PWD/../lib/darwin
+mac:DEPENDPATH += $$PWD/../lib/darwin
+
+                   
+linux:PRE_TARGETDEPS += ../lib/linux/libcic$${LIBSUFFIX}.a
+linux:INCLUDEPATH += $$PWD/../lib/linux
+linux:DEPENDPATH += $$PWD/../lib/linux
+
+win32:PRE_TARGETDEPS += ../lib/windows/libcic$${LIBSUFFIX}.a
+win32:INCLUDEPATH += $$PWD/../lib/windows
+win32:DEPENDPATH += $$PWD/../lib/windows
 

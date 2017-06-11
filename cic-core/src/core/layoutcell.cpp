@@ -208,6 +208,7 @@ namespace cIcCore{
 
         double offset = (obj.size() > 5) ? obj[5].toDouble() : 0;
         QString name = (obj.size() > 6) ? obj[6].toString() : "";
+        double yoffset = (obj.size() > 7) ? obj[7].toDouble() : 0;
 
 
         QList<Rect*> rects = this->findAllRectangles(path,startlayer);
@@ -216,7 +217,7 @@ namespace cIcCore{
         foreach(Rect* r, rects){
             if(r == 0) continue;
             Instance * inst= Cut::getInstance(startlayer,stoplayer,hcuts,vcuts);
-            inst->moveTo(r->x1() + offset*this->rules->get("ROUTE","horizontalgrid"),r->y1());
+            inst->moveTo(r->x1() + offset*this->rules->get("ROUTE","horizontalgrid"),r->y1() + this->rules->get("ROUTE","verticalgrid")*yoffset);
 
             if(name != ""){
                 Rect * p = inst->getRect(stoplayer);
@@ -365,6 +366,7 @@ namespace cIcCore{
 
         QList<Rect*> rects = this->findAllRectangles(path,layer);
 
+        
         foreach(Rect* r, rects){
             int width = r->width();
             if(cuts > 0){
@@ -382,6 +384,47 @@ namespace cIcCore{
 
         }
     }
+
+    void LayoutCell::addHorizontalRect(QJsonArray obj)
+    {
+        if(obj.size() < 2){
+            qDebug() << "Error: addHorizontalRects must contain at least 2 elements\n";
+            return;
+        }
+
+        QString layer = obj[0].toString();
+        QString path = obj[1].toString();
+
+        double xsize = (obj.size() > 2) ? obj[2].toDouble(): 1;
+        double ysize = (obj.size() > 3) ? obj[3].toDouble(): 1;
+
+        int xspace = this->rules->get("ROUTE","horizontalgrid")*xsize;
+        int yspace = this->rules->get("ROUTE","verticalgrid")*ysize;
+        
+        QList<Rect*> rects = this->findAllRectangles(path,layer);
+
+        foreach(Rect* r, rects){
+
+            int x;
+            int y;
+            
+            int width;
+            
+            if(xspace > 0){
+                x = r->x1();
+                y = r->y1() + yspace;
+                width = xspace;
+            }else{
+                x = r->x1()  + xspace;
+                y = r->y1() + yspace;
+                width = -xspace;
+            }
+            
+            Rect * rn = new Rect(layer, x, y,width,r->height());
+            this->add(rn);
+        }
+    }
+
 
     void LayoutCell::addRectangle(QJsonArray obj)
     {

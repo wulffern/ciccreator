@@ -52,8 +52,27 @@ namespace cIcCore{
         cellTranslator["Layout::LayoutCapCellSmall"] = "cIcCells::CapCell";
         nameTranslator["type"] = "mosType";
         console = new ConsoleOutput();
+        readError = false;
+        ignoreSetYoffsetHalf = false;
+        
+    }
+
+    bool fexists(const char *filename)
+    {
+        if (FILE *file = fopen(filename, "r")) {
+            fclose(file);
+            return true;
+        } else {
+            return false;
+        } 
 
     }
+
+    void Design::addIncludePath(QString filename)
+    {
+        _includePaths.append(filename);
+    }
+    
 
     bool Design::readCells(QString filename)
     {
@@ -61,15 +80,51 @@ namespace cIcCore{
         QString spice_file = filename;
         spice_file.replace(".json",".spi");
         _spice_parser.parseFile(spice_file);
+
+        console->comment("Reading '" + filename + "'",ConsoleOutput::green);
         QJsonObject obj = this->readJson( filename);
+
+        if(readError){
+            return false;
+        }
+
+        //Read options
+        QJsonValue options = obj["options"];
+        if(options.isObject()){
+            QJsonObject opt = options.toObject();
+            if(opt.contains("ignoreSetYoffsetHalf")){
+                ignoreSetYoffsetHalf = opt["ignoreSetYoffsetHalf"].toBool();
+            }
+        }
+        
+        
 
         //Read includes
         QJsonValue include = obj["include"];
         if(include.isArray()){
             QJsonArray includeArray  = include.toArray();
-            foreach (const QJsonValue & value, includeArray) {
+            foreach (const QJsonValue & value, includeArray) { 
                 QString incfile = value.toString();
-                this->readCells(incfile);
+                qDebug() << incfile;
+                
+                if(fexists(incfile.toStdString().c_str())){
+                    if(!this->readCells(incfile))
+                    {
+                        return false;
+                        
+                    }
+                    
+                }
+                
+                foreach (QString incpath,_includePaths){
+                    QString incf = QString("%1/%2").arg(incpath).arg(incfile);
+                    qDebug() << incf;
+                    if(fexists(incf.toStdString().c_str())){
+                        this->readCells(incf);
+                    }
+
+                }
+                
             }
 
             
@@ -390,7 +445,10 @@ namespace cIcCore{
 
         foreach( QString key, jobj.keys()){
             if(re.match(key).hasMatch()){ continue;}
-
+            if( ignoreSetYoffsetHalf && key == "setYoffsetHalf"){continue;}
+            
+            
+                
             QString method_key = key;
             if(nameTranslator.contains(key)){
                 method_key = nameTranslator[key];
@@ -508,6 +566,8 @@ namespace cIcCore{
         QJsonParseError err;
         QJsonDocument d = QJsonDocument::fromJson(val.toUtf8(),&err);
         if(QJsonParseError::NoError != err.error ){
+            readError = true;
+            
             QString verr = val.mid(0,err.offset);
             int charcount =0;
             int line_count = 0;

@@ -1,0 +1,12 @@
+*Test model for use with aimspice and cIcCreator
+
+.model nch NMOS level=14 version=4.7
+.model nch_lvt NMOS level=14 version=4.7 
+.model nch_io NMOS level=14 version=4.7 
+.model nch_lvt_io NMOS level=14 version=4.7 
+
+.model pch PMOS level=14 version=4.7 
+.model pch_lvt PMOS level=14 version=4.7 
+.model pch_io PMOS level=14 version=4.7 
+.model pch_lvt_io PMOS level=14 version=4.7 
+

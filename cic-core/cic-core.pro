@@ -30,12 +30,13 @@
 
   osx:DESTDIR = ../lib/darwin
   linux:DESTDIR = ../lib/linux
+  win32:DESTDIR = ../lib/windows
 
   #- Add coverage information
   QMAKE_CFLAGS += $$(CFLAGS)
-                  QMAKE_LFLAGS += $$(LDFLAGS)
+  QMAKE_LFLAGS += $$(LDFLAGS)
 
-                  TARGET = cic
+  TARGET = cic
 
   OBJECTS_DIR=build
   MOC_DIR=build

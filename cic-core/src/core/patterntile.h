@@ -42,10 +42,10 @@ namespace cIcCore{
 
     struct EnclosureRectangle{
         QString layer;
-        int x1;
-        int y1;
-        int width;
-        int height;
+        double x1;
+        double y1;
+        double width;
+        double height;
         QList<QString> encloseWithLayers;
     };
 

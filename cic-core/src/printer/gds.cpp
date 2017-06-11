@@ -152,7 +152,12 @@ namespace cIcPrinter{
 
 
   void Gds::openFile(QString file){
-    fd = open( this->toChar(file), O_CREAT | O_TRUNC | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH );
+#ifdef _WIN32
+    cout << this->toChar(file);
+    fd = open( this->toChar(file), O_CREAT | O_TRUNC | O_WRONLY, _S_IREAD | _S_IWRITE  );
+#else
+    fd = open( this->toChar(file), O_CREAT | O_TRUNC | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH   );
+#endif
   }
 
   void Gds::closeFile(){

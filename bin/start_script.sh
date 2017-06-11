@@ -47,8 +47,16 @@ if [ $platform == "darwin" ]; then
 	else
 		$dirname/${platform}/${appname} "$@"
 	fi
-fi
 
+else
+
+    export PATH=$dirname/windows/:$PATH
+    echo $PATH
+    execfile=$dirname/windows/${appname}.exe
+    if [ -f "$execfile" ]; then
+	$execfile "$@"
+    fi
+fi
 
 
 

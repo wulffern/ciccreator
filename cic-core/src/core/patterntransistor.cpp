@@ -49,35 +49,41 @@ namespace cIcCore{
 	void PatternTransistor::paintRect(Rect *r, QChar c, int x, int y){
 		if(r->layer() == "PO" && rectangle_strings_.contains("OD") && rectangle_strings_["OD"].contains(x)           && rectangle_strings_["OD"][x].contains(y)){
 			
-			if(ports_.contains("G")){
-				Port * p = ports_["G"];
-				Rect * rect = p->get("PO");
-				if(rect){
-					rect->setRect(r);
-				}else{
-					p->add(r);
-				}
-			}else{
-			    Port *p = new Port("G");
-				p->set(r);
-				this->add(p);
-			}		
+//			if(ports_.contains("G")){
+//				Port * p = ports_["G"];
+//				Rect * rect = p->get("PO");
+                
+//				if(rect){
+//					rect->setRect(r);
+//				}else{
+//					p->add(r);
+//				}
+//			}else{
+//			    Port *p = new Port("G");
+//				p->set(r);
+//				this->add(p);
+//			}		
 		}
 	}
 
     void PatternTransistor::onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data){
 
-        if(layer == "PO" && rectangle_strings_.contains("OD") && rectangle_strings_["OD"].contains(x)
-           && rectangle_strings_["OD"][x].contains(y) ){
-
-            data["isTransistor"] = true;
 
 
+
+        if(layer == "PO" && c == 'G'){
             int pofinger = data["pofinger"].toInt();
             if(pofinger != y){
                 data["nf"] = data["nf"].toInt() +  1;
             }
             data["pofinger"] = y;
+        }
+        
+        
+        if(layer == "PO" && rectangle_strings_.contains("OD") && rectangle_strings_["OD"].contains(x)
+           && rectangle_strings_["OD"][x].contains(y) ){
+
+            data["isTransistor"] = true;            
 
             if(x < data["wmin"].toInt()){
                 data["wmin"] = x;
@@ -86,7 +92,6 @@ namespace cIcCore{
             if(x > data["wmax"].toInt()){
                 data["wmax"] = x;
             }
-
 
             if(c == 'm'){
                 data["useMinLength"] = true;

@@ -25,15 +25,18 @@ CMD=time ../bin/cic
 ifeq ($(OS),Windows_NT)
 	#- Not compatible with windows yet
 OSNAME=Windows
+OSBIN=windows
 GDS3D=WINDOWS
 else
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
 OSNAME=macOS
+OSBIN=darwin
 GDS3D=GDS3D/mac/GDS3D.app/Contents/MacOS/GDS3D
 endif
 ifeq ($(UNAME_S),Linux)
 OSNAME=Linux
+OSBIN=linux
 GDS3D=GDS3D/linux/GDS3D
 endif
 endif
@@ -47,6 +50,9 @@ lay:
 
 qmake:
 	qmake -o qmake.make ciccreator.pro 
+
+windeploy:
+	windeployqt bin/windows/cic-gui.exe
 
 xcode:
 	qmake -o qmake.make ciccreator.pro -spec  macx-xcode
@@ -84,17 +90,27 @@ minecraft: lay
 routes: lay
 	cd lay; ${CMD} ${EXAMPLE}/routes.json ${TECHFILE} routes ${OPT}
 
+esscircbulk:
+	cd examples; cp ${LIBNAME}.json SAR_ESSCIRC16_28NBULK.json
+	cd examples; cp ${LIBNAME}.hier SAR_ESSCIRC16_28NBULK.hier
+	${MAKE}	esscirc LIBNAME=SAR_ESSCIRC16_28NBULK
+
 esscirc: lay
-	cd lay; ${CMD} ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
-	./scripts/cics2spice  lay/SAR_ESSCIRC16_28N.cics  lay/SAR_ESSCIRC16_28N.spice
-	cd lay	; ../bin/cic2eps ${EXAMPLE}/${LIBNAME}.json ${EXAMPLE}/tech_eps.json ${CELL}
-	cd lay	; ../bin/cic2png ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${EXAMPLE}/${LIBNAME}.hier 
+
+	cd lay; ../bin/${OSBIN}/cic ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
+	-./scripts/cics2aimspice  lay/${LIBNAME}.cics  lay/${LIBNAME}.spice
+	cd lay	; ../bin/${OSBIN}/cic2eps ${EXAMPLE}/${LIBNAME}.json ${EXAMPLE}/tech_eps.json ${CELL}
+	cd lay	; ../bin/${OSBIN}/cic2png ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${EXAMPLE}/${LIBNAME}.hier
+
 
 view: lay
-	cd lay; ../bin/cic-gui ${TECHFILE} ${LIBNAME}.cicl &
-
+ifeq ($(UNAME_S),Darwin)
+	cd lay; ../bin/darwin/cic-gui.app/Contents/MacOS/cic-gui ${TECHFILE} ${LIBNAME}.cicl &
+else
+	cd lay; ../bin/${OSBIN}/cic-gui ${TECHFILE} ${LIBNAME}.cicl &
+endif
 view-routes: lay
-	cd lay; ../bin/cic-gui ${TECHFILE} routes.json &
+	cd lay; ../bin/${OSBIN}/cic-gui ${TECHFILE} routes.json &
 
 GDS3D:
 	wget https://sourceforge.net/projects/gds3d/files/GDS3D%201.8/GDS3D_1.8.tar.bz2/download
