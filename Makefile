@@ -103,6 +103,9 @@ esscirc: lay
 	cd lay	; ../bin/${OSBIN}/cic2png ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${EXAMPLE}/${LIBNAME}.hier
 
 
+geda: lay
+	cd lay; ../bin/cic2geda ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
+
 view: lay
 ifeq ($(UNAME_S),Darwin)
 	cd lay; ../bin/darwin/cic-gui.app/Contents/MacOS/cic-gui ${TECHFILE} ${LIBNAME}.cicl &
