@@ -6,11 +6,14 @@ CONFIG += c++11
 CONFIG += qt console debug
 
 TEMPLATE = app 
-TARGET = build/cSchematic
+TARGET = cschematic
 
 OBJECTS_DIR=build
 MOC_DIR=build
 
+
+osx:DESTDIR = ../bin/darwin
+linux:DESTDIR = ../bin/linux
 
 DEPENDPATH += . 
 INCLUDEPATH += src/

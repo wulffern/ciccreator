@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#define OPEN_DEFAULT_FILE
+
 #include <QMainWindow>
 #include "schematic/captureview.h"
 #include "geda/gEdaFileReader.h"
@@ -22,6 +24,8 @@ private:
     QMenu * fileMenu;
     QMenu * viewMenu;
     CaptureView * view;
+    QString currentFilename;
+    
 
 public:
     explicit MainWindow(QWidget *parent = 0);

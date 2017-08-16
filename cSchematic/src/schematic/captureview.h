@@ -34,6 +34,8 @@ public:
   ~CaptureView();
 
   void openFile(QString & file);
+    void writeFile(QString & file);
+    
 
   CaptureScene * scene();
 

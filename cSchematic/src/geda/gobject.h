@@ -714,6 +714,13 @@ public:
         return c;
     }
 
+    static GComponent * newInstance(QString &basename, QString & aInstanceName,int ax, int ay){
+        GComponent *c  = GComponent::newInstance(basename,ax,ay);
+        GText * instName = GText::pinText(ax, ay-15, "instName",aInstanceName);
+        c->addChild(instName);
+        return c;
+    }
+
 };
 
 //-----------------------------------------------------------------

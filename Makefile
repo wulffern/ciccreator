@@ -96,7 +96,6 @@ esscircbulk:
 	${MAKE}	esscirc LIBNAME=SAR_ESSCIRC16_28NBULK
 
 esscirc: lay
-
 	cd lay; ../bin/${OSBIN}/cic ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
 	-./scripts/cics2aimspice  lay/${LIBNAME}.cics  lay/${LIBNAME}.spice
 	cd lay	; ../bin/${OSBIN}/cic2eps ${EXAMPLE}/${LIBNAME}.json ${EXAMPLE}/tech_eps.json ${CELL}
@@ -105,6 +104,11 @@ esscirc: lay
 
 geda: lay
 	cd lay; ../bin/cic2geda ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
+
+sch:
+ifeq ($(UNAME_S),Darwin)	
+		bin/darwin/cschematic.app/Contents/MacOS/cschematic &
+endif
 
 view: lay
 ifeq ($(UNAME_S),Darwin)

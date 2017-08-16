@@ -17,16 +17,16 @@
 
   private:
     GColors(){
-      colors_.insert(BACKGROUND_COLOR,Qt::black);
-      colors_.insert(PIN_COLOR,Qt::black);
+      colors_.insert(BACKGROUND_COLOR,Qt::green);
+      colors_.insert(PIN_COLOR,Qt::green);
       colors_.insert(NET_ENDPOINT_COLOR,Qt::darkRed);
-      colors_.insert(GRAPHIC_COLOR,Qt::black);
+      colors_.insert(GRAPHIC_COLOR,Qt::green);
       colors_.insert(NET_COLOR,QColor(0,100,0));
-      colors_.insert(ATTRIBUTE_COLOR,Qt::black);
-      colors_.insert(LOGIC_BUBBLE_COLOR,Qt::white);
+      colors_.insert(ATTRIBUTE_COLOR,Qt::gray);
+      colors_.insert(LOGIC_BUBBLE_COLOR,Qt::gray);
       colors_.insert(DOTS_GRID_COLOR,Qt::gray);
-      colors_.insert(DETACHED_ATTRIBUTE_COLOR,Qt::black);
-      colors_.insert(TEXT_COLOR,Qt::blue);
+      colors_.insert(DETACHED_ATTRIBUTE_COLOR,Qt::gray);
+      colors_.insert(TEXT_COLOR,Qt::green);
       colors_.insert(BUS_COLOR,Qt::yellow);
       colors_.insert(SELECT_COLOR,Qt::white);
       colors_.insert(BOUNDINGBOX_COLOR,Qt::white);

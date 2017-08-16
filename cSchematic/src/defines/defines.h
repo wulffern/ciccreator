@@ -32,7 +32,7 @@
 #define GEDA_SCALE 10
 
 //Defines for cSchematic
-#define G_GRID 40
+#define G_GRID 10
 #define G_Y_MAX 9000
 #define G_X_MAX 12000
 #define G_SCALE 10

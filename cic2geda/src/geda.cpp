@@ -70,7 +70,7 @@ namespace cIcPrinter{
             int length = 20;
             QString name = ckt->name();
             
-            GText *  tname  = GText::commentText(length, -5, name);
+            GText *  tname  = GText::commentText(length, -10, name);
             sym->addChild(tname);
 
             int slength = 0;
@@ -104,6 +104,9 @@ namespace cIcPrinter{
         {
 
             subcktInPrint = false;
+            QString s(ckt->name() + ".sch");
+            gwriter->writeFile(s,sch);
+            
         }
 
 
@@ -128,40 +131,40 @@ namespace cIcPrinter{
         
 
 
-        if(si){
-            // QString instname = si->name();
+        if(si && sch){
+            QString name = si->subcktName() + ".sym";
+            QString instname = si->name();
+            
 
-            // ts2 << "$Comp"<< "\n";
-            // ts2 << "L "<< si->subcktName() << " " << si->name() << "\n";
-            // ts2 << "U 1 1 1" << "\n";
-            // ts2 << "P " << xref << " " << yref << "\n";
-            // ts2 << "$EndComp"<< "\n";
+            GComponent * gc = GComponent::newInstance(name,instname,xref,yref);
+             sch->addChild(gc);
+             
+             
+             
+             if (xref > 800)
+             {
+                 xref = 0;
+                 if(symbolHeight.contains(si->subcktName()))
+                 {
+                     yref -= symbolHeight[si->subcktName()]*1.5;
 
-            // if (xref > 8000)
-            // {
-            //     xref = 0;
-            //     if(symbolHeight.contains(si->subcktName()))
-            //     {
-            //         yref -= symbolHeight[si->subcktName()]*1.5;
-
-            //     }else
-            //     {
-            //         yref -= 1000;
-            //     }
-
+                 }else
+                 {
+                     yref -= 100;
+                 }
 
 
 
-            // }
+
+             }
 
             
-            // if(symbolWidth.contains(si->subcktName()))
-            // {
-            //     xref += symbolWidth[si->subcktName()]*1.5;
-            // }else{
-
-            //     xref += 1000;
-            // }
+             if(symbolWidth.contains(si->subcktName()))
+             {
+                 xref += symbolWidth[si->subcktName()]*1.5;
+             }else{
+                      xref += 100;
+             }
 
 
         }

@@ -152,7 +152,9 @@ void SceneAddNet::cancel(){
 
 void SceneAddNet::start(){
   l1 = new QGraphicsLineItem(m_start.x(),m_start.y(),m_start.x(),m_start.y());
+  l1->setPen(QPen(Qt::gray,0.5,Qt::SolidLine));
   l2 = new QGraphicsLineItem(m_start.x(),m_start.y(),m_start.x(),m_start.y());
+  l1->setPen(QPen(Qt::gray,0.5,Qt::SolidLine));
   p1 = m_start;
   p2 = m_start;
   p3 = m_start;

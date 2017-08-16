@@ -13,7 +13,7 @@ gEdaSymbolLibrary * gEdaSymbolLibrary::myLib = 0;
 gEdaSymbolLibrary::gEdaSymbolLibrary(){
 
   QStringList dirs;
-  dirs.append("/Users/wulff/svnwork/wulff/trunk/research/cSchematic/example/sym/");
+  dirs.append("/Users/wulff/pro/ciccreator/lay");
 
   foreach(QString d, dirs){
     findFiles(d);

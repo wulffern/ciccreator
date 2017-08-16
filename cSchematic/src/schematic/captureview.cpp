@@ -9,24 +9,24 @@
 #include "captureview.h"
 
 CaptureView::CaptureView(QWidget *parent):QGraphicsView(parent){
-  scene_ = new CaptureScene(0);
-  scene_->setSceneRect(QRectF(0,0 ,G_X_MAX,G_Y_MAX));
-  scene_->setSceneMode(CaptureScene::DefaultMode);
-	scene_->setBackgroundBrush(Qt::white);
-	//setDragMode(QGraphicsView::RubberBandDrag);
+    scene_ = new CaptureScene(0);
+    scene_->setSceneRect(QRectF(-G_X_MAX,-G_Y_MAX ,G_X_MAX*2,G_Y_MAX*2));
+    scene_->setSceneMode(CaptureScene::DefaultMode);
+    scene_->setBackgroundBrush(Qt::black);
+    //setDragMode(QGraphicsView::RubberBandDrag);
     setRenderHints(QPainter::Antialiasing
-                            | QPainter::TextAntialiasing);
-  //  scene_->setForegroundBrush(QBrush(Qt::lightGray, Qt::CrossPattern));
-  scale_ = 0.5;
-  scale(scale_,scale_);
-  setScene(scene_);
-	setMouseTracking(true);
-  //  setCacheMode(QGraphicsView::CacheBackground);
+                   | QPainter::TextAntialiasing);
+    //  scene_->setForegroundBrush(QBrush(Qt::lightGray, Qt::CrossPattern));
+    scale_ = 0.5;
+    scale(scale_,scale_);
+    setScene(scene_);
+    setMouseTracking(true);
+    //  setCacheMode(QGraphicsView::CacheBackground);
 
 #ifdef OPENGL_RENDERING
-  setViewport(new QGLWidget(QGLFormat(QGL::DoubleBuffer)));
+    setViewport(new QGLWidget(QGLFormat(QGL::DoubleBuffer)));
 #endif
-  scale(1,-1);
+    scale(1,-1);
 }
 
 CaptureView::~CaptureView(){
@@ -34,26 +34,38 @@ CaptureView::~CaptureView(){
 }
 
 CaptureScene * CaptureView::scene(){
-  return scene_;
+    return scene_;
 }
 
 void CaptureView::openFile(QString & file){
-  gEdaFileReader gdf;
-  GObject *g = gdf.readFile(file);
-  scene_->clear();
-  
-  scene_->addGObject(g);
-  QRectF r = scene_->itemsBoundingRect();
-  fitInView(r,Qt::KeepAspectRatio);
+    gEdaFileReader gdf;
+    GObject *g = gdf.readFile(file);
+    scene_->clear();
+
+    scene_->addGObject(g);
+    QRectF r = scene_->itemsBoundingRect();
+    fitInView(r,Qt::KeepAspectRatio);
+}
+
+void CaptureView::writeFile(QString & file){
+
+//  gEdaFileWriter gdw;
+//  gdw.writeFile(fileName,view->scene()->dataSource());
+//  GObject *g = gdf.readFile(file);
+//  scene_->clear();
+//  scene_->addGObject(g);
+//  QRectF r = scene_->itemsBoundingRect();
+//  fitInView(r,Qt::KeepAspectRatio);
 }
 
 
+
 void CaptureView::zoomOut(){
-  scale(0.5,0.5);
+    scale(1/1.25,1/1.25);
 
 }
 
 void CaptureView::zoomIn(){
-  scale(2,2);
+    scale(1.25,1.25);
 
 }

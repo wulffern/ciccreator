@@ -20,12 +20,12 @@
 #include "gEdaObjectFactory.h"
 #include "gEdaSymbolLibrary.h"
 
-  class gEdaFileReader
-  {
+class gEdaFileReader
+{
 
-  private:
+private:
 
-  public:
+public:
     //--------------------------------------------------------
     // ctor and dtor
     //--------------------------------------------------------
@@ -39,69 +39,71 @@
 
     GObject * readFile(QString & file_){
 
-      GObject * parent = new GObject();
-      readFile(file_,parent);
+        GObject * parent = new GObject();
+        readFile(file_,parent);
 
-      return parent;
+        return parent;
 
     }
 
     void readFile(QString & file_, GObject * parent){
-      QFile myFile(file_);
+        QFile myFile(file_);
 
-      if ( ! myFile.exists() ){
-        qDebug() << "File does not exists '" << file_<< "'\n";
-      }
+        if ( ! myFile.exists() ){
+            qDebug() << "File does not exists '" << file_<< "'\n";
+        }
 
-      if (!myFile.open(QIODevice::ReadOnly | QIODevice::Text))
-        return;
+        if (!myFile.open(QIODevice::ReadOnly | QIODevice::Text))
+            return;
 
-      QTextStream in(&myFile);
-      QString line = in.readLine();
-      gEdaObjectFactory gof;
-      while (!line.isNull()) {
-        //Remove whitespace from start and end
-        line = line.trimmed();
-        GObject * g = gof.getObject(line,in);
+        QTextStream in(&myFile);
+        QString line = in.readLine();
+        gEdaObjectFactory gof;
+        while (!line.isNull()) {
+            //Remove whitespace from start and end
+            line = line.trimmed();
+            GObject * g = gof.getObject(line,in);
 
-        if(g != 0)
-          {
-	    parent->addChild(g);
-	    if(g->type == OBJ_COMPLEX)
-	      {
-		GComponent * c = dynamic_cast<GComponent*>(g);
-		readSymbolFile(c);
-	      }
-          }
-        line = in.readLine();
-      }
-      myFile.close();
-      return ;
+            if(g != 0)
+            {
+                parent->addChild(g);
+                if(g->type == OBJ_COMPLEX)
+                {
+                    GComponent * c = dynamic_cast<GComponent*>(g);
+                    readSymbolFile(c);
+                }
+            }
+            line = in.readLine();
+        }
+        myFile.close();
+        return ;
     }
 
     void readSymbolFile(GComponent *c){
-      gEdaSymbolLibrary *sym = gEdaSymbolLibrary::instance();
-      if(sym->library().contains(c->basename)){
+        if(!c) return;
+        
+        gEdaSymbolLibrary *sym = gEdaSymbolLibrary::instance();
+        if(sym->library().contains(c->basename)){
 
-        //Make symbol cache
-        if(!sym->objectlibrary().contains(c->basename)){
-          GObject * o = new GObject();
-          QString basename = sym->library().value(c->basename);
-          readFile(basename,o);
-          sym->addObject(c->basename,o);
+            //Make symbol cache
+            if(!sym->objectlibrary().contains(c->basename)){
+                GObject * o = new GObject();
+                QString basename = sym->library().value(c->basename);
+                readFile(basename,o);
+                sym->addObject(c->basename,o);
+            }
+
+            GObject *o = sym->objectlibrary().value(c->basename);
+            c->symbol = o;
+        }else{
+            c->symbol = 0;
         }
-	
-        GObject *o = sym->objectlibrary().value(c->basename);
-	c->symbol = o;
-      }else{
-	c->symbol = 0;
-      }
     }
 
 
 
 
-  };
+};
 
 
 

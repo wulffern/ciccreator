@@ -18,6 +18,7 @@
 #include <QLineF>
 #include <QDebug>
 #include "geda/gobject.h"
+#include "geda/gEdaFileReader.h"
 #include "items/captureitem.h"
 #include "commands/scenemodifier.h"
 #include <QUndoStack>
