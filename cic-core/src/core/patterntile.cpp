@@ -386,8 +386,10 @@ namespace cIcCore {
                 }
             }
         }
+        
         this->updateBoundingRect();
         this->paintEnclosures();
+        this->onPaintEnd();
 
     }
 
@@ -597,6 +599,13 @@ namespace cIcCore {
     void PatternTile::onPaintEnclosure(Rect* r)
     {
     }
+
+    void PatternTile::onPaintEnd()
+    {
+
+    }
+    
+    
     
 
 }

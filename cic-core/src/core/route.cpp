@@ -32,6 +32,17 @@ namespace cIcCore{
         return match;
     }
 
+    QString Route::getQStringFromMatch(QString regex, QString options, QString defaultValue)
+    {
+        QString match =defaultValue;
+        QRegularExpression re(regex);
+        QRegularExpressionMatch m =  re.match(options);
+        if(m.hasMatch()){
+            match = m.captured(1);
+        }
+        return match;
+    }
+    
     Route::Route(QString net, QString layer, QList<Rect*> start, QList<Rect*> stop, QString options,QString routeType){
         net_ = net;
         routeLayer_ = layer;
@@ -99,6 +110,7 @@ namespace cIcCore{
         cuts_  = getIntegerFromMatch("(\\d+)cuts", options,2);
 
         vcuts_  = getIntegerFromMatch("(\\d+)vcuts", options,1);
+        routeWidthRule_ = getQStringFromMatch("routeWidth=([^,\\s+,$]+)",options,"width");
 
         if(routeType == "-|--"){routeType_ = LEFT;}
         else if(routeType == "--|-"){routeType_ = RIGHT;}
@@ -125,7 +137,7 @@ namespace cIcCore{
         }
 
 
-        
+
 
     }
 
@@ -155,8 +167,8 @@ namespace cIcCore{
             return;
         }
 
-        
-        
+
+
         QList<Rect*>  cuts = Cut::getCutsForRects(routeLayer_,rects,cuts_,vcuts_);
         foreach(Rect* r,cuts){
             allcuts.append(r);
@@ -173,18 +185,18 @@ namespace cIcCore{
         QList<Rect*> stop_rects_org = stop_rects_;
         stop_rects_.clear();
         start_rects_.clear();
-        
+
         foreach(Rect* r, start_rects_org){
             start_rects_.append(r->getCopy());
         }
         foreach(Rect* r, stop_rects_org){
             stop_rects_.append(r->getCopy());
         }
-        
-        
 
-        
-        
+
+
+
+
         this->addStartCuts();
         this->addEndCuts();
         switch(routeType_){
@@ -246,17 +258,17 @@ namespace cIcCore{
     }
 
     void Route::routeOne(){
-        int width = rules->get(routeLayer_,"width");
+        int width = rules->get(routeLayer_,routeWidthRule_);
         int space = rules->get(routeLayer_,"space");
 
         Rect start_bound = this->calcBoundingRect(start_rects_);
-        
+
         int hgrid = this->rules->get("ROUTE","horizontalgrid");
 
         int x = 0;
         if(routeType_ == RIGHT){
-            x = start_bound.left() - space - width;                
-            
+            x = start_bound.left() - space - width;
+
             if(hasTrack_)
                 x = x - hgrid*track_ - space;
 
@@ -275,7 +287,7 @@ namespace cIcCore{
     }
 
     void Route::routeLeftDownLeftUp(){
-        int width = rules->get(routeLayer_,"width");
+        int width = rules->get(routeLayer_,routeWidthRule_);
         int space = rules->get(routeLayer_,"space");
 
         Rect start_bound = this->calcBoundingRect(start_rects_);
@@ -317,7 +329,7 @@ namespace cIcCore{
     }
 
     void Route::routeLeftUpLeftDown(){
-        int width = rules->get(routeLayer_,"width");
+        int width = rules->get(routeLayer_,routeWidthRule_);
         int space = rules->get(routeLayer_,"space");
 
 
@@ -327,7 +339,7 @@ namespace cIcCore{
         int x = 0;
         x = start_bound.x2() + space*2;
         int y = 0;
-        
+
         foreach(auto rect,start_rects_){
             auto r = new Rect(routeLayer_,rect->x1(),rect->y1(),x-rect->x1(),width);
             this->applyOffset(width,r,startOffset_);
@@ -340,7 +352,7 @@ namespace cIcCore{
         }
         double yca = -1e32;
 
-        
+
 
         foreach(auto rect,stop_rects_) {
 
@@ -372,8 +384,8 @@ namespace cIcCore{
     }
 
     void Route::routeStrap(){
-                int width = rules->get(routeLayer_,"width");
-	
+        int width = rules->get(routeLayer_,routeWidthRule_);
+
         if(start_rects_.count() == 1){
             auto sr = start_rects_[0];
             foreach(Rect* r, stop_rects_){
@@ -381,7 +393,7 @@ namespace cIcCore{
                 auto rc = new Rect(routeLayer_,sr->x1(),r->y1(),r->x1()-sr->x1(),width);
                 cs->moveTo(rc->x1(),rc->y1());
                 this->add(rc);
-                
+
                 if( sr->layer() != routeLayer_){
                     this->add(cs);
                 }
@@ -396,22 +408,22 @@ namespace cIcCore{
                 if( sr->layer() != routeLayer_){
                     this->add(cs);
                 }
-                
+
             }
         }else{
             qDebug() << "Error: Cannot route strap!";
         }
-        
-        
-            
-  }
+
+
+
+    }
 
 
 
 
     void Route::addVertical(int x){
 
-        int width = rules->get(routeLayer_,"width");
+        int width = rules->get(routeLayer_,routeWidthRule_);
         if(this->options_.contains(QRegularExpression("novert"))) return;
         if(this->options_.contains(QRegularExpression("antenna"))){
             //TODO::Add antenna code
@@ -457,7 +469,7 @@ namespace cIcCore{
 
         Rect start_bound = Cell::calcBoundingRect(start_rects_);
         Rect stop_bound = Cell::calcBoundingRect(stop_rects_);
-        int width = this->rules->get(routeLayer_,"width");
+        int width = this->rules->get(routeLayer_,routeWidthRule_);
 
         int yc = start_bound.y1();
         int height = stop_bound.y2() - yc;
@@ -536,7 +548,7 @@ namespace cIcCore{
 
 
     void Route::routeU(){
-        int width = rules->get(routeLayer_,"width");
+        int width = rules->get(routeLayer_,routeWidthRule_);
         int space = rules->get(routeLayer_,"space");
 
         int hgrid = this->rules->get("ROUTE","horizontalgrid");
@@ -565,7 +577,7 @@ namespace cIcCore{
     }
 
     void Route::addHorizontalTo(int x, QList<Rect*> rects,Offset offset){
-        int width = rules->get(routeLayer_,"width");
+        int width = rules->get(routeLayer_,routeWidthRule_);
 
         foreach(Rect *r, rects){
             Rect * rect  = Rect::getHorizontalRectangleFromTo(routeLayer_,r->centerX(),x,r->y1(),width);

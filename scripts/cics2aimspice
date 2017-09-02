@@ -76,9 +76,19 @@ foreach my $cell (@{$arr}) {
   # Write standard capacitors
   #----------------------------------------------------------------------------
   if ($cell->{class} =~ m/Capacitor/) {
-    print fo "C1 ".join(' ',@nodes)." 6f \n";
-    print fo "R1 A 0 1e12\n";
-    print fo "R2 B 0 1e12\n";
+	my $w = $cell->{properties}->{width};
+	my $h = $cell->{properties}->{width};
+
+
+	my $a = $w * $h * 0.5;
+    print fo "C1 ".$nodes[0]." ".$nodes[1]." ${a}f \n";
+	if(scalar(@nodes) > 2){
+	  print fo "CB ".$nodes[2]." 0 ".(${a}*0.1)."f \n";
+	}  
+	foreach my $n(@nodes){
+	  print fo "R$n $n 0 1e12\n";
+	}
+
 
 	#----------------------------------------------------------------------------
 	# Write CDAC cells
