@@ -52,11 +52,11 @@ namespace cIcCore{
     class PatternTile: public Cell
     {
         Q_OBJECT
-        Q_PROPERTY(int minPolyLength READ minPolyLength WRITE setMinPolyLength)
-        Q_PROPERTY(int widthoffset READ widthoffset WRITE setWidthoffset)
-        Q_PROPERTY(int heightoffset READ heightoffset WRITE setHeightoffset)
-		Q_PROPERTY(int verticalGrid READ verticalGrid WRITE setVerticalGrid)
-        Q_PROPERTY(int horizontalGrid READ horizontalGrid WRITE setHorizontalGrid)
+        Q_PROPERTY(qreal minPolyLength READ minPolyLength WRITE setMinPolyLength)
+        Q_PROPERTY(qreal widthoffset READ widthoffset WRITE setWidthoffset)
+        Q_PROPERTY(qreal heightoffset READ heightoffset WRITE setHeightoffset)
+		Q_PROPERTY(qreal verticalGrid READ verticalGrid WRITE setVerticalGrid)
+        Q_PROPERTY(qreal horizontalGrid READ horizontalGrid WRITE setHorizontalGrid)
         Q_PROPERTY(double verticalGridMultiplier READ verticalGridMultiplier WRITE setVerticalGridMultiplier)
         Q_PROPERTY(double horizontalGridMultiplier READ horizontalGridMultiplier WRITE setHorizontalGridMultiplier)
         Q_PROPERTY(qreal yoffset READ yoffset WRITE setYoffset)
@@ -89,11 +89,11 @@ namespace cIcCore{
 
         virtual Rect calcBoundingRect();
 
-        int minPolyLength(){return minPolyLength_;}
-        int setMinPolyLength(int val){ minPolyLength_ = val*this->rules->gamma(); return minPolyLength_;  }
+        qreal minPolyLength(){return minPolyLength_;}
+        qreal setMinPolyLength(qreal val){ minPolyLength_ = val*this->rules->gamma(); return minPolyLength_;  }
 
-		int verticalGrid(){return verticalGrid_;}
-        int setVerticalGrid(int val){ verticalGrid_ = val; return verticalGrid_;  }
+		qreal verticalGrid(){return verticalGrid_;}
+        qreal setVerticalGrid(qreal val){ verticalGrid_ = val; return verticalGrid_;  }
 
         double verticalGridMultiplier(){return verticalGridMultiplier_;}
         double setVerticalGridMultiplier(double val){ verticalGridMultiplier_ = val; return verticalGridMultiplier_;  }
@@ -130,10 +130,10 @@ namespace cIcCore{
     protected:
         QMap<QString,QMap<int,QMap<int,QChar> > > rectangle_strings_;
         int mirrorPatternString_;
-        int minPolyLength_;
+        qreal minPolyLength_;
         int currentHeight_;
-		int horizontalGrid_;
-		int verticalGrid_;
+		qreal horizontalGrid_;
+		qreal verticalGrid_;
         double horizontalGridMultiplier_;
 		double verticalGridMultiplier_;
         int polyWidthAdjust_;
