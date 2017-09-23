@@ -157,6 +157,8 @@ namespace cIcCore{
         QList<Rect*> findPatternStrings(QString layer);
         Rect * makeRect(QString layer,QChar c,int x, int y);
         void paintEnclosures();
+        virtual void onPaintEnd();
+        
 
         inline int translateX(int x){  return (x + xoffset_)*xspace_;}
         inline int translateY(int y){ return (y + yoffset_)*yspace_;}

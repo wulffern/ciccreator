@@ -57,6 +57,7 @@ namespace cIcCore{
 
 		void hasMatch(QString options);
 		int getIntegerFromMatch(QString regex,QString options, int defaultValue);
+        QString getQStringFromMatch(QString regex,QString options, QString defaultValue);
 	protected:
 		QString routeLayer_;
 		RouteType routeType_;
@@ -69,6 +70,7 @@ namespace cIcCore{
 		bool hasTrack_;
 		int cuts_;
 		int vcuts_;
+        QString routeWidthRule_;
 		bool fillvcut_;
 		bool fillhcut_;
 		bool antenna_;

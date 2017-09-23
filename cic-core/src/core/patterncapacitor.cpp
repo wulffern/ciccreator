@@ -76,6 +76,15 @@ namespace cIcCore{
     }
 
 
+    void PatternCapacitor::onPaintEnd()
+    {
+        Subckt * ckt = this->subckt();
+
+        ckt->setProperty("width",this->rules->toMicron(this->width()));
+        ckt->setProperty("height",this->rules->toMicron(this->height()));
+        
+    }
+    
 
 
     void PatternCapacitor::paintRect(Rect* r, QChar c  ,int x , int y ){

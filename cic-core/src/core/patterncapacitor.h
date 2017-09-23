@@ -40,6 +40,9 @@ namespace cIcCore{
         virtual void paintRect(Rect*, QChar ,int , int );
         PatternCapacitor();
         ~PatternCapacitor();
+        void onPaintEnd();
+        
+        
         void onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data);
 
 
