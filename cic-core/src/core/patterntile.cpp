@@ -50,8 +50,8 @@ namespace cIcCore {
 
         int x1  = 0;
         int y1  = 0;
-        int x2  = (xmax_ + widthoffset_)*xspace_;
-        int y2  = (ymax_ + heightoffset_)*yspace_;
+        int x2  = ((float)xmax_ + (float)widthoffset_)*(float)xspace_;
+        int y2  = ((float)ymax_ + (float)heightoffset_)*(float)yspace_;
 
         Rect r;
         r.setPoint1(x1,y1);
