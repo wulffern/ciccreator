@@ -58,6 +58,7 @@ namespace cIcCore{
         Q_INVOKABLE void addRouteHorizontalRect(QJsonArray obj);
         Q_INVOKABLE void addGuard(QJsonArray obj);
         Q_INVOKABLE void addHorizontalRect(QJsonArray obj);
+        Q_INVOKABLE void alternateGroup(QJsonValue obj);
         
         
 
@@ -104,6 +105,7 @@ namespace cIcCore{
 
 	private:
         bool useHalfHeight;
+        bool alternateGroup_;
         QList<QString> nodeGraphList_;
 		QHash<QString,Graph*> nodeGraph_;
 

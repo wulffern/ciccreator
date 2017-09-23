@@ -25,6 +25,7 @@ namespace cIcCore{
         useHalfHeight = false;
         noPowerRoute_ = false;
         boundaryIgnoreRouting_ = true;
+        alternateGroup_ = false;
     }
 
     LayoutCell::LayoutCell(const LayoutCell& cell): Cell(cell){
@@ -39,6 +40,10 @@ namespace cIcCore{
 
     void LayoutCell::setYoffsetHalf(QJsonValue obj){
         useHalfHeight = true;
+    }
+
+    void LayoutCell::alternateGroup(QJsonValue obj){
+        alternateGroup_ = true;
     }
 
     void LayoutCell::noPowerRoute(QJsonValue obj){
@@ -836,7 +841,6 @@ namespace cIcCore{
             }
             
             
-            
             Instance* inst = this->addInstance(ckt_inst,instance_x,instance_y);
 
 
@@ -845,7 +849,13 @@ namespace cIcCore{
                 if(angle == "180"){
                     inst->setAngle("MY");
                 }
-            }            
+            }
+
+            
+            if(alternateGroup_){
+                inst->setAngle("MY");
+            }
+            
 
             next_x = inst->x2();
             next_y = inst->y2();
