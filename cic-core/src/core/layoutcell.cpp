@@ -801,6 +801,7 @@ namespace cIcCore{
         int next_y = 0;
         int x = 0;
         int y = 0;
+        bool mirror_y = false;
         foreach(cIcSpice::SubcktInstance * ckt_inst,_subckt->instances()){
             QString group = ckt_inst->groupName();
             if(prev_group.compare(group) != 0  && prev_group.compare("")  != 0){
@@ -852,8 +853,11 @@ namespace cIcCore{
             }
 
             
-            if(alternateGroup_){
+            if(alternateGroup_ && mirror_y){
                 inst->setAngle("MY");
+                mirror_y = false;
+            }else  if(alternateGroup_ && !mirror_y){
+                mirror_y = true;
             }
             
 
