@@ -1076,6 +1076,7 @@ namespace cIcCore{
     }
 
     void LayoutCell::addAllPorts(){
+        if(!_subckt) return;
         QStringList nodes = _subckt->nodes();
         QString filterChild = "^B$";
         QString filterInstance = "";

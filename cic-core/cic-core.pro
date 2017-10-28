@@ -24,7 +24,8 @@
   CONFIG += c++11
 
   mac {
-  mac::QMAKE_MAC_SDK = macosx10.12
+  #- This needs to point to the SDK usually in /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
+  mac::QMAKE_MAC_SDK = macosx10.13
   }
   TEMPLATE = lib
 
