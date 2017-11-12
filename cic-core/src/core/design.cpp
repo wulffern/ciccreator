@@ -96,9 +96,29 @@ namespace cIcCore{
                 ignoreSetYoffsetHalf = opt["ignoreSetYoffsetHalf"].toBool();
             }
         }
-        
-        
 
+
+        //Read patterns
+        QJsonValue patterns = obj["patterns"];
+        if(patterns.isObject()){
+            QJsonObject pat = patterns.toObject();
+            foreach(const QString & str, pat.keys()){
+                QStringList lst;
+                QJsonValue jv = pat[str];
+                if(jv.isArray()){
+                    
+                    QJsonArray a = jv.toArray();
+                    foreach(const QJsonValue & v, a){
+                        lst.append(v.toString());
+                        
+                    }                    
+                    PatternTile::Patterns[str] = lst;                    
+                }                         
+            }
+            
+        }
+
+        
         //Read includes
         QJsonValue include = obj["include"];
         if(include.isArray()){

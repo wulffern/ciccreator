@@ -18,8 +18,30 @@
         ],
         "comment" : "------------------------------------------------------------"
     },
+	"patterns" : {
+		"Y" : [ "-",
+				"x"],
+		"H" : [ "x",
+				"-"]
+	},
     "cells":
     [
+
+		{ "name" : "Pattern",
+          "class" : "cIcCore::PatternTile",
+          "fillCoordinatesFromStrings" : [
+              [ "PO",
+                "------------------",
+				"----xx-xx-xx------",
+				"------------------",
+				"----YY-XX-HH------",
+				"------------------",
+				"------------------"
+              ]
+
+          ]
+        },
+
         { "name" : "DDD",
           "class" : "cIcCore::PatternTile",
           "fillCoordinatesFromStrings" : [

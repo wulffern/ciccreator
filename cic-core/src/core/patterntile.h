@@ -40,6 +40,60 @@ namespace cIcCore{
 
     };
 
+    class PatternData
+    {
+    public:
+        int xcount;
+        int ycount;
+        QChar name;
+        QStringList pattern;
+
+        QList<Rect*> getRectangles(Rect* r)
+        {
+            QList<Rect*> rects;
+            if(!r) return rects;
+            
+            
+            int x1 = r->x1();
+            int y1 = r->y1();
+            int x2 = r->x2();
+            int y2 = r->y2();
+            int xstep = (x2 - x1)/xcount;
+            int ystep = (y2 - y1)/ycount;
+            int xa = x1;
+            int ya = y1;
+
+            Rect* prevrect;
+            
+            for(int y=0;y<ycount;y++){
+                QString s = pattern[y];
+                xa = x1;
+                for(int x = 0;x<xcount;x++){
+                    QChar c = s[x];
+                    if(c == 'x'){
+                        if(prevrect && prevrect->x2() == xa){
+                            prevrect->setRight(xa+xstep);
+                        }else{
+                            Rect * ra = new Rect(r->layer(),xa,ya,xstep,ystep);
+                            rects.append(ra);
+                            prevrect = ra;
+                            
+                        }
+                        
+                    }
+                    xa += xstep;
+                }
+                ya += ystep;
+            }
+            return rects;
+            
+        }
+        
+        
+    };
+    
+        
+
     struct EnclosureRectangle{
         QString layer;
         double x1;
@@ -125,6 +179,8 @@ namespace cIcCore{
         int setMirrorPatternString(int mirrorPatternString){mirrorPatternString_ = mirrorPatternString; return mirrorPatternString_;}
 
 
+        static QMap<QString,QStringList> Patterns;
+        QMap<QChar,PatternData*> Pattern;
 
 
     protected:
@@ -158,6 +214,8 @@ namespace cIcCore{
         Rect * makeRect(QString layer,QChar c,int x, int y);
         void paintEnclosures();
         virtual void onPaintEnd();
+        virtual void readPatterns();
+        
         
 
         inline int translateX(int x){  return (x + xoffset_)*xspace_;}

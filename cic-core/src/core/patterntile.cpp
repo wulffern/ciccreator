@@ -20,6 +20,9 @@
 
 namespace cIcCore {
 
+    QMap<QString,QStringList> PatternTile::Patterns;
+
+
     PatternTile::PatternTile():Cell()
     {
         ymax_ = 0;
@@ -33,16 +36,16 @@ namespace cIcCore {
         heightoffset_ = 0;
         mirrorPatternString_ = 0;
         polyWidthAdjust_ = 1;
-        
+
         verticalGrid_ = 0;
         horizontalGrid_ = 0;
         verticalGridMultiplier_ = 1;
         horizontalGridMultiplier_ = 1;
-        
-        
+
+
         prev_rect_  = 0;
         _has_pr = true;
-        
+
     }
 
     Rect PatternTile::calcBoundingRect(){
@@ -93,9 +96,9 @@ namespace cIcCore {
         QString layer = ar[0].toString();
         QString rule = ar[1].toString();
         horizontalGrid_ = this->getRules()->get(layer,rule);
-        
+
     }
-    
+
     void PatternTile::getRuleForVerticalGrid(QJsonArray ar)
     {
         if(ar.size() < 2){
@@ -108,7 +111,38 @@ namespace cIcCore {
         verticalGrid_ = this->getRules()->get(layer,rule);
 
     }
-    
+
+
+    //TODO: How dow I figure out how the patterns should be translated
+    //into rectangles? I guess it's a quantization of the rectangle,
+    //so some sort of loop that adds sub-rectangles?
+    void PatternTile::readPatterns()
+    {
+        foreach(const QString & key, Patterns.keys()){
+            QStringList sl = Patterns[key];
+            int ycount = sl.count();
+            int xcount = 0;
+
+
+            foreach(const QString & s, sl){
+                int xc = s.length();
+                if(xc > xcount){
+                    xcount = xc;
+                }
+            }
+            PatternData* d = new PatternData();
+
+            d->xcount = xcount;
+            d->ycount = ycount;
+            d->name = key[0];
+            d->pattern = sl;
+
+            Pattern[key[0]] = d;
+        }
+
+
+    }
+
 
 
     void PatternTile::fillCoordinatesFromString(QJsonArray ar){
@@ -118,18 +152,18 @@ namespace cIcCore {
         this->xspace_ = this->rules->get("ROUTE","horizontalgrid")*horizontalGridMultiplier_;
         this->yspace_ = this->rules->get("ROUTE","verticalgrid")*verticalGridMultiplier_;
 
-        
+
         if(horizontalGrid_ != 0){
             this->xspace_ = horizontalGrid_;
         }
-        
+
         if(verticalGrid_ != 0){
             this->yspace_ = verticalGrid_;
         }
         if( this->minPolyLength_ == 0 ){
             this->minPolyLength_ = this->rules->get("PO","mingatelength");
         }
-        
+
 
         QMap<QString,QVariant> data = this->initFillCoordinates();
 
@@ -201,6 +235,10 @@ namespace cIcCore {
             this->minPolyLength_ = this->rules->get("PO","mingatelength");
         }
 
+        //- Load all user-defined patterns
+        readPatterns();
+
+
         currentHeight_ = yspace_;
         foreach(QString layer, layerNames_){
 
@@ -224,13 +262,11 @@ namespace cIcCore {
 
                     //- Set height
                     if(layer == "PO"){
-                        
+
                         currentHeight_ = this->rules->get(layer,"width");
                         if(currentHeight_ < this->minPolyLength_){
                             currentHeight_ = this->minPolyLength_;
                         }
-                        
-                            
                     }else if( c== 'x'){
                         currentHeight_ = yspace_;
                     }
@@ -281,6 +317,25 @@ namespace cIcCore {
                         break;
                     }
 
+
+                    
+                    
+                    if(Pattern.contains(c)){
+                        
+
+                        PatternData *p = Pattern[c];
+                        if(p){
+                            rect->setRect(xs,ys,xspace_,yspace_);                            
+                            QList<Rect*> rects = p->getRectangles(rect);
+                            foreach(Rect* r,rects){
+                                this->add(rects);
+                            }
+                            rect->setRect(xs,ys,0,0);
+                        }
+                        
+                    }
+
+
                     //Adjustment to get poly transistors correct
                     if(c =='G' && layer == "PO"){
                         rect->setRect(xs,ys,xspace_,this->minPolyLength());
@@ -291,12 +346,11 @@ namespace cIcCore {
                         prev_rect_->setRight(rect->x2());
                         delete(rect);
                         rect = prev_rect_;
-                    }else
-                        if(!rect->empty() && !this->_children.contains(rect)){
+                    }else if(!rect->empty() && !this->_children.contains(rect)){
                             this->add(rect);
                             rectangles_[layer][y][x] = rect;
-                        }
-
+                    }
+                    
                     prev_rect_ = rect;
 
                     if(p){
@@ -337,45 +391,45 @@ namespace cIcCore {
 
                         break;
                     case 'K':
-					case 'Q':
+                    case 'Q':
                     case 'k':
-						lay = this->rules->getNextLayer(layer);
-						cr = new Rect();
+                        lay = this->rules->getNextLayer(layer);
+                        cr = new Rect();
 
                         cr->setLayer(lay);
                         cw = this->rules->get(lay,"width");
                         ch = this->rules->get(lay,"height");
                         cs = this->rules->get(lay,"space");
                         cr->setRect(xs,ys,cw,ch);
-						cxoffset = xspace_/2.0;
+                        cxoffset = xspace_/2.0;
 
-						if(c == 'K'){
-						if(this->mirrorPatternString()){
-                            cxoffset = xspace_ ;
-                        }else{
-                            cxoffset = 0;
+                        if(c == 'K'){
+                            if(this->mirrorPatternString()){
+                                cxoffset = xspace_ ;
+                            }else{
+                                cxoffset = 0;
+                            }
                         }
-						}
-						
-						if(c == 'Q'){
-							if (this->mirrorPatternString()) {
-								cxoffset = -xspace_/2.0;
-							} else {
-								cxoffset = xspace_/2 +cs/2 + cr->width()/2;
 
-							}
-						}
-						
+                        if(c == 'Q'){
+                            if (this->mirrorPatternString()) {
+                                cxoffset = -xspace_/2.0;
+                            } else {
+                                cxoffset = xspace_/2 +cs/2 + cr->width()/2;
+
+                            }
+                        }
+
 
                         cr1 = cr->getCopy();
 //                        if(this->mirrorPatternString()){cxoffset -= cs/2 - cw/2;}
 
                         cr->moveCenter(xs + cxoffset, ys + yspace_/2.0);
-						if(this->mirrorPatternString()){
-								cr1->moveCenter(cr->centerX() + cs + cw,cr->centerY());
-							}else{
-								cr1->moveCenter(cr->centerX() - cs - cw,cr->centerY());
-							}
+                        if(this->mirrorPatternString()){
+                            cr1->moveCenter(cr->centerX() + cs + cw,cr->centerY());
+                        }else{
+                            cr1->moveCenter(cr->centerX() - cs - cw,cr->centerY());
+                        }
                         this->add(cr);
                         this->add(cr1);
                         break;
@@ -386,7 +440,7 @@ namespace cIcCore {
                 }
             }
         }
-        
+
         this->updateBoundingRect();
         this->paintEnclosures();
         this->onPaintEnd();
@@ -604,8 +658,8 @@ namespace cIcCore {
     {
 
     }
-    
-    
-    
+
+
+
 
 }

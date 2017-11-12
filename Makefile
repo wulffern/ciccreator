@@ -110,7 +110,11 @@ else
 	cd lay; ../bin/${OSBIN}/cic-gui ${TECHFILE} ${LIBNAME}.cicl &
 endif
 view-routes: lay
-	cd lay; ../bin/${OSBIN}/cic-gui ${TECHFILE} routes.json &
+ifeq ($(UNAME_S),Darwin)
+	cd lay; ../bin/darwin/cic-gui.app/Contents/MacOS/cic-gui ${TECHFILE} routes.cicl &
+else
+	cd lay; ../bin/${OSBIN}/cic-gui ${TECHFILE} routes.cicl &
+endif
 
 GDS3D:
 	wget https://sourceforge.net/projects/gds3d/files/GDS3D%201.8/GDS3D_1.8.tar.bz2/download

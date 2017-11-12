@@ -802,6 +802,9 @@ namespace cIcCore{
         int x = 0;
         int y = 0;
         bool mirror_y = false;
+        if(!_subckt) return;
+        
+            
         foreach(cIcSpice::SubcktInstance * ckt_inst,_subckt->instances()){
             QString group = ckt_inst->groupName();
             if(prev_group.compare(group) != 0  && prev_group.compare("")  != 0){
