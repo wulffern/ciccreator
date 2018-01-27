@@ -46,19 +46,18 @@ int main(int argc, char *argv[])
 
             //Load design, this is where the magic happens
             cIcCore::Design * d= new cIcCore::Design();
-
-	    d->readJsonFile(file);
+            d->readJsonFile(file);
 
 
             cIcPrinter::Eps * eps = new cIcPrinter::Eps(cell);
             eps->print(d,cell);
-            
+
         }else{
-            qWarning() << "Usage: cic2eps <JSON file> <Technology file> [<Cell>]";
+            qWarning() << "Usage: cic2eps <CIC file> <Technology file> [<Cell>]";
         }
 
     }catch(...){
-      
+
         return -1;
     }
 

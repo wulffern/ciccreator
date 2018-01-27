@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
                 QRegularExpressionMatch m = re.match(file);
                 library = m.captured(1);
             }
-            
+
 
 
             //Load rules
@@ -48,20 +48,21 @@ int main(int argc, char *argv[])
 
             //Load design, this is where the magic happens
             cIcCore::Design * d= new cIcCore::Design();
-	    d->readJsonFile(file);
+            d->readJsonFile(file);
 
 
-	    //Minecraft JavaScript
+            //Minecraft JavaScript
             cIcPrinter::Minecraft * m = new cIcPrinter::Minecraft(library + ".js");
             m->print(d);
 
 
         }else{
-            qWarning() << "Wrong number of arguments " << argc;
+            qWarning() << "Usage: cic2scriptcraft <CIC file> <Technology file> [<Library Name>]";
+
         }
 
     }catch(...){
-      
+
         return -1;
     }
 

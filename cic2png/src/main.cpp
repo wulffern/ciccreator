@@ -170,10 +170,6 @@ int main(int argc, char *argv[])
             }
 
 
-//             painter.end();
-
-
-
             console->comment("Writing " + outfilename + ".png",ConsoleOutput::green);
             QImageWriter writer(outfilename + ".png");
             writer.setFormat("png");
@@ -182,7 +178,7 @@ int main(int argc, char *argv[])
 
 
         }else{
-           qWarning() << "Usage: cic2png <JSON file> <Technology file> [<Hierarchy description>]";
+           qWarning() << "Usage: cic2png <CIC file> <Technology file> [<Hierarchy description>]";
       
         }
 
