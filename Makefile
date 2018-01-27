@@ -17,7 +17,7 @@
 ##   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ######################################################################
 
-VERSION=0.1.0
+VERSION=0.1.1
 
 CMD=time ../bin/cic
 
@@ -96,24 +96,31 @@ esscircbulk:
 	${MAKE}	esscirc LIBNAME=SAR_ESSCIRC16_28NBULK
 
 esscirc: lay
+ifeq ($(UNAME_S),Darwin)
+	cd lay; ../bin/${OSBIN}/cic.app/Contents/MacOS/cic ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
+	-./scripts/cics2aimspice  lay/${LIBNAME}.cic  lay/${LIBNAME}.spice
+	cd lay	; ../bin/${OSBIN}/cic2eps.app/Contents/MacOS/cic2eps ${EXAMPLE}/${LIBNAME}.json ${EXAMPLE}/tech_eps.json ${CELL}
+	cd lay	; ../bin/${OSBIN}/cic2png.app/Contents/MacOS/cic2png ${LIBNAME}.cic ${TECHFILE} ${EXAMPLE}/${LIBNAME}.hier
 
+else
 	cd lay; ../bin/${OSBIN}/cic ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
 	-./scripts/cics2aimspice  lay/${LIBNAME}.cics  lay/${LIBNAME}.spice
 	cd lay	; ../bin/${OSBIN}/cic2eps ${EXAMPLE}/${LIBNAME}.json ${EXAMPLE}/tech_eps.json ${CELL}
-	cd lay	; ../bin/${OSBIN}/cic2png ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${EXAMPLE}/${LIBNAME}.hier
+	cd lay	; ../bin/${OSBIN}/cic2png ${LIBNAME}.cic ${TECHFILE} ${EXAMPLE}/${LIBNAME}.hier
+endif
 
 
 view: lay
 ifeq ($(UNAME_S),Darwin)
-	cd lay; ../bin/darwin/cic-gui.app/Contents/MacOS/cic-gui ${TECHFILE} ${LIBNAME}.cicl &
+	cd lay; ../bin/darwin/cic-gui.app/Contents/MacOS/cic-gui ${TECHFILE} ${LIBNAME}.cic &
 else
-	cd lay; ../bin/${OSBIN}/cic-gui ${TECHFILE} ${LIBNAME}.cicl &
+	cd lay; ../bin/${OSBIN}/cic-gui ${TECHFILE} ${LIBNAME}.cic &
 endif
 view-routes: lay
 ifeq ($(UNAME_S),Darwin)
-	cd lay; ../bin/darwin/cic-gui.app/Contents/MacOS/cic-gui ${TECHFILE} routes.cicl &
+	cd lay; ../bin/darwin/cic-gui.app/Contents/MacOS/cic-gui ${TECHFILE} routes.cic &
 else
-	cd lay; ../bin/${OSBIN}/cic-gui ${TECHFILE} routes.cicl &
+	cd lay; ../bin/${OSBIN}/cic-gui ${TECHFILE} routes.cic &
 endif
 
 GDS3D:

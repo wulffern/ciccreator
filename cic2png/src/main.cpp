@@ -62,29 +62,28 @@ int main(int argc, char *argv[])
 
         if(argc >=  3){
             QString file = argv[1];
-            QString rules = argv[2];
-            QString filename = argv[3];
+	    QString rules = argv[2];
+	    QString filename = argv[3];
             QString outfilename = "outfile";
             
             if(filename == ""){
-                QRegularExpression re("^(.*)\\.json");
+                QRegularExpression re("^(.*)\\.cicl");
                 QRegularExpressionMatch m = re.match(file);
                 filename = m.captured(1) + ".hier";
             }
 
-            QRegularExpression re1("/?([^\\/]+)\\.json");
+            QRegularExpression re1("/?([^\\/]+)\\.cicl");
             QRegularExpressionMatch m1 = re1.match(file);
             outfilename = m1.captured(1);
 
             //Load rules
-            cIcCore::Rules::loadRules(rules);
-
+	    cIcCore::Rules::loadRules(rules);
 
             //Load design, this is where the magic happens
             cIcCore::Design * d= new cIcCore::Design();
             console->comment("Reading JSON: " + file,ConsoleOutput::green);
 
-            d->read(file);
+	    d->readJsonFile(file);
 
             //Load hiearchy file
             QJsonObject obj = d->readJson(filename);
@@ -92,8 +91,6 @@ int main(int argc, char *argv[])
             Cell * boundary = new Cell();
             QList<CellHier> cells;
             if(obj.contains("unit")){
-                qDebug() << "testing";
-                
                 QJsonValue unitValue = obj["unit"];
                 unit = unitValue.toDouble();
                 console->comment("Found unit = " + QString("%1").arg(unit),ConsoleOutput::green);

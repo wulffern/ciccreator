@@ -543,7 +543,15 @@ namespace cIcCore{
         o["class"] =  this->metaObject()->className();
         o["name"] = this->name();
         o["has_pr"] = this->_has_pr;
-        QJsonArray ar;
+
+	cIcSpice::Subckt * ckt = this->subckt();
+        if(ckt){
+	  QJsonObject ockt = ckt->toJson();
+	  ockt["class"] = this->metaObject()->className();
+	  o["ckt"] = ockt;
+	}
+
+		QJsonArray ar;
 
         foreach(Rect * r, children()){
             QJsonObject child = r->toJson();

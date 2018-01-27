@@ -74,10 +74,6 @@ int main(int argc, char *argv[])
             spice->print(d);
             delete(spice);
 
-            cIcPrinter::Cics * cics = new cIcPrinter::Cics(library);
-            cics->print(d);
-            delete(cics);
-
 
             //Write GDS
             cIcCore::ConsoleOutput console;
@@ -87,7 +83,7 @@ int main(int argc, char *argv[])
             delete(gd);
 
             //Write JSON
-            d->writeJsonFile(library + ".cicl");
+            d->writeJsonFile(library + ".cic");
 
         }else{
             qWarning() << "Usage: cic <JSON file> <Technology file> [<Output name>]";

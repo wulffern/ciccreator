@@ -46,7 +46,8 @@ int main(int argc, char *argv[])
 
             //Load design, this is where the magic happens
             cIcCore::Design * d= new cIcCore::Design();
-            d->read(file);
+
+	    d->readJsonFile(file);
 
 
             cIcPrinter::Eps * eps = new cIcPrinter::Eps(cell);

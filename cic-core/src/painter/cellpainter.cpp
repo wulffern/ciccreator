@@ -213,7 +213,9 @@ namespace cIcPainter{
 
     void CellPainter::paintCell(QPainter & painter,Cell * c,QString hierarchy){
 
-        if(Cell::isEmpty(c)){return ;}
+
+
+      if(Cell::isEmpty(c)){qDebug() << "Empty cell\n "; return ;}
 
         this->startCell(painter,c);
 

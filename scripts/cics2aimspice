@@ -63,21 +63,24 @@ my $arr = $json->decode($buffer);
 my $err  = $json->error;
 die $err if $err;
 
+
 #----------------------------------------------------------------------------
 # Write spice file
 #----------------------------------------------------------------------------
 #- Parse all cells, and write spice
-foreach my $cell (@{$arr}) {
-  my @nodes = @{$cell->{nodes}};
-  print fo ".SUBCKT ".$cell->{name}." ".join(' ',@nodes)."\n";
-  my @devices = @{$cell->{devices}};
+foreach my $cell (@{$arr->{cells}}) {
+  next unless $cell->{ckt};
+  my $ckt = $cell->{ckt};
+  my @nodes = @{$ckt->{nodes}};
+  print fo ".SUBCKT ".$ckt->{name}." ".join(' ',@nodes)."\n";
+  my @devices = @{$ckt->{devices}};
 
   #----------------------------------------------------------------------------
   # Write standard capacitors
   #----------------------------------------------------------------------------
-  if ($cell->{class} =~ m/Capacitor/) {
-	my $w = $cell->{properties}->{width};
-	my $h = $cell->{properties}->{width};
+  if ($ckt->{class} =~ m/Capacitor/) {
+	my $w = $ckt->{properties}->{width};
+	my $h = $ckt->{properties}->{width};
 
 
 	my $a = $w * $h * 0.5;
@@ -93,7 +96,7 @@ foreach my $cell (@{$arr}) {
 	#----------------------------------------------------------------------------
 	# Write CDAC cells
 	#----------------------------------------------------------------------------
-  } elsif ($cell->{class} =~ m/CapCell/) {
+  } elsif ($ckt->{class} =~ m/CapCell/) {
     foreach my $n (@nodes) {
       next if $n =~ m/CTOP/;
       next if $n =~ m/AVSS/;
@@ -160,7 +163,7 @@ foreach my $cell (@{$arr}) {
 	#----------------------------------------------------------------------------
 	# Write Instances
 	#----------------------------------------------------------------------------
-    my @instances = @{$cell->{instances}};
+    my @instances = @{$ckt->{instances}};
     foreach my $instance (@instances) {
 
       my @inodes = @{$instance->{nodes}};

@@ -17,7 +17,6 @@
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //====================================================================
 
-
 #include "cic-core.h"
 #include <iostream>
 #include <QDebug>
@@ -25,12 +24,8 @@
 
 int main(int argc, char *argv[])
 {
-
     try
     {
-
-
-        
         if(argc >=  3){
 
             QString file = argv[1];
@@ -48,8 +43,7 @@ int main(int argc, char *argv[])
 
             //Load design, this is where the magic happens
             cIcCore::Design * d= new cIcCore::Design();
-            d->read(file);
-
+	    d->readJsonFile(file);
 
             cIcPrinter::Tikz * tikz = new cIcPrinter::Tikz(library + ".tex");
             tikz->print(d);
