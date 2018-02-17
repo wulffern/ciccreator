@@ -24,6 +24,8 @@
 #include <QString>
 
 
+bool nogds = false;
+
 
 int main(int argc, char *argv[])
 {
@@ -38,16 +40,18 @@ int main(int argc, char *argv[])
             //Parse options
             for(int i=0;i<argc;i++){
                 QString arg = argv[i];
-                
+
                 if(arg == "--I" && (i+1)< argc){
                     includePaths.append(argv[i+1]);
                     i  = i+1;
+                }else if(arg == "--nogds"){
+                    nogds = true;
                 }else{
                     arguments.append(arg);
                 }
             }
-            
-            
+
+
             QString file = arguments[1];
             QString rules = arguments[2];
             QString library = arguments[3];
@@ -66,7 +70,7 @@ int main(int argc, char *argv[])
             foreach(QString path,includePaths){
                 d->addIncludePath(path);
             }
-            
+
             d->read(file);
 
             //Print SPICE file
@@ -75,12 +79,15 @@ int main(int argc, char *argv[])
             delete(spice);
 
 
-            //Write GDS
-            cIcCore::ConsoleOutput console;
-            console.comment("Writing GDS");
-            cIcPrinter::Gds * gd = new cIcPrinter::Gds(library);
-            gd->print(d);
-            delete(gd);
+            if(!nogds){
+                //Write GDS
+                cIcCore::ConsoleOutput console;
+                console.comment("Writing GDS");
+                cIcPrinter::Gds * gd = new cIcPrinter::Gds(library);
+                gd->print(d);
+                delete(gd);
+            }
+
 
             //Write JSON
             d->writeJsonFile(library + ".cic");
