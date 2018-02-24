@@ -30,7 +30,13 @@ namespace cIcCore {
             if(l->material == Layer::metal || l->material == Layer::poly|| l->material == Layer::diffusion ){
                 QString encRule = l->next  + "encOpposite";
                 int encOpposite = rules->get(l->name,encRule);
-                int enclosure = rules->get(l->name,"enclosure");
+                QString encThis = l->next + "enclosure";
+                int enclosure = 0;
+                if(rules->hasRule(l->name,encRule)){
+                    enclosure = rules->get(l->name,encThis);
+                }else{
+                    enclosure = rules->get(l->name,"enclosure");
+                }
                 int cut_width = rules->get(l->next,"width");
                 int cut_height = rules->get(l->next,"height");
                 int cut_space = rules->get(l->next,"space");
@@ -56,7 +62,15 @@ namespace cIcCore {
             }else if(l->material == Layer::cut){
                 QString encRule = l->name  + "encOpposite";
                 int encOpposite = rules->get(l->previous,encRule);
-                int enclosure = rules->get(l->previous,"enclosure");
+                QString encThis = l->name + "enclosure";
+                int enclosure = 0;
+                if(rules->hasRule(l->previous,encRule)){
+                    enclosure = rules->get(l->previous,encThis);
+                }else{
+                    enclosure = rules->get(l->previous,"enclosure");
+                }
+
+//                int enclosure = rules->get(l->previous,"enclosure");
                 int cut_width = rules->get(l->name,"width");
                 int cut_height = rules->get(l->name,"height");
                 int cut_space = rules->get(l->name,"space");

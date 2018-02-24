@@ -143,6 +143,7 @@ namespace cIcCore {
 
     }
 
+    int arraylength = 0;
 
 
     void PatternTile::fillCoordinatesFromString(QJsonArray ar){
@@ -171,9 +172,19 @@ namespace cIcCore {
         QString layer = ar[0].toString();
         ar.pop_front();
 
+        if(arraylength == 0) arraylength = ar.count();
+
+       if(arraylength != ar.count()){
+           qDebug() << " Error: " << " layer " << layer << " does not have " << arraylength << " lines \n";
+           
+           
+       }
+        
+        
         QList<QString> strs;
         for(int i=0;i<ar.count();i++){
             QString str = ar[i].toString();
+
 
             //Copy columns
             if(copyColumn_.length() > 0){

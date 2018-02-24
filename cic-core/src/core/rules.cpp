@@ -112,7 +112,8 @@ namespace cIcCore{
     QList<Layer*> stack;
     QString start;
     QString stop;
-
+    
+    
     if(this->isLayerBeforeLayer(layer1,layer2)){
         start = layer1;
         stop = layer2;
@@ -144,6 +145,8 @@ namespace cIcCore{
    }
         stack.append(this->getLayer(stop));
 
+//        qDebug() << stack;
+        
 
   return stack;
    }
