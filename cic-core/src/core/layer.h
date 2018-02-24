@@ -22,6 +22,7 @@
 
 #include <QImage>
 #include <QPainter>
+#include <QMap>
 
 
 namespace cIcCore{
@@ -42,6 +43,7 @@ namespace cIcCore{
         //!GDS layer datatype
         int datatype;
 
+        QMap<QString,int> datatypes;
 
         enum MATERIAL_TYPE {diffusion, poly, metal, cut, metalres,other,marker,implant};
 

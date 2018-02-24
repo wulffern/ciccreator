@@ -177,7 +177,7 @@ namespace cIcCore{
         Rules* rules;
 
     private:
-        QString _layer;
+        QString _layer = "PR";
 		QString net_;
 		
         Rect* _parent;

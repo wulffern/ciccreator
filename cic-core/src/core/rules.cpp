@@ -46,7 +46,7 @@ namespace cIcCore{
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     val = file.readAll();
     file.close();
-       QJsonParseError err;
+    QJsonParseError err;
     QJsonDocument d = QJsonDocument::fromJson(val.toUtf8(),&err);
 
 
@@ -198,7 +198,32 @@ namespace cIcCore{
         QJsonObject lay = layers[layer].toObject();
         Layer *ln = new Layer();
         ln->name = layer;
-        ln->datatype = lay["datatype"].toInt();
+        QJsonValue dtv = lay["datatype"];
+        
+        if(dtv.isArray()){
+            QJsonArray dtva = dtv.toArray();
+            foreach ( const QJsonValue & value, dtva){
+                QJsonArray dtvc = value.toArray();
+                QString dts = dtvc[0].toString();
+                int dti = dtvc[1].toInt();
+                if(dts == "default"){
+                    ln->datatype = dti;
+                }else{
+                    ln->datatypes.insert(dts, dti);
+                }
+                
+                
+                
+            }
+            
+            
+        }else{
+            ln->datatype = lay["datatype"].toInt();
+        }
+        
+        
+                
+
         ln->number = lay["number"].toInt();
 
         if(lay.contains("material")){
@@ -274,13 +299,32 @@ namespace cIcCore{
     // layers_ = job["layers"].toObject();
     // technology_ = job["technology"].toObject();
   }
+    QString Rules::removeDataType(QString layer)
+    {
+        QStringList sl = layer.split("_");
+        return sl[0];
+
+    }
+
+    QString Rules::getDataType(QString layer)
+    {
+        QStringList sl = layer.split("_");
+
+        
+        if(sl.count() > 1){
+            return  sl[1];
+        }else{
+            return "";
+        }
+    }
+
 
 
    bool Rules::hasRule(QString layer, QString rule){
-
-     if(rules_.contains(layer)){
-         if(rules_[layer].contains(rule)){
-        return true;
+       QString layerstr = removeDataType(layer);
+       if(rules_.contains(layerstr)){
+           if(rules_[layerstr].contains(rule)){
+               return true;
            }
        }
      return false;
@@ -288,12 +332,12 @@ namespace cIcCore{
 
   qreal Rules::get(QString layer, QString rule){
     qreal v = 0;
-
-    if(rules_.contains(layer)){
-        QMap<QString,qreal> lay =  rules_[layer];
+    QString layerstr = removeDataType(layer);
+    if(rules_.contains(layerstr)){
+        QMap<QString,qreal> lay =  rules_[layerstr];
 
         if(!lay.contains(rule)){
-            qDebug() << "Could not find rule "<< layer << rule ;
+            qDebug() << "Could not find rule "<< layerstr << rule ;
           }else{
             v = lay[rule]*gamma_;
 
@@ -306,28 +350,41 @@ namespace cIcCore{
   }
 
   QString Rules::layerToColor(QString name){
-    if(this->layers_.contains(name)){
-              return this->layers_[name]->color;
+      QString layerstr = removeDataType(name);
+    if(this->layers_.contains(layerstr)){
+              return this->layers_[layerstr]->color;
       }
 
-    qWarning() << "Layer " << name << "not found in rule file";
+    qWarning() << "Error (layerToColor)   : Layer " << layerstr << "not found in rule file";
     return "";
   }
 
   int Rules::layerToNumber(QString name){
+      name = removeDataType(name);
     if(this->layers_.contains(name)){
               return this->layers_[name]->number;
       }
 
-    qWarning() << "Layer " << name << "not found in rule file";
+    qWarning() << "Error (layerToNumber)   : Layer " << name << "not found in rule file";
     return 1;
   }
 
   int Rules::layerToDataType(QString name){
-    if(this->layers_.contains(name)){
-        return this->layers_[name]->datatype;
+      QString datatype = getDataType(name);
+      
+      name = removeDataType(name);
+      if(this->layers_.contains(name)){
+          Layer * l = this->layers_[name];
+          if(datatype != ""){
+              return l->datatypes[datatype];
+          }else{
+              return l->datatype;
+          }
+          
+          
+
       }
-    qWarning() << "Layer " << name << "not found in rule file";
+      qWarning() << "Error (layerToDataType) : Layer " << name << "not found in rule file";
     return 0;
   }
 }
