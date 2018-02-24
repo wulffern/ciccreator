@@ -125,7 +125,6 @@ namespace cIcCore{
             QJsonArray includeArray  = include.toArray();
             foreach (const QJsonValue & value, includeArray) { 
                 QString incfile = value.toString();
-                qDebug() << incfile;
                 
                 if(fexists(incfile.toStdString().c_str())){
                     if(!this->readCells(incfile))
