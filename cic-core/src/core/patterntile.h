@@ -209,6 +209,10 @@ namespace cIcCore{
         QMap<QString,QMap<int,QMap<int,Rect*> > > rectangles_;
         Rect * prev_rect_;
 
+        int arraylength;
+
+
+        
         QList<Rect*> findPatternRects(QString layer);
         QList<Rect*> findPatternStrings(QString layer);
         Rect * makeRect(QString layer,QChar c,int x, int y);

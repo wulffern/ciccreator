@@ -198,8 +198,8 @@ namespace cIcCore{
         QJsonObject lay = layers[layer].toObject();
         Layer *ln = new Layer();
         ln->name = layer;
-        QJsonValue dtv = lay["datatype"];
         
+        QJsonValue dtv = lay["datatype"];        
         if(dtv.isArray()){
             QJsonArray dtva = dtv.toArray();
             foreach ( const QJsonValue & value, dtva){
@@ -214,8 +214,7 @@ namespace cIcCore{
                 
                 
                 
-            }
-            
+            }    
             
         }else{
             ln->datatype = lay["datatype"].toInt();
@@ -301,16 +300,14 @@ namespace cIcCore{
   }
     QString Rules::removeDataType(QString layer)
     {
-        QStringList sl = layer.split("_");
+        QStringList sl = layer.split("|");
         return sl[0];
 
     }
 
     QString Rules::getDataType(QString layer)
     {
-        QStringList sl = layer.split("_");
-
-        
+        QStringList sl = layer.split("|");
         if(sl.count() > 1){
             return  sl[1];
         }else{
@@ -371,20 +368,26 @@ namespace cIcCore{
 
   int Rules::layerToDataType(QString name){
       QString datatype = getDataType(name);
+
+      int dt = 0;
       
-      name = removeDataType(name);
-      if(this->layers_.contains(name)){
-          Layer * l = this->layers_[name];
+      QString layer = removeDataType(name);
+      if(this->layers_.contains(layer)){
+          Layer * l = this->layers_[layer];
           if(datatype != ""){
-              return l->datatypes[datatype];
+              dt =  l->datatypes[datatype];
           }else{
-              return l->datatype;
+              dt =  l->datatype;
           }
           
           
 
+      }else{          
+          qWarning() << "Error (layerToDataType) : Layer " << name << "not found in rule file";
       }
-      qWarning() << "Error (layerToDataType) : Layer " << name << "not found in rule file";
-    return 0;
+
+      
+      
+    return dt;
   }
 }

@@ -36,6 +36,7 @@ namespace cIcCore {
         heightoffset_ = 0;
         mirrorPatternString_ = 0;
         polyWidthAdjust_ = 1;
+        arraylength = 0;
 
         verticalGrid_ = 0;
         horizontalGrid_ = 0;
@@ -142,8 +143,6 @@ namespace cIcCore {
 
 
     }
-
-    int arraylength = 0;
 
 
     void PatternTile::fillCoordinatesFromString(QJsonArray ar){

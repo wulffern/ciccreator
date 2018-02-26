@@ -391,7 +391,7 @@ namespace cIcCore{
             foreach(Rect* r, stop_rects_){
                 auto cs = Cut::getInstance(sr->layer(),routeLayer_,1,2);
                 auto rc = new Rect(routeLayer_,sr->x1(),r->y1(),r->x1()-sr->x1(),width);
-                cs->moveTo(rc->x1(),rc->y1());
+                cs->moveTo(rc->x1(),rc->y2());
                 this->add(rc);
 
                 if( sr->layer() != routeLayer_){

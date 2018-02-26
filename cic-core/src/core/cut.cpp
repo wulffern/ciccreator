@@ -47,7 +47,8 @@ namespace cIcCore {
                     r_width = encOpposite*2 + cut_width*horizontal_cuts + cut_space*(horizontal_cuts - 1);
                     r_height = enclosure*2 + cut_height*vertical_cuts + cut_space*(vertical_cuts - 1);
                 }else if(horizontal_cuts == vertical_cuts){
-                    r_width = enclosure*2 + cut_width*horizontal_cuts + cut_space*(horizontal_cuts - 1);
+                    //2018-02-24: Modified to support 22nm
+                    r_width = encOpposite*2 + cut_width*horizontal_cuts + cut_space*(horizontal_cuts - 1);
                     r_height = encOpposite*2 + cut_height*vertical_cuts + cut_space*(vertical_cuts - 1);
                 }
                 else{
@@ -81,7 +82,8 @@ namespace cIcCore {
                     enc_x = enclosure;
                     enc_y = encOpposite;
                 }else if(horizontal_cuts == vertical_cuts){
-                    enc_x = enclosure;
+                    //2018-02-20: Modified to support 22nm
+                    enc_x = encOpposite;
                     enc_y = encOpposite;
                 }
                 
