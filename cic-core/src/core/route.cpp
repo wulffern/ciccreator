@@ -93,11 +93,19 @@ namespace cIcCore{
             start_rects_.append(r);
         }
 
+        //- Start trim
+        if(options.contains(QRegularExpression("trimstartleft(,|\\s+|$)"))){ startTrim_ = TRIM_START_LEFT ;}
+        else if(options.contains(QRegularExpression("trimstartright(\\s+|,|$)"))){ startTrim_ = TRIM_START_RIGHT ;}
+
+        //- End trim
+        if(options.contains(QRegularExpression("trimendleft(,|\\s+|$)"))){ endTrim_ = TRIM_END_LEFT ;}
+        else if(options.contains(QRegularExpression("trimendright(\\s+|,|$)"))){ endTrim_ = TRIM_END_RIGHT ;}
 
         //- Start offset
         if(options.contains(QRegularExpression("offsethigh(,|\\s+|$)"))){ startOffset_ = HIGH ;}
         else if(options.contains(QRegularExpression("offsetlow(\\s+|,|$)"))){ startOffset_ = LOW ;}
 
+        
         //- Stop offset;
         if(options.contains(QRegularExpression("offsethighend"))){ stopOffset_ = HIGH ;}
         else if(options.contains(QRegularExpression("offsetlowend"))){ stopOffset_ = LOW ;}
@@ -279,6 +287,28 @@ namespace cIcCore{
         }else{
 
         }
+
+        if(startTrim_ == TRIM_START_LEFT){
+            foreach(auto rect, start_rects_){
+                rect->setLeft(rect->x2() - 2* width);
+            }
+        }else if(startTrim_ == TRIM_START_RIGHT){
+            foreach(auto rect, start_rects_){
+                rect->setRight(rect->x1() + 2* width);
+            }
+        }
+
+         if(endTrim_ == TRIM_END_LEFT){
+            foreach(auto rect, stop_rects_){
+                rect->setLeft(rect->x2() - 2* width);
+            }
+        }else if(endTrim_ == TRIM_END_RIGHT){
+            foreach(auto rect, stop_rects_){
+                rect->setRight(rect->x1() + 2* width);
+            }
+        }
+        
+        
 
         this->addHorizontalTo(x,start_rects_,startOffset_);
         this->addHorizontalTo(x,stop_rects_,stopOffset_);
