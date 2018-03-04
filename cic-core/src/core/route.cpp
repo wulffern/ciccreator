@@ -52,7 +52,14 @@ namespace cIcCore{
         sortDirection_ = SORT_RIGHT;
         startOffset_ = NO_OFFSET;
         stopOffset_ = NO_OFFSET;
+        startTrim_ = NO_TRIM;
+        endTrim_ = NO_TRIM;
         track_ = 0;
+        startCuts_ = 0;
+        startVCuts_ = 0;
+        endCuts_ = 0;
+        endVCuts_ = 0;
+        
         cuts_ = 2;
         vcuts_ = 1;
         fillvcut_ = false;
@@ -113,18 +120,50 @@ namespace cIcCore{
         if(options.contains(QRegularExpression("track(\\d+)")))
             hasTrack_ = true;
 
+
+        
+
         track_  = getIntegerFromMatch("track(\\d+)", options,0);
 
-        cuts_  = getIntegerFromMatch("(\\d+)cuts", options,2);
+        //- Start offset
+        if(options.contains(QRegularExpression("offsethigh(\\s+|,|$)"))){ startOffset_ = HIGH ;}
+        else if(options.contains(QRegularExpression("offsetlow(\\s+|,|$)"))){ startOffset_ = LOW ;}
 
+        
+        //- Stop offset;
+        if(options.contains(QRegularExpression("offsethighend(\\s+|,|$)"))){ stopOffset_ = HIGH ;}
+        else if(options.contains(QRegularExpression("offsetlowend(\\s+|,|$)"))){ stopOffset_ = LOW ;}
+
+        if(options.contains(QRegularExpression("track(\\d+)")))
+            hasTrack_ = true;
+
+
+        
+
+        track_  = getIntegerFromMatch("track(\\d+)", options,0);
+
+
+        //Cuts
+        startCuts_ = getIntegerFromMatch("(\\d+)startcuts(\\s+|,|$)", options,0);
+        startVCuts_ = getIntegerFromMatch("(\\d+)startvcuts(\\s+|,|$)", options,0);
+
+        endCuts_ = getIntegerFromMatch("(\\d+)endcuts(\\s+|,|$)", options,0);
+        endVCuts_ = getIntegerFromMatch("(\\d+)endvcuts(\\s+|,|$)", options,0);
+        
+        cuts_  = getIntegerFromMatch("(\\d+)cuts", options,2);
         vcuts_  = getIntegerFromMatch("(\\d+)vcuts", options,1);
         routeWidthRule_ = getQStringFromMatch("routeWidth=([^,\\s+,$]+)",options,"width");
 
+//Route
+
+        
         if(routeType == "-|--"){routeType_ = LEFT;}
         else if(routeType == "--|-"){routeType_ = RIGHT;}
         else if(routeType == "-"){routeType_ = STRAIGHT;}
         else if(routeType == "-|"){routeType_ = U_RIGHT;}
         else if(routeType == "|-"){routeType_ = U_LEFT;}
+        else if(routeType == "--|"){routeType_ = U_TOP;}
+        else if(routeType == "|--"){routeType_ = U_BOTTOM;}
         else if(routeType == "->"){routeType_ = STRAIGHT;}
         else if(routeType == "||"){routeType_ = VERTICAL;}
 
@@ -159,29 +198,46 @@ namespace cIcCore{
 
     void Route::addStartCuts(){
         if(!this->options_.contains(QRegularExpression("nostartcut"))){
-            this->addCuts(start_rects_,startcuts);
+
+            int lcuts = startCuts_ > 0 ? startCuts_: cuts_;
+            int lvcuts = startVCuts_ > 0 ? startVCuts_: vcuts_;
+
+            
+            
+            
+            this->addCuts(start_rects_,startcuts,lcuts,lvcuts);
         }
     }
 
     void Route::addEndCuts(){
         if(!this->options_.contains(QRegularExpression("noendcut"))){
-            this->addCuts(stop_rects_,endcuts);
+
+            int lcuts = endCuts_ > 0 ? endCuts_: cuts_;
+            int lvcuts = endVCuts_ > 0 ? endVCuts_: vcuts_;
+
+            
+            
+            this->addCuts(stop_rects_,endcuts,lcuts,lvcuts);
         }
     }
 
+
+
     void Route::addCuts(QList<Rect*> rects,QList<Rect*>& allcuts){
+        this->addCuts(rects,allcuts,cuts_,vcuts_);
+    }
+
+    void Route::addCuts(QList<Rect*> rects,QList<Rect*>& allcuts,int cuts_, int vcuts_){
         //TODO: Make poly routing work, right now all routing must happen in > M1
         if(routeLayer_ == "PO"){
             return;
         }
-
-
-
+        
         QList<Rect*>  cuts = Cut::getCutsForRects(routeLayer_,rects,cuts_,vcuts_);
         foreach(Rect* r,cuts){
             allcuts.append(r);
         }
-
+        
         this->add(cuts);
 
     }
@@ -207,6 +263,8 @@ namespace cIcCore{
 
         this->addStartCuts();
         this->addEndCuts();
+
+        
         switch(routeType_){
         case LEFT:
             this->routeOne();
@@ -227,6 +285,12 @@ namespace cIcCore{
             break;
         case U_LEFT:
             this->routeU();
+            break;
+        case U_TOP:
+            this->routeUHorizontal();
+            break;
+        case U_BOTTOM:
+            this->routeUHorizontal();
             break;
         case LEFT_DOWN_LEFT_UP:
             this->routeLeftDownLeftUp();
@@ -346,7 +410,7 @@ namespace cIcCore{
                 ra = new Rect(routeLayer_,x1,rect->y1()-space-width,x-x1 ,width);
             }
 
-            rb = new Rect(routeLayer_,ra->x2(),ra->y1(),width,rect->y1() - ra->y1());
+            rb = new Rect(routeLayer_,ra->x2()-width,ra->y1(),width,rect->y2() - ra->y1());
             this->add(ra);
             this->add(rb);
         }
@@ -390,12 +454,12 @@ namespace cIcCore{
             Rect* ra;
             Rect* rb;
             if (x1 > x) {
-                ra = new Rect(routeLayer_,x,y,x1-x + width ,width);
+                ra = new Rect(routeLayer_,x,y,x1-x  ,width);
             } else {
-                ra = new Rect(routeLayer_,x1,y,x-x1 + width ,width);
+                ra = new Rect(routeLayer_,x1,y,x-x1  ,width);
             }
 
-            rb = new Rect(routeLayer_,rect->x1(),rect->y2(),width,ra->y2() - rect->y2());
+            rb = new Rect(routeLayer_,rect->x1()-width,rect->y1(),width,ra->y2() - rect->y1());
 
             if (yca < ra->y1()) {
                 yca = ra->y1();
@@ -419,7 +483,10 @@ namespace cIcCore{
         if(start_rects_.count() == 1){
             auto sr = start_rects_[0];
             foreach(Rect* r, stop_rects_){
-                auto cs = Cut::getInstance(sr->layer(),routeLayer_,1,2);
+                int lcuts = startCuts_ > 0 ? startCuts_: 1;
+                int lvcuts = startVCuts_ > 0 ? startVCuts_: 2;
+
+                auto cs = Cut::getInstance(sr->layer(),routeLayer_,lcuts,lvcuts);
                 auto rc = new Rect(routeLayer_,sr->x1(),r->y1(),r->x1()-sr->x1(),width);
                 cs->moveTo(rc->x1(),rc->y2());
                 this->add(rc);
@@ -431,7 +498,9 @@ namespace cIcCore{
         }else if (stop_rects_.count() == 1){
             auto sr = stop_rects_[0];
             foreach(Rect* r, start_rects_){
-                auto cs = Cut::getInstance(sr->layer(),routeLayer_,1,2);
+                int lcuts = endCuts_ > 0 ? endCuts_: 1;
+                int lvcuts = endVCuts_ > 0 ? endVCuts_: 2;
+                auto cs = Cut::getInstance(sr->layer(),routeLayer_,lcuts,lvcuts);
                 auto rc = new Rect(routeLayer_,r->x2(),r->y1(),sr->x2()-r->x2(),width);
                 cs->moveTo(rc->x2()-cs->width(),rc->y1());
                 this->add(rc);
@@ -576,7 +645,52 @@ namespace cIcCore{
 
     }
 
+    void Route::routeUHorizontal(){
+        int width = rules->get(routeLayer_,routeWidthRule_);
+        int space = rules->get(routeLayer_,"space");
 
+        
+        
+        int vgrid = this->rules->get("ROUTE","verticalgrid");
+
+        QList<Rect*> allrect = start_rects_ + stop_rects_;
+        Rect all_bound = Cell::calcBoundingRect(allrect);
+
+        int y = 0;
+        if(routeType_ == U_TOP){
+            y = all_bound.top() +space;
+            if(hasTrack_)
+                y = y + vgrid*track_ + space;
+
+        }else if(routeType_ == U_BOTTOM){
+            y = all_bound.bottom() - space - width;
+            if(hasTrack_)
+                y = y - vgrid*track_ - space;
+
+        }else{
+            cerr << "Error(route.cpp): Unknown U route " << routeType_ << "\n";
+        }
+
+        Rect * rect  = Rect::getHorizontalRectangleFromTo(routeLayer_,all_bound.left(),all_bound.right(),y,width);
+        if(rect){this->add(rect);}
+        
+            foreach(auto * r,allrect){
+            Rect * ra;
+            if(routeType_ == U_BOTTOM){
+                ra = Rect::getVerticalRectangleFromTo(routeLayer_,r->x1()-width,rect->y1(),r->y2(),width);
+            }
+            if(routeType_ == U_TOP){
+                ra = Rect::getVerticalRectangleFromTo(routeLayer_,r->x1()-width,r->y1(),rect->y2(),width);
+            }
+            
+            
+            if(ra){this->add(ra);}
+        }
+        this->updateBoundingRect();
+
+    }
+
+    
     void Route::routeU(){
         int width = rules->get(routeLayer_,routeWidthRule_);
         int space = rules->get(routeLayer_,"space");
