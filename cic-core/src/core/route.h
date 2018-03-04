@@ -51,19 +51,18 @@ namespace cIcCore{
 
 		virtual void addStartCuts();
 		virtual void addEndCuts(); 
-		virtual void addCuts(QList<Rect*>,QList<Rect*>&);
-        virtual void addCuts(QList<Rect*>,QList<Rect*>&,int cuts_, int vcuts_);
+//		virtual QList<Rect*> addCuts(QList<Rect*>,QList<Rect*>&);
+        virtual QList<Rect*> addCuts(QList<Rect*>,QList<Rect*>&,int cuts_, int vcuts_);
 		virtual void route();
 
         void routeUHorizontal();
-        
-
 		void addVertical(int x);
 		void applyOffset(int width, Rect* start, Offset offset);
 
 		void hasMatch(QString options);
 		int getIntegerFromMatch(QString regex,QString options, int defaultValue);
         QString getQStringFromMatch(QString regex,QString options, QString defaultValue);
+
 	protected:
 		QString routeLayer_;
 		RouteType routeType_;
@@ -71,6 +70,8 @@ namespace cIcCore{
 		QString net_;
 		SortDirection sortDirection_;
 		Offset startOffset_;
+        Offset startOffsetCut_;
+        Offset endOffsetCut_;
 		Offset stopOffset_;
         Trim startTrim_;
         Trim endTrim_;
@@ -80,6 +81,9 @@ namespace cIcCore{
         int startVCuts_;
         int endCuts_;
         int endVCuts_;
+
+
+        
 		int cuts_;
 		int vcuts_;
         QString routeWidthRule_;

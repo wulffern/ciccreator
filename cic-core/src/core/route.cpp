@@ -51,6 +51,8 @@ namespace cIcCore{
         options_ = options;
         sortDirection_ = SORT_RIGHT;
         startOffset_ = NO_OFFSET;
+        startOffsetCut_ = NO_OFFSET;
+        endOffsetCut_ = NO_OFFSET;
         stopOffset_ = NO_OFFSET;
         startTrim_ = NO_TRIM;
         endTrim_ = NO_TRIM;
@@ -100,6 +102,8 @@ namespace cIcCore{
             start_rects_.append(r);
         }
 
+
+        
         //- Start trim
         if(options.contains(QRegularExpression("trimstartleft(,|\\s+|$)"))){ startTrim_ = TRIM_START_LEFT ;}
         else if(options.contains(QRegularExpression("trimstartright(\\s+|,|$)"))){ startTrim_ = TRIM_START_RIGHT ;}
@@ -112,6 +116,16 @@ namespace cIcCore{
         if(options.contains(QRegularExpression("offsethigh(,|\\s+|$)"))){ startOffset_ = HIGH ;}
         else if(options.contains(QRegularExpression("offsetlow(\\s+|,|$)"))){ startOffset_ = LOW ;}
 
+//- start cut offset
+        if(options.contains(QRegularExpression("startoffsetcuthigh(,|\\s+|$)"))){ startOffsetCut_ = HIGH ;}
+        else if(options.contains(QRegularExpression("startoffsetcutlow(,|\\s+|$)"))){ startOffsetCut_ = LOW ;}
+
+//- start cut offset
+        if(options.contains(QRegularExpression("endoffsetcuthigh(,|\\s+|$)"))){ endOffsetCut_ = HIGH ;}
+        else if(options.contains(QRegularExpression("endoffsetcutlow(,|\\s+|$)"))){ endOffsetCut_ = LOW ;}
+
+        
+        
         
         //- Stop offset;
         if(options.contains(QRegularExpression("offsethighend"))){ stopOffset_ = HIGH ;}
@@ -158,9 +172,9 @@ namespace cIcCore{
 
         
         if(routeType == "-|--"){routeType_ = LEFT;}
-        else if(routeType == "--|-"){routeType_ = RIGHT;}
+        else if(routeType == "--|-"){routeType_ = RIGHT; leftAlignCut = false;}
         else if(routeType == "-"){routeType_ = STRAIGHT;}
-        else if(routeType == "-|"){routeType_ = U_RIGHT;}
+        else if(routeType == "-|"){routeType_ = U_RIGHT; leftAlignCut = false;}
         else if(routeType == "|-"){routeType_ = U_LEFT;}
         else if(routeType == "--|"){routeType_ = U_TOP;}
         else if(routeType == "|--"){routeType_ = U_BOTTOM;}
@@ -170,6 +184,8 @@ namespace cIcCore{
         else{
             routeType_ = ROUTE_UNKNOWN;
         }
+
+        if(options.contains(QRegularExpression("cutalignright(,|\\s+|$)"))){ leftAlignCut = false ; }
 
         //- Route
         if(options.contains(QRegularExpression("leftdownleftup"))){
@@ -204,8 +220,23 @@ namespace cIcCore{
 
             
             
+            QList<Rect*> cuts = this->addCuts(start_rects_,startcuts,lcuts,lvcuts);
+            if(startOffsetCut_ == HIGH){
+                foreach(auto *cut, cuts){
+                    cut->translate(0,cut->height()/2);
+                }
+                foreach(auto *r,start_rects_){
+                    r->translate(0,r->height()/2);
+                }                
+            }else if(startOffsetCut_ == LOW){
+                foreach(auto *cut, cuts){
+                    cut->translate(0,-cut->height()/2);
+                }
+                foreach(auto *r,start_rects_){
+                    r->translate(0,-r->height()/2);
+                }
+            }                        
             
-            this->addCuts(start_rects_,startcuts,lcuts,lvcuts);
         }
     }
 
@@ -217,29 +248,51 @@ namespace cIcCore{
 
             
             
-            this->addCuts(stop_rects_,endcuts,lcuts,lvcuts);
+            QList<Rect*> cuts = this->addCuts(stop_rects_,endcuts,lcuts,lvcuts);
+
+            if(endOffsetCut_ == HIGH){
+                foreach(auto *cut, cuts){
+                    cut->translate(0,cut->height()/2);
+                }
+                foreach(auto *r,stop_rects_){
+                    r->translate(0,r->height()/2);
+                }
+            }else if(endOffsetCut_ == LOW){
+                foreach(auto *cut, cuts){
+                    cut->translate(0,-cut->height()/2);
+                }
+                foreach(auto *r,stop_rects_){
+                    r->translate(0,-r->height()/2);
+                }
+            }            
+
         }
     }
 
 
 
-    void Route::addCuts(QList<Rect*> rects,QList<Rect*>& allcuts){
-        this->addCuts(rects,allcuts,cuts_,vcuts_);
-    }
+//    QList<Rect*> Route::addCuts(QList<Rect*> rects,QList<Rect*>& allcuts){
+//        QList<Rect*> cuts = this->addCuts(rects,allcuts,cuts_,vcuts_);
+//        return cuts;
+//    }
 
-    void Route::addCuts(QList<Rect*> rects,QList<Rect*>& allcuts,int cuts_, int vcuts_){
+    QList<Rect*> Route::addCuts(QList<Rect*> rects,QList<Rect*>& allcuts,int cuts_, int vcuts_){
+        QList<Rect*> cuts;
         //TODO: Make poly routing work, right now all routing must happen in > M1
         if(routeLayer_ == "PO"){
-            return;
+            return cuts;
         }
-        
-        QList<Rect*>  cuts = Cut::getCutsForRects(routeLayer_,rects,cuts_,vcuts_);
+
+
+        cuts = Cut::getCutsForRects(routeLayer_,rects,cuts_,vcuts_,leftAlignCut);
         foreach(Rect* r,cuts){
             allcuts.append(r);
         }
-        
         this->add(cuts);
+        
 
+
+        return cuts;
     }
 
     void Route::route(){
@@ -256,10 +309,7 @@ namespace cIcCore{
         foreach(Rect* r, stop_rects_org){
             stop_rects_.append(r->getCopy());
         }
-
-
-
-
+        
 
         this->addStartCuts();
         this->addEndCuts();
@@ -270,7 +320,6 @@ namespace cIcCore{
             this->routeOne();
             break;
         case RIGHT:
-            leftAlignCut = false;
             this->routeOne();
             break;
         case STRAIGHT:
@@ -280,7 +329,6 @@ namespace cIcCore{
             this->routeVertical();
             break;
         case U_RIGHT:
-            leftAlignCut = false;
             this->routeU();
             break;
         case U_LEFT:
@@ -306,8 +354,17 @@ namespace cIcCore{
             cerr << "Error(route.cpp): Unknown route routeType=" << route_.toStdString() << " net=" << net_.toStdString() << " layer=" << routeLayer_.toStdString() << " options="<< options_.toStdString() << "\n";
             break;
 
+
         }
 
+        if(start_rects_.count() > 0){
+            Rect * r = start_rects_[0];
+            Text* t = new Text(this->name());
+            t->moveTo(r->x1(),r->y1());
+            this->add(t);            
+        }
+
+        
     }
 
     void Route::applyOffset(int width, Rect* rect,Offset offset)
