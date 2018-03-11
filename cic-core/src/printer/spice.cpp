@@ -35,6 +35,8 @@ namespace cIcPrinter{
 
     if(!cell){return;}
     if(cell->isCut()){return;};
+//    if(cell->isPhysicalOnly()){return;}
+        
     cIcSpice::Subckt * ckt = cell->subckt();
 
     if(!ckt){return;}

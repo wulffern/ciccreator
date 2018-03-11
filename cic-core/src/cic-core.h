@@ -10,3 +10,5 @@
 #include "printer/minecraft.h"
 #include "printer/tikz.h"
 #include "printer/eps.h"
+
+#include "decorator/layoutcelldecorator.h"

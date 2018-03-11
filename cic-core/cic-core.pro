@@ -93,6 +93,8 @@
   src/cells/cells.h \
   src/cells/sar.h \
   src/cells/cdac.h \
+  src/decorator/layoutcelldecorator.h \
+  src/decorator/connectsourcedrain.h \
   src/cells/capcell.h
 
 
@@ -138,4 +140,6 @@
   src/core/text.cpp \
   src/cells/sar.cpp\
   src/cells/cdac.cpp \
+  src/decorator/layoutcelldecorator.cpp \
+  src/decorator/connectsourcedrain.cpp \
   src/cells/capcell.cpp

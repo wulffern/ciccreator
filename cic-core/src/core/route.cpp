@@ -619,8 +619,6 @@ namespace cIcCore{
     void Route::routeVertical(){
 
 
-        qDebug() << start_rects_.count() << " " << stop_rects_.count();
-        
         if( !(start_rects_.count() > 0 && stop_rects_.count() > 0)) return;
 
 

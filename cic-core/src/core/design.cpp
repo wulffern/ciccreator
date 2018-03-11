@@ -36,6 +36,7 @@ namespace cIcCore{
         qRegisterMetaType<cIcCells::CDAC>("cIcCells::CDAC");
         qRegisterMetaType<cIcCore::PatternHighResistor>("cIcCore::PatternHighResistor");
         qRegisterMetaType<cIcCore::PatternResistor>("cIcCore::PatternResistor");
+        qRegisterMetaType<cIcCore::ConnectSourceDrain>("ConnectSourceDrain");
 
 
         //Translate from Perl names to c++ names
@@ -305,6 +306,30 @@ namespace cIcCore{
             cl = "cIcCore::LayoutCell";
         }
 
+        QList<LayoutCellDecorator*> decorators;
+        
+        //Find decorators
+        if( jobj.contains("decorator") ){
+            QJsonArray ar = jobj["decorator"].toArray();
+            foreach(QJsonValue dcjv, ar){
+                QJsonObject djob = dcjv.toObject();
+                QString decorator = djob.keys()[0];
+                QJsonValue jv = djob[decorator];
+                
+                //Make the object, let's see how that works in Qt
+                int id = QMetaType::type(decorator.toUtf8().data());
+                if(id != 0){
+                    void* vp = QMetaType::create(id);
+                    LayoutCellDecorator * c  = static_cast<LayoutCellDecorator*>(vp);
+                    c->setOptions(jv);                    
+                    decorators.append(c);
+                }                
+            }
+        }
+
+        
+
+
         //Make the object, let's see how that works in Qt
         int id = QMetaType::type(cl.toUtf8().data());
         if(id != 0){
@@ -318,6 +343,12 @@ namespace cIcCore{
             this->runAllParentMethods("afterNew",c,reverse_parents);
             this->runAllMethods("afterNew",c,jobj);
 
+            foreach(auto lcd, decorators){
+                if(c->isLayoutCell()){
+                    lcd->setCell((LayoutCell*) c);
+                    lcd->afterNew();
+                }                
+            }
             //- Run instancemethods
             this->runParentsIfObjectCanMethods(c,reverse_parents);
             this->runIfObjectCanMethods(c,jobj);
@@ -329,26 +360,76 @@ namespace cIcCore{
             //- Place
             this->runAllParentMethods("beforePlace",c,reverse_parents);
             this->runAllMethods("beforePlace",c,jobj);
+            foreach(auto lcd, decorators){
+                if(c->isLayoutCell()){
+                    lcd->setCell((LayoutCell*) c);
+                    lcd->beforePlace();
+                }                
+            }
             c->place();
+            foreach(auto lcd, decorators){
+                if(c->isLayoutCell()){
+                    lcd->setCell((LayoutCell*) c);
+                    lcd->place();
+                }                
+            }
             this->runAllParentMethods("afterPlace",c,reverse_parents);
             this->runAllMethods("afterPlace",c,jobj);
-
+            foreach(auto lcd, decorators){
+                if(c->isLayoutCell()){
+                    lcd->setCell((LayoutCell*) c);
+                    lcd->afterPlace();
+                }                
+            }
+            
             //- Route
             this->runAllParentMethods("beforeRoute",c,reverse_parents);
             this->runAllMethods("beforeRoute",c,jobj);
+            foreach(auto lcd, decorators){
+                if(c->isLayoutCell()){
+                    lcd->setCell((LayoutCell*) c);
+                    lcd->beforeRoute();
+                }                
+            }
             c->route();
             this->runAllParentMethods("afterRoute",c,reverse_parents);
             this->runAllMethods("afterRoute",c,jobj);
-
+            foreach(auto lcd, decorators){
+                if(c->isLayoutCell()){
+                    lcd->setCell((LayoutCell*) c);
+                    lcd->afterRoute();
+                }                
+            }
             c->addAllPorts();
 
             //- Paint
             this->runAllParentMethods("beforePaint",c,reverse_parents);
             this->runAllMethods("beforePaint",c,jobj);
+            foreach(auto lcd, decorators){
+                if(c->isLayoutCell()){
+                    lcd->setCell((LayoutCell*) c);
+                    lcd->beforePaint();
+                }                
+            }
             c->paint();
+            foreach(auto lcd, decorators){
+                if(c->isLayoutCell()){
+                    lcd->setCell((LayoutCell*) c);
+                    lcd->paint();
+                }                
+            }
             this->runAllParentMethods("afterPaint",c,reverse_parents);
             this->runAllMethods("afterPaint",c,jobj);
-
+            foreach(auto lcd, decorators){
+                if(c->isLayoutCell()){
+                    lcd->setCell((LayoutCell*) c);
+                    lcd->afterPaint();
+                }                
+            }
+            
+            
+            
+            
             this->add(c);
             Cell::addCell(c);
             _cell_names.append(c->name());
@@ -459,7 +540,7 @@ namespace cIcCore{
         }
 
         //Search throught the json file and find methods that can be run
-        QRegularExpression re("^new|inherit|leech|class|name|before.*|after.*|comment");
+        QRegularExpression re("^new|inherit|leech|class|name|before.*|after.*|comment|decorator");
 
 
         foreach( QString key, jobj.keys()){

@@ -126,6 +126,10 @@ namespace cIcCore{
         Cell* cell = this->cell();
 
         if(cell == NULL){ qWarning() << "Error: Could find cell" << inst->subcktName(); return;}
+        if(cell->isPhysicalOnly()){return;}
+        
+            
+            
 
         if(ckt){
             cktNodes = ckt->nodes();

@@ -38,7 +38,8 @@
 #include "cells/sar.h"
 #include "cells/cdac.h"
 #include "cells/capcell.h"
-
+#include "decorator/layoutcelldecorator.h"
+#include "decorator/connectsourcedrain.h"
 #include <exception>
 #include <iostream>
 
