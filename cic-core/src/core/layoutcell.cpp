@@ -563,13 +563,7 @@ namespace cIcCore{
                       p->set(m1);
         }
 
-
-  
-
     }
-    
-
-
     
     
     void LayoutCell::addRouteHorizontalRect(QString layer, QString rectpath, int x, QString name)
@@ -981,7 +975,7 @@ namespace cIcCore{
 
     void LayoutCell::addPowerRoute(QString net,QString excludeInstances)
     {
-        QList<Rect*> foundrects  = this->findRectanglesByNode(net,"^(B|G)$", "");
+        QList<Rect*> foundrects  = this->findRectanglesByNode(net,"^(B|G|BULKP|BULKN)$", "");
 
         QList<Rect*> rects;
         foreach(Rect * r, foundrects){

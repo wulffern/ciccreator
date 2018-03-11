@@ -54,11 +54,10 @@ namespace cIcCore{
         case 'S':
         case 'G':
             Resistor *res = new Resistor(QStringList() << c << QString("NC%1").arg(rindex));
-            rindex +=1;
+            rindex++;
             res->setName(QString("%1%2").arg("R").arg(rindex));
             nodes << c;
             this->subckt()->setNodes(nodes);
-            
             this->subckt()->add(res);
             resistors.append(res);
             break;
