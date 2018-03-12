@@ -48,7 +48,7 @@ namespace cIcCore{
 
     void ConnectSourceDrain::beforeRoute()
     {
-        if(layoutcell){return;}
+        if(!layoutcell){return;}
         
             
             

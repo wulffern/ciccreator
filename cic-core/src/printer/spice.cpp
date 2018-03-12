@@ -35,7 +35,7 @@ namespace cIcPrinter{
 
     if(!cell){return;}
     if(cell->isCut()){return;};
-//    if(cell->isPhysicalOnly()){return;}
+    if(cell->isPhysicalOnly()){return;}
         
     cIcSpice::Subckt * ckt = cell->subckt();
 
@@ -83,6 +83,7 @@ namespace cIcPrinter{
     Cell * cell =   i->cell();
 
     if(!cell){return;}
+    if(cell->isPhysicalOnly()){return;}
 
     QTextStream ts(&file);
 

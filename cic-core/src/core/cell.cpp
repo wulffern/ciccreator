@@ -26,11 +26,14 @@ namespace cIcCore{
     Cell::Cell(): Rect(){
         _subckt = NULL;
         boundaryIgnoreRouting_ = false;
+        _physicalOnly = false;
+        
     }
 
     Cell::Cell(const Cell&){
         _subckt = NULL;
         boundaryIgnoreRouting_ = false;
+        _physicalOnly = false;
     }
 
     Cell::~Cell() {
