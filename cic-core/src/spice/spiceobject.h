@@ -47,6 +47,8 @@ namespace cIcSpice{
         QString name();
 
         virtual QJsonObject toJson();
+        void fromJson(QJsonObject o);
+        
         virtual QString setName(QString val);
 
         int lineNumber();

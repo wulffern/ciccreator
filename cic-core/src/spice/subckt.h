@@ -44,6 +44,7 @@ namespace cIcSpice{
         ~Subckt();
 
         virtual QJsonObject toJson();
+        virtual void fromJson(QJsonObject o);
         
 
         static Subckt* getInstanceSubckt(SubcktInstance*);
@@ -65,6 +66,8 @@ namespace cIcSpice{
         {
             _allsubckt[this->name()] = this;            
         }
+
+        
         
 
         
