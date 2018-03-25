@@ -1030,6 +1030,13 @@ namespace cIcCore{
     void LayoutCell::fromJson(QJsonObject o){
         Cell::fromJson(o);
         QJsonArray car = o["children"].toArray();
+
+        if(o.contains("ckt")){
+            cIcSpice::Subckt * subckt = new cIcSpice::Subckt();
+            subckt->fromJson(o["ckt"].toObject());
+            _subckt = subckt;
+        }
+        
         foreach(QJsonValue child,car){
             QJsonObject co = child.toObject();
             QString cl = co["class"].toString();

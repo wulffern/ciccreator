@@ -46,10 +46,39 @@ namespace cIcSpice{
         return ckt;
     }
 
+    void Subckt::fromJson(QJsonObject o)
+    {
+        SpiceObject::fromJson(o);
+        
+        this->setName(o["name"].toString());
+        QJsonArray insts = o["instances"].toArray();
+        foreach(auto i, insts){
+            SubcktInstance * is = new SubcktInstance();
+            is->fromJson(i.toObject());
+            this->add(is);
+
+        }
+        QJsonArray dev = o["devices"].toArray();
+        foreach(auto d, dev){
+
+            //TODO: Parse devices
+        }
+
+        QJsonArray prop = o["properties"].toArray();
+        foreach(auto p, prop){
+
+
+        }
+
+        
+
+    }
+    
+
     QJsonObject Subckt::toJson()
     {
         QJsonObject o = SpiceObject::toJson();
-        QJsonArray ar;        
+        QJsonArray ar;
         foreach(SubcktInstance* i, _instances){
             QJsonObject oi = i->toJson();
             ar.append(oi);

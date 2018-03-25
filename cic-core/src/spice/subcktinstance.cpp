@@ -88,6 +88,16 @@ namespace cIcSpice{
         this->setNodes(nodes);
     }
 
+    void SubcktInstance::fromJson(QJsonObject o)
+    {
+        SpiceObject::fromJson(o);
+        
+        _subckt_name = o["subcktName"].toString();
+        _group_name = o["groupName"].toString();
+
+    }
+    
+    
     QJsonObject SubcktInstance::toJson()
     {
         QJsonObject o = SpiceObject::toJson();
