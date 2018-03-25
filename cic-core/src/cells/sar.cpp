@@ -163,7 +163,7 @@ namespace cIcCells{
                 c->moveCenter(r1->centerX(),r0->centerY());
                 this->add(c);
                 this->add(r1);
-                this->addPort(graph->name,r1);
+//                this->addPort(graph->name,r1);
                 xfmin =  (xfmin > r1->x1()) ? r1->x1(): xfmin;
                 xfmax=  (xfmax < r1->x2()) ? r1->x2(): xfmax;
             }

@@ -921,12 +921,7 @@ namespace cIcCore{
     QList<QString> LayoutCell::nodeGraphList()
         {
 
-//            qDebug() << nodeGraph_.keys();
-//            qDebug() << nodeGraphList_;
-//            qDebug() << "\n";
             
-            
-//            return nodeGraph_.keys();
             return nodeGraphList_;
 
         }
@@ -1077,7 +1072,7 @@ namespace cIcCore{
         QStringList nodes = _subckt->nodes();
         QString filterChild = "^B$";
         QString filterInstance = "";
-        foreach(QString node,nodes){
+        foreach(QString node,nodes){            
             if(ports_.contains(node)) continue;
             QList<Rect*> rects = this->findRectanglesByNode(node+"$",filterChild,filterInstance);
             if(rects.count() > 0){

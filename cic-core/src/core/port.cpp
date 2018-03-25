@@ -34,6 +34,7 @@ namespace cIcCore{
 
     Port::Port(QString name){
         name_ = name;
+        
         routeLayer_ = 0;
         rect_ = 0;
         spicePort = true;
