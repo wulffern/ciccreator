@@ -65,7 +65,6 @@ namespace cIcPrinter{
                 if(p->spicePort){
                     this->printPort(p);
                 }
-
             }else if(child->isText()){
                 Text * p = (Text *) child;
                 this->printText(p);

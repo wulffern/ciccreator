@@ -123,6 +123,7 @@ namespace cIcCore{
     void Port::fromJson(QJsonObject o){
         Rect::fromJson(o);
         name_ = o["name"].toString();
+	spicePort = o["spicePort"].toBool();
         routeLayer_ = rules->getLayer(this->layer());
     }
 
@@ -130,7 +131,7 @@ namespace cIcCore{
         QJsonObject o = Rect::toJson();
         o["class"] = "Port";
         o["name"] = name_;
-
+	o["spicePort"] = spicePort;
         return o;
     }
 
