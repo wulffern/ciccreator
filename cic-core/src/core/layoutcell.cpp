@@ -478,16 +478,17 @@ namespace cIcCore{
         QString name = obj[1].toString();
         QString location = (obj.size() > 2) ? obj[2].toString() : "rtbl";
         int widthmult = (obj.size() > 3) ? obj[3].toInt(): 1;
+        int spacemult = (obj.size() > 4) ? obj[4].toInt(): 10;
 
-        this->addPowerRing(layer,name,location,widthmult);
+        this->addPowerRing(layer,name,location,widthmult,spacemult);
     }
 
-    void LayoutCell::addPowerRing(QString layer, QString name, QString location, int widthmult)
+  void LayoutCell::addPowerRing(QString layer, QString name, QString location, int widthmult,int spacemult)
     {
         Instance* c = Cut::getInstance("M3","M4",2,2);
         int metalwidth = c->height()*widthmult;
-        int xgrid = this->rules->get("ROUTE","horizontalgrid")*10;
-        int ygrid = this->rules->get("ROUTE","horizontalgrid")*10;
+        int xgrid = this->rules->get("ROUTE","horizontalgrid")*spacemult;
+        int ygrid = this->rules->get("ROUTE","horizontalgrid")*spacemult;
 
         RouteRing* rr = new RouteRing(layer,name,this->getCopy(),location,ygrid,xgrid,metalwidth);
 
@@ -620,7 +621,6 @@ namespace cIcCore{
         }else{
             xgrid = this->rules->get(layer,"space")*spacemult + metalwidth;
             ygrid = this->rules->get(layer,"space")*spacemult + metalwidth;
-
         }
 
 
