@@ -45,12 +45,6 @@ else
 CIC= time ../bin/${OSBIN}/cic
 endif
 
-ifeq ($(UNAME_S),Darwin)
-CICGUI=time ../bin/${OSBIN}/cic-gui.app/Contents/MacOS/cic-gui
-else
-CICGUI= time ../bin/${OSBIN}/cic-gui
-endif
-
 
 .PHONY: doxygen coverage
 
@@ -77,12 +71,6 @@ clean:
 	${MAKE} -f qmake.make clean
 	-rm cic/Makefile
 	-rm cic-core/Makefile
-	-rm cic-gui/Makefile
-	-rm cic-color/Makefile
-	-rm cic2png/Makefile
-	-rm cic2eps/Makefile
-	-rm cic2tikz/Makefile
-	-rm cic2scriptcraft/Makefile
 
 doxygen:
 	doxygen
@@ -90,9 +78,6 @@ doxygen:
 help:
 	@echo " make               Compile ciccreator"
 	@echo " make esscirc       Compile SAR ADC from ESSCIRC paper"
-	@echo " make view          View the SAR ADC"
-	@echo " make routes        Compile route example "
-	@echo " make view-routes   View route example"
 	@echo " make view3d         View SAR in GDS3D"
 
 #- Run the program with the example json file

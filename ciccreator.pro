@@ -26,17 +26,9 @@ CONFIG += static
 TEMPLATE=subdirs
   CONFIG += ordered
   SUBDIRS = cic-core \
-  cic \
-  cic2eps \
-  cic2tikz \
-  cic2png \
-  cic-gui
-
+  cic 
 
   cic.depends = cic-core
-  cic-gui.depends = cic-core
-  cic2eps.depends = cic-core
-  cic2tikz.depends = cic-core
-  cic2png.depends = cic-core
+
 
 

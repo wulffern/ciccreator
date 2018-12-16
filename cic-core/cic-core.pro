@@ -52,10 +52,6 @@
   HEADERS +=  src/core/rules.h  \
   src/core/console.h \
   src/core/rect.h \
-  src/printer/minecraft.h \
-  src/printer/tikz.h \
-  src/printer/eps.h \
-  src/painter/cellpainter.h \
   src/core/graph.h \
   src/core/cell.h \
   src/core/instance.h \
@@ -74,7 +70,6 @@
   src/core/design.h \
   src/printer/gds.h \
   src/printer/designprinter.h \
-  src/printer/svg.h \
   src/spice/spiceparser.h\
   src/spice/subckt.h \
   src/spice/subcktinstance.h \
@@ -105,10 +100,6 @@
   src/core/rules.cpp \
   src/core/rect.cpp \
   src/core/cell.cpp   \
-  src/printer/minecraft.cpp \
-  src/printer/tikz.cpp \
-  src/printer/eps.cpp \
-  src/painter/cellpainter.cpp \
   src/core/patterntile.cpp \
   src/core/patterntransistor.cpp \
   src/core/patterncapacitor.cpp \
@@ -117,7 +108,6 @@
   src/core/design.cpp \
   src/core/guard.cpp \
   src/printer/designprinter.cpp \
-  src/printer/svg.cpp \
   src/spice/spiceparser.cpp \
   src/spice/spiceobject.cpp \
   src/spice/subckt.cpp \

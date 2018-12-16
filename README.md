@@ -40,34 +40,9 @@ On Windows:
     mingw32-make esscirc
 
 # Viewing
-Open GDSII file or open built in viewer
-
-On Linux or Mac:
-
-    make view
-
-On Windows:
-
-    mingw32-make view
-
-Or on Linux or Mac you can use GDS3D from https://sourceforge.net/projects/gds3d/ 
+Open GDSII file or on Linux or Mac you can use GDS3D from https://sourceforge.net/projects/gds3d/ 
 
     make view3d
-
-
-# Simulation
-The spice file that comes out of ciccreator is compatible with
-AimSpice (http://www.aimspice.com).
-
-
-On Mac: 
-- Install AimSpice
-- Run:
-
-	make esscircbulk
-- Open aimspice
-- Open sim/tb_sarbssw.cir
-- Press run
 
 # cIcCreator in action
 
