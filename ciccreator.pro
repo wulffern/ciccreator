@@ -27,17 +27,15 @@ TEMPLATE=subdirs
   CONFIG += ordered
   SUBDIRS = cic-core \
   cic \
-  cic-gui \
   cic2eps \
   cic2tikz \
   cic2png \
-  cic2scriptcraft \
-  cic-color
+  cic-gui
 
   cic.depends = cic-core
   cic-gui.depends = cic-core
   cic2eps.depends = cic-core
   cic2tikz.depends = cic-core
   cic2png.depends = cic-core
-  cic2scriptcraft.depends = cic-core
+
 
