@@ -32,6 +32,7 @@ TEMPLATE=subdirs
   cic2png \
   cic-gui
 
+
   cic.depends = cic-core
   cic-gui.depends = cic-core
   cic2eps.depends = cic-core
