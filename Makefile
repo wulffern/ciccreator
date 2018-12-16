@@ -78,6 +78,7 @@ doxygen:
 help:
 	@echo " make               Compile ciccreator"
 	@echo " make esscirc       Compile SAR ADC from ESSCIRC paper"
+	@echo " make esscircbulk   Compile SAR ADC from ESSCIRC paper in BULK CMOS"
 	@echo " make view3d         View SAR in GDS3D"
 
 #- Run the program with the example json file
@@ -94,11 +95,11 @@ esscirc: lay
 	cd lay; ${CIC} ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
 	-./scripts/cics2aimspice  lay/${LIBNAME}.cic  lay/${LIBNAME}.spice
 
-view: lay
-	cd lay; ${CICGUI} ${TECHFILE} ${LIBNAME}.cic &
+esscircbulk:
+	cd examples; cp ${LIBNAME}.json SAR_ESSCIRC16_28NBULK.json
+	cd examples; cp ${LIBNAME}.hier SAR_ESSCIRC16_28NBULK.hier
+	${MAKE}	esscirc LIBNAME=SAR_ESSCIRC16_28NBULK
 
-view-routes: lay
-	cd lay; ${CICGUI} ${TECHFILE} routes.cic &
 
 GDS3D:
 	wget https://sourceforge.net/projects/gds3d/files/GDS3D%201.8/GDS3D_1.8.tar.bz2/download
