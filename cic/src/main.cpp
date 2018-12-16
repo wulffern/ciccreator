@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
         }else{
             qWarning() << "Usage: cic <JSON file> <Technology file> [<Output name>]";
             qWarning() << "Example: cic ALGIC003_STDLIB.json ST_28NM_FDSOI.tech";
-            qWarning() << "About: cIcCreator reads a JSON object definition file, technology rule file\n and a SPICE netlist (assumes same name as object definition file)\n and outputs a; SPICE netlist, connectivity description (*.cics),\n a layout description (*.cicl), and a GDSII file.";
+            qWarning() << "About: \n\tcIcCreator reads a JSON object definition file, technology rule file\n\tand a SPICE netlist (assumes same name as object definition file)\n\tand outputs a; SPICE netlist (.spi), description file (.cic), and a GDSII file (.gds).\nOptions:\n\t --nogds\t Don't output GDS file\n\t --I\t\t Path's to search for include files";
         }
 
     }catch(...){
