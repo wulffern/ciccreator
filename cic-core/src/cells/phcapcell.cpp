@@ -70,12 +70,12 @@ namespace cIcCells{
 
         //Add binary bits
         for(int i=0;i<=_binaryBits;i++){
-            y = this->addFinger(x,y,msw,mw,mh,i,"CB" + to_string(i));
+            y = this->addFinger(x,y,msw,mw,mh,i,"CB" + to_string((long long) i));
         }
 
         for(int i=0;i<=_unaryBits;i++){
             for(int z=0;z<pow(2,_unaryBits);z++){
-                y = this->addFinger(x,y,msw,mw,mh,_binaryBits,"CU" + to_string(i) + "N" + to_string(z));
+                y = this->addFinger(x,y,msw,mw,mh,_binaryBits,"CU" + to_string((long long)i) + "N" + to_string((long long)z));
             }
         }
         y -= ms;
