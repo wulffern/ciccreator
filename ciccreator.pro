@@ -22,6 +22,8 @@ CONFIG += c++11
 CONFIG += debug
 CONFIG += static
 
+include(etc/mac_sdk.pro)
+
 
 TEMPLATE=subdirs
   CONFIG += ordered

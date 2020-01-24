@@ -17,7 +17,7 @@
 ##   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ######################################################################
 
-VERSION=0.1.1
+VERSION=0.1.2
 
 #- Figure out which platform we're running on
 ifeq ($(OS),Windows_NT)
@@ -94,6 +94,7 @@ routes: lay
 esscirc: lay
 	cd lay; ${CIC} ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
 	-./scripts/cics2aimspice  lay/${LIBNAME}.cic  lay/${LIBNAME}.spice
+
 
 esscircbulk:
 	cd examples; cp ${LIBNAME}.json SAR_ESSCIRC16_28NBULK.json

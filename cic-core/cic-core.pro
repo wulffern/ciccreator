@@ -23,12 +23,8 @@
   CONFIG += staticlib
   CONFIG += c++11
 
-  mac {
-  #- This needs to point to the SDK usually in /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
-#  mac::QMAKE_MAC_SDK = macosx10.13
-    mac::QMAKE_MAC_SDK = macosx10.14
-
-  }
+  include(../etc/mac_sdk.pro)
+  
   TEMPLATE = lib
 
   osx:DESTDIR = ../lib/darwin
@@ -92,7 +88,9 @@
   src/cells/cdac.h \
   src/decorator/layoutcelldecorator.h \
   src/decorator/connectsourcedrain.h \
-  src/cells/capcell.h
+  src/cells/capcell.h \
+  src/cells/phcapcell.h \
+  src/cells/capcellv2.h
 
 
   SOURCES +=         src/printer/gds.cpp \
@@ -134,4 +132,6 @@
   src/cells/cdac.cpp \
   src/decorator/layoutcelldecorator.cpp \
   src/decorator/connectsourcedrain.cpp \
-  src/cells/capcell.cpp
+  src/cells/capcell.cpp \
+  src/cells/phcapcell.cpp \
+  src/cells/capcellv2.cpp

@@ -545,7 +545,7 @@ namespace cIcCore{
     }
 
     QJsonObject Cell::toJson(){
-        QJsonObject o;
+        QJsonObject o = Rect::toJson();
         o["class"] =  this->metaObject()->className();
         o["name"] = this->name();
         o["has_pr"] = this->_has_pr;
