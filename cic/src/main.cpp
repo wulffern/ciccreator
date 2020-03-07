@@ -29,13 +29,13 @@ bool nogds = false;
 
 int main(int argc, char *argv[])
 {
+    int error = 0;
     try
     {
 
         QStringList includePaths;
 
-        if(argc >=  3){
-            QStringList arguments;
+        QStringList arguments;
 
             //Parse options
             for(int i=0;i<argc;i++){
@@ -51,10 +51,25 @@ int main(int argc, char *argv[])
                 }
             }
 
+            foreach(QString s, arguments){
+                qWarning() << s << "\n";
+                
+
+            }
+            
+
+            if(arguments.length() >=  3){
+            
+
 
             QString file = arguments[1];
             QString rules = arguments[2];
-            QString library = arguments[3];
+            
+            QString library ="" ;
+            if(arguments.length() > 3){
+                library = arguments[3];
+            }
+            
 
             if(library == ""){
                 QRegularExpression re("/?([^\\/]+)\\.json");
@@ -96,13 +111,16 @@ int main(int argc, char *argv[])
             qWarning() << "Usage: cic <JSON file> <Technology file> [<Output name>]";
             qWarning() << "Example: cic ALGIC003_STDLIB.json ST_28NM_FDSOI.tech";
             qWarning() << "About: \n\tcIcCreator reads a JSON object definition file, technology rule file\n\tand a SPICE netlist (assumes same name as object definition file)\n\tand outputs a; SPICE netlist (.spi), description file (.cic), and a GDSII file (.gds).\nOptions:\n\t --nogds\t Don't output GDS file\n\t --I\t\t Path's to search for include files";
+            error = 1;
         }
 
     }catch(...){
 
-        return -1;
+        
     }
 
+    return error;
+    
 
 
 
