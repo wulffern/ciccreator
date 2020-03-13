@@ -133,7 +133,7 @@ namespace cIcCore{
         QJsonObject o = Rect::toJson();
         o["class"] = "Port";
         o["name"] = name_;
-	o["spicePort"] = spicePort;
+        o["spicePort"] = spicePort;
         return o;
     }
 

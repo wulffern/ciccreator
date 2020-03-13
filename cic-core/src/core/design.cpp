@@ -128,24 +128,34 @@ namespace cIcCore{
             QJsonArray includeArray  = include.toArray();
             foreach (const QJsonValue & value, includeArray) { 
                 QString incfile = value.toString();
+
+                bool fileNotFound = true;
                 
                 if(fexists(incfile.toStdString().c_str())){
-                    if(!this->readCells(incfile))
+                    if(this->readCells(incfile))
                     {
-                        return false;
+                         fileNotFound = false;
                         
                     }
-                    
                 }
                 
                 foreach (QString incpath,_includePaths){
                     QString incf = QString("%1/%2").arg(incpath).arg(incfile);
-                    qDebug() << incf;
-                    if(fexists(incf.toStdString().c_str())){
-                        this->readCells(incf);
-                    }
 
+                    if(fexists(incf.toStdString().c_str())){
+                        if(this->readCells(incf)){
+                            fileNotFound = false;
+                        }
+                        
+                    }
+                    
                 }
+
+                if(fileNotFound){
+                    console->error("Could not find file '" + incfile + "'");
+                    return false;
+                }
+                
                 
             }
 
@@ -164,14 +174,19 @@ namespace cIcCore{
             }
 
         }else{
-            qWarning() << "Could not find 'cells' array in json file\n";
+            console->error("Could not find 'cells' array in json file\n");
+            return false;
+            
         }
         return true;
     }
     
     
-    void Design::read(QString filename){
-            
+    bool Design::read(QString filename){
+
+        bool retval = true;
+        
+        
         if(readCells(filename)){
             //Import all cuts, and put them on top
             foreach(Cut* cut,Cut::getCuts()){
@@ -180,9 +195,12 @@ namespace cIcCore{
                 _cell_names.insert(0,cut->name());
             }
 
+        }else{
+            retval = false;
+            
         }
         
-        
+        return retval;
     }
 
     Subckt * Design::getSpiceSubckt(QJsonObject jobj, QList<QJsonObject>* reverse_parents, QString name)
@@ -645,6 +663,8 @@ namespace cIcCore{
         file.setFileName(filename);
         if(!file.exists()){
             console->comment("Could not find file '" + filename + "'",ConsoleOutput::red);
+            throw "Die";
+            
             QJsonObject obj;
             return obj;
         }

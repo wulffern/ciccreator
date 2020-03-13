@@ -644,9 +644,7 @@ namespace cIcCore{
 
     }
     int xc = start_bound.centerX() - width/2;
-
-
-
+    
 
     //Align cuts with center of start rectangle
     foreach(Rect * r, this->children()){
@@ -696,6 +694,14 @@ namespace cIcCore{
 
         //Use the lowest rectangle to route
         int height = r1->height();
+
+        //Exception, poly should only be routed minimum??
+//        if(routeLayer_ == "PO"){
+//            height = rules->get(routeLayer_,"width");            
+
+//        }
+        
+        
         if(r1->height() > r2->height()){
           height = r2->height();
         }

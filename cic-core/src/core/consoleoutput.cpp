@@ -88,6 +88,20 @@ void ConsoleOutput::endComment(QTextStream &out){
 
  }
 
+    void ConsoleOutput::error(QString str)
+    {
+
+        int indent_old = indent;
+
+        indent = 0;
+        
+        this->comment("ERROR: " + str,ConsoleOutput::red);
+
+        indent = indent_old;
+
+    }
+    
+
 void ConsoleOutput::commentInvokeMethod(QString cell, QString theme, QString method){
   QTextStream out(stdout);
   this->startComment(out);

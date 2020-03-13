@@ -20,10 +20,7 @@
   QT += core
   CONFIG += c++11
   
-  mac {
-  #- This needs to point to the SDK usually in /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
-  mac::QMAKE_MAC_SDK = macosx10.14
-  }
+
   osx:DESTDIR = ../bin/darwin
   linux:DESTDIR = ../bin/linux
   win32:DESTDIR = ../bin/windows

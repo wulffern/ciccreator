@@ -27,6 +27,7 @@
 #include <QJsonDocument>
 #include <QDebug>
 #include "layer.h"
+#include "consoleoutput.h"
 
 namespace cIcCore{
 

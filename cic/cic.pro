@@ -22,5 +22,7 @@ CONFIG += static
 TEMPLATE = app
 TARGET = cic
 
+include(../etc/mac_sdk.pro)
 include(../etc/console_config.pro)
+
 
