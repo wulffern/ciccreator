@@ -92,7 +92,9 @@
   src/cells/cdac.h \
   src/decorator/layoutcelldecorator.h \
   src/decorator/connectsourcedrain.h \
-  src/cells/capcell.h
+  src/cells/capcell.h \
+  src/cells/phcapcell.h \
+  src/cells/capcellv2.h
 
 
   SOURCES +=         src/printer/gds.cpp \
@@ -134,4 +136,6 @@
   src/cells/cdac.cpp \
   src/decorator/layoutcelldecorator.cpp \
   src/decorator/connectsourcedrain.cpp \
-  src/cells/capcell.cpp
+  src/cells/capcell.cpp \
+  src/cells/phcapcell.cpp \
+  src/cells/capcellv2.cpp

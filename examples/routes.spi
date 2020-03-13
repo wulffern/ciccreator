@@ -8,6 +8,10 @@
 .subckt DDMVIA S D B
 .ends
 
+.subckt CAPCELL A B C
+
+.ends
+
 
 .subckt TEST A B
 XA1 B DDD

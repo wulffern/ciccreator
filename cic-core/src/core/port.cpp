@@ -40,6 +40,8 @@ namespace cIcCore{
         spicePort = true;
     }
 
+    
+
     void Port::mirrorX(int ay)
     {
         updateRect();

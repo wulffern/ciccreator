@@ -252,7 +252,7 @@ namespace cIcCore{
     }
 
     QJsonObject Instance::toJson(){
-        QJsonObject o = Rect::toJson();
+        QJsonObject o = Cell::toJson();
         o["class"]  = "Instance";
         if(_cell){
             o["cell"] = _cell->name();
