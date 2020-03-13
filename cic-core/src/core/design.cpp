@@ -140,9 +140,11 @@ namespace cIcCore{
                 
                 foreach (QString incpath,_includePaths){
                     QString incf = QString("%1/%2").arg(incpath).arg(incfile);
-                    qDebug() << incf;
+
                     if(fexists(incf.toStdString().c_str())){
-                        this->readCells(incf);
+                        if(!this->readCells(incf)){
+                            return false;
+                        }
                     }
 
                 }

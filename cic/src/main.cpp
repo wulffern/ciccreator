@@ -51,11 +51,6 @@ int main(int argc, char *argv[])
                 }
             }
 
-            foreach(QString s, arguments){
-                qWarning() << s << "\n";
-                
-
-            }
             
 
             if(arguments.length() >=  3){

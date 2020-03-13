@@ -352,7 +352,8 @@ namespace cIcCore {
                         rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
                     }
 
-                    if(prev_rect_ && prev_rect_->abutsLeft(rect)){
+                    //Don't combine rectangles if it's a metal resistor
+                    if(c != 'r' &&prev_rect_ && prev_rect_->abutsLeft(rect)){
                         prev_rect_->setRight(rect->x2());
                         delete(rect);
                         rect = prev_rect_;
