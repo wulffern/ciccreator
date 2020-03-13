@@ -41,6 +41,7 @@ namespace cIcCore{
     {
         Q_OBJECT
         Q_PROPERTY(QString name READ name WRITE setName)
+        Q_PROPERTY(bool physicalOnly READ isPhysicalOnly WRITE setPhysicalOnly)
         Q_INVOKABLE void moveTo(QJsonArray obj);
 
     public:
@@ -94,6 +95,13 @@ namespace cIcCore{
         //! Convert cell to a human readable format, useful for debug
         QString toString();
 
+        //! Mark as a physcial only cell
+        bool isPhysicalOnly(){return _physicalOnly;}
+        bool setPhysicalOnly(bool val){ _physicalOnly = val;
+            return _physicalOnly;
+        }
+
+        
         //! Name of this cell
         QString name(){return _name;}
         QString setName(QString val){ _name = val;
@@ -225,6 +233,7 @@ namespace cIcCore{
     private:
         //! Cell name
         QString _name;
+        bool _physicalOnly;
 
 
 

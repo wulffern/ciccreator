@@ -41,6 +41,7 @@ namespace cIcCore{
 	  Port();
 	  ~Port();
 	  Port(QString name);
+//		Port(string name):Port(QString::fromLocal8Bit(name.c_str())){}
 
 	  //! Net name
 	  QString name();

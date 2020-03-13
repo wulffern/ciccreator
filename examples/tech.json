@@ -1,9 +1,8 @@
-
 {
     "layers" : {
         "CO"  : { "number" : 14, "datatype" : 0,  "material" : "cut",       "previous" : "PO",  "next" : "M1", "color" : "yellow"},
         "OD"  : { "number" : 2,  "datatype" : 0,  "material" : "diffusion", "previous" : "",  "next" : "CO", "pin" : "OD_pin", "color" : "green" },
-        "OD2" : { "number" : 12, "datatype" : 43, "material" : "diffusion", "previous" : "",  "next" : "CO", "pin" : "OD_pin" , "color" : "nofill" },
+        "OD2" : { "number" : 12, "datatype" : 43, "material" : "implant", "previous" : "",  "next" : "CO", "pin" : "OD_pin" , "color" : "nofill" },
         "PO"  : { "number" : 7,  "datatype" : 0,  "material" : "poly",      "previous" : "",  "next" : "CO", "pin" : "PO_pin" , "color" : "red"},
 		
         "PO_pin" : { "number" : 7, "datatype" : 20 },
@@ -49,7 +48,7 @@
         "SVT" : { "number" : 12, "datatype" : 164 , "material" : "marker" , "color" : "cyan","fill" : "nofill"}
     },
     "technology" :{
-		"gamma" : 100,
+		"gamma" : 50,
         "devices" : {
             "rppo" : { "name" : "rppo", "ports" : ["p","n"]},
             "mres" : { "name" : "mres", "ports" : ["p","n"]},
@@ -79,10 +78,10 @@
         "RE"   : { "POenclosure" : 48},
         "PRES" : { "POenclosure" : 48},
         "OD"   : { "space" : 14, "enclosure" : 4, "COencOpposite" : 15},
-        "M1"   : { "space" : 18, "width" : 12 , "enclosure" : 1, "VIA1encOpposite" : 15},
+        "M1"   : { "space" : 18, "ana_width": 18, "cap_width" : 20, "width" : 12 , "enclosure" : 1, "VIA1encOpposite" : 15},
         "M2"   : { "space" : 18, "width" : 12 , "enclosure" : 1, "VIA1enclosure" : 1, "VIA1encOpposite" : 15, "VIA2encOpposite" : 15},
         "M3"   : { "space" : 18, "width" : 12 , "enclosure" : 1, "VIA2enclosure" : 1, "VIA2encOpposite" : 15, "VIA3encOpposite" : 15},
-        "M4"   : { "space" : 18, "width" : 12 , "enclosure" : 1, "VIA3enclosure" : 1, "VIA3encOpposite" : 15, "VIA4encOpposite" : 15, "capspace" : 30},
+        "M4"   : { "space" : 18, "width" : 12 ,  "cap_width" : 20, "enclosure" : 1, "VIA3enclosure" : 1, "VIA3encOpposite" : 15, "VIA4encOpposite" : 15, "capspace" : 30},
         "M5"   : { "space" : 18, "width" : 12 , "enclosure" : 1, "VIA3enclosure" : 1, "VIA3encOpposite" : 15, "VIA5encOpposite" : 15, "capspace" : 30},
         "M6"   : { "space" : 18, "width" : 12 , "enclosure" : 1, "VIA3enclosure" : 1, "VIA3encOpposite" : 15, "VIA6encOpposite" : 15, "capspace" : 30},
         "LVT" : { "enclosure": 24, "ODenclosure" : 24, "OD2enclosure" : 50},

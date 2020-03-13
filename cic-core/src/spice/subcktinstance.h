@@ -47,7 +47,8 @@ namespace cIcSpice{
         QString groupTag(){return _group_tag;}
         void parse(QString buffer,int line_number);
         virtual QJsonObject toJson();
-
+        virtual void fromJson(QJsonObject o);
+        
     private:
 
         QString _subckt_name;

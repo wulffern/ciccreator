@@ -26,11 +26,14 @@ namespace cIcCore{
     Cell::Cell(): Rect(){
         _subckt = NULL;
         boundaryIgnoreRouting_ = false;
+        _physicalOnly = false;
+        
     }
 
     Cell::Cell(const Cell&){
         _subckt = NULL;
         boundaryIgnoreRouting_ = false;
+        _physicalOnly = false;
     }
 
     Cell::~Cell() {
@@ -247,10 +250,13 @@ namespace cIcCore{
             p_ptr->spicePort = this->isASpicePort(name);
             p_ptr->set(r);
         }else{
-            p_ptr = new Port(name);
-            p_ptr->spicePort = this->isASpicePort(name);
-            p_ptr->set(r);
-            this->add(p_ptr);
+            if(_subckt && _subckt->nodes().contains(name)){
+                p_ptr = new Port(name);
+                p_ptr->spicePort = this->isASpicePort(name);
+                p_ptr->set(r);
+                this->add(p_ptr);
+            }
+            
         }
         return p_ptr;
     }
@@ -539,11 +545,19 @@ namespace cIcCore{
     }
 
     QJsonObject Cell::toJson(){
-        QJsonObject o;
+        QJsonObject o = Rect::toJson();
         o["class"] =  this->metaObject()->className();
         o["name"] = this->name();
         o["has_pr"] = this->_has_pr;
-        QJsonArray ar;
+
+	cIcSpice::Subckt * ckt = this->subckt();
+        if(ckt){
+	  QJsonObject ockt = ckt->toJson();
+	  ockt["class"] = this->metaObject()->className();
+	  o["ckt"] = ockt;
+	}
+
+		QJsonArray ar;
 
         foreach(Rect * r, children()){
             QJsonObject child = r->toJson();

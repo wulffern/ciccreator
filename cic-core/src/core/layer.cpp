@@ -34,45 +34,6 @@ namespace cIcCore{
         visible = true;
       }
 
-	QPixmap Layer::icon(){
-        return QPixmap::fromImage(drawColorIconProof(this->color, icon(200)));
-      }
-	
-	QImage Layer::icon(int size) {
-         QImage image(size, size, QImage::Format_ARGB32_Premultiplied);
-         image.fill(Qt::transparent);
-         QPainter p(&image);
-         p.setRenderHint(QPainter::Antialiasing);
-         p.setPen(Qt::NoPen);
-         p.translate(image.rect().center());
-         p.scale(image.width()/2.2, image.height()/2.2);
-         p.setBrush(Qt::white);
-         p.drawRect(0,0,image.width(),image.height());
-         return image;
-      }
-
-	void Layer::drawColorIcon(QPainter & p, QColor color, const QImage & alpha)
-      {
-        p.save();
-        p.setCompositionMode(QPainter::CompositionMode_SourceOver);
-        p.fillRect(QRect(0, 0, alpha.width(), alpha.height()), color);
-        p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
-        p.drawImage(0, 0, alpha);
-        p.restore();
-      }
-
-	QImage Layer::drawColorIconProof(QColor color, const QImage & alpha) {
-         QImage result(alpha.size(), alpha.format());
-         QPainter p(&result);
-         drawColorIcon(p, color, alpha);
-         p.setPen(Qt::NoPen);
-         QBrush brush;
-         //brush.setTextureImage(checkers(10));
-         p.setCompositionMode(QPainter::CompositionMode_DestinationAtop);
-         p.fillRect(alpha.rect(), brush);
-         return result;
-      }
-
 
 }
 

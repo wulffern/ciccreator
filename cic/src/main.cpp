@@ -24,33 +24,47 @@
 #include <QString>
 
 
+bool nogds = false;
+
 
 int main(int argc, char *argv[])
 {
+    int error = 0;
     try
     {
 
         QStringList includePaths;
 
-        if(argc >=  3){
-            QStringList arguments;
+        QStringList arguments;
 
             //Parse options
             for(int i=0;i<argc;i++){
                 QString arg = argv[i];
-                
+
                 if(arg == "--I" && (i+1)< argc){
                     includePaths.append(argv[i+1]);
                     i  = i+1;
+                }else if(arg == "--nogds"){
+                    nogds = true;
                 }else{
                     arguments.append(arg);
                 }
             }
+
             
+
+            if(arguments.length() >=  3){
             
+
+
             QString file = arguments[1];
             QString rules = arguments[2];
-            QString library = arguments[3];
+            
+            QString library ="" ;
+            if(arguments.length() > 3){
+                library = arguments[3];
+            }
+            
 
             if(library == ""){
                 QRegularExpression re("/?([^\\/]+)\\.json");
@@ -66,7 +80,7 @@ int main(int argc, char *argv[])
             foreach(QString path,includePaths){
                 d->addIncludePath(path);
             }
-            
+
             d->read(file);
 
             //Print SPICE file
@@ -74,32 +88,34 @@ int main(int argc, char *argv[])
             spice->print(d);
             delete(spice);
 
-            cIcPrinter::Cics * cics = new cIcPrinter::Cics(library);
-            cics->print(d);
-            delete(cics);
 
+            if(!nogds){
+                //Write GDS
+                cIcCore::ConsoleOutput console;
+                console.comment("Writing GDS");
+                cIcPrinter::Gds * gd = new cIcPrinter::Gds(library);
+                gd->print(d);
+                delete(gd);
+            }
 
-            //Write GDS
-            cIcCore::ConsoleOutput console;
-            console.comment("Writing GDS");
-            cIcPrinter::Gds * gd = new cIcPrinter::Gds(library);
-            gd->print(d);
-            delete(gd);
 
             //Write JSON
-            d->writeJsonFile(library + ".cicl");
+            d->writeJsonFile(library + ".cic");
 
         }else{
             qWarning() << "Usage: cic <JSON file> <Technology file> [<Output name>]";
             qWarning() << "Example: cic ALGIC003_STDLIB.json ST_28NM_FDSOI.tech";
-            qWarning() << "About: cIcCreator reads a JSON object definition file, technology rule file\n and a SPICE netlist (assumes same name as object definition file)\n and outputs a; SPICE netlist, connectivity description (*.cics),\n a layout description (*.cicl), and a GDSII file.";
+            qWarning() << "About: \n\tcIcCreator reads a JSON object definition file, technology rule file\n\tand a SPICE netlist (assumes same name as object definition file)\n\tand outputs a; SPICE netlist (.spi), description file (.cic), and a GDSII file (.gds).\nOptions:\n\t --nogds\t Don't output GDS file\n\t --I\t\t Path's to search for include files";
+            error = 1;
         }
 
     }catch(...){
 
-        return -1;
+        
     }
 
+    return error;
+    
 
 
 

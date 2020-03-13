@@ -63,27 +63,40 @@ my $arr = $json->decode($buffer);
 my $err  = $json->error;
 die $err if $err;
 
+
 #----------------------------------------------------------------------------
 # Write spice file
 #----------------------------------------------------------------------------
 #- Parse all cells, and write spice
-foreach my $cell (@{$arr}) {
-  my @nodes = @{$cell->{nodes}};
-  print fo ".SUBCKT ".$cell->{name}." ".join(' ',@nodes)."\n";
-  my @devices = @{$cell->{devices}};
+foreach my $cell (@{$arr->{cells}}) {
+  next unless $cell->{ckt};
+  my $ckt = $cell->{ckt};
+  my @nodes = @{$ckt->{nodes}};
+  print fo ".SUBCKT ".$ckt->{name}." ".join(' ',@nodes)."\n";
+  my @devices = @{$ckt->{devices}};
 
   #----------------------------------------------------------------------------
   # Write standard capacitors
   #----------------------------------------------------------------------------
-  if ($cell->{class} =~ m/Capacitor/) {
-    print fo "C1 ".join(' ',@nodes)." 6f \n";
-    print fo "R1 A 0 1e12\n";
-    print fo "R2 B 0 1e12\n";
+  if ($ckt->{class} =~ m/Capacitor/) {
+	my $w = $ckt->{properties}->{width};
+	my $h = $ckt->{properties}->{width};
+
+
+	my $a = $w * $h * 0.5;
+    print fo "C1 ".$nodes[0]." ".$nodes[1]." ${a}f \n";
+	if(scalar(@nodes) > 2){
+	  print fo "CB ".$nodes[2]." 0 ".(${a}*0.1)."f \n";
+	}  
+	foreach my $n(@nodes){
+	  print fo "R$n $n 0 1e12\n";
+	}
+
 
 	#----------------------------------------------------------------------------
 	# Write CDAC cells
 	#----------------------------------------------------------------------------
-  } elsif ($cell->{class} =~ m/CapCell/) {
+  } elsif ($ckt->{class} =~ m/CapCell/) {
     foreach my $n (@nodes) {
       next if $n =~ m/CTOP/;
       next if $n =~ m/AVSS/;
@@ -150,7 +163,7 @@ foreach my $cell (@{$arr}) {
 	#----------------------------------------------------------------------------
 	# Write Instances
 	#----------------------------------------------------------------------------
-    my @instances = @{$cell->{instances}};
+    my @instances = @{$ckt->{instances}};
     foreach my $instance (@instances) {
 
       my @inodes = @{$instance->{nodes}};

@@ -33,7 +33,9 @@ namespace cIcCore{
 	enum SortDirection {SORT_RIGHT, SORT_LEFT, SORT_BOTTOM, SORT_TOP};
 	enum Offset {LOW, HIGH,NO_OFFSET};
 	enum CutProperty { NO_START_CUT, NO_END_CUT, CENTER_CUT};
-	enum RouteType { LEFT, RIGHT, LEFT_DOWN_LEFT_UP, STRAIGHT,VERTICAL,U_RIGHT, U_LEFT, ROUTE_UNKNOWN,LEFT_UP_LEFT_DOWN,STRAP};
+	enum RouteType { LEFT, RIGHT, LEFT_DOWN_LEFT_UP, STRAIGHT,VERTICAL,U_RIGHT, U_LEFT, ROUTE_UNKNOWN,LEFT_UP_LEFT_DOWN,STRAP, U_TOP, U_BOTTOM};
+    enum Trim{NO_TRIM,TRIM_START_LEFT,TRIM_START_RIGHT, TRIM_END_LEFT, TRIM_END_RIGHT};
+        
 	
 	class Route : public Cell
 	{
@@ -49,14 +51,18 @@ namespace cIcCore{
 
 		virtual void addStartCuts();
 		virtual void addEndCuts(); 
-		virtual void addCuts(QList<Rect*>,QList<Rect*>&);
+//		virtual QList<Rect*> addCuts(QList<Rect*>,QList<Rect*>&);
+        virtual QList<Rect*> addCuts(QList<Rect*>,QList<Rect*>&,int cuts_, int vcuts_);
 		virtual void route();
 
+        void routeUHorizontal();
 		void addVertical(int x);
 		void applyOffset(int width, Rect* start, Offset offset);
 
 		void hasMatch(QString options);
 		int getIntegerFromMatch(QString regex,QString options, int defaultValue);
+        QString getQStringFromMatch(QString regex,QString options, QString defaultValue);
+
 	protected:
 		QString routeLayer_;
 		RouteType routeType_;
@@ -64,11 +70,23 @@ namespace cIcCore{
 		QString net_;
 		SortDirection sortDirection_;
 		Offset startOffset_;
+        Offset startOffsetCut_;
+        Offset endOffsetCut_;
 		Offset stopOffset_;
+        Trim startTrim_;
+        Trim endTrim_;
 		int track_;
 		bool hasTrack_;
+        int startCuts_;
+        int startVCuts_;
+        int endCuts_;
+        int endVCuts_;
+
+
+        
 		int cuts_;
 		int vcuts_;
+        QString routeWidthRule_;
 		bool fillvcut_;
 		bool fillhcut_;
 		bool antenna_;
@@ -77,6 +95,7 @@ namespace cIcCore{
 		QList<Rect*> stop_rects_;
         QList<Rect*> startcuts;
         QList<Rect*> endcuts;
+	QList<Rect*> add_after_route;
         bool leftAlignCut;
         
         

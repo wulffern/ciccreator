@@ -34,10 +34,13 @@ namespace cIcCore{
 
     Port::Port(QString name){
         name_ = name;
+        
         routeLayer_ = 0;
         rect_ = 0;
         spicePort = true;
     }
+
+    
 
     void Port::mirrorX(int ay)
     {
@@ -122,12 +125,15 @@ namespace cIcCore{
     void Port::fromJson(QJsonObject o){
         Rect::fromJson(o);
         name_ = o["name"].toString();
+	spicePort = o["spicePort"].toBool();
+        routeLayer_ = rules->getLayer(this->layer());
     }
 
     QJsonObject Port::toJson(){
         QJsonObject o = Rect::toJson();
         o["class"] = "Port";
         o["name"] = name_;
+        o["spicePort"] = spicePort;
         return o;
     }
 

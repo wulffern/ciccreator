@@ -352,6 +352,7 @@ namespace cIcCore{
         o["x2"] = x2_;
         o["y2"] = y2_;
         o["layer"] = _layer;
+        o["net"] = this->net();
         return o;
     }
 

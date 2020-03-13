@@ -1,0 +1,123 @@
+#!/usr/bin/python
+######################################################################
+##        Copyright (c) 2018 Carsten Wulff Software, Norway 
+## ###################################################################
+## Created       : wulff at 2018-12-23
+## ###################################################################
+##  The MIT License (MIT)
+## 
+##  Permission is hereby granted, free of charge, to any person obtaining a copy
+##  of this software and associated documentation files (the "Software"), to deal
+##  in the Software without restriction, including without limitation the rights
+##  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+##  copies of the Software, and to permit persons to whom the Software is
+##  furnished to do so, subject to the following conditions:
+## 
+##  The above copyright notice and this permission notice shall be included in all
+##  copies or substantial portions of the Software.
+## 
+##  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+##  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+##  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+##  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+##  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+##  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+##  SOFTWARE.
+##  
+######################################################################
+import json
+import sys
+
+header_template = """<?xml version="1.0" encoding="utf-8"?>
+<layer-properties>
+"""
+
+properties_template = """
+ <properties>
+  <frame-color>__framecolor__</frame-color>
+  <fill-color>__fillcolor__</fill-color>
+  <frame-brightness>0</frame-brightness>
+  <fill-brightness>0</fill-brightness>
+  <dither-pattern>__dither__</dither-pattern>
+  <line-style/>
+  <valid>true</valid>
+  <visible>__visible__</visible>
+  <transparent>false</transparent>
+  <width/>
+  <marked>false</marked>
+  <xfill>false</xfill>
+  <animation>0</animation>
+  <name>__name__</name>
+  <source>__number__/__datatype__@1</source>
+ </properties>
+"""
+
+footer_template = """
+ <name/>
+</layer-properties>
+"""
+
+
+stiples = ( )
+
+def main(jsonfile,lytfile):
+
+    s = header_template + "\n"
+    
+    with open(jsonfile) as jf:
+        jobj = json.load(jf)
+        layers = jobj["layers"]
+        for lay in sorted(layers):
+            p = properties_template
+            l = layers[lay]
+            p = p.replace("__number__",str(l["number"]))
+            p = p.replace("__datatype__",str(l["datatype"]))
+            p = p.replace("__name__",lay)
+            if( "color" in l):
+                p = p.replace("__framecolor__",l["color"])
+                p = p.replace("__fillcolor__",l["color"])
+                p = p.replace("__visible__","true")
+            else:
+                p = p.replace("__visible__","false")
+                p = p.replace("<frame-color>__framecolor__</frame-color>","<frame-color/>")
+                p = p.replace("<fill-color>__fillcolor__</fill-color>","<fill-color/>")    
+
+            if("material" in l):
+                if(l["material"] == "metal"):
+                    p = p.replace("__dither__","I4")
+                elif(l["material"] == "cut"):
+                    p = p.replace("__dither__","I0")
+                elif(l["material"] == "metal"):
+                    p = p.replace("__dither__","I1")
+                elif(l["material"] == "implant" ):
+                    p = p.replace("__dither__","I1")
+                elif(l["material"] == "poly" ):
+                    p = p.replace("__dither__","I2")
+                else:
+                    p = p.replace("__dither__","I1")
+            else:
+                p = p.replace("__dither__","I1")
+                    
+                    
+
+                
+            s += p
+
+    s += footer_template
+    with open(lytfile,"w") as lytf:
+        lytf.write(s)
+        
+        
+
+
+if(len(sys.argv) > 1):
+
+    if(len(sys.argv) == 2):
+        main(sys.argv[1],sys.argv[1] + ".lyp")
+    else:
+        main(sys.argv[1],sys.argv[2])
+
+else:
+    print('Usage: json2lyt <json tech file> [<klayout lyt file name>]')
+    
+

@@ -20,6 +20,8 @@
 #include "core/patterntransistor.h"
 
 namespace cIcCore{
+
+
     PatternTransistor::PatternTransistor():PatternTile()
     {
         

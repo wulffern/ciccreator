@@ -20,9 +20,7 @@
   QT += core
   CONFIG += c++11
   
-  mac {
-    mac::QMAKE_MAC_SDK = macosx10.12
-    }
+
   osx:DESTDIR = ../bin/darwin
   linux:DESTDIR = ../bin/linux
   win32:DESTDIR = ../bin/windows

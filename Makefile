@@ -17,9 +17,7 @@
 ##   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ######################################################################
 
-VERSION=0.1.0
-
-CMD=time ../bin/cic
+VERSION=0.1.2
 
 #- Figure out which platform we're running on
 ifeq ($(OS),Windows_NT)
@@ -40,6 +38,13 @@ OSBIN=linux
 GDS3D=GDS3D/linux/GDS3D
 endif
 endif
+
+ifeq ($(UNAME_S),Darwin)
+CIC=time ../bin/${OSBIN}/cic.app/Contents/MacOS/cic
+else
+CIC= time ../bin/${OSBIN}/cic
+endif
+
 
 .PHONY: doxygen coverage
 
@@ -66,16 +71,15 @@ clean:
 	${MAKE} -f qmake.make clean
 	-rm cic/Makefile
 	-rm cic-core/Makefile
-	-rm cic-gui/Makefile
-	-rm cic-color/Makefile
 
 doxygen:
 	doxygen
 
-coverage:
-	lcov --capture --directory . --output-file coverage/converage.info
-	genhtml coverage/converage.info --output-directory coverage/
-
+help:
+	@echo " make               Compile ciccreator"
+	@echo " make esscirc       Compile SAR ADC from ESSCIRC paper"
+	@echo " make esscircbulk   Compile SAR ADC from ESSCIRC paper in BULK CMOS"
+	@echo " make view3d         View SAR in GDS3D"
 
 #- Run the program with the example json file
 EXAMPLE=../examples
@@ -84,33 +88,19 @@ CELL=SAR9B_EV
 JSONFILE=${EXAMPLE}/${LIBNAME}.json
 TECHFILE=${EXAMPLE}/tech.json
 
-minecraft: lay
-	cd lay; ${CMD} ${JSONFILE} ${EXAMPLE}/tech_minecraft.json minecraft ${OPT}
-
 routes: lay
-	cd lay; ${CMD} ${EXAMPLE}/routes.json ${TECHFILE} routes ${OPT}
+	cd lay; ${CIC} ${EXAMPLE}/routes.json ${TECHFILE} routes ${OPT}
+
+esscirc: lay
+	cd lay; ${CIC} ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
+	-./scripts/cics2aimspice  lay/${LIBNAME}.cic  lay/${LIBNAME}.spice
+
 
 esscircbulk:
 	cd examples; cp ${LIBNAME}.json SAR_ESSCIRC16_28NBULK.json
 	cd examples; cp ${LIBNAME}.hier SAR_ESSCIRC16_28NBULK.hier
 	${MAKE}	esscirc LIBNAME=SAR_ESSCIRC16_28NBULK
 
-esscirc: lay
-
-	cd lay; ../bin/${OSBIN}/cic ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
-	-./scripts/cics2aimspice  lay/${LIBNAME}.cics  lay/${LIBNAME}.spice
-	cd lay	; ../bin/${OSBIN}/cic2eps ${EXAMPLE}/${LIBNAME}.json ${EXAMPLE}/tech_eps.json ${CELL}
-	cd lay	; ../bin/${OSBIN}/cic2png ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${EXAMPLE}/${LIBNAME}.hier
-
-
-view: lay
-ifeq ($(UNAME_S),Darwin)
-	cd lay; ../bin/darwin/cic-gui.app/Contents/MacOS/cic-gui ${TECHFILE} ${LIBNAME}.cicl &
-else
-	cd lay; ../bin/${OSBIN}/cic-gui ${TECHFILE} ${LIBNAME}.cicl &
-endif
-view-routes: lay
-	cd lay; ../bin/${OSBIN}/cic-gui ${TECHFILE} routes.json &
 
 GDS3D:
 	wget https://sourceforge.net/projects/gds3d/files/GDS3D%201.8/GDS3D_1.8.tar.bz2/download
@@ -121,9 +111,4 @@ GDS3D:
 view3d: GDS3D
 	echo ${GDS3D}
 	 ${GDS3D} -p examples/tech_gds3d.txt -i lay/SAR_ESSCIRC16_28N.gds -t SAR9B_EV
-
-
-tar:
-	cd ..; tar cfz ciccreator/ciccreator_${OSNAME}_${VERSION}.tar.gz ciccreator/bin ciccreator/Makefile ciccreator/README.md ciccreator/lib ciccreator/examples ciccreator/LICENSE 
-
 

@@ -58,6 +58,7 @@ namespace cIcCore{
         Q_INVOKABLE void addRouteHorizontalRect(QJsonArray obj);
         Q_INVOKABLE void addGuard(QJsonArray obj);
         Q_INVOKABLE void addHorizontalRect(QJsonArray obj);
+        Q_INVOKABLE void alternateGroup(QJsonValue obj);
         
         
 
@@ -76,7 +77,7 @@ namespace cIcCore{
 
 		void addRouteRing(QString layer, QString name, QString location, int widthmult, int spacemult);
         void addRouteRing(QString layer, QString name, QString location, int widthmult, int spacemult,bool useGridForSpace);
-		void addPowerRing(QString layer, QString name, QString location, int widthmult);
+	void addPowerRing(QString layer, QString name, QString location, int widthmult,int spacemult);
 		void addPowerConnection(QString name, QString includeInstances,  QString location);
 		void addRouteConnection(QString path, QString includeInstances, QString layer, QString location, QString options);
 
@@ -104,6 +105,7 @@ namespace cIcCore{
 
 	private:
         bool useHalfHeight;
+        bool alternateGroup_;
         QList<QString> nodeGraphList_;
 		QHash<QString,Graph*> nodeGraph_;
 

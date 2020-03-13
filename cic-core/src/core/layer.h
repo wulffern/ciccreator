@@ -20,8 +20,10 @@
 #ifndef CIC_CORE_LAYER_H
 #define CIC_CORE_LAYER_H
 
-#include <QImage>
-#include <QPainter>
+//#include <QImage>
+//#include <QPainter>
+#include <QString>
+#include <QMap>
 
 
 namespace cIcCore{
@@ -42,6 +44,7 @@ namespace cIcCore{
         //!GDS layer datatype
         int datatype;
 
+        QMap<QString,int> datatypes;
 
         enum MATERIAL_TYPE {diffusion, poly, metal, cut, metalres,other,marker,implant};
 
@@ -72,12 +75,12 @@ namespace cIcCore{
         Layer();
 
         //!Makes a small icon of this layer that can be used in GUI
-        QPixmap icon();
+//        QPixmap icon();
 
     private:
-        QImage icon(int size);
-        void drawColorIcon(QPainter & p, QColor color, const QImage & alpha);
-        QImage drawColorIconProof(QColor color, const QImage & alpha) ;
+//        QImage icon(int size);
+//        void drawColorIcon(QPainter & p, QColor color, const QImage & alpha);
+//        QImage drawColorIconProof(QColor color, const QImage & alpha) ;
     };
 
 }

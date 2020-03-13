@@ -126,6 +126,10 @@ namespace cIcCore{
         Cell* cell = this->cell();
 
         if(cell == NULL){ qWarning() << "Error: Could find cell" << inst->subcktName(); return;}
+        if(cell->isPhysicalOnly()){return;}
+        
+            
+            
 
         if(ckt){
             cktNodes = ckt->nodes();
@@ -248,7 +252,7 @@ namespace cIcCore{
     }
 
     QJsonObject Instance::toJson(){
-        QJsonObject o = Rect::toJson();
+        QJsonObject o = Cell::toJson();
         o["class"]  = "Instance";
         if(_cell){
             o["cell"] = _cell->name();

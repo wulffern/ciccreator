@@ -191,6 +191,7 @@ namespace cIcCells{
     void CapCell::addContacts(QString name, QString node,int y,QList<int> array){
 
         auto ms =  this->getRules()->get("M2","space");
+        auto mw =  this->getRules()->get("M2","width");
 
         auto ctres =  Cut::getInstance("M1","M4",2,1);
         auto inst = this->getInstanceFromInstanceName(name);
@@ -204,8 +205,13 @@ namespace cIcCells{
             auto ra = new Rect("M2",ct->x1(),0,ct->width(),ct->y1()- ms);
             auto rb = new Rect("M2",ct->x1(),ct->y2() + ms,ct->width(),yMax - ct->y2() - ms );
             this->add(ct);
-            this->add(ra);
-            this->add(rb);
+            if(ra->height() - mw > mw){
+                this->add(ra);
+            }
+            if(rb->height() - mw > mw){
+                this->add(rb);
+            }
+            
 
         }
     }

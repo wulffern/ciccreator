@@ -32,13 +32,16 @@
 #include "core/patterncapacitor.h"
 #include "core/layoutcell.h"
 #include "core/layoutrotatecell.h"
+#include "cells/phcapcell.h"
 #include "spice/spiceparser.h"
 #include "core/patternhighresistor.h"
 #include "core/patternresistor.h"
 #include "cells/sar.h"
 #include "cells/cdac.h"
 #include "cells/capcell.h"
-
+#include "cells/capcellv2.h"
+#include "decorator/layoutcelldecorator.h"
+#include "decorator/connectsourcedrain.h"
 #include <exception>
 #include <iostream>
 

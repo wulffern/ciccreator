@@ -30,7 +30,13 @@ namespace cIcCore {
             if(l->material == Layer::metal || l->material == Layer::poly|| l->material == Layer::diffusion ){
                 QString encRule = l->next  + "encOpposite";
                 int encOpposite = rules->get(l->name,encRule);
-                int enclosure = rules->get(l->name,"enclosure");
+                QString encThis = l->next + "enclosure";
+                int enclosure = 0;
+                if(rules->hasRule(l->name,encRule)){
+                    enclosure = rules->get(l->name,encThis);
+                }else{
+                    enclosure = rules->get(l->name,"enclosure");
+                }
                 int cut_width = rules->get(l->next,"width");
                 int cut_height = rules->get(l->next,"height");
                 int cut_space = rules->get(l->next,"space");
@@ -41,7 +47,8 @@ namespace cIcCore {
                     r_width = encOpposite*2 + cut_width*horizontal_cuts + cut_space*(horizontal_cuts - 1);
                     r_height = enclosure*2 + cut_height*vertical_cuts + cut_space*(vertical_cuts - 1);
                 }else if(horizontal_cuts == vertical_cuts){
-                    r_width = enclosure*2 + cut_width*horizontal_cuts + cut_space*(horizontal_cuts - 1);
+                    //2018-02-24: Modified to support 22nm
+                    r_width = encOpposite*2 + cut_width*horizontal_cuts + cut_space*(horizontal_cuts - 1);
                     r_height = encOpposite*2 + cut_height*vertical_cuts + cut_space*(vertical_cuts - 1);
                 }
                 else{
@@ -51,12 +58,20 @@ namespace cIcCore {
 
                 Rect * r = new Rect(l->name,0,0,r_width,r_height);
                 this->add(r);
-                
+
 
             }else if(l->material == Layer::cut){
                 QString encRule = l->name  + "encOpposite";
                 int encOpposite = rules->get(l->previous,encRule);
-                int enclosure = rules->get(l->previous,"enclosure");
+                QString encThis = l->name + "enclosure";
+                int enclosure = 0;
+                if(rules->hasRule(l->previous,encRule)){
+                    enclosure = rules->get(l->previous,encThis);
+                }else{
+                    enclosure = rules->get(l->previous,"enclosure");
+                }
+
+//                int enclosure = rules->get(l->previous,"enclosure");
                 int cut_width = rules->get(l->name,"width");
                 int cut_height = rules->get(l->name,"height");
                 int cut_space = rules->get(l->name,"space");
@@ -67,10 +82,11 @@ namespace cIcCore {
                     enc_x = enclosure;
                     enc_y = encOpposite;
                 }else if(horizontal_cuts == vertical_cuts){
-                    enc_x = enclosure;
+                    //2018-02-20: Modified to support 22nm
+                    enc_x = encOpposite;
                     enc_y = encOpposite;
                 }
-                
+
 
                 int xa1 = enc_x;
                 int ya1 = enc_y;
@@ -84,13 +100,13 @@ namespace cIcCore {
                     xa1 += cut_width + cut_space;
                 }
 
-                
+
             }
         }
 
         this->updateBoundingRect();
 
-        
+
     }
 
     Cut::Cut(QString layer1, QString layer2, Rect* r):Cell()
@@ -108,7 +124,7 @@ namespace cIcCore {
         foreach(Layer * l, layers){
             if(l->material == Layer::metal || l->material == Layer::poly|| l->material == Layer::diffusion ){
 
-                
+
                 this->add(new Rect(l->name,0,0,r->width(),r->height()));
             }else if(l->material == Layer::cut){
                 QString encRule = l->name  + "encOpposite";
@@ -130,7 +146,7 @@ namespace cIcCore {
                     enc_x = encOpposite;
                     enc_y = enclosure;
                 }
-                
+
 
                 int width = r->width() - enc_x*2;
                 int horizontal_cuts = width/(cut_width  + cut_space);
@@ -140,30 +156,30 @@ namespace cIcCore {
                 if(vertical_cuts == 0) {
                     vertical_cuts = height/(cut_height);
                 }
-                
+
                 if(horizontal_cuts == 0) {
                     horizontal_cuts = width/(cut_width);
                 }
 
-                
+
 
                 this->setName(this->makeName(layers.first()->name,layers.last()->name,horizontal_cuts,vertical_cuts));
-                
+
 
                 int xa1 = enc_x;
                 int ya1 = enc_y;
 
-                
+
                 if(r->isHorizontal()){
                     xa1 = int((r->width() - horizontal_cuts*(cut_width + cut_space) + cut_space)/2/10)*10;
                 }
-                
+
                 if(r->isVertical()){
                     ya1 = int((r->height() - vertical_cuts*(cut_height + cut_space) + cut_space)/2/10)*10;
                 }
-                
 
-                
+
+
                 for(int x = 0;x < horizontal_cuts; x++){
                     for( int y = 0;y < vertical_cuts; y++){
                         Rect * r = new Rect(l->name,xa1,ya1,cut_width,cut_height);
@@ -174,17 +190,17 @@ namespace cIcCore {
                     xa1 += cut_width + cut_space;
                 }
 
-                
+
             }
         }
 
         this->updateBoundingRect();
         this->moveTo(r->x1(),r->y1());
         this->updateBoundingRect();
-        
+
     }
 
-    
+
 
     Cut::~Cut()
     {
@@ -197,9 +213,9 @@ namespace cIcCore {
 
     }
 
-   
-    
-    
+
+
+
     QList<Rect*> Cut::getVerticalFillCutsForRects(QString layer1, QList<Rect*> rects, int horizontal_cuts)
     {
 
@@ -211,7 +227,7 @@ namespace cIcCore {
             if(r == NULL) continue;
             if(layer1 == r->layer()) continue;
 
-            
+
 
         }
 
@@ -220,9 +236,9 @@ namespace cIcCore {
     QList<Rect*> Cut::getCutsForRects(QString layer1, QList<Rect*> rects, int horizontal_cuts,int vertical_cuts){
 
         return Cut::getCutsForRects(layer1,rects,horizontal_cuts,vertical_cuts,true);
-        }
-    
-    
+    }
+
+
 
     QList<Rect*> Cut::getCutsForRects(QString layer1, QList<Rect*> rects, int horizontal_cuts,int vertical_cuts, bool alignLeft){
 
@@ -231,7 +247,7 @@ namespace cIcCore {
             if(r == NULL){continue;}
             if(layer1 != r->layer()){
 
-                
+
                 Instance * inst= Cut::getInstance(layer1,r->layer(),horizontal_cuts,vertical_cuts);
                 if(inst){
 
@@ -239,25 +255,25 @@ namespace cIcCore {
                         //In this case we've got the wrong cut, and it
                         //should be rotated
                         inst= Cut::getInstance(layer1,r->layer(),vertical_cuts,horizontal_cuts);
-                        
+
                     }
 
-//                    if(alignLeft){
-//                        inst->moveTo(r->x2() - inst->width(),r->y1());
-//                    }
-//                    else{
+                    if(alignLeft){
                         inst->moveTo(r->x1(),r->y1());
-//                    }
-                    
+                    }
+                    else{
+                        inst->moveTo(r->x2() - inst->width(),r->y1());
+                    }
 
-                        int xc = r->centerX();
 
-                        //Resize rectangle if the center of rect is not
-                        //contained in the instance
-                        if(inst->x1() > xc || inst->x2() < xc){
-                            r->setWidth(inst->width());                            
-                        }
-                        
+                    int xc = r->centerX();
+
+                    //Resize rectangle if the center of rect is not
+                    //contained in the instance
+                    if(inst->x1() > xc || inst->x2() < xc){
+                        r->setWidth(inst->width());
+                    }
+
 
                     cuts.append(inst);
                 }
