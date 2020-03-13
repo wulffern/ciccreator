@@ -106,7 +106,23 @@ namespace cIcSpice{
     }
     
 
+    void SpiceObject::fromJson(QJsonObject o)
+    {
+        this->setName(o["name"].toString());
+        deviceName_ = o["deviceName"].toString();
+        QJsonArray ar = o["nodes"].toArray();
+        foreach(auto n,ar){
+            _nodes.append(n.toString());
+        }
 
+
+        QVariantMap vm = o["properties"].toObject().toVariantMap();
+        _properties = vm;
+
+        
+
+    }
+    
     QJsonObject SpiceObject::toJson()
     {
         QJsonObject o;

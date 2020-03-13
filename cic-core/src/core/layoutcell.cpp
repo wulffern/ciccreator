@@ -25,6 +25,7 @@ namespace cIcCore{
         useHalfHeight = false;
         noPowerRoute_ = false;
         boundaryIgnoreRouting_ = true;
+        alternateGroup_ = false;
     }
 
     LayoutCell::LayoutCell(const LayoutCell& cell): Cell(cell){
@@ -39,6 +40,10 @@ namespace cIcCore{
 
     void LayoutCell::setYoffsetHalf(QJsonValue obj){
         useHalfHeight = true;
+    }
+
+    void LayoutCell::alternateGroup(QJsonValue obj){
+        alternateGroup_ = true;
     }
 
     void LayoutCell::noPowerRoute(QJsonValue obj){
@@ -473,16 +478,17 @@ namespace cIcCore{
         QString name = obj[1].toString();
         QString location = (obj.size() > 2) ? obj[2].toString() : "rtbl";
         int widthmult = (obj.size() > 3) ? obj[3].toInt(): 1;
+        int spacemult = (obj.size() > 4) ? obj[4].toInt(): 10;
 
-        this->addPowerRing(layer,name,location,widthmult);
+        this->addPowerRing(layer,name,location,widthmult,spacemult);
     }
 
-    void LayoutCell::addPowerRing(QString layer, QString name, QString location, int widthmult)
+  void LayoutCell::addPowerRing(QString layer, QString name, QString location, int widthmult,int spacemult)
     {
         Instance* c = Cut::getInstance("M3","M4",2,2);
         int metalwidth = c->height()*widthmult;
-        int xgrid = this->rules->get("ROUTE","horizontalgrid")*10;
-        int ygrid = this->rules->get("ROUTE","horizontalgrid")*10;
+        int xgrid = this->rules->get("ROUTE","horizontalgrid")*spacemult;
+        int ygrid = this->rules->get("ROUTE","horizontalgrid")*spacemult;
 
         RouteRing* rr = new RouteRing(layer,name,this->getCopy(),location,ygrid,xgrid,metalwidth);
 
@@ -558,13 +564,7 @@ namespace cIcCore{
                       p->set(m1);
         }
 
-
-  
-
     }
-    
-
-
     
     
     void LayoutCell::addRouteHorizontalRect(QString layer, QString rectpath, int x, QString name)
@@ -621,7 +621,6 @@ namespace cIcCore{
         }else{
             xgrid = this->rules->get(layer,"space")*spacemult + metalwidth;
             ygrid = this->rules->get(layer,"space")*spacemult + metalwidth;
-
         }
 
 
@@ -796,6 +795,10 @@ namespace cIcCore{
         int next_y = 0;
         int x = 0;
         int y = 0;
+        bool mirror_y = false;
+        if(!_subckt) return;
+        
+            
         foreach(cIcSpice::SubcktInstance * ckt_inst,_subckt->instances()){
             QString group = ckt_inst->groupName();
             if(prev_group.compare(group) != 0  && prev_group.compare("")  != 0){
@@ -836,7 +839,6 @@ namespace cIcCore{
             }
             
             
-            
             Instance* inst = this->addInstance(ckt_inst,instance_x,instance_y);
 
 
@@ -845,7 +847,16 @@ namespace cIcCore{
                 if(angle == "180"){
                     inst->setAngle("MY");
                 }
-            }            
+            }
+
+            
+            if(alternateGroup_ && mirror_y){
+                inst->setAngle("MY");
+                mirror_y = false;
+            }else  if(alternateGroup_ && !mirror_y){
+                mirror_y = true;
+            }
+            
 
             next_x = inst->x2();
             next_y = inst->y2();
@@ -910,12 +921,7 @@ namespace cIcCore{
     QList<QString> LayoutCell::nodeGraphList()
         {
 
-//            qDebug() << nodeGraph_.keys();
-//            qDebug() << nodeGraphList_;
-//            qDebug() << "\n";
             
-            
-//            return nodeGraph_.keys();
             return nodeGraphList_;
 
         }
@@ -964,7 +970,7 @@ namespace cIcCore{
 
     void LayoutCell::addPowerRoute(QString net,QString excludeInstances)
     {
-        QList<Rect*> foundrects  = this->findRectanglesByNode(net,"^(B|G)$", "");
+        QList<Rect*> foundrects  = this->findRectanglesByNode(net,"^(B|G|BULKP|BULKN)$", "");
 
         QList<Rect*> rects;
         foreach(Rect * r, foundrects){
@@ -1024,6 +1030,13 @@ namespace cIcCore{
     void LayoutCell::fromJson(QJsonObject o){
         Cell::fromJson(o);
         QJsonArray car = o["children"].toArray();
+
+        if(o.contains("ckt")){
+            cIcSpice::Subckt * subckt = new cIcSpice::Subckt();
+            subckt->fromJson(o["ckt"].toObject());
+            _subckt = subckt;
+        }
+        
         foreach(QJsonValue child,car){
             QJsonObject co = child.toObject();
             QString cl = co["class"].toString();
@@ -1062,10 +1075,11 @@ namespace cIcCore{
     }
 
     void LayoutCell::addAllPorts(){
+        if(!_subckt) return;
         QStringList nodes = _subckt->nodes();
         QString filterChild = "^B$";
         QString filterInstance = "";
-        foreach(QString node,nodes){
+        foreach(QString node,nodes){            
             if(ports_.contains(node)) continue;
             QList<Rect*> rects = this->findRectanglesByNode(node+"$",filterChild,filterInstance);
             if(rects.count() > 0){

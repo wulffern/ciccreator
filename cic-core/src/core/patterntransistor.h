@@ -40,6 +40,7 @@ public:
     QString mosType(){return mos->deviceName();}
     void setMosType(QString mosType){mos->setDeviceName( mosType); }
 
+
     virtual QMap<QString,QVariant>  initFillCoordinates();
     virtual void onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data);
     virtual void endFillCoordinate(QMap<QString, QVariant> &data);

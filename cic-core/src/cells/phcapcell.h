@@ -1,7 +1,7 @@
 //====================================================================
 //        Copyright (c) 2016 Carsten Wulff Software, Norway 
 // ===================================================================
-// Created       : wulff at 2016-8-7
+// Created       : wulff at 2019-06-02
 // ===================================================================
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -17,41 +17,36 @@
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //====================================================================
 
+#ifndef CIC_CELLS_PHCAPCELL_H
+#define CIC_CELLS_PHCAPCELL_H
 
+#include "core/layoutcell.h"
 
+namespace cIcCells{
 
-#ifndef WINDOW_H
-#define WINDOW_H
+    class PhCapCell: public cIcCore::LayoutCell
+    {
+        Q_OBJECT
 
-#include <QApplication>
-#include <QtCore>
-#include <QWidget>
-#include <QPainter>
-#include <QPaintEvent>
-#include <QPainterPath>
-#include <QRect>
-#include <QPen>
-#include <QWidget>
-#include <QPushButton>
-#include <QPainter>
-#include <QPaintEvent>
-#include <QScrollArea>
-#include "renderarea.h"
-#include <QGridLayout>
-class Window : public QWidget
-{
-    Q_OBJECT
+    public:
+        
+        Q_INVOKABLE void binaryBits(QJsonValue obj);
+        Q_INVOKABLE void unaryBits(QJsonValue obj);
+        
+        virtual void place();
+        virtual Rect calcBoundingRect();
+        int addFinger(int x, int y, int msw, int mw, int mh,int i,string name);
 
-public:
-    Window();
+        
+    private:
+        int _binaryBits;
+        int _unaryBits;
+        int _top_length;
+        int _finger_length;
+    };
 
-private slots:
-
-private:
-    RenderArea* renderArea;
-    QScrollArea* scroll;
-    
 
 };
+    Q_DECLARE_METATYPE(cIcCells::PhCapCell)
 
-#endif
+#endif 

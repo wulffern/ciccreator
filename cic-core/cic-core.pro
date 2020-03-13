@@ -23,9 +23,8 @@
   CONFIG += staticlib
   CONFIG += c++11
 
-  mac {
-  mac::QMAKE_MAC_SDK = macosx10.12
-  }
+  include(../etc/mac_sdk.pro)
+  
   TEMPLATE = lib
 
   osx:DESTDIR = ../lib/darwin
@@ -49,10 +48,6 @@
   HEADERS +=  src/core/rules.h  \
   src/core/console.h \
   src/core/rect.h \
-  src/printer/minecraft.h \
-  src/printer/tikz.h \
-  src/printer/eps.h \
-  src/painter/cellpainter.h \
   src/core/graph.h \
   src/core/cell.h \
   src/core/instance.h \
@@ -71,7 +66,6 @@
   src/core/design.h \
   src/printer/gds.h \
   src/printer/designprinter.h \
-  src/printer/svg.h \
   src/spice/spiceparser.h\
   src/spice/subckt.h \
   src/spice/subcktinstance.h \
@@ -92,7 +86,11 @@
   src/cells/cells.h \
   src/cells/sar.h \
   src/cells/cdac.h \
-  src/cells/capcell.h
+  src/decorator/layoutcelldecorator.h \
+  src/decorator/connectsourcedrain.h \
+  src/cells/capcell.h \
+  src/cells/phcapcell.h \
+  src/cells/capcellv2.h
 
 
   SOURCES +=         src/printer/gds.cpp \
@@ -100,10 +98,6 @@
   src/core/rules.cpp \
   src/core/rect.cpp \
   src/core/cell.cpp   \
-  src/printer/minecraft.cpp \
-  src/printer/tikz.cpp \
-  src/printer/eps.cpp \
-  src/painter/cellpainter.cpp \
   src/core/patterntile.cpp \
   src/core/patterntransistor.cpp \
   src/core/patterncapacitor.cpp \
@@ -112,7 +106,6 @@
   src/core/design.cpp \
   src/core/guard.cpp \
   src/printer/designprinter.cpp \
-  src/printer/svg.cpp \
   src/spice/spiceparser.cpp \
   src/spice/spiceobject.cpp \
   src/spice/subckt.cpp \
@@ -137,4 +130,8 @@
   src/core/text.cpp \
   src/cells/sar.cpp\
   src/cells/cdac.cpp \
-  src/cells/capcell.cpp
+  src/decorator/layoutcelldecorator.cpp \
+  src/decorator/connectsourcedrain.cpp \
+  src/cells/capcell.cpp \
+  src/cells/phcapcell.cpp \
+  src/cells/capcellv2.cpp

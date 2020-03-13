@@ -1,7 +1,7 @@
 //====================================================================
 //        Copyright (c) 2016 Carsten Wulff Software, Norway 
 // ===================================================================
-// Created       : wulff at 2016-8-7
+// Created       : wulff at 2016-9-3
 // ===================================================================
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -20,18 +20,34 @@
 
 
 
+#ifndef CIC_CELLS_CAPCELLV2_H
+#define CIC_CELLS_CAPCELLV2_H
 
-#include <QApplication>
-#include <QtCore>
-#include "window.h"
+#include "core/layoutcell.h"
 
-int main(int argc, char *argv[])
-{
+namespace cIcCells{
 
-	QApplication app(argc, argv);
-	Window window;
-	window.show();
-	return app.exec();
+    class CapCellV2: public cIcCore::LayoutCell
+    {
+        Q_OBJECT
 
-	
-}
+    public:
+        virtual void place();
+        virtual Rect calcBoundingRect();
+        void addContacts(QString name, QString node,int y,QList<int> array);
+        Rect* getAvssConnectRect(Rect* rect);
+        
+        
+    private:
+        int msw;
+        int xorg;
+        int yMax;
+        
+
+    };
+
+
+};
+    Q_DECLARE_METATYPE(cIcCells::CapCellV2)
+
+#endif 

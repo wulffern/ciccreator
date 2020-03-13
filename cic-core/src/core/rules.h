@@ -72,6 +72,9 @@ namespace cIcCore{
         QString getNextLayer(QString lay);
         QString getPreviousLayer(QString lay);
         double toMicron(int val);
+        QString removeDataType(QString layer);
+        QString getDataType(QString layer);
+        
 
     private:
         static Rules * myRules_;

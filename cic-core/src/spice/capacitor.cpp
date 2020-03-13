@@ -50,7 +50,7 @@ namespace cIcSpice{
             sn.append(node);
             sn.append(QString("%1%2").arg("NC").arg(i));
             ins->setNodes(sn);
-            ins->setName(QString("%1%2").arg("R1").arg(i));
+            ins->setName(QString("%1%2").arg("R").arg(i));
             ins->setDeviceName("resistor");
             instances.append(ins);
         }

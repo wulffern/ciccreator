@@ -40,6 +40,60 @@ namespace cIcCore{
 
     };
 
+    class PatternData
+    {
+    public:
+        int xcount;
+        int ycount;
+        QChar name;
+        QStringList pattern;
+
+        QList<Rect*> getRectangles(Rect* r)
+        {
+            QList<Rect*> rects;
+            if(!r) return rects;
+            
+            
+            int x1 = r->x1();
+            int y1 = r->y1();
+            int x2 = r->x2();
+            int y2 = r->y2();
+            int xstep = (x2 - x1)/xcount;
+            int ystep = (y2 - y1)/ycount;
+            int xa = x1;
+            int ya = y1;
+
+            Rect* prevrect;
+            
+            for(int y=0;y<ycount;y++){
+                QString s = pattern[y];
+                xa = x1;
+                for(int x = 0;x<xcount;x++){
+                    QChar c = s[x];
+                    if(c == 'x'){
+                        if(prevrect && prevrect->x2() == xa){
+                            prevrect->setRight(xa+xstep);
+                        }else{
+                            Rect * ra = new Rect(r->layer(),xa,ya,xstep,ystep);
+                            rects.append(ra);
+                            prevrect = ra;
+                            
+                        }
+                        
+                    }
+                    xa += xstep;
+                }
+                ya += ystep;
+            }
+            return rects;
+            
+        }
+        
+        
+    };
+    
+        
+
     struct EnclosureRectangle{
         QString layer;
         double x1;
@@ -52,11 +106,11 @@ namespace cIcCore{
     class PatternTile: public Cell
     {
         Q_OBJECT
-        Q_PROPERTY(int minPolyLength READ minPolyLength WRITE setMinPolyLength)
-        Q_PROPERTY(int widthoffset READ widthoffset WRITE setWidthoffset)
-        Q_PROPERTY(int heightoffset READ heightoffset WRITE setHeightoffset)
-		Q_PROPERTY(int verticalGrid READ verticalGrid WRITE setVerticalGrid)
-        Q_PROPERTY(int horizontalGrid READ horizontalGrid WRITE setHorizontalGrid)
+        Q_PROPERTY(qreal minPolyLength READ minPolyLength WRITE setMinPolyLength)
+        Q_PROPERTY(qreal widthoffset READ widthoffset WRITE setWidthoffset)
+        Q_PROPERTY(qreal heightoffset READ heightoffset WRITE setHeightoffset)
+		Q_PROPERTY(qreal verticalGrid READ verticalGrid WRITE setVerticalGrid)
+        Q_PROPERTY(qreal horizontalGrid READ horizontalGrid WRITE setHorizontalGrid)
         Q_PROPERTY(double verticalGridMultiplier READ verticalGridMultiplier WRITE setVerticalGridMultiplier)
         Q_PROPERTY(double horizontalGridMultiplier READ horizontalGridMultiplier WRITE setHorizontalGridMultiplier)
         Q_PROPERTY(qreal yoffset READ yoffset WRITE setYoffset)
@@ -89,11 +143,11 @@ namespace cIcCore{
 
         virtual Rect calcBoundingRect();
 
-        int minPolyLength(){return minPolyLength_;}
-        int setMinPolyLength(int val){ minPolyLength_ = val*this->rules->gamma(); return minPolyLength_;  }
+        qreal minPolyLength(){return minPolyLength_;}
+        qreal setMinPolyLength(qreal val){ minPolyLength_ = val*this->rules->gamma(); return minPolyLength_;  }
 
-		int verticalGrid(){return verticalGrid_;}
-        int setVerticalGrid(int val){ verticalGrid_ = val; return verticalGrid_;  }
+		qreal verticalGrid(){return verticalGrid_;}
+        qreal setVerticalGrid(qreal val){ verticalGrid_ = val; return verticalGrid_;  }
 
         double verticalGridMultiplier(){return verticalGridMultiplier_;}
         double setVerticalGridMultiplier(double val){ verticalGridMultiplier_ = val; return verticalGridMultiplier_;  }
@@ -125,15 +179,17 @@ namespace cIcCore{
         int setMirrorPatternString(int mirrorPatternString){mirrorPatternString_ = mirrorPatternString; return mirrorPatternString_;}
 
 
+        static QMap<QString,QStringList> Patterns;
+        QMap<QChar,PatternData*> Pattern;
 
 
     protected:
         QMap<QString,QMap<int,QMap<int,QChar> > > rectangle_strings_;
         int mirrorPatternString_;
-        int minPolyLength_;
+        qreal minPolyLength_;
         int currentHeight_;
-		int horizontalGrid_;
-		int verticalGrid_;
+		qreal horizontalGrid_;
+		qreal verticalGrid_;
         double horizontalGridMultiplier_;
 		double verticalGridMultiplier_;
         int polyWidthAdjust_;
@@ -153,10 +209,18 @@ namespace cIcCore{
         QMap<QString,QMap<int,QMap<int,Rect*> > > rectangles_;
         Rect * prev_rect_;
 
+        int arraylength;
+
+
+        
         QList<Rect*> findPatternRects(QString layer);
         QList<Rect*> findPatternStrings(QString layer);
         Rect * makeRect(QString layer,QChar c,int x, int y);
         void paintEnclosures();
+        virtual void onPaintEnd();
+        virtual void readPatterns();
+        
+        
 
         inline int translateX(int x){  return (x + xoffset_)*xspace_;}
         inline int translateY(int y){ return (y + yoffset_)*yspace_;}

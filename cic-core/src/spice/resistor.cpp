@@ -50,7 +50,7 @@ namespace cIcSpice{
     }
 
     QString Resistor::toSpice( ){
-        return toSpice("1",nodes());
+        return toSpice(this->name(),nodes());
    } 
 
     QString Resistor::toSpice( QString instance, QStringList nodes){
@@ -60,7 +60,7 @@ namespace cIcSpice{
         cIcCore::Rules * rules = cIcCore::Rules::getRules();
         cIcCore::Device * mtype = rules->getDevice(this->deviceName());
 
-        ts << "R" << instance << " " << nodes.join(" ") << " "<< mtype->name << "\n";
+        ts << "XR" << instance << " " << nodes.join(" ") << " "<< mtype->name << "\n";
 
         return s;
     }
