@@ -109,8 +109,6 @@ namespace cIcCore{
                 rects.append(named_rects_[rect_name]);
             }
         }
-
-
     }
 
     QList<Rect*> Cell::findRectanglesByRegex(QString regex,QString layer){
