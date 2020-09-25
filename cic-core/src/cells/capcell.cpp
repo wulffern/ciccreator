@@ -119,8 +119,8 @@ namespace cIcCells{
         auto y16 = y1a + msc*(b - 4);
         yMax = height;
 
-        rects.append(new Rect("M5",xorg - msw, y ,x - msw, mw));
-        rects.append(new Rect("M5",xorg - msw, height - mw ,x - msw, mw));
+        rects.append(new Rect("M5",xorg - msw, y ,x - xorg + msw*2, mw));
+        rects.append(new Rect("M5",xorg - msw, height - mw ,x - xorg +  msw*2 , mw));
 
         auto vss1 =  new Rect("M2",xorg, y ,x - msw*2, mw);
         auto ctop1 =  new Rect("M4",xorg, y ,x - xorg, mw);
