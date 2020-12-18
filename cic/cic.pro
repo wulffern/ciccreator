@@ -23,7 +23,8 @@
   CONFIG += c++11
   CONFIG -= app_bundle
 mac {
-    mac::QMAKE_MAC_SDK = macosx10.12
+#mac::QMAKE_MAC_SDK = macosx10.12
+mac::QMAKE_MAC_SDK = macosx11.0
 }
 
   TEMPLATE = app

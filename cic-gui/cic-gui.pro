@@ -16,7 +16,7 @@ CONFIG += static
   }
   
 mac {
-    mac::QMAKE_MAC_SDK = macosx10.12
+    mac::QMAKE_MAC_SDK = macosx11.0
 }
   
   osx:DESTDIR = ../bin/darwin
