@@ -187,7 +187,7 @@ namespace cIcCore {
         if(arraylength == 0) arraylength = ar.count();
 
        if(arraylength != ar.count()){
-           qDebug() << " Error: " << " layer " << layer << " does not have " << arraylength << " lines \n";
+           qDebug() << " Warning " << " layer " << layer << " does not have " << arraylength << " lines \n";
 
        }
 

@@ -27,7 +27,8 @@ namespace cIcCore{
         _subckt = NULL;
         boundaryIgnoreRouting_ = false;
         _physicalOnly = false;
-        
+        abstract_ = false;
+
     }
 
     Cell::Cell(const Cell&){
@@ -59,6 +60,13 @@ namespace cIcCore{
 
     }
 
+     void Cell::abstract(QJsonValue obj){
+        auto v = obj.toInt();
+        if(v == 1)
+            abstract_ = true;
+        else
+            abstract_ = false;
+    }
 
 
 
@@ -232,8 +240,8 @@ namespace cIcCore{
             return true;
         }else{
             return false;
-            
-                }
+
+        }
     }
 
 
@@ -254,7 +262,7 @@ namespace cIcCore{
                 p_ptr->set(r);
                 this->add(p_ptr);
             }
-            
+
         }
         return p_ptr;
     }
@@ -266,7 +274,7 @@ namespace cIcCore{
     // Children handling
     //-------------------------------------------------------------
 
-    
+
     QList<Rect*> Cell::getChildren(QString type)
     {
 
@@ -548,14 +556,16 @@ namespace cIcCore{
         o["name"] = this->name();
         o["has_pr"] = this->_has_pr;
 
-	cIcSpice::Subckt * ckt = this->subckt();
-        if(ckt){
-	  QJsonObject ockt = ckt->toJson();
-	  ockt["class"] = this->metaObject()->className();
-	  o["ckt"] = ockt;
-	}
+        o["abstract"] = this->abstract_;
 
-		QJsonArray ar;
+        cIcSpice::Subckt * ckt = this->subckt();
+        if(ckt){
+            QJsonObject ockt = ckt->toJson();
+            ockt["class"] = this->metaObject()->className();
+            o["ckt"] = ockt;
+        }
+
+        QJsonArray ar;
 
         foreach(Rect * r, children()){
             QJsonObject child = r->toJson();
@@ -576,7 +586,7 @@ namespace cIcCore{
     void Cell::addEnclosingLayers(QList<QString> layers)
     {
 
-        
+
         Rect* r = this->getCopy();
         foreach(QString lay, layers){
 
@@ -592,8 +602,8 @@ namespace cIcCore{
             r_enc->setLayer(lay);
             this->add(r_enc);
         }
-        
+
     }
-    
+
 
 }
