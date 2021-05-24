@@ -46,7 +46,7 @@ CIC= ../bin/${OSBIN}/cic
 endif
 
 
-.PHONY: doxygen coverage
+.PHONY: doxygen coverage sim
 
 all: qmake compile
 
@@ -76,8 +76,10 @@ doxygen:
 
 help:
 	@echo " make               Compile ciccreator"
+	@echo " make docker        Make a docker image, and compile ciccreator"
+	@echo " make run           Compile stuff inside docker"
+	@echo " make sim           Simulate circuits"
 	@echo " make esscirc       Compile SAR ADC from ESSCIRC paper"
-	@echo " make esscircbulk   Compile SAR ADC from ESSCIRC paper in BULK CMOS"
 	@echo " make view3d         View SAR in GDS3D"
 
 #- Run the program with the example json file
@@ -104,3 +106,21 @@ view3d: GDS3D
 	echo ${GDS3D}
 	 ${GDS3D} -p examples/tech_gds3d.txt -i lay/SAR_ESSCIRC16_28N.gds -t SAR9B_EV
 
+CONT=cic_qt_bionic
+
+docker:
+	docker build   -t ${CONT} .
+
+sh:
+	docker run --rm -it -v `pwd`:/lcic ${CONT} bash
+
+gds: esscirc_gds routes_gds
+
+esscirc_gds:
+	cd lay; docker run --rm --workdir /lcic/lay -v `pwd`/../:/lcic -t ${CONT}  /ciccreator/bin/cic --gds --spi /lcic/examples/SAR_ESSCIRC16_28N.json /lcic/examples/tech.json SAR_ESSCIRC16_28N
+
+routes_gds:
+	cd lay; docker run --rm --workdir /lcic/lay -v `pwd`/../:/lcic -t ${CONT}  /ciccreator/bin/cic --gds --spi /lcic/examples/routes.json /lcic/examples/tech.json routes
+
+sim:
+	cd sim; make sar plot_sar
