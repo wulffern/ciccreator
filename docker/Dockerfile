@@ -45,6 +45,5 @@ RUN mkdir $QT_PATH && cd $QT_PATH \
 
 RUN git clone https://github.com/wulffern/ciccreator.git
 WORKDIR ciccreator
-RUN git checkout develop
 RUN git pull
 RUN make all esscirc routes
