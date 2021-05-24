@@ -35,3 +35,15 @@ Another nice option for viewing GDS is [GDS3D](https://sourceforge.net/projects/
 Minecraft video - https://youtu.be/J9lhEt0f3Wk 
 cIcCreator in action - https://youtu.be/hv9u9aQGHQc
 
+# Directions
+I have a full-time job, and three kids, which means that my time for this project is unplannable, so things will be coded when they are coded. But I'd like to share what directions I see for ciccreator. 
+- Rewamp the cic-gui: Today it's a relativley straightforward implemnetation, and usable to look at the designs. But I don't get the warm fuzzy feeling that I would want from a GUI. I'd like to transfer it to a quick QGraphicsScene.
+- Add LVS: One of the main issues with developing with ciccreator is that the routing needs to be verified by layout versus schematic. As of today one has to use commercial LVS tools to check the GDSII vs the netlist. It's possible, however, that it could be doable to implement an "LVS light" into ciccreator itself. After all, it knows where are the rectangles are, and what they should be connected too. It might be a "easier" problem to solve than the standard "GDSII vs netlist".
+
+If you feel you can contribute to any of the topics above, then get in touch.
+
+# Comments/Questions
+I'd be happy to answer most questions, but I do get around 100 emails a day, so it might take some time to get through them all.
+Email: carsten@ciccreator.com
+
+
