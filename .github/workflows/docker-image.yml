@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build docker --file Dockerfile --tag cic_qt_bionic:$(date +%s)
+      run: docker build docker --file docker/Dockerfile --tag cic_qt_bionic:$(date +%s)
