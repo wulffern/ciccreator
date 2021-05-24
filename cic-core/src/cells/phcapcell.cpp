@@ -76,6 +76,7 @@ namespace cIcCells{
         for(int i=0;i<=_unaryBits;i++){
             for(int z=0;z<pow(2,_unaryBits);z++){
                 y = this->addFinger(x,y,msw,mw,mh,_binaryBits,"CU" + to_string((long long)i) + "N" + to_string((long long)z));
+
             }
         }
         y -= ms;

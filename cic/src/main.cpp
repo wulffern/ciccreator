@@ -24,7 +24,9 @@
 #include <QString>
 
 
-bool nogds = false;
+//- Default
+bool gds = false;
+bool spice = false;
 
 
 int main(int argc, char *argv[])
@@ -37,34 +39,38 @@ int main(int argc, char *argv[])
 
         QStringList arguments;
 
-            //Parse options
-            for(int i=0;i<argc;i++){
-                QString arg = argv[i];
+        //Parse options
+        for(int i=0;i<argc;i++){
+            QString arg = argv[i];
 
-                if(arg == "--I" && (i+1)< argc){
-                    includePaths.append(argv[i+1]);
-                    i  = i+1;
-                }else if(arg == "--nogds"){
-                    nogds = true;
-                }else{
-                    arguments.append(arg);
-                }
+            if(arg == "--I" && (i+1)< argc){
+                includePaths.append(argv[i+1]);
+                i  = i+1;
+            }else if(arg == "--nogds"){
+                gds = false;
+            }else if(arg == "--gds"){
+                gds = true;
+            }else if(arg == "--spi"){
+                spice = true;
+            }else{
+                arguments.append(arg);
             }
+        }
 
-            
 
-            if(arguments.length() >=  3){
-            
+
+        if(arguments.length() >=  3){
+
 
 
             QString file = arguments[1];
             QString rules = arguments[2];
-            
+
             QString library ="" ;
             if(arguments.length() > 3){
                 library = arguments[3];
             }
-            
+
 
             if(library == ""){
                 QRegularExpression re("/?([^\\/]+)\\.json");
@@ -81,41 +87,55 @@ int main(int argc, char *argv[])
                 d->addIncludePath(path);
             }
 
-            d->read(file);
+            if(d->read(file)){
 
-            //Print SPICE file
-            cIcPrinter::Spice * spice = new cIcPrinter::Spice(library);
-            spice->print(d);
-            delete(spice);
+                if(spice){
+
+                    //Print SPICE file
+                    cIcPrinter::Spice * sp = new cIcPrinter::Spice(library);
+                    sp->print(d);
+
+                    delete(sp);
+                }
 
 
-            if(!nogds){
-                //Write GDS
-                cIcCore::ConsoleOutput console;
-                console.comment("Writing GDS");
-                cIcPrinter::Gds * gd = new cIcPrinter::Gds(library);
-                gd->print(d);
-                delete(gd);
+
+                if(gds){
+                    //Write GDS
+                    cIcCore::ConsoleOutput console;
+                    console.comment("Writing GDS");
+                    cIcPrinter::Gds * gd = new cIcPrinter::Gds(library);
+                    gd->print(d);
+                    delete(gd);
+                }
+
+
+                //Write JSON
+                d->writeJsonFile(library + ".cic");
             }
 
 
-            //Write JSON
-            d->writeJsonFile(library + ".cic");
-
         }else{
-            qWarning() << "Usage: cic <JSON file> <Technology file> [<Output name>]";
-            qWarning() << "Example: cic ALGIC003_STDLIB.json ST_28NM_FDSOI.tech";
-            qWarning() << "About: \n\tcIcCreator reads a JSON object definition file, technology rule file\n\tand a SPICE netlist (assumes same name as object definition file)\n\tand outputs a; SPICE netlist (.spi), description file (.cic), and a GDSII file (.gds).\nOptions:\n\t --nogds\t Don't output GDS file\n\t --I\t\t Path's to search for include files";
-            error = 1;
+            throw "Die";
         }
 
     }catch(...){
+        qWarning() << "Usage: cic <JSON file> <Technology file> [<Output name>]";
+        qWarning() << "Example: cic ALGIC003_STDLIB.json ST_28NM_FDSOI.tech";
+        qWarning() << "About: \n\tcIcCreator reads a JSON object definition file, technology rule file\n" <<
+            "\tand a SPICE netlist (assumes same name as object definition file)\n\tand outputs a cic description file (.cic)" <<
+            "\nOptions:\n" <<
+            "\t --I\t <path> \t Path to search for include files\n" <<
+             "\t --nogds\t     \t Don't write GDSII file (default)\n" <<
+             "\t --gds\t     \t Write GDSII file \n" <<
+             "\t --spi\t     \t Write SPICE file \n" <<
+             "";
+        error = 1;
 
-        
     }
 
     return error;
-    
+
 
 
 

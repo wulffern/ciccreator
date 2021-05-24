@@ -59,7 +59,7 @@ namespace cIcCore{
         Design();
 
         //Read a JSON file and compainon SPICE file
-        void read(QString filename);
+        bool read(QString filename);
         bool readCells(QString filename);
 
         //List of cells in the design

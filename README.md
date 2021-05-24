@@ -1,7 +1,7 @@
 # ciccreator
 Back in 2013 I started playing with the thought of generating a SAR ADC with a script, such that it would be easy to port between technologies. The prototype was written in Perl, and contained 16k lines of code. The Perl compiler is closed source, and not available outside NTNU. cIcCreator is the C++ version, it's been written from scratch to support the same input files as the Perl compiler, but with a vastly improved performance.   
 
-# Master plan, part 1
+# Master plan
 :white_check_mark: Create prototype of compiler in Perl that can compile SAR ADCs (Aug 2014) 
 
 :white_check_mark: Tapeout SAR ADC in 28nm FDSOI (Jan 2015)
@@ -10,60 +10,26 @@ Back in 2013 I started playing with the thought of generating a SAR ADC with a s
 
 :white_check_mark: Rewrite the compiler in C++ under a GPL license and compile equivalent GDS with Perl compiler (Nov 2016)
 
-:white_check_mark: Encourage development of open source, free IP blocks for academic use ([Open Source Custom IC Creator packages](https://github.com/wulffern/oscic))
+# Compile and run, the easy version
+I'd recommend the docker environment
 
-The vision is that "Custom IC Creator" will be a rapid layout generation tool for SAR ADCs. 
-
-# Dependencies
-- Qt 5.4
-
-# Compile
-Install > Qt5.4 (i.e http://download.qt.io/archive/qt/5.4/5.4.2/qt-opensource-linux-x64-5.4.2.run), and edit bashrc.config to point to your Qt5.4 path, then
-
-On Linux or Mac:
-
-    source bashrc.config
-    make
-
-On Windows, make sure you install MinGW > 4.9.2 with the Qt installation. Open console (Start - Qt - 5.x - MinGW  - Qt5.x for Desktop).
-
-    mingw32-make
+    cd docker
+    make build
+    make run
+    
+This should compile the inputs into a gds file in lay/
 
 
-# Test
-On Linux or Mac:
+# Viewing GDS output
 
-    make esscirc
+I'd recommend [Klayout](www.klayout.de), you can find a Layer property file in
+ examples/
+ 
+Another nice option for viewing GDS is [GDS3D](https://sourceforge.net/projects/gds3d/)
 
-On Windows:
-
-    mingw32-make esscirc
-
-# Viewing
-Open GDSII file or on Linux or Mac you can use GDS3D from https://sourceforge.net/projects/gds3d/ 
-
-    make view3d
-
-# Simulation
-The spice file that comes out of ciccreator is compatible with
-AimSpice (http://www.aimspice.com).
-
-
-On Mac: 
-- Install AimSpice
-- Run:
-
-    make esscircbulk
-
-- Open aimspice
-- Open sim/tb_sarbssw.cir
-- Press run
-
-
-# cIcCreator in action
+# Videos
 
 Minecraft video - https://youtu.be/J9lhEt0f3Wk 
-
 cIcCreator in action - https://youtu.be/hv9u9aQGHQc
 
 # Directions

@@ -43,6 +43,7 @@ namespace cIcCore{
         Q_PROPERTY(QString name READ name WRITE setName)
         Q_PROPERTY(bool physicalOnly READ isPhysicalOnly WRITE setPhysicalOnly)
         Q_INVOKABLE void moveTo(QJsonArray obj);
+        Q_INVOKABLE void abstract(QJsonValue obj);
 
     public:
         Cell();
@@ -228,7 +229,8 @@ namespace cIcCore{
     protected:
         QString instanceName_;
         bool boundaryIgnoreRouting_;
-        bool _has_pr;        
+        bool _has_pr;
+        bool abstract_;
 
     private:
         //! Cell name

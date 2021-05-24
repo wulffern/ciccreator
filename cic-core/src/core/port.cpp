@@ -134,6 +134,7 @@ namespace cIcCore{
         o["class"] = "Port";
         o["name"] = name_;
         o["spicePort"] = spicePort;
+        o["pinLayer"] = this->pinLayer();
         return o;
     }
 

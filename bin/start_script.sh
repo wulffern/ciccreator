@@ -42,11 +42,13 @@ if [ $platform == "darwin" ]; then
 
 
 	execfile=$dirname/${platform}/${appname}.app/Contents/MacOS/${appname}
-	if [ -f "$execfile" ]; then
-	  $execfile "$@"
-	else
-		$dirname/${platform}/${appname} "$@"
+	if [ ! -f "$execfile" ]; then
+
+		execfile=$dirname/${platform}/${appname}
 	fi
+	echo $execfile "$@"
+	$execfile "$@"
+
 
 else
 

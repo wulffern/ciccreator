@@ -26,6 +26,7 @@ namespace cIcCore{
         noPowerRoute_ = false;
         boundaryIgnoreRouting_ = true;
         alternateGroup_ = false;
+        abstract_ = false;
     }
 
     LayoutCell::LayoutCell(const LayoutCell& cell): Cell(cell){
@@ -41,6 +42,8 @@ namespace cIcCore{
     void LayoutCell::setYoffsetHalf(QJsonValue obj){
         useHalfHeight = true;
     }
+
+
 
     void LayoutCell::alternateGroup(QJsonValue obj){
         alternateGroup_ = true;
@@ -801,10 +804,12 @@ namespace cIcCore{
             
         foreach(cIcSpice::SubcktInstance * ckt_inst,_subckt->instances()){
             QString group = ckt_inst->groupName();
+
             if(prev_group.compare(group) != 0  && prev_group.compare("")  != 0){
                 y = 0;
                 x = next_x;
                 prev_width = 0;
+                mirror_y = !mirror_y;
             }
 
             prev_group = group;
@@ -852,9 +857,10 @@ namespace cIcCore{
             
             if(alternateGroup_ && mirror_y){
                 inst->setAngle("MY");
-                mirror_y = false;
+
+
             }else  if(alternateGroup_ && !mirror_y){
-                mirror_y = true;
+
             }
             
 
@@ -1089,6 +1095,16 @@ namespace cIcCore{
             }
         }
 
+    }
+
+     QJsonObject LayoutCell::toJson(){
+        QJsonObject o = Cell::toJson();
+
+
+        o["useHalfHeight"] = this->useHalfHeight;
+        o["boundaryIgnoreRouting"] = this->boundaryIgnoreRouting_;
+        o["alternateGroup"] = this->alternateGroup_;
+        return o;
     }
 
 }

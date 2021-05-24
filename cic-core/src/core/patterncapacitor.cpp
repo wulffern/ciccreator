@@ -60,6 +60,7 @@ namespace cIcCore{
             this->subckt()->setNodes(nodes);
             this->subckt()->add(res);
             resistors.append(res);
+            res->setProperty("layer",layer);
             break;
 
         }

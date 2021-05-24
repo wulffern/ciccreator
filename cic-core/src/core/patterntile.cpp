@@ -76,6 +76,14 @@ namespace cIcCore {
         copyColumn_.append(c);
     }
 
+    void PatternTile::copyLayer(QJsonArray ar){
+        CopyLayer l;
+        l.from = ar[0].toString();
+        l.to= ar[1].toString();
+        copyLayer_.append(l);
+    }
+
+
     PatternTile::PatternTile(const PatternTile&)
     {
 
@@ -145,9 +153,14 @@ namespace cIcCore {
     }
 
 
+
+
+
     void PatternTile::fillCoordinatesFromString(QJsonArray ar){
 
 
+
+        
         //Load rules
         this->xspace_ = this->rules->get("ROUTE","horizontalgrid")*horizontalGridMultiplier_;
         this->yspace_ = this->rules->get("ROUTE","verticalgrid")*verticalGridMultiplier_;
@@ -174,9 +187,18 @@ namespace cIcCore {
         if(arraylength == 0) arraylength = ar.count();
 
        if(arraylength != ar.count()){
-           qDebug() << " Error: " << " layer " << layer << " does not have " << arraylength << " lines \n";
-           
-           
+           qDebug() << " Warning " << " layer " << layer << " does not have " << arraylength << " lines \n";
+
+       }
+
+       //Check if the current layer is supposed to be copied. If so, then run fillCoordinates
+       foreach(CopyLayer cl, copyLayer_){
+            if(layer == cl.from){
+                QJsonArray ar2 = ar;
+                ar2.push_front(cl.to);
+                fillCoordinatesFromString(ar2);
+            }
+
        }
         
         
