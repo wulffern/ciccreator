@@ -7,4 +7,4 @@
 *.include ngspice_model.spi
 *.include eldo_model.spi
 
-.include ../lay/SAR_ESSCIRC16_28NBULK.spice
+.include ../lay/SAR_ESSCIRC16_28N.spice
