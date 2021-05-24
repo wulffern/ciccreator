@@ -96,6 +96,7 @@ esscirc: lay
 	cd lay; ${CIC} ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
 	-./scripts/cics2aimspice  lay/${LIBNAME}.cic  lay/${LIBNAME}.spice
 
+
 GDS3D:
 	wget https://sourceforge.net/projects/gds3d/files/GDS3D%201.8/GDS3D_1.8.tar.bz2/download
 	tar -zxvf download
@@ -123,4 +124,5 @@ routes_gds:
 	cd lay; docker run --rm --workdir /lcic/lay -v `pwd`/../:/lcic -t ${CONT}  /ciccreator/bin/cic --gds --spi /lcic/examples/routes.json /lcic/examples/tech.json routes
 
 sim:
+	-./scripts/cics2aimspice  lay/${LIBNAME}.cic  lay/${LIBNAME}.spice
 	cd sim; make sar plot_sar
