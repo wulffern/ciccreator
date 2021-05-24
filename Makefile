@@ -40,9 +40,9 @@ endif
 endif
 
 ifeq ($(UNAME_S),Darwin)
-CIC=time ../bin/${OSBIN}/cic.app/Contents/MacOS/cic
+CIC=../bin/${OSBIN}/cic.app/Contents/MacOS/cic
 else
-CIC= time ../bin/${OSBIN}/cic
+CIC= ../bin/${OSBIN}/cic
 endif
 
 
@@ -65,7 +65,6 @@ xcode:
 #- Use a wrapper around qmake, I like defining my own makefiles
 compile:
 	${MAKE} -f qmake.make
-
 
 clean:
 	${MAKE} -f qmake.make clean
@@ -94,13 +93,6 @@ routes: lay
 esscirc: lay
 	cd lay; ${CIC} ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
 	-./scripts/cics2aimspice  lay/${LIBNAME}.cic  lay/${LIBNAME}.spice
-
-
-esscircbulk:
-	cd examples; cp ${LIBNAME}.json SAR_ESSCIRC16_28NBULK.json
-	cd examples; cp ${LIBNAME}.hier SAR_ESSCIRC16_28NBULK.hier
-	${MAKE}	esscirc LIBNAME=SAR_ESSCIRC16_28NBULK
-
 
 GDS3D:
 	wget https://sourceforge.net/projects/gds3d/files/GDS3D%201.8/GDS3D_1.8.tar.bz2/download

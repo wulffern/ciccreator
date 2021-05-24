@@ -10,43 +10,28 @@ Back in 2013 I started playing with the thought of generating a SAR ADC with a s
 
 :white_check_mark: Rewrite the compiler in C++ under a GPL license and compile equivalent GDS with Perl compiler (Nov 2016)
 
-:white_check_mark: Encourage development of open source, free IP blocks for academic use ([Open Source Custom IC Creator packages](https://github.com/wulffern/oscic))
-
-The vision is that "Custom IC Creator" will be a rapid layout generation tool for SAR ADCs. 
-
 # Dependencies
 - Qt 5.4
 
 # Compile
-Install > Qt5.4 (i.e http://download.qt.io/archive/qt/5.4/5.4.2/qt-opensource-linux-x64-5.4.2.run), and edit bashrc.config to point to your Qt5.4 path, then
+I'd recommend the docker environment
 
-On Linux or Mac:
-
-    source bashrc.config
-    make
-
-On Windows, make sure you install MinGW > 4.9.2 with the Qt installation. Open console (Start - Qt - 5.x - MinGW  - Qt5.x for Desktop).
-
-    mingw32-make
-
+    cd docker
+    make build
 
 # Test
-On Linux or Mac:
+    make run-sh
+    make esscirc routes
 
-    make esscirc
+# Viewing GDS output
 
-On Windows:
+I'd recommend [Klayout](www.klayout.de), you can find a Layer property file in
+ examples/
+ 
+Another nice option for viewing GDS is [GDS3D](https://sourceforge.net/projects/gds3d/)
 
-    mingw32-make esscirc
-
-# Viewing
-Open GDSII file or on Linux or Mac you can use GDS3D from https://sourceforge.net/projects/gds3d/ 
-
-    make view3d
-
-# cIcCreator in action
+# Videos
 
 Minecraft video - https://youtu.be/J9lhEt0f3Wk 
-
 cIcCreator in action - https://youtu.be/hv9u9aQGHQc
 
