@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 if(len(sys.argv) > 1):
     fname = sys.argv[1]
     df = pd.read_csv(fname,header=4)
-    print("Options" + ", ".join(df.columns))
+    print("Waves: " + ", ".join(df.columns))
 
 if(len(sys.argv) < 3):
     print("Usage: plot.py <csvfile> [<waveform,waveform>] ")
