@@ -125,7 +125,11 @@ int main(int argc, char *argv[])
         qWarning() << "About: \n\tcIcCreator reads a JSON object definition file, technology rule file\n" <<
             "\tand a SPICE netlist (assumes same name as object definition file)\n\tand outputs a cic description file (.cic)" <<
             "\nOptions:\n" <<
-            "\t --I\t <path> \t Path to search for include files";
+            "\t --I\t <path> \t Path to search for include files\n" <<
+             "\t --nogds\t     \t Don't write GDSII file (default)\n" <<
+             "\t --gds\t     \t Write GDSII file \n" <<
+             "\t --spi\t     \t Write SPICE file \n" <<
+             "";
         error = 1;
 
     }

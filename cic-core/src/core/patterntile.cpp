@@ -175,8 +175,6 @@ namespace cIcCore {
 
        if(arraylength != ar.count()){
            qDebug() << " Error: " << " layer " << layer << " does not have " << arraylength << " lines \n";
-           
-           
        }
         
         

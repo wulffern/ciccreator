@@ -318,7 +318,7 @@ namespace cIcCore{
         if(cellTranslator.contains(cl)){
             cl = cellTranslator[cl];
         }else{
-//            cerr << "Error(design.cpp): Unknown class " << cl.toStdString() << " for " << name.toStdString() <<  "\n";
+            cerr << "Error(design.cpp): Unknown class " << cl.toStdString() << " for " << name.toStdString() <<  "\n";
         }
 
         //- Set default class name
