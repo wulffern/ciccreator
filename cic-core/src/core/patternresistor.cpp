@@ -43,6 +43,7 @@ namespace cIcCore{
 
     void PatternResistor::onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data){
 
+        
         int pofinger = data["pofinger"].toInt();
         if(pofinger < x){
             data["nf"] = data["nf"].toInt() +  1;
@@ -50,10 +51,10 @@ namespace cIcCore{
         }
 
         if(layer == "PO"){
-            qDebug() << "PO";
-            
             res->setProperty("width",this->rules->toMicron(xspace_));
         }
+
+
     }
 
     void PatternResistor::endFillCoordinate(QMap<QString,QVariant> &data){
@@ -78,10 +79,18 @@ namespace cIcCore{
         if(c != 'r' || r == 0) return;
 
         Layer* l = this->rules->getLayer(r->layer());
-        QString res = l->res;
-        if(res == "") return; //Return if resistor layer is undefined
+        QString res_ss = l->res;
+        if(res_ss == "") return; //Return if resistor layer is undefined
 
-        Rect * rc = new Rect(res,translateX(x),translateY(y),xspace_,currentHeight_);
+        Rect * rc = new Rect(res_ss,translateX(x),translateY(y),xspace_,currentHeight_);
         this->add(rc);
+
+        
+        if(c =='r'){
+                this->res->setProperty("width",this->rules->toMicron( currentHeight_ ) );
+                this->res->setProperty("length",this->rules->toMicron( xspace_ ) );
+                this->res->setProperty("layer",r->layer());
+        }
+
     }
 }

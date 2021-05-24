@@ -30,90 +30,93 @@
 
 namespace cIcCore{
 
-    class LayoutCell : public Cell
-    {
-        Q_OBJECT
+        class LayoutCell : public Cell
+        {
+                Q_OBJECT
 
-    public:
-        LayoutCell();
-        LayoutCell(const LayoutCell&);
-        ~LayoutCell() ;
+                public:
+                        LayoutCell();
+                        LayoutCell(const LayoutCell&);
+                        ~LayoutCell() ;
 
-        Q_INVOKABLE void setYoffsetHalf(QJsonValue obj);
-        Q_INVOKABLE void noPowerRoute(QJsonValue obj);
-		Q_INVOKABLE void addDirectedRoute(QJsonArray obj);
-		Q_INVOKABLE void addConnectivityRoute(QJsonArray obj);
-        Q_INVOKABLE void addPortOnRect(QJsonArray obj);
-		Q_INVOKABLE void addVia(QJsonArray obj);
-		Q_INVOKABLE void addConnectivityVia(QJsonArray obj);
-		Q_INVOKABLE void addPortVia(QJsonArray obj);
-		Q_INVOKABLE void addVerticalRect(QJsonArray obj);
-		Q_INVOKABLE void addRouteRing(QJsonArray obj);
-		Q_INVOKABLE void addPowerRing(QJsonArray obj);
-		Q_INVOKABLE void addRouteConnection(QJsonArray obj);
-		Q_INVOKABLE void addPowerConnection(QJsonArray obj);
-        Q_INVOKABLE void trimRouteRing(QJsonArray obj);
-        Q_INVOKABLE void addRectangle(QJsonArray obj);
-        Q_INVOKABLE void addRouteHorizontalRect(QString layer, QString rectpath, int x, QString name);
-        Q_INVOKABLE void addRouteHorizontalRect(QJsonArray obj);
-        Q_INVOKABLE void addGuard(QJsonArray obj);
-        Q_INVOKABLE void addHorizontalRect(QJsonArray obj);
-        Q_INVOKABLE void alternateGroup(QJsonValue obj);
-        
-        
-
- 
-       void addGuard(QString port, double gridMultiplier, QList<QString> layers);
-        
-        
-        QList<Graph*> getNodeGraphs(QString regex);
-        void noPowerRoute();
-        Instance* addInstance(cIcSpice::SubcktInstance* ckt,int x, int y);
-
-        void addRectangle(QString layer, int x1, int y1, int width, int height, QString angle);
-        void addConnectivityRoute(QString layer,QString regex, QString routeType,QString options,QString cuts,QString excludeInstances, QString includeInstances);
-        
-        void trimRouteRing(QString path, QString location,QString whichEndToTrim);
-
-		void addRouteRing(QString layer, QString name, QString location, int widthmult, int spacemult);
-        void addRouteRing(QString layer, QString name, QString location, int widthmult, int spacemult,bool useGridForSpace);
-	void addPowerRing(QString layer, QString name, QString location, int widthmult,int spacemult);
-		void addPowerConnection(QString name, QString includeInstances,  QString location);
-		void addRouteConnection(QString path, QString includeInstances, QString layer, QString location, QString options);
-
-        Instance* getInstanceFromInstanceName(QString instanceName);
-        
-
-		
-        virtual void place();
-        virtual void route();
-        virtual  void addAllPorts();
-        virtual void routePower();
-        virtual void paint();
-        QList<QString> nodeGraphList();
-        
-        
-
-		QStringList expandBus(QString name);
-
-        virtual QList<Rect*> findRectanglesByNode(QString node, QString filterChild,QString filterInstance);
+                        Q_INVOKABLE void setYoffsetHalf(QJsonValue obj);
+                        Q_INVOKABLE void noPowerRoute(QJsonValue obj);
+                        Q_INVOKABLE void addDirectedRoute(QJsonArray obj);
+                        Q_INVOKABLE void addConnectivityRoute(QJsonArray obj);
+                        Q_INVOKABLE void addPortOnRect(QJsonArray obj);
+                        Q_INVOKABLE void addVia(QJsonArray obj);
+                        Q_INVOKABLE void addConnectivityVia(QJsonArray obj);
+                        Q_INVOKABLE void addPortVia(QJsonArray obj);
+                        Q_INVOKABLE void addVerticalRect(QJsonArray obj);
+                        Q_INVOKABLE void addRouteRing(QJsonArray obj);
+                        Q_INVOKABLE void addPowerRing(QJsonArray obj);
+                        Q_INVOKABLE void addRouteConnection(QJsonArray obj);
+                        Q_INVOKABLE void addPowerConnection(QJsonArray obj);
+                        Q_INVOKABLE void trimRouteRing(QJsonArray obj);
+                        Q_INVOKABLE void addRectangle(QJsonArray obj);
+                        Q_INVOKABLE void addRouteHorizontalRect(QString layer, QString rectpath, int x, QString name);
+                        Q_INVOKABLE void addRouteHorizontalRect(QJsonArray obj);
+                        Q_INVOKABLE void addGuard(QJsonArray obj);
+                        Q_INVOKABLE void addHorizontalRect(QJsonArray obj);
+                        Q_INVOKABLE void alternateGroup(QJsonValue obj);
 
 
-		virtual void fromJson(QJsonObject obj);
 
-        void addPowerRoute(QString net,QString excludeInstances);
 
-	private:
-        bool useHalfHeight;
-        bool alternateGroup_;
-        QList<QString> nodeGraphList_;
-		QHash<QString,Graph*> nodeGraph_;
 
-        bool noPowerRoute_;
+                        void addGuard(QString port, double gridMultiplier, QList<QString> layers);
 
-		void addToNodeGraph(Instance * inst);
 
-    };
+                        QList<Graph*> getNodeGraphs(QString regex);
+                        void noPowerRoute();
+                        Instance* addInstance(cIcSpice::SubcktInstance* ckt,int x, int y);
+
+                        void addRectangle(QString layer, int x1, int y1, int width, int height, QString angle);
+                        void addConnectivityRoute(QString layer,QString regex, QString routeType,QString options,QString cuts,QString excludeInstances, QString includeInstances);
+
+                        void trimRouteRing(QString path, QString location,QString whichEndToTrim);
+
+                        void addRouteRing(QString layer, QString name, QString location, int widthmult, int spacemult);
+                        void addRouteRing(QString layer, QString name, QString location, int widthmult, int spacemult,bool useGridForSpace);
+                        void addPowerRing(QString layer, QString name, QString location, int widthmult,int spacemult);
+                        void addPowerConnection(QString name, QString includeInstances,  QString location);
+                        void addRouteConnection(QString path, QString includeInstances, QString layer, QString location, QString options);
+
+                        Instance* getInstanceFromInstanceName(QString instanceName);
+
+
+
+                        virtual void place();
+                        virtual void route();
+                        virtual  void addAllPorts();
+                        virtual void routePower();
+                        virtual void paint();
+                        QList<QString> nodeGraphList();
+
+
+
+                        QStringList expandBus(QString name);
+
+                        virtual QList<Rect*> findRectanglesByNode(QString node, QString filterChild,QString filterInstance);
+
+
+                        virtual void fromJson(QJsonObject obj);
+                        virtual  QJsonObject  toJson();
+
+                        void addPowerRoute(QString net,QString excludeInstances);
+
+                private:
+                        bool useHalfHeight;
+                        bool abstract_;
+                        bool alternateGroup_;
+                        QList<QString> nodeGraphList_;
+                        QHash<QString,Graph*> nodeGraph_;
+
+                        bool noPowerRoute_;
+
+                        void addToNodeGraph(Instance * inst);
+
+        };
 
 }
 

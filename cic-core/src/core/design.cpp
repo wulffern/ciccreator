@@ -671,15 +671,20 @@ namespace cIcCore{
 
         QString val;
         QStringList valList;
+        QList<int> lineList;
+        int linecount = 0;
+
         if (file.open(QIODevice::ReadOnly | QIODevice::Text))
         {
             QTextStream in(&file);
             while (!in.atEnd())
             {
                 QString line = in.readLine();
+                linecount++;
                 if(line.contains(QRegularExpression("^\\s*//"))) continue;
                 val.append(line);
                 valList.append(line);
+                lineList.append(linecount);
             }
 
             file.close();
@@ -706,7 +711,7 @@ namespace cIcCore{
 
             QString error("%1%2%3%4\n%5\n%6\n%7\n%8\n%9");
             console->comment(error.arg("JSON ERROR (line ")
-                             .arg(line_count)
+                             .arg(lineList[line_count+2])
                              .arg("): ")
                              .arg(err.errorString())
                              .arg("   " + valList[line_count])
