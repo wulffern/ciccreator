@@ -39,8 +39,8 @@ namespace cIcCells{
 
         
     private:
-        int _binaryBits;
-        int _unaryBits;
+        int _binaryBits ;
+        int _unaryBits ;
         int _top_length;
         int _finger_length;
     };

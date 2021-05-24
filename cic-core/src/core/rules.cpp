@@ -40,9 +40,23 @@ namespace cIcCore{
 
 
     void Rules::loadRules(QString filename){
+
+        ConsoleOutput* console = new ConsoleOutput();
         QString val;
         QFile file;
+
+
+        
         file.setFileName(filename);
+
+
+        if(!file.exists()){
+            console->error("Can't find file '" + filename + "'" ) ;
+            throw "Die";
+            
+        }
+        
+        
         file.open(QIODevice::ReadOnly | QIODevice::Text);
         val = file.readAll();
         file.close();
@@ -62,7 +76,7 @@ namespace cIcCore{
                 index = verr.indexOf("\n",position+1);
             }
 
-            qWarning() << "Error[" << filename << "]:" <<  err.errorString() << " at line " << line_count ;
+            console->error("Error[" + filename + "]:" +  err.errorString() + " at line " + QString(line_count)) ;
             throw "Die";
         }
 

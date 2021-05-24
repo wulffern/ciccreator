@@ -69,8 +69,6 @@ namespace cIcSpice{
     {
 
 
-        cIcCore::Rules * rules = cIcCore::Rules::getRules();
-        cIcCore::Device * mtype = rules->getDevice(this->deviceName());
 
         QList<SubcktInstance*> instances;
         SubcktInstance* ins = new SubcktInstance();
@@ -80,7 +78,6 @@ namespace cIcSpice{
         ins->setNodes(sn);
         ins->setName("R1");
         ins->setDeviceName("resistor");
-        ins->setSubcktName(mtype->name);
         instances.append(ins);
 
 

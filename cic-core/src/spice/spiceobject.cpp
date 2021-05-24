@@ -131,6 +131,9 @@ namespace cIcSpice{
 
         QJsonArray ar;        
         foreach(QString n,nodes()){
+            if(n == ""){
+                continue;
+            }
             ar.append(n);
         }
         o["nodes"] = ar;

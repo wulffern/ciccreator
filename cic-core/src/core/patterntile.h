@@ -33,6 +33,11 @@ namespace cIcCore{
         int length;
     };
 
+    struct CopyLayer{
+        QString from;
+        QString to;
+    };
+
     struct Enclosure{
         QString layer;
         int startx;
@@ -128,6 +133,7 @@ namespace cIcCore{
         Q_INVOKABLE void getRuleForHorizontalGrid(QJsonArray ar);
         Q_INVOKABLE void getRuleForVerticalGrid(QJsonArray ar);
         Q_INVOKABLE void copyColumn(QJsonObject obj);
+        Q_INVOKABLE void copyLayer(QJsonArray ar);
         Q_INVOKABLE void addEnclosure(QJsonArray ar);
         Q_INVOKABLE void addEnclosureByRectangle(QJsonArray ar);
         Q_INVOKABLE void addEnclosuresByRectangle(QJsonArray ar);
@@ -206,6 +212,7 @@ namespace cIcCore{
         qreal widthoffset_;
         qreal heightoffset_;
         QList<CopyColumn> copyColumn_;
+            QList<CopyLayer> copyLayer_;
         QMap<QString,QMap<int,QMap<int,Rect*> > > rectangles_;
         Rect * prev_rect_;
 

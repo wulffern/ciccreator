@@ -37,6 +37,7 @@ public:
   void commentInvokeMethod(QString cell, QString theme, QString method);
   void commentStartClass(QString cell);
   void comment(QString cell, AnsiColor color = green);
+    void error(QString str);
   void commentSetProperty(QString cell, QString theme, QString property);
   void errorMethodNotFound(QString cell, QString theme, QString method);
   void increaseIndent();

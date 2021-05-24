@@ -87,6 +87,9 @@ namespace cIcCore{
 
             data["isTransistor"] = true;            
 
+
+            //cout << x << " @ " << data["wmin"].toInt() << " to " << data["wmax"].toInt() << "\n";
+
             if(x < data["wmin"].toInt()){
                 data["wmin"] = x;
             }
@@ -94,6 +97,8 @@ namespace cIcCore{
             if(x > data["wmax"].toInt()){
                 data["wmax"] = x;
             }
+
+            //cout << x << " @ " << data["wmin"].toInt() << " to " << data["wmax"].toInt() << "\n";
 
             if(c == 'm'){
                 data["useMinLength"] = true;
@@ -106,6 +111,7 @@ namespace cIcCore{
     void PatternTransistor::endFillCoordinate(QMap<QString,QVariant> &data){
         if(data["isTransistor"].toBool()){
 
+
             int width = (data["wmax"].toInt() - data["wmin"].toInt() + 1)*this->xspace_;
 
             
@@ -114,7 +120,7 @@ namespace cIcCore{
             if(minlength == 0){
                 minlength  = this->rules->get("PO","mingatelength");
             }
-            
+
             mos->setProperty("width",this->rules->toMicron(width));
             mos->setProperty("length",this->rules->toMicron(minlength));
             mos->setProperty("nf",data["nf"].toInt());
