@@ -29,14 +29,14 @@ To compile the SAR and the routes example do
 
 , which will generate the following files in lay/
 
-## Example of routing options
+Example of routing options:
 
     routes.cic                      JSON output
     routes.gds                      Layout stream file (KLayout openable)
     routes.spi                      CDL netlist
     
-## Successive-Approximation Analog-To-Digital Converter
- 
+Successive-Approximation Analog-To-Digital Converter:
+
     SAR_ESSCIRC16_28N.cic           JSON output
     SAR_ESSCIRC16_28N.gds           Layout stream file (KLayout openable)
     SAR_ESSCIRC16_28N.spi           CDL netlist
