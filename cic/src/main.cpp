@@ -22,6 +22,7 @@
 #include <iostream>
 #include <QDebug>
 #include <QString>
+#include "version.h"
 
 
 //- Default
@@ -123,12 +124,13 @@ int main(int argc, char *argv[])
         qWarning() << "Usage: cic <JSON file> <Technology file> [<Output name>]";
         qWarning() << "Example: cic ALGIC003_STDLIB.json ST_28NM_FDSOI.tech";
         qWarning() << "About: \n\tcIcCreator reads a JSON object definition file, technology rule file\n" <<
-            "\tand a SPICE netlist (assumes same name as object definition file)\n\tand outputs a cic description file (.cic)" <<
+            "\tand a SPICE netlist (assumes same name as object definition file)\n\tand outputs a cic description file (.cic)." <<
+            "\n\tVersion" << CICVERSION <<
             "\nOptions:\n" <<
             "\t --I\t <path> \t Path to search for include files\n" <<
              "\t --nogds\t     \t Don't write GDSII file (default)\n" <<
-             "\t --gds\t     \t Write GDSII file \n" <<
-             "\t --spi\t     \t Write SPICE file \n" <<
+             "\t --gds\t      \t \t Write GDSII file \n" <<
+             "\t --spi\t      \t \t Write SPICE file \n" <<
              "";
         error = 1;
 
