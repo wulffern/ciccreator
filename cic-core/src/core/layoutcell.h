@@ -39,8 +39,8 @@ namespace cIcCore{
                         LayoutCell(const LayoutCell&);
                         ~LayoutCell() ;
 
-                        Q_INVOKABLE void setYoffsetHalf(QJsonValue obj);
-                        Q_INVOKABLE void noPowerRoute(QJsonValue obj);
+                        Q_INVOKABLE void setYoffsetHalf(QJsonValue obj); //doc
+                        Q_INVOKABLE void noPowerRoute(QJsonValue obj); //doc
                         Q_INVOKABLE void addDirectedRoute(QJsonArray obj);
                         Q_INVOKABLE void addConnectivityRoute(QJsonArray obj);
                         Q_INVOKABLE void addPortOnRect(QJsonArray obj);
@@ -48,8 +48,8 @@ namespace cIcCore{
                         Q_INVOKABLE void addConnectivityVia(QJsonArray obj);
                         Q_INVOKABLE void addPortVia(QJsonArray obj);
                         Q_INVOKABLE void addVerticalRect(QJsonArray obj);
-                        Q_INVOKABLE void addRouteRing(QJsonArray obj);
-                        Q_INVOKABLE void addPowerRing(QJsonArray obj);
+                        Q_INVOKABLE void addRouteRing(QJsonArray obj); //doc
+                        Q_INVOKABLE void addPowerRing(QJsonArray obj); //doc
                         Q_INVOKABLE void addRouteConnection(QJsonArray obj);
                         Q_INVOKABLE void addPowerConnection(QJsonArray obj);
                         Q_INVOKABLE void trimRouteRing(QJsonArray obj);

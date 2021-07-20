@@ -18,6 +18,7 @@
 ######################################################################
 
 VERSION=0.1.2
+VERSION_DATE=${VERSION} built on $(shell date)
 
 #- Figure out which platform we're running on
 ifeq ($(OS),Windows_NT)
@@ -54,7 +55,10 @@ lay:
 	mkdir lay
 
 qmake:
-	qmake -o qmake.make ciccreator.pro 
+	echo "#define CICVERSION \""${VERSION_DATE}"\""  > cic/src/version.h
+	qmake -o qmake.make ciccreator.pro
+	cp build/${CIC} build/cic.${OSBIN}_${VERSION}
+
 
 windeploy:
 	windeployqt bin/windows/cic-gui.exe
@@ -107,10 +111,11 @@ view3d: GDS3D
 	echo ${GDS3D}
 	 ${GDS3D} -p examples/tech_gds3d.txt -i lay/SAR_ESSCIRC16_28N.gds -t SAR9B_EV
 
-CONT=cic_qt_bionic
+CONT=cic_qt_groovy:latest
 
 docker:
 	docker build   -t ${CONT} .
+	docker run --rm -it -v `pwd`:/lcic ${CONT} cd /lcic && make && cp /lcic/ebin/linux/cic /lcic/build/cic.ubuntu_groovy_${VERSION}
 
 sh:
 	docker run --rm -it -v `pwd`:/lcic ${CONT} bash
