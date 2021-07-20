@@ -59,6 +59,7 @@ namespace cIcCore{
                         Q_INVOKABLE void addGuard(QJsonArray obj);
                         Q_INVOKABLE void addHorizontalRect(QJsonArray obj);
                         Q_INVOKABLE void alternateGroup(QJsonValue obj);
+                        Q_INVOKABLE void resetOrigin(QJsonValue obj);
 
 
 
