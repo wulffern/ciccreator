@@ -770,8 +770,11 @@ namespace cIcCore{
     {
         QList<Rect*> rects = this->getChildren("cIcCore::RouteRing");
         foreach(Rect* r,rects){
+
             RouteRing* rr = (RouteRing*) r;
+
             if(rr->name().contains(QRegularExpression(path))){
+
                 rr->trimRouteRing(location,whichEndToTrim);
             }
         }
