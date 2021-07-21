@@ -28,8 +28,6 @@ namespace cIcCore{
         qRegisterMetaType<cIcCore::PatternTile>("cIcCore::PatternTile");
         qRegisterMetaType<cIcCore::PatternTransistor>("cIcCore::PatternTransistor");
         qRegisterMetaType<cIcCore::PatternCapacitor>("cIcCore::PatternCapacitor");
-        qRegisterMetaType<cIcCore::LayoutCell>("cIcCore::LayoutCell");
-        qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
         qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
         qRegisterMetaType<cIcCells::SAR>("cIcCells::SAR");
         qRegisterMetaType<cIcCells::CapCell>("cIcCells::CapCell");
@@ -348,8 +346,6 @@ namespace cIcCore{
             }
         }
 
-        
-
 
         //Make the object, let's see how that works in Qt
         int id = QMetaType::type(cl.toUtf8().data());
@@ -447,10 +443,7 @@ namespace cIcCore{
                     lcd->afterPaint();
                 }                
             }
-            
-            
-            
-            
+
             this->add(c);
             Cell::addCell(c);
             _cell_names.append(c->name());

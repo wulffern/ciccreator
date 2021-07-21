@@ -124,34 +124,12 @@ namespace cIcCore{
     if(options.contains(QRegularExpression("endoffsetcuthigh(,|\\s+|$)"))){ endOffsetCut_ = HIGH ;}
     else if(options.contains(QRegularExpression("endoffsetcutlow(,|\\s+|$)"))){ endOffsetCut_ = LOW ;}
 
-
-
-
     //- Stop offset;
     if(options.contains(QRegularExpression("offsethighend"))){ stopOffset_ = HIGH ;}
     else if(options.contains(QRegularExpression("offsetlowend"))){ stopOffset_ = LOW ;}
 
     if(options.contains(QRegularExpression("track(\\d+)")))
       hasTrack_ = true;
-
-
-
-
-    track_  = getIntegerFromMatch("track(\\d+)", options,0);
-
-    //- Start offset
-    if(options.contains(QRegularExpression("offsethigh(\\s+|,|$)"))){ startOffset_ = HIGH ;}
-    else if(options.contains(QRegularExpression("offsetlow(\\s+|,|$)"))){ startOffset_ = LOW ;}
-
-
-    //- Stop offset;
-    if(options.contains(QRegularExpression("offsethighend(\\s+|,|$)"))){ stopOffset_ = HIGH ;}
-    else if(options.contains(QRegularExpression("offsetlowend(\\s+|,|$)"))){ stopOffset_ = LOW ;}
-
-    if(options.contains(QRegularExpression("track(\\d+)")))
-      hasTrack_ = true;
-
-
 
 
     track_  = getIntegerFromMatch("track(\\d+)", options,0);
@@ -532,10 +510,6 @@ namespace cIcCore{
     }
 
     this->updateBoundingRect();
-
-
-    //        auto r = new Rect(routeLayer_,x,yca,width,this->y2() - yca);
-    //        this->add(r);
 
   }
 
