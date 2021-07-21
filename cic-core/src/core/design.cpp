@@ -266,7 +266,8 @@ namespace cIcCore{
                 strlist.replaceInStrings(QRegularExpression(from),to);
             }
 
-            _spice_parser.parseSubckt(0,strlist);
+
+            _spice_parser.parseSubckt(0,strlist);            
             ckt = _spice_parser.getSubckt(name);
         }
 
@@ -560,7 +561,7 @@ namespace cIcCore{
         }
 
         //Search throught the json file and find methods that can be run
-        QRegularExpression re("^new|inherit|leech|class|name|before.*|after.*|comment|decorator");
+        QRegularExpression re("^new|inherit|leech|class|name|before.*|after.*|comment|decorator|spiceRegex");
 
 
         foreach( QString key, jobj.keys()){
