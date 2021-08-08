@@ -111,8 +111,13 @@ int main(int argc, char *argv[])
                 }
 
 
+                QJsonObject info;
+                info["version"] = CICVERSION;
+                info["hash"] = CICHASH;
+
                 //Write JSON
-                d->writeJsonFile(library + ".cic");
+                d->writeJsonFile(library + ".cic",info);
+
             }
 
 
