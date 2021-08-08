@@ -80,6 +80,10 @@ namespace cIcCore{
         
     }
 
+    void LayoutCell::meta(QJsonObject obj){
+        meta_ = obj;
+    }
+
 
 
     void LayoutCell::addDirectedRoute(QJsonArray obj){
@@ -1123,11 +1127,10 @@ namespace cIcCore{
 
      QJsonObject LayoutCell::toJson(){
         QJsonObject o = Cell::toJson();
-
-
         o["useHalfHeight"] = this->useHalfHeight;
         o["boundaryIgnoreRouting"] = this->boundaryIgnoreRouting_;
         o["alternateGroup"] = this->alternateGroup_;
+        o["meta"] = meta_;
         return o;
     }
 

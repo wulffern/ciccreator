@@ -727,12 +727,13 @@ namespace cIcCore{
     }
 
 
-    void Design::writeJsonFile(QString filename){
+    void Design::writeJsonFile(QString filename,QJsonObject info){
 
         QFile file;
         file.setFileName(filename);
         file.open(QIODevice::WriteOnly | QIODevice::Text);
         QJsonObject o = this->toJson();
+        o["info"] = info;
 
         QJsonDocument d(o);
         file.write(d.toJson());

@@ -17,8 +17,9 @@
 ##   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ######################################################################
 
-VERSION=0.1.2
+VERSION=0.1.3
 VERSION_DATE=${VERSION} built on $(shell date)
+VERSION_HASH=${shell git describe --tags}
 
 #- Figure out which platform we're running on
 ifeq ($(OS),Windows_NT)
@@ -56,6 +57,7 @@ lay:
 
 qmake:
 	echo "#define CICVERSION \""${VERSION_DATE}"\""  > cic/src/version.h
+	echo "#define CICHASH \""${VERSION_HASH}"\""  >> cic/src/version.h
 	qmake -o qmake.make ciccreator.pro
 	cp build/${CIC} build/cic.${OSBIN}_${VERSION}
 
