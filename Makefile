@@ -110,19 +110,19 @@ docker:
 	docker build   -t ${CONT} .
 
 run:
-	docker run --rm -it -v `pwd`:/lcic ${CONT} cd /lcic && make && cp /lcic/ebin/linux/cic /lcic/build/cic.ubuntu_groovy_${VERSION}
+	docker run --rm -it -v `pwd`:/lcic ${CONT} sh -c 'cd /lcic && make && cp /lcic/bin/linux/cic /lcic/build/cic.ubuntu_groovy_${VERSION}'
 
 sh:
 	docker run --rm -it -v `pwd`:/lcic ${CONT} bash
 
 gds: esscirc_gds routes_gds
 
-#esscirc_gds:
-#	cd lay; docker run --rm --workdir /lcic/lay -v `pwd`/../:/lcic -t ${CONT}  /ciccreator/bin/cic --gds --spi /lcic/examples/SAR_ESSCIRC16_28N.json /lcic/examples/tech.json SAR_ESSCIRC16_28N
-#	-./scripts/cics2aimspice  lay/${LIBNAME}.cic  lay/${LIBNAME}.spice
+esscirc_gds:
+	cd lay; docker run --rm --workdir /lcic/lay -v `pwd`/../:/lcic -t ${CONT} sh -c  '/ciccreator/bin/cic --gds --spi /lcic/examples/SAR_ESSCIRC16_28N.json /lcic/examples/tech.json SAR_ESSCIRC16_28N'
+	./scripts/cics2aimspice  lay/${LIBNAME}.cic  lay/${LIBNAME}.spice
 
-#routes_gds:
-#	cd lay; docker run --rm --workdir /lcic/lay -v `pwd`/../:/lcic -t ${CONT}  /ciccreator/bin/cic --gds --spi /lcic/examples/routes.json /lcic/examples/tech.json routes
+routes_gds:
+	cd lay; docker run --rm --workdir /lcic/lay -v `pwd`/../:/lcic -t ${CONT} sh -c  '/ciccreator/bin/cic --gds --spi /lcic/examples/routes.json /lcic/examples/tech.json routes'
 
 sim:
 	cd sim; make sar plot_sar
