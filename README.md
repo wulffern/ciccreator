@@ -21,7 +21,7 @@ the compile does require qt 5.4, which is starting to be hard to come by.
 As such, the easiest is to use the docker environment (although, for some
 reason, the GDS output is super slow)
 
-    make docker
+    make docker run
 
 To compile the SAR and the routes example do
 
