@@ -50,30 +50,22 @@ endif
 
 .PHONY: doxygen coverage sim
 
-all: qmake compile
+all: compile
 
 lay:
 	mkdir lay
 
-qmake:
+compile:
 	echo "#define CICVERSION \""${VERSION_DATE}"\""  > cic/src/version.h
 	echo "#define CICHASH \""${VERSION_HASH}"\""  >> cic/src/version.h
 	qmake -o qmake.make ciccreator.pro
-	cp build/${CIC} build/cic.${OSBIN}_${VERSION}
-
-
-windeploy:
-	windeployqt bin/windows/cic-gui.exe
-
-xcode:
-	qmake -o qmake.make ciccreator.pro -spec  macx-xcode
-
-#- Use a wrapper around qmake, I like defining my own makefiles
-compile:
 	${MAKE} -f qmake.make
+	cp build/${CIC} build/cic.${OSBIN}_${VERSION}
 
 clean:
 	${MAKE} -f qmake.make clean
+	-rm -rf GDS3D
+	-rm -rf GDS3D_1.8
 	-rm cic/Makefile
 	-rm cic-core/Makefile
 
@@ -99,9 +91,8 @@ routes: lay
 	cd lay; ${CIC} ${EXAMPLE}/routes.json ${TECHFILE} routes ${OPT}
 
 esscirc: lay
-	cd lay; ${CIC} ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
+	cd lay; ${CIC} --gds ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
 	-./scripts/cics2aimspice  lay/${LIBNAME}.cic  lay/${LIBNAME}.spice
-
 
 GDS3D:
 	wget https://sourceforge.net/projects/gds3d/files/GDS3D%201.8/GDS3D_1.8.tar.bz2/download
@@ -117,6 +108,8 @@ CONT=cic_qt_groovy:latest
 
 docker:
 	docker build   -t ${CONT} .
+
+run:
 	docker run --rm -it -v `pwd`:/lcic ${CONT} cd /lcic && make && cp /lcic/ebin/linux/cic /lcic/build/cic.ubuntu_groovy_${VERSION}
 
 sh:
@@ -124,12 +117,12 @@ sh:
 
 gds: esscirc_gds routes_gds
 
-esscirc_gds:
-	cd lay; docker run --rm --workdir /lcic/lay -v `pwd`/../:/lcic -t ${CONT}  /ciccreator/bin/cic --gds --spi /lcic/examples/SAR_ESSCIRC16_28N.json /lcic/examples/tech.json SAR_ESSCIRC16_28N
-	-./scripts/cics2aimspice  lay/${LIBNAME}.cic  lay/${LIBNAME}.spice
+#esscirc_gds:
+#	cd lay; docker run --rm --workdir /lcic/lay -v `pwd`/../:/lcic -t ${CONT}  /ciccreator/bin/cic --gds --spi /lcic/examples/SAR_ESSCIRC16_28N.json /lcic/examples/tech.json SAR_ESSCIRC16_28N
+#	-./scripts/cics2aimspice  lay/${LIBNAME}.cic  lay/${LIBNAME}.spice
 
-routes_gds:
-	cd lay; docker run --rm --workdir /lcic/lay -v `pwd`/../:/lcic -t ${CONT}  /ciccreator/bin/cic --gds --spi /lcic/examples/routes.json /lcic/examples/tech.json routes
+#routes_gds:
+#	cd lay; docker run --rm --workdir /lcic/lay -v `pwd`/../:/lcic -t ${CONT}  /ciccreator/bin/cic --gds --spi /lcic/examples/routes.json /lcic/examples/tech.json routes
 
 sim:
 	cd sim; make sar plot_sar
