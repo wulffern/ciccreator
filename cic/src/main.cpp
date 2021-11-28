@@ -63,13 +63,24 @@ int main(int argc, char *argv[])
         if(arguments.length() >=  3){
 
 
+            //Store info on this run
+            QJsonObject info;
+
 
             QString file = arguments[1];
+            info["file"] = file;
             QString rules = arguments[2];
+            info["rules"] = rules;
+            info["includepaths"] = includePaths.join(" ");
+            info["--gds"] = gds;
+            info["--spi"] = spice;
+            info["arguments"] = arguments.join(" ");
+
 
             QString library ="" ;
             if(arguments.length() > 3){
                 library = arguments[3];
+
             }
 
 
@@ -79,14 +90,19 @@ int main(int argc, char *argv[])
                 library = m.captured(1);
             }
 
+            info["library"] = library;
+
             //Load rules
             cIcCore::Rules::loadRules(rules);
 
+
             //Load design, this is where the magic happens
             cIcCore::Design * d = new cIcCore::Design();
+
             foreach(QString path,includePaths){
                 d->addIncludePath(path);
             }
+
 
             if(d->read(file)){
 
@@ -95,7 +111,6 @@ int main(int argc, char *argv[])
                     //Print SPICE file
                     cIcPrinter::Spice * sp = new cIcPrinter::Spice(library);
                     sp->print(d);
-
                     delete(sp);
                 }
 
@@ -111,12 +126,14 @@ int main(int argc, char *argv[])
                 }
 
 
-                QJsonObject info;
+
                 info["version"] = CICVERSION;
                 info["hash"] = CICHASH;
 
+
                 //Write JSON
                 d->writeJsonFile(library + ".cic",info);
+
 
             }
 
@@ -131,6 +148,7 @@ int main(int argc, char *argv[])
         qWarning() << "About: \n\tcIcCreator reads a JSON object definition file, technology rule file\n" <<
             "\tand a SPICE netlist (assumes same name as object definition file)\n\tand outputs a cic description file (.cic)." <<
             "\n\tVersion" << CICVERSION <<
+            "\n\tHash" << CICHASH <<
             "\nOptions:\n" <<
             "\t --I\t <path> \t Path to search for include files\n" <<
              "\t --nogds\t     \t Don't write GDSII file (default)\n" <<
