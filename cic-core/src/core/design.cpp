@@ -228,6 +228,7 @@ namespace cIcCore{
 
             _spice_parser.parseSubckt(0,strlist);
             ckt = _spice_parser.getSubckt(name);
+
         }
 
 
@@ -263,11 +264,18 @@ namespace cIcCore{
                 QJsonArray reg_arr = rval.toArray();
                 QString from = reg_arr[0].toString();
                 QString to = reg_arr[1].toString();
+
                 strlist.replaceInStrings(QRegularExpression(from),to);
             }
 
+
             _spice_parser.parseSubckt(0,strlist);
             ckt = _spice_parser.getSubckt(name);
+
+
+
+
+
         }
 
         

@@ -40,7 +40,12 @@ namespace cIcCore{
     }
 
     void LayoutCell::setYoffsetHalf(QJsonValue obj){
-        useHalfHeight = true;
+        if(obj.toInt()){
+            useHalfHeight = true;
+        }else{
+            useHalfHeight = false;
+        }
+
     }
 
 
