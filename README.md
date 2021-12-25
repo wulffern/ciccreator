@@ -1,7 +1,10 @@
+
+[![Docker Image CI](https://github.com/wulffern/ciccreator/actions/workflows/docker-image.yml/badge.svg?branch=master)](https://github.com/wulffern/ciccreator/actions/workflows/docker-image.yml)
+
 # ciccreator
 Back in 2013 I started playing with the thought of generating a SAR ADC with a script, such that it would be easy to port between technologies. The prototype was written in Perl, and contained 16k lines of code. The Perl compiler is closed source, and not available outside NTNU. cIcCreator is the C++ version, it's been written from scratch to support the same input files as the Perl compiler, but with a vastly improved performance.   
 
-# Master plan, part 1
+# Master plan
 :white_check_mark: Create prototype of compiler in Perl that can compile SAR ADCs (Aug 2014) 
 
 :white_check_mark: Tapeout SAR ADC in 28nm FDSOI (Jan 2015)
@@ -10,59 +13,54 @@ Back in 2013 I started playing with the thought of generating a SAR ADC with a s
 
 :white_check_mark: Rewrite the compiler in C++ under a GPL license and compile equivalent GDS with Perl compiler (Nov 2016)
 
-:white_check_mark: Encourage development of open source, free IP blocks for academic use ([Open Source Custom IC Creator packages](https://github.com/wulffern/oscic))
+# Compile and run, the easy version
 
-The vision is that "Custom IC Creator" will be a rapid layout generation tool for SAR ADCs. 
+Although it's possible to run "make" to compile ciccreator on most platforms,
+the compile does require qt 5.4, which is starting to be hard to come by.
 
-# Dependencies
-- Qt 5.4
+As such, the easiest is to use the docker environment (although, for some
+reason, the GDS output is super slow)
 
-# Compile
-Install > Qt5.4 (i.e http://download.qt.io/archive/qt/5.4/5.4.2/qt-opensource-linux-x64-5.4.2.run), and edit bashrc.config to point to your Qt5.4 path, then
+    make docker run
 
-On Linux or Mac:
+To compile the SAR and the routes example do
 
-    source bashrc.config
-    make
+    make gds
 
-On Windows, make sure you install MinGW > 4.9.2 with the Qt installation. Open console (Start - Qt - 5.x - MinGW  - Qt5.x for Desktop).
+, which will generate the following files in lay/
 
-    mingw32-make
+Example of routing options:
 
+    routes.cic                      JSON output
+    routes.gds                      Layout stream file (KLayout openable)
+    routes.spi                      CDL netlist
+    
+Successive-Approximation Analog-To-Digital Converter:
 
-# Test
-On Linux or Mac:
+    SAR_ESSCIRC16_28N.cic           JSON output
+    SAR_ESSCIRC16_28N.gds           Layout stream file (KLayout openable)
+    SAR_ESSCIRC16_28N.spi           CDL netlist
+    SAR_ESSCIRC16_28N.spice         SPICE file for simulation
 
-    make esscirc
-
-On Windows:
-
-    mingw32-make esscirc
-
-# Viewing
-Open GDSII file or on Linux or Mac you can use GDS3D from https://sourceforge.net/projects/gds3d/ 
-
-    make view3d
-
-# Simulation
-The spice file that comes out of ciccreator is compatible with
-AimSpice (http://www.aimspice.com).
+Another nice option for viewing GDS is [GDS3D](https://sourceforge.net/projects/gds3d/)
 
 
-On Mac: 
-- Install AimSpice
-- Run:
+To simulate the SAR I'd recommend downloading
+[AIM-Spice](http://www.aimspice.com), then you should be able to run
 
-    make esscircbulk
+    make sim
+ 
 
-- Open aimspice
-- Open sim/tb_sarbssw.cir
-- Press run
-
-
-# cIcCreator in action
+# Videos
 
 Minecraft video - https://youtu.be/J9lhEt0f3Wk 
-
 cIcCreator in action - https://youtu.be/hv9u9aQGHQc
+
+# Directions
+I have a full-time job, and three kids, which means that my time for this project is unplannable, so things will be coded when they are coded. 
+
+# Comments/Questions
+I'd be happy to answer most questions, but I do get around 100 emails a day, so it might take some time to get through them all.
+Email: carsten@ciccreator.com
+
 

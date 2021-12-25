@@ -133,7 +133,10 @@ namespace cIcCore{
 			return right;
 		}else if(location == "left"){
 			return left;
-		}
+		}else{
+            qDebug() << "Could not find location =" << location << "on" << this->name() << ". Use top,bottom,left,right";
+            return 0;
+        }
 	}
 
     void RouteRing::trimRouteRing(QString location,QString whichEndToTrim)
@@ -141,8 +144,13 @@ namespace cIcCore{
 
         QList<Rect*> cuts = this->getChildren("cIcCore::Route");
         Rect bounds = Cell::calcBoundingRect(cuts);
-        
+
+
+
         Rect* r = this->getPointer(location);
+        if(r == 0){
+            return;
+        }
         if(whichEndToTrim.contains("l")){
             r->setLeft(bounds.x1());
         }
@@ -158,6 +166,7 @@ namespace cIcCore{
         if(whichEndToTrim.contains("b")){
             r->setBottom(bounds.y1());
         }
+
     }
     
 

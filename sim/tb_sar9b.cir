@@ -2,14 +2,14 @@
 *----------------------------------------------------------------------------
 * OPTIONS
 *----------------------------------------------------------------------------
-.option reltol=500u vntol=1u abstol=1p trtol=7 method=trap chgtol=1e-16
+.option reltol=1e-4 vntol=1u abstol=1p trtol=7 method=trap chgtol=1e-16
 *----------------------------------------------------------------------------
 * PARAMETERS
 *----------------------------------------------------------------------------
 .param vdd=1.6
-.param vcm = 0.4
+.param vcm = 0.8
 
-.param input_freq = 1e6
+.param input_freq = 1.3e6
 
 .param sample_width=25n
 .param sample_period=100n
@@ -24,13 +24,14 @@
 * DUT
 *----------------------------------------------------------------------------
 XIV CK_SAMPLE EN AVDD AVSS IVX1_EV
+
 XDUT SAR_IP SAR_IN SARN SARP DONE D<9> D<8> D<7> D<6> D<5> D<4> D<3> D<2> D<1> EN CK_SAMPLE CK_SAMPLE AVDD AVDD AVSS SAR9B_EV
 
 
 *----------------------------------------------------------------------------
 * FORCE
 *----------------------------------------------------------------------------
-VDD AVDD 0 dc vdd
+VDD AVDD 0 pwl 0 0 10n vdd
 VSS AVSS 0 dc 0
 
 VIP SAR_IP VCM SIN(0 0.4 input_freq 0 0) dc 0
@@ -38,20 +39,24 @@ VIN SAR_IN VCM SIN(0 -0.4 input_freq 0 0) dc 0
 VCM VCM 0 dc vcm
 VCK CK_SAMPLE 0 pulse(0 vdd 0 1n 1n sample_width sample_period) dc 0
 
-bao aout 0 v=(512*v(D<9>)+256*v(D<8>)+128*v(D<7>)+64*v(D<6>)+32*v(D<5>)+16*v(D<4>)+8*v(D<3>)+4*v(D<2>)+2*v(D<1>))/1024
+bao aout_s 0 v=(-512*v(D<9>)+256*v(D<8>)+128*v(D<7>)+64*v(D<6>)+32*v(D<5>)+16*v(D<4>)+8*v(D<3>)+4*v(D<2>)+2*v(D<1>))/1024
+
+*XB1 aout_s DONE NC1 NC2 aout NC3 AVDD AVSS SARBSSW_EV
+s1 aout_s aout DONE 0 switch
+c1 aout 0 0.1p
 
 
 *----------------------------------------------------------------------------
 * ANALYSIS
 *----------------------------------------------------------------------------
-.tran 1n 400n
+.tran 1n 100n
+*.tran 1n 2u
 
 *----------------------------------------------------------------------------
 * PLOTS AND EXTRACTS
 *----------------------------------------------------------------------------
 
-.extract enob(v(aout),v(DONE))
-.plot v(aout)
+.plot v(aout) v(aout_s)
 .plot v(done)
 .plot v(SAR_IP) v(SARP) v(SAR_IN) v(SARN)
 .plot v(CK_SAMPLE) v(EN)

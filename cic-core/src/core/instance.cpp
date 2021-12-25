@@ -69,6 +69,10 @@ namespace cIcCore{
             r->mirrorY(0);
             r->translate(xcell,ycell);
             
+        }else if(this->angle() == "MX"){
+            r->mirrorX(0);
+            r->translate(xcell,ycell);
+
         }
         r->translate(this->x1(),this->y1());
     }
@@ -128,8 +132,6 @@ namespace cIcCore{
         if(cell == NULL){ qWarning() << "Error: Could find cell" << inst->subcktName(); return;}
         if(cell->isPhysicalOnly()){return;}
         
-            
-            
 
         if(ckt){
             cktNodes = ckt->nodes();
@@ -168,11 +170,11 @@ namespace cIcCore{
         angle_ = angle;
         if(angle == "R90"){
             xcell = this->cell()->y2();
-
-            
         }else if(angle == "MY"){
             xcell = this->cell()->x2();
             //Fix instanceports
+        }else if(angle == "MX"){
+            ycell = ycell +  this->cell()->y1() + this->cell()->y2();
         }
         foreach(Rect* r,this->children()){
             //TODO: HOW TO HANDLE INSTANCES WITH NEGATIVE COORDINATES

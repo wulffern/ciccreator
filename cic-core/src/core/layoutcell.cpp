@@ -72,7 +72,23 @@ namespace cIcCore{
         }
         return graphs;
     }
-  
+
+    void LayoutCell::resetOrigin(QJsonValue obj){
+
+        int reset = obj.toInt();
+        if(reset> 0){
+            this->updateBoundingRect();
+
+
+            this->translate(-this->x1(),-this->y1());
+        }
+        
+    }
+
+    void LayoutCell::meta(QJsonObject obj){
+        meta_ = obj;
+    }
+
 
 
     void LayoutCell::addDirectedRoute(QJsonArray obj){
@@ -723,14 +739,18 @@ namespace cIcCore{
         }
 
         foreach(QString node, nodeGraphList()){
+
             if(!node.contains(QRegularExpression(path))) continue;
             if(!named_rects_.contains("rail_" + node)) continue;
-            
+
+
+
             Graph * g = nodeGraph_[node];
             QList<Rect*>  rects = g->getRectangles("",includeInstances,layer);
             RouteRing* rr = (RouteRing*) named_rects_["rail_" + node];
             Rect* routering = rr->get(location);
             QList<Rect*> empty;
+            
             foreach(Rect* r, rects){
                 QList<Rect*> stop;
                 stop.append(r);
@@ -759,8 +779,11 @@ namespace cIcCore{
     {
         QList<Rect*> rects = this->getChildren("cIcCore::RouteRing");
         foreach(Rect* r,rects){
+
             RouteRing* rr = (RouteRing*) r;
+
             if(rr->name().contains(QRegularExpression(path))){
+
                 rr->trimRouteRing(location,whichEndToTrim);
             }
         }
@@ -843,8 +866,6 @@ namespace cIcCore{
                 }else{
                     int yoffset = offset.toInt();
                     instance_y = instance_y + this->rules->get("ROUTE","verticalgrid")*yoffset;
-                    
-                    
                 }
             }
             
@@ -857,6 +878,13 @@ namespace cIcCore{
                 if(angle == "180"){
                     inst->setAngle("MY");
                 }
+
+                if(angle == "MX"){
+                    inst->setAngle("MX");
+
+                }
+
+
             }
 
             
@@ -1104,11 +1132,10 @@ namespace cIcCore{
 
      QJsonObject LayoutCell::toJson(){
         QJsonObject o = Cell::toJson();
-
-
         o["useHalfHeight"] = this->useHalfHeight;
         o["boundaryIgnoreRouting"] = this->boundaryIgnoreRouting_;
         o["alternateGroup"] = this->alternateGroup_;
+        o["meta"] = meta_;
         return o;
     }
 

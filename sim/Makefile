@@ -29,3 +29,6 @@ bssw:
 
 cmp:
 	${spice} tb_sarcmp.cir
+
+plot_sar:
+	./plot.py tb_sar9b.csv "v(sar_in),v(sar_ip),v(sarn),v(sarp):v(ck_sample),v(done)"

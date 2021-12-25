@@ -198,6 +198,7 @@ namespace cIcCore {
                 ar2.push_front(cl.to);
                 fillCoordinatesFromString(ar2);
             }
+
        }
         
         
@@ -588,8 +589,23 @@ namespace cIcCore {
                 e->width = w.toDouble();
                 if(this->copyColumn_.count() > 0){
                     foreach(CopyColumn c,copyColumn_){
+                        
                         if(e->x1 < c.offset && (e->x1 + e->width) > c.offset){
                             e->width += (c.length)*c.count;
+                        }else if(mirrorPatternString_) {
+
+                            cout << "\n" << e->x1 << "," << e->y1 << "," << e->width << "," <<e->height << "\n";
+                            int xmax = this->xmax_ + 1 - (c.length)*c.count;
+                            int x2mir = xmax - e->x1;
+                            int x1mir = xmax - e->x1 - e->width;
+
+                            cout << "x1mir=" << x1mir << " x2mir=" << x2mir << "\n";
+                            cout << c.offset<< "\n";
+
+                            if(x1mir < c.offset && x2mir > c.offset){
+                                e->width += (c.length)*c.count;
+                            }
+
                         }
                     }
 
