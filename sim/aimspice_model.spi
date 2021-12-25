@@ -10,3 +10,4 @@
 .model pch_io PMOS level=33  version=4.7
 .model pch_lvt_io PMOS level=33  version=4.7
 
+.model switch sw vt=0.5

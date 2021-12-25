@@ -74,7 +74,7 @@ namespace cIcCore{
 
         QJsonObject readJson(QString filename);
         void readJsonFile(QString filename);
-        void writeJsonFile(QString filename);
+        void writeJsonFile(QString filename,QJsonObject info);
 
         void addIncludePath(QString path);
         
