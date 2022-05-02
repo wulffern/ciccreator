@@ -41,6 +41,11 @@ namespace cIcCore{
 
     }
 
+    void Cell::meta(QJsonObject obj){
+        meta_ = obj;
+    }
+
+
     void Cell::boundaryIgnoreRouting(QJsonValue obj)
     {
 //        if(!obj) return;
@@ -557,6 +562,7 @@ namespace cIcCore{
         o["has_pr"] = this->_has_pr;
 
         o["abstract"] = this->abstract_;
+        o["meta"] = meta_;
 
         cIcSpice::Subckt * ckt = this->subckt();
         if(ckt){

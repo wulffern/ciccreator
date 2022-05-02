@@ -123,6 +123,8 @@ namespace cIcCore{
         Q_PROPERTY(int mirrorPatternString READ mirrorPatternString WRITE setMirrorPatternString)
         Q_PROPERTY(int polyWidthAdjust READ polyWidthAdjust WRITE setPolyWidthAdjust)
 
+
+
     public:
 
         PatternTile();
@@ -136,7 +138,7 @@ namespace cIcCore{
         Q_INVOKABLE void copyLayer(QJsonArray ar);
         Q_INVOKABLE void addEnclosure(QJsonArray ar);
         Q_INVOKABLE void addEnclosureByRectangle(QJsonArray ar);
-        Q_INVOKABLE void addEnclosuresByRectangle(QJsonArray ar);
+            Q_INVOKABLE void addEnclosuresByRectangle(QJsonArray ar);
 
         virtual QMap<QString,QVariant> initFillCoordinates();
         virtual void onFillCoordinate(QChar , QString , int , int , QMap<QString,QVariant> &){};

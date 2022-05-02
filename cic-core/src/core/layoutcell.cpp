@@ -85,9 +85,6 @@ namespace cIcCore{
         
     }
 
-    void LayoutCell::meta(QJsonObject obj){
-        meta_ = obj;
-    }
 
 
 
@@ -1135,7 +1132,7 @@ namespace cIcCore{
         o["useHalfHeight"] = this->useHalfHeight;
         o["boundaryIgnoreRouting"] = this->boundaryIgnoreRouting_;
         o["alternateGroup"] = this->alternateGroup_;
-        o["meta"] = meta_;
+
         return o;
     }
 
