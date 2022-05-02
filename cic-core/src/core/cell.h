@@ -43,7 +43,9 @@ namespace cIcCore{
         Q_PROPERTY(QString name READ name WRITE setName)
         Q_PROPERTY(bool physicalOnly READ isPhysicalOnly WRITE setPhysicalOnly)
         Q_INVOKABLE void moveTo(QJsonArray obj);
-        Q_INVOKABLE void abstract(QJsonValue obj);
+            Q_INVOKABLE void abstract(QJsonValue obj);
+
+
 
     public:
         Cell();
@@ -70,7 +72,9 @@ namespace cIcCore{
         virtual void moveTo(int ax, int ay);
 
         //! Center this cell, and all children on ax and ay
-        Q_INVOKABLE void moveCenter(int ax, int ay);
+                    Q_INVOKABLE void moveCenter(int ax, int ay);
+
+        Q_INVOKABLE void meta(QJsonObject obj);
 
         //! Center this cell, and all children on ax and ay
         Q_INVOKABLE void boundaryIgnoreRouting(QJsonValue obj);
@@ -223,7 +227,9 @@ namespace cIcCore{
 
         //! Children of this cell
         QList<Rect*> _children;
-        QMap<QString,QList<Rect*>> children_by_type;
+                    QMap<QString,QList<Rect*>> children_by_type;
+
+        QJsonObject meta_;
         
 
     protected:

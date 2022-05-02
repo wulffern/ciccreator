@@ -49,6 +49,8 @@ namespace cIcCore {
 
     }
 
+
+
     Rect PatternTile::calcBoundingRect(){
 
 

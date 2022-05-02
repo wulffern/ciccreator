@@ -62,7 +62,7 @@ namespace cIcCore{
                         Q_INVOKABLE void resetOrigin(QJsonValue obj);
 
                         //Set meta information on ports
-                        Q_INVOKABLE void meta(QJsonObject obj);
+
 
 
                         void addGuard(QString port, double gridMultiplier, QList<QString> layers);
@@ -114,7 +114,7 @@ namespace cIcCore{
                         QHash<QString,Graph*> nodeGraph_;
 
                         bool noPowerRoute_;
-                        QJsonObject meta_;
+
 
                         void addToNodeGraph(Instance * inst);
 
