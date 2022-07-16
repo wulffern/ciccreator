@@ -154,9 +154,7 @@ namespace cIcCore{
                     return false;
                 }
 
-
             }
-
 
         }
 
@@ -360,6 +358,7 @@ namespace cIcCore{
             void* vp = QMetaType::create(id);
 
             Cell * c  = static_cast<Cell*>(vp);
+
             c->setName(name);
             console->increaseIndent();
             console->commentStartClass(name);

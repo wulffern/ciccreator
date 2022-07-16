@@ -122,7 +122,8 @@ namespace cIcCore{
 
 
         bool readError;
-        bool ignoreSetYoffsetHalf;
+                    bool ignoreSetYoffsetHalf;
+                    bool metalUnderMetalRes;
         
 
     signals:

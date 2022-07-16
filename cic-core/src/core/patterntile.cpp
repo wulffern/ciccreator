@@ -42,6 +42,7 @@ namespace cIcCore {
         horizontalGrid_ = 0;
         verticalGridMultiplier_ = 1;
         horizontalGridMultiplier_ = 1;
+        metalUnderMetalRes_ = true;
 
 
         prev_rect_  = 0;
@@ -355,7 +356,6 @@ namespace cIcCore {
                     
                     
                     if(Pattern.contains(c)){
-                        
 
                         PatternData *p = Pattern[c];
                         if(p){
@@ -377,16 +377,29 @@ namespace cIcCore {
                     }
 
                     //Don't combine rectangles if it's a metal resistor
+
                     if(c != 'r' &&prev_rect_ && prev_rect_->abutsLeft(rect)){
                         prev_rect_->setRight(rect->x2());
                         delete(rect);
                         rect = prev_rect_;
                     }else if(!rect->empty() && !this->_children.contains(rect)){
+
+                        if(c == 'r'){
+                            //Some technologies don't want metal under metal resistor
+                            if(this->metalUnderMetalRes()){
+                                this->add(rect);
+                                rectangles_[layer][y][x] = rect;
+                                prev_rect_ = rect;
+                            }else{
+                            }
+                        }else{
                             this->add(rect);
                             rectangles_[layer][y][x] = rect;
+                            prev_rect_ = rect;
+                        }
+
                     }
-                    
-                    prev_rect_ = rect;
+
 
                     if(p){
                         p->set(rect);
