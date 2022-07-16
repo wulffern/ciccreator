@@ -84,7 +84,6 @@ namespace cIcCore{
                             prevrect = ra;
                             
                         }
-                        
                     }
                     xa += xstep;
                 }
@@ -122,6 +121,7 @@ namespace cIcCore{
         Q_PROPERTY(qreal xoffset READ xoffset WRITE setXoffset)
         Q_PROPERTY(int mirrorPatternString READ mirrorPatternString WRITE setMirrorPatternString)
         Q_PROPERTY(int polyWidthAdjust READ polyWidthAdjust WRITE setPolyWidthAdjust)
+        Q_PROPERTY(bool metalUnderMetalRes  READ metalUnderMetalRes WRITE setMetalUnderMetalRes)
 
 
 
@@ -152,7 +152,10 @@ namespace cIcCore{
         virtual Rect calcBoundingRect();
 
         qreal minPolyLength(){return minPolyLength_;}
-        qreal setMinPolyLength(qreal val){ minPolyLength_ = val*this->rules->gamma(); return minPolyLength_;  }
+            qreal setMinPolyLength(qreal val){ minPolyLength_ = val*this->rules->gamma(); return minPolyLength_;  }
+
+        bool metalUnderMetalRes(){return metalUnderMetalRes_;}
+        bool setMetalUnderMetalRes(bool val){ metalUnderMetalRes_ = val;  }
 
 		qreal verticalGrid(){return verticalGrid_;}
         qreal setVerticalGrid(qreal val){ verticalGrid_ = val; return verticalGrid_;  }
@@ -199,7 +202,8 @@ namespace cIcCore{
 		qreal horizontalGrid_;
 		qreal verticalGrid_;
         double horizontalGridMultiplier_;
-		double verticalGridMultiplier_;
+            double verticalGridMultiplier_;
+            bool metalUnderMetalRes_;
         int polyWidthAdjust_;
         int xmax_;
         int ymax_;

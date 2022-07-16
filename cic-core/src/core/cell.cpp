@@ -65,7 +65,7 @@ namespace cIcCore{
 
     }
 
-     void Cell::abstract(QJsonValue obj){
+    void Cell::abstract(QJsonValue obj){
         auto v = obj.toInt();
         if(v == 1)
             abstract_ = true;
@@ -573,9 +573,26 @@ namespace cIcCore{
 
         QJsonArray ar;
 
+        QMap<QString,bool> _printedRects;
+
         foreach(Rect * r, children()){
-            QJsonObject child = r->toJson();
-            ar.append(child);
+
+            //If it's a rectangle, then don't print duplicates
+            if(r->isRect()){
+                QString rid = r->toString();
+                if(_printedRects.contains(rid)){
+                    //Skip duplicate rectangles
+                }else{
+                    _printedRects[rid] = true;
+                    QJsonObject child = r->toJson();
+                    ar.append(child);
+                }
+            }else{
+                QJsonObject child = r->toJson();
+                ar.append(child);
+            }
+
+
         }
         o["children"] = ar;
         return o;

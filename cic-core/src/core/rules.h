@@ -33,7 +33,8 @@ namespace cIcCore{
 
     class Device{
     public:
-        QString name;
+                    QString name;
+                    QString devicetype;
         QStringList ports;
 
     };

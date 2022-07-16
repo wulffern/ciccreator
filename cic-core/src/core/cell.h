@@ -199,8 +199,9 @@ namespace cIcCore{
         void fromJson(QJsonObject o);
         QList<Rect*> getChildren(QString type);
         
-        void addEnclosingLayers(QList<QString> layers);
-        
+                    void addEnclosingLayers(QList<QString> layers);
+
+
 
     protected:
         QList<Rect*> routes_;
@@ -229,14 +230,16 @@ namespace cIcCore{
         QList<Rect*> _children;
                     QMap<QString,QList<Rect*>> children_by_type;
 
-        QJsonObject meta_;
+                    QJsonObject meta_;
+
         
 
     protected:
         QString instanceName_;
         bool boundaryIgnoreRouting_;
         bool _has_pr;
-        bool abstract_;
+                    bool abstract_;
+
 
     private:
         //! Cell name
