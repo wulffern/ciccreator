@@ -563,6 +563,7 @@ namespace cIcCore{
 
         o["abstract"] = this->abstract_;
         o["meta"] = meta_;
+        o["physicalOnly"] = this->_physicalOnly;
 
         cIcSpice::Subckt * ckt = this->subckt();
         if(ckt){

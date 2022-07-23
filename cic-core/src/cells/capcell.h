@@ -34,7 +34,7 @@ namespace cIcCells{
     public:
         virtual void place();
         virtual Rect calcBoundingRect();
-        void addContacts(QString name, QString node,int y,QList<int> array);
+        void addContacts(QString name, QString node,int y,QList<int> array, Rect* r);
         Rect* getAvssConnectRect(Rect* rect);
         
         

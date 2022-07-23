@@ -179,16 +179,16 @@ namespace cIcCells{
         
         
         
-        this->addContacts("XRES1A","C1A",y1a ,cint1a);
-        this->addContacts("XRES1B","C1B",y1b ,cint1b);
-        this->addContacts("XRES2","C2",y2,cint2);
-        this->addContacts("XRES4","C4",y4,cint4);
-        this->addContacts("XRES8","C8",y8,cint8);
-        this->addContacts("XRES16","C16",y16,cint16);
+        this->addContacts("XRES1A","C1A",y1a ,cint1a,c1a);
+        this->addContacts("XRES1B","C1B",y1b ,cint1b,c1b);
+        this->addContacts("XRES2","C2",y2,cint2,c2);
+        this->addContacts("XRES4","C4",y4,cint4,c4);
+        this->addContacts("XRES8","C8",y8,cint8,c8);
+        this->addContacts("XRES16","C16",y16,cint16,c16);
         this->add(rects);
     }
 
-    void CapCell::addContacts(QString name, QString node,int y,QList<int> array){
+    void CapCell::addContacts(QString name, QString node,int y,QList<int> array, Rect * cp){
 
         auto ms =  this->getRules()->get("M2","space");
         auto mw =  this->getRules()->get("M2","width");
@@ -197,6 +197,12 @@ namespace cIcCells{
         auto inst = this->getInstanceFromInstanceName(name);
         if(!inst){return;}
         inst->moveTo(ctres->width(),y);
+
+        //Move the metal1 rectangle so it starts at after the metal resistor. Not all
+        //technologies can overlap res and metal
+        cp->setLeft(inst->x2());
+
+
         foreach(int x,array) {
 
             auto ct = Cut::getInstance("M1","M4",1,2);
