@@ -346,6 +346,21 @@ namespace cIcCore{
 
     QJsonObject Rect::toJson(){
         QJsonObject o;
+
+        //Not all programs like negative width/height, so fix it
+        int tmp;
+        if(x2_ < x1_){
+            tmp = x2_;
+            x2_ = x1_;
+            x1_ = tmp;
+        }
+
+        if(y2_ < y1_){
+            tmp = y2_;
+            y2_ = y1_;
+            y1_ = tmp;
+        }
+
         o["class"] = "Rect";
         o["x1"] = x1_;
         o["y1"] = y1_;
