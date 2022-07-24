@@ -17,7 +17,7 @@
 ##   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ######################################################################
 
-VERSION=0.1.3
+VERSION=0.1.4
 VERSION_DATE=${VERSION} built on $(shell date)
 VERSION_HASH=${shell git describe --tags}
 
@@ -76,7 +76,6 @@ help:
 	@echo " make               Compile ciccreator"
 	@echo " make docker        Make a docker image, and compile ciccreator"
 	@echo " make run           Compile stuff inside docker"
-	@echo " make sim           Simulate circuits"
 	@echo " make esscirc       Compile SAR ADC from ESSCIRC paper"
 	@echo " make view3d         View SAR in GDS3D"
 
@@ -92,7 +91,6 @@ routes: lay
 
 esscirc: lay
 	cd lay; ${CIC} --gds ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
-	-./scripts/cics2aimspice  lay/${LIBNAME}.cic  lay/${LIBNAME}.spice
 
 GDS3D:
 	wget https://sourceforge.net/projects/gds3d/files/GDS3D%201.8/GDS3D_1.8.tar.bz2/download
@@ -119,10 +117,6 @@ gds: esscirc_gds routes_gds
 
 esscirc_gds:
 	cd lay; docker run --rm --workdir /lcic/lay -v `pwd`/../:/lcic -t ${CONT} sh -c  '/lcic/bin/cic --gds --spi /lcic/examples/SAR_ESSCIRC16_28N.json /lcic/examples/tech.json SAR_ESSCIRC16_28N'
-	./scripts/cics2aimspice  lay/${LIBNAME}.cic  lay/${LIBNAME}.spice
 
 routes_gds:
 	cd lay; docker run --rm --workdir /lcic/lay -v `pwd`/../:/lcic -t ${CONT} sh -c  '/lcic/bin/cic --gds --spi /lcic/examples/routes.json /lcic/examples/tech.json routes'
-
-sim:
-	cd sim; make sar plot_sar
