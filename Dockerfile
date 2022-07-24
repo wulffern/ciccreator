@@ -1,4 +1,4 @@
-FROM ubuntu:groovy
+FROM ubuntu
 
 RUN apt-get update -q && \
     DEBIAN_FRONTEND=noninteractive apt-get install -qy make git && \
