@@ -102,6 +102,7 @@ namespace cIcCore{
 
 
                         virtual void fromJson(QJsonObject obj);
+                        virtual Rect * cellFromJson(QJsonObject co);
                         virtual  QJsonObject  toJson();
 
                         void addPowerRoute(QString net,QString excludeInstances);

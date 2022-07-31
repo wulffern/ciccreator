@@ -187,6 +187,15 @@ namespace cIcCore{
     }
 
     Rect Instance::calcBoundingRect(){
+
+
+        //- Somehow the cell is not set, so keep the bounding box
+        if(this->_cell == 0){
+            qDebug() << "_cell in " << this->name() << " instance is null, that should not happen";
+
+            return this;
+        }
+
         Rect r = this->_cell->calcBoundingRect();
 
         if(this->angle() == "R90"){
@@ -209,6 +218,7 @@ namespace cIcCore{
             this->setLayer("PR");
             this->updateBoundingRect();
         }else{
+            qDebug() << "Could not find cell " << cell << " in " << this;
             this->_cell = new Cell();
             this->setName("");
             this->updateBoundingRect();
@@ -245,24 +255,36 @@ namespace cIcCore{
 
     void Instance::fromJson(QJsonObject o){
 
+
         angle_ = o["angle"].toString();
         xcell = o["xcell"].toInt();
         ycell = o["ycell"].toInt();
         instanceName_ = o["instanceName"].toString();
-        Cell::fromJson(o);
+
+        this->ckt_inst_ = new cIcSpice::SubcktInstance();
+        this->ckt_inst_->fromJson(o["subcktInstance"].toObject());
         this->setCell(o["cell"].toString());
+
+        //Do cell last. The _cell must be set before bounding rect can be calculated
+        Cell::fromJson(o);
+
     }
 
     QJsonObject Instance::toJson(){
         QJsonObject o = Cell::toJson();
         o["class"]  = "Instance";
         if(_cell){
-            o["cell"] = _cell->name();
+            o["cell"] = this->prefix_ + _cell->name();
         }
         o["angle"] = angle_;
         o["xcell"] = xcell;
         o["ycell"] = ycell;
         o["instanceName"] = instanceName_;
+
+        if(this->ckt_inst_){
+            o["subcktInstance"] = this->ckt_inst_->toJson();
+        }
+
 
         return o;
     }

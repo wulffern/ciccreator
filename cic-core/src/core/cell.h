@@ -23,6 +23,7 @@
 #include <QObject>
 #include "rect.h"
 #include "port.h"
+#include "text.h"
 #include "instanceport.h"
 #include <QPainterPath>
 #include "spice/subckt.h"
@@ -43,215 +44,218 @@ namespace cIcCore{
         Q_PROPERTY(QString name READ name WRITE setName)
         Q_PROPERTY(bool physicalOnly READ isPhysicalOnly WRITE setPhysicalOnly)
         Q_INVOKABLE void moveTo(QJsonArray obj);
-            Q_INVOKABLE void abstract(QJsonValue obj);
+        Q_INVOKABLE void abstract(QJsonValue obj);
 
 
 
-    public:
-        Cell();
-        Cell(const Cell&);
-        ~Cell();
+        public:
+            Cell();
+            Cell(const Cell&);
+            ~Cell();
 
-        //! Find the first rectangle in this cell that uses layer
-        Rect * getRect(QString layer);
+            //! Find the first rectangle in this cell that uses layer
+            Rect * getRect(QString layer);
 
-        //! Add a rectangle to the cell, hooks updated() of the child to updateBoundingRect
-        void add(Rect* rect);
-        void add(QList<Rect*> rects);
+            //! Add a rectangle to the cell, hooks updated() of the child to updateBoundingRect
+            void add(Rect* rect);
+            void add(QList<Rect*> rects);
 
-        //! Move this cell, and all children by dx and dy
-        virtual void translate(int dx, int dy);
+            //! Move this cell, and all children by dx and dy
+            virtual void translate(int dx, int dy);
 
-        //! Mirror this cell, and all children around ax
-        virtual void mirrorX(int ax);
+            //! Mirror this cell, and all children around ax
+            virtual void mirrorX(int ax);
 
-        //! Mirror this cell, and all children around ay
-        virtual void mirrorY(int ay);
+            //! Mirror this cell, and all children around ay
+            virtual void mirrorY(int ay);
 
-        //! Move this cell, and all children to ax and ay
-        virtual void moveTo(int ax, int ay);
+            //! Move this cell, and all children to ax and ay
+            virtual void moveTo(int ax, int ay);
 
-        //! Center this cell, and all children on ax and ay
-                    Q_INVOKABLE void moveCenter(int ax, int ay);
+            //! Center this cell, and all children on ax and ay
+            Q_INVOKABLE void moveCenter(int ax, int ay);
 
-        Q_INVOKABLE void meta(QJsonObject obj);
+            Q_INVOKABLE void meta(QJsonObject obj);
 
-        //! Center this cell, and all children on ax and ay
-        Q_INVOKABLE void boundaryIgnoreRouting(QJsonValue obj);
-        void setBoundaryIgnoreRouting(bool bir);
-        bool boundaryIgnoreRouting();
+            //! Center this cell, and all children on ax and ay
+            Q_INVOKABLE void boundaryIgnoreRouting(QJsonValue obj);
+            void setBoundaryIgnoreRouting(bool bir);
+            bool boundaryIgnoreRouting();
 
-        //! Shortcut for adding ports
-        void addPort(QString name, Rect* r);
-        
-        
-        //! Mirror this cell, and all children around horizontal center point (basically flip horizontal)
-        Q_INVOKABLE void mirrorCenterX();
-        Q_INVOKABLE void mirrorCenterY();
+            //! Shortcut for adding ports
+            void addPort(QString name, Rect* r);
 
-        //! Calculate the extent of this cell. Should be overriden by children
-        virtual Rect calcBoundingRect();
-        static Rect calcBoundingRect(QList<Rect*> children);
-        static Rect calcBoundingRect(QList<Rect*> children,bool ignoreBoundaryRouting);
 
-        static bool isEmpty(Cell *c);
-        
-        
-        //! Convert cell to a human readable format, useful for debug
-        QString toString();
+            //! Mirror this cell, and all children around horizontal center point (basically flip horizontal)
+            Q_INVOKABLE void mirrorCenterX();
+            Q_INVOKABLE void mirrorCenterY();
 
-        //! Mark as a physcial only cell
-        bool isPhysicalOnly(){return _physicalOnly;}
-        bool setPhysicalOnly(bool val){ _physicalOnly = val;
-            return _physicalOnly;
-        }
+            //! Calculate the extent of this cell. Should be overriden by children
+            virtual Rect calcBoundingRect();
+            static Rect calcBoundingRect(QList<Rect*> children);
+            static Rect calcBoundingRect(QList<Rect*> children,bool ignoreBoundaryRouting);
 
-        
-        //! Name of this cell
-        QString name(){return _name;}
-        QString setName(QString val){ _name = val;
-            if(_subckt){
-                _subckt->setName(val);
+            static bool isEmpty(Cell *c);
+
+
+            //! Convert cell to a human readable format, useful for debug
+            QString toString();
+
+            //! Mark as a physcial only cell
+            bool isPhysicalOnly(){return _physicalOnly;}
+            bool setPhysicalOnly(bool val){ _physicalOnly = val;
+                return _physicalOnly;
             }
-            return _name;}
-
-        //! Get the port linked to net name (name)
-        Port * getPort(QString name);
-        Port * getCellPort(QString name);
-
-        //! Get all ports on this cell
-        QList<Port *>  ports();
-        QMap<QString,QList<Port*>> allports();
-        QList<QString> allPortNames();
-
-        //! Update rectangle of port, if port does not exist a new one
-        //! is created
-        Port * updatePort(QString name,Rect* r);
-
-        //! Spice subcircuit object
-        cIcSpice::Subckt * subckt(){return _subckt;}
-        cIcSpice::Subckt * setSubckt(cIcSpice::Subckt * val){ _subckt = val; return _subckt;}
 
 
-        //! Get list of all children
-        QList<Rect*> children(){return _children;}
+            //! Name of this cell
+            QString name(){return _name;}
+            QString setName(QString val){ _name = val;
+                if(_subckt){
+                    _subckt->setName(val);
+                }
+                return _name;}
 
-        bool isASpicePort(QString name);
-        
+            //! Get the port linked to net name (name)
+            Port * getPort(QString name);
+            Port * getCellPort(QString name);
 
-        //! Place children
-        virtual void place();
+            //! Get all ports on this cell
+            QList<Port *>  ports();
+            QMap<QString,QList<Port*>> allports();
+            QList<QString> allPortNames();
 
-        //! Route children
-        virtual void route();
+            //! Update rectangle of port, if port does not exist a new one
+            //! is created
+            Port * updatePort(QString name,Rect* r);
 
-        //! Paint children, useful with a method after route
-        virtual void paint();
+            //! Spice subcircuit object
+            cIcSpice::Subckt * subckt(){return _subckt;}
+            cIcSpice::Subckt * setSubckt(cIcSpice::Subckt * val){ _subckt = val; return _subckt;}
 
-        //! Automatically add remaing ports
-        virtual void addAllPorts();
 
-        //! Check if this cell contains a cell with name cell
-        static bool hasCell(QString cell){
-            return Cell::_allcells.contains(cell);
-        }
+            //! Get list of all children
+            QList<Rect*> children(){return _children;}
 
-        //! Get a named cell, returns empty cell if it does not exist, so you should check
-        //! that the cell exists in this cell first
-        static Cell* getCell(QString cell){
-            if(Cell::_allcells.contains(cell)){
-                return Cell::_allcells[cell];
-            }else{
-                Cell * c = new Cell();
+            bool isASpicePort(QString name);
+
+
+            //! Place children
+            virtual void place();
+
+            //! Route children
+            virtual void route();
+
+            //! Paint children, useful with a method after route
+            virtual void paint();
+
+            //! Automatically add remaing ports
+            virtual void addAllPorts();
+
+            //! Check if this cell contains a cell with name cell
+            static bool hasCell(QString cell){
+                return Cell::_allcells.contains(cell);
+            }
+
+            //! Get a named cell, returns empty cell if it does not exist, so you should check
+            //! that the cell exists in this cell first
+            static Cell* getCell(QString cell){
+                if(Cell::_allcells.contains(cell)){
+                    return Cell::_allcells[cell];
+                }else{
+                    Cell * c = new Cell();
+                    return c;
+                }
+            }
+
+            //! Get a list of all cells in this design
+            static QList<Cell*> getAllCells(){
+                QList<Cell*> cells;
+                foreach(Cell * cell,_allcells){
+                    cells.append(cell);
+                }
+                return cells;
+            }
+
+            //! Add a cell to the list of all cells
+            static Cell* addCell(QString cell,Cell * c){
+                Cell::_allcells[cell] = c;
                 return c;
             }
-        }
 
-        //! Get a list of all cells in this design
-        static QList<Cell*> getAllCells(){
-            QList<Cell*> cells;
-            foreach(Cell * cell,_allcells){
-                cells.append(cell);
+            //! Add a cell, and use the cell->name() as key
+            static Cell* addCell(Cell *c){
+                Cell::_allcells[c->name()] = c;
+                return c;
             }
-            return cells;
-        }
-
-        //! Add a cell to the list of all cells
-        static Cell* addCell(QString cell,Cell * c){
-            Cell::_allcells[cell] = c;
-            return c;
-        }
-
-        //! Add a cell, and use the cell->name() as key
-        static Cell* addCell(Cell *c){
-            Cell::_allcells[c->name()] = c;
-            return c;
-        }
-
-  
-
-        //! Find all rectangles by regular expression
-        virtual QList<Rect *> findRectanglesByRegex(QString regex,QString layer);
-        virtual void findRectangles(QList<Rect*> &rects,QString name,QString layer);
-        virtual QList<Rect *> findAllRectangles(QString regex, QString layer);
-
-        QJsonObject toJson();
-        void fromJson(QJsonObject o);
-        QList<Rect*> getChildren(QString type);
-        
-                    void addEnclosingLayers(QList<QString> layers);
 
 
 
-    protected:
-        QList<Rect*> routes_;
-        //! List of all cells
-        static QMap<QString,Cell*> _allcells;
+            //! Find all rectangles by regular expression
+            virtual QList<Rect *> findRectanglesByRegex(QString regex,QString layer);
+            virtual void findRectangles(QList<Rect*> &rects,QString name,QString layer);
+            virtual QList<Rect *> findAllRectangles(QString regex, QString layer);
 
-        //! Ports in this cell
-        QMap<QString,Port*> ports_;
+            virtual QJsonObject toJson();
+            virtual void fromJson(QJsonObject o);
+            virtual Rect * cellFromJson(QJsonObject co);
+            QList<Rect*> getChildren(QString type);
 
-        QList<QString> allPortNames_;
-        
-        QMap<QString,QList<Port*>> allports_;
-
-        //! Named Rects in this cell
-        QMap<QString,Rect*> named_rects_;
-
-        //! SPICE subcircuit related to this cell
-        cIcSpice::Subckt * _subckt;
-
-        //! Find bottom left rectangle in the cell
-        Rect* getBottomLeftRect();
-        //! Find top left rectangle in the cell
-        Rect* getTopLeftRect();
-
-        //! Children of this cell
-        QList<Rect*> _children;
-                    QMap<QString,QList<Rect*>> children_by_type;
-
-                    QJsonObject meta_;
-
-        
-
-    protected:
-        QString instanceName_;
-        bool boundaryIgnoreRouting_;
-        bool _has_pr;
-                    bool abstract_;
-
-
-    private:
-        //! Cell name
-        QString _name;
-        bool _physicalOnly;
+            void addEnclosingLayers(QList<QString> layers);
 
 
 
-    signals:
+        protected:
+            QList<Rect*> routes_;
+            //! List of all cells
+            static QMap<QString,Cell*> _allcells;
 
-    public slots:
-        void updateBoundingRect();
+            //! Ports in this cell
+            QMap<QString,Port*> ports_;
+
+            QList<QString> allPortNames_;
+
+            QMap<QString,QList<Port*>> allports_;
+
+            //! Named Rects in this cell
+            QMap<QString,Rect*> named_rects_;
+
+            //! SPICE subcircuit related to this cell
+            cIcSpice::Subckt * _subckt;
+
+            //! Find bottom left rectangle in the cell
+            Rect* getBottomLeftRect();
+            //! Find top left rectangle in the cell
+            Rect* getTopLeftRect();
+
+            //! Children of this cell
+            QList<Rect*> _children;
+            QMap<QString,QList<Rect*>> children_by_type;
+
+            QJsonObject meta_;
+
+
+
+
+        protected:
+            QString instanceName_;
+            bool boundaryIgnoreRouting_;
+            bool _has_pr;
+            bool abstract_;
+
+
+        private:
+            //! Cell name
+            QString _name;
+            bool _physicalOnly;
+
+
+
+
+        signals:
+
+        public slots:
+            void updateBoundingRect();
 
     };
 

@@ -48,6 +48,7 @@ CIC= ../bin/${OSBIN}/cic
 endif
 
 
+
 .PHONY: doxygen coverage sim
 
 all: compile
@@ -58,7 +59,7 @@ lay:
 compile:
 	echo "#define CICVERSION \""${VERSION_DATE}"\""  > cic/src/version.h
 	echo "#define CICHASH \""${VERSION_HASH}"\""  >> cic/src/version.h
-	qmake -o qmake.make ciccreator.pro
+	qmake -o qmake.make  ciccreator.pro
 	${MAKE} -f qmake.make
 	cp build/${CIC} build/cic.${OSBIN}_${VERSION}
 

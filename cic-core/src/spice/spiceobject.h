@@ -30,71 +30,73 @@
 
 namespace cIcSpice{
 
-    class SpiceObject: public QObject
-    {
+        class SpiceObject: public QObject
+        {
 
-        Q_OBJECT
-        Q_PROPERTY(QString name READ name WRITE setName)
-        Q_PROPERTY(QStringList spiceStr READ spiceStr WRITE setSpiceStr)
-        Q_PROPERTY(QStringList nodes READ nodes WRITE setNodes)
-        Q_PROPERTY(int lineNumber READ lineNumber WRITE setLineNumber)
+                Q_OBJECT
+                Q_PROPERTY(QString name READ name WRITE setName)
+                Q_PROPERTY(QStringList spiceStr READ spiceStr WRITE setSpiceStr)
+                Q_PROPERTY(QStringList nodes READ nodes WRITE setNodes)
+                Q_PROPERTY(int lineNumber READ lineNumber WRITE setLineNumber)
 
-    public:
-        SpiceObject();
-        SpiceObject(const SpiceObject&);
-        ~SpiceObject();
+                public:
+                        SpiceObject();
+                        SpiceObject(const SpiceObject&);
+                        ~SpiceObject();
 
-        QString name();
+                        QString name();
 
-        virtual QJsonObject toJson();
-        void fromJson(QJsonObject o);
-        
-        virtual QString setName(QString val);
+                        virtual QJsonObject toJson();
+                        void fromJson(QJsonObject o);
 
-        int lineNumber();
-        int setLineNumber(int val);
+                        virtual QString setName(QString val);
 
-        QList<QString> spiceStr();      QList<QString> setSpiceStr(QList<QString>  val);
+                        int lineNumber();
+                        int setLineNumber(int val);
 
-        QStringList nodes();        QStringList setNodes(QStringList val);
+                        QList<QString> spiceStr();      QList<QString> setSpiceStr(QList<QString>  val);
 
-        QVariantMap properties();
+                        QStringList nodes();        QStringList setNodes(QStringList val);
 
-        QString spiceType();
-        void setSpiceType(QString type);
-        
+                        QVariantMap properties();
 
-        QString deviceName();       void setDeviceName(QString name);
-
-        virtual QString toSpice( QString instance, QStringList nodes);
+                        QString spiceType();
+                        void setSpiceType(QString type);
 
 
-        virtual        void setProperty(QString key, int val);
-        virtual void setProperty(QString key, QString val);
-        virtual void setProperty(QString key, double val);
-        virtual bool hasProperty(QString key);
-        //QVariant getProperty(QString key);
-         virtual QString getPropertyString(QString key);
-        
-        
-    protected:
-        QString spiceType_;
-        QString deviceName_;
-        QList<QString> _spice_str;
-        QVariantMap _properties;
-        QStringList _nodes;
+                        QString deviceName();       void setDeviceName(QString name);
 
-    private:
-
-        QString _name;
-
-        QList<SpiceObject*> _children;
-        int _line_number;
+                        virtual QString toSpice( QString instance, QStringList nodes);
 
 
+                        virtual        void setProperty(QString key, int val);
+                        virtual void setProperty(QString key, QString val);
+                        virtual void setProperty(QString key, double val);
+                        virtual bool hasProperty(QString key);
+                        //QVariant getProperty(QString key);
+                        virtual QString getPropertyString(QString key);
+                        void setPrefix(QString prefix);
 
 
-    };
+                protected:
+                        QString spiceType_;
+                        QString deviceName_;
+                        QList<QString> _spice_str;
+                        QVariantMap _properties;
+                        QStringList _nodes;
+                        QString prefix_;
+
+                private:
+
+                        QString _name;
+
+                        QList<SpiceObject*> _children;
+                        int _line_number;
+
+
+
+
+        };
 
 
 }

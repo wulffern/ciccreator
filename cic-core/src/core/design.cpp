@@ -24,6 +24,9 @@ namespace cIcCore{
     Design::Design(){
         //Need to register celltypes for reflection later on
         qRegisterMetaType<cIcCore::Cell>("cIcCore::Cell");
+        qRegisterMetaType<cIcCore::Rect>("cIcCore::Rect");
+        qRegisterMetaType<cIcCore::Text>("cIcCore::Text");
+        qRegisterMetaType<cIcCore::Port>("cIcCore::Port");
         qRegisterMetaType<cIcCore::LayoutCell>("cIcCore::LayoutCell");
         qRegisterMetaType<cIcCore::PatternTile>("cIcCore::PatternTile");
         qRegisterMetaType<cIcCore::PatternTransistor>("cIcCore::PatternTransistor");
@@ -39,6 +42,7 @@ namespace cIcCore{
         qRegisterMetaType<cIcCells::CapCellV2>("cIcCells::CapCellV2");
 
 
+
         //Translate from Perl names to c++ names
         cellTranslator["Gds::GdsPatternTransistor"] = "cIcCore::PatternTransistor";
         cellTranslator["Gds::GdsPatternHighResistor"] = "cIcCore::PatternHighResistor";
@@ -47,6 +51,7 @@ namespace cIcCore{
         cellTranslator["Gds::GdsPatternCapacitorGnd"] = "cIcCore::PatternCapacitor";
         cellTranslator["cIcCore::PatternCapacitorGnd"] = "cIcCore::PatternCapacitor";
         cellTranslator["Layout::LayoutDigitalCell"] = "cIcCore::LayoutCell";
+        cellTranslator["cIcCore::LayoutCell"] = "cIcCore::LayoutCell";
         cellTranslator["Layout::LayoutRotateCell"] = "cIcCore::LayoutRotateCell";
         cellTranslator["Layout::LayoutSARCDAC"] = "cIcCells::SAR";
         cellTranslator["Layout::LayoutCDACSmall"] = "cIcCells::CDAC";
@@ -56,6 +61,9 @@ namespace cIcCore{
         readError = false;
         ignoreSetYoffsetHalf = false;
 
+    }
+    void Design::setPrefix(QString prefix){
+        prefix_ = prefix;
     }
 
     bool fexists(const char *filename)
@@ -96,6 +104,9 @@ namespace cIcCore{
             if(opt.contains("ignoreSetYoffsetHalf")){
                 ignoreSetYoffsetHalf = opt["ignoreSetYoffsetHalf"].toBool();
             }
+             if(opt.contains("prefix")){
+                this->prefix_ = opt["prefix"].toString();
+            }
         }
 
 
@@ -118,6 +129,31 @@ namespace cIcCore{
             }
 
         }
+
+        //Read libraries
+        QJsonValue library = obj["library"];
+        if(library.isArray()){
+            QJsonArray libraryArray  = library.toArray();
+            foreach (const QJsonValue & value, libraryArray) {
+                QString libfile = value.toString();
+
+                bool fileNotFound = true;
+
+                if(fexists(libfile.toStdString().c_str())){
+                    console->comment("Reading library '" + libfile + "'",ConsoleOutput::green);
+                    this->readJsonFile(libfile);
+                     fileNotFound = false;
+                }
+
+                if(fileNotFound){
+                    console->error("Could not find file '" + libfile + "'");
+                    return false;
+                }
+
+            }
+
+        }
+
 
 
         //Read includes
@@ -187,6 +223,7 @@ namespace cIcCore{
             //Import all cuts, and put them on top
             foreach(Cut* cut,Cut::getCuts()){
                 Cell::addCell(cut);
+
                 this->add(cut);
                 _cell_names.insert(0,cut->name());
             }
@@ -322,7 +359,8 @@ namespace cIcCore{
         if(cellTranslator.contains(cl)){
             cl = cellTranslator[cl];
         }else{
-            cerr << "Error(design.cpp): Unknown class " << cl.toStdString() << " for " << name.toStdString() <<  "\n";
+            //TODO: Not correct that it's an unknown class
+            //cerr << "Error(design.cpp): Unknown class " << cl.toStdString() << " for " << name.toStdString() <<  "\n";
         }
 
         //- Set default class name
@@ -618,20 +656,40 @@ namespace cIcCore{
     void Design::fromJson(QJsonObject o){
 
         QJsonArray ar =  o["cells"].toArray();
+        cIcSpice::Subckt* ckt = 0;
         foreach(QJsonValue v,ar){
+            ckt = 0;
             QJsonObject o = v.toObject();
             QString cl = o["class"].toString();
             Cell *c;
-            if(cl.contains(QRegularExpression("Don't have special case yet"))){
-            }else{
-                c = new LayoutCell();
+
+
+            //Make the object, let's see how that works in Qt
+            int id = QMetaType::type(cl.toUtf8().data());
+            if(id != 0){
+                void* vp = QMetaType::create(id);
+                 c  = static_cast<Cell*>(vp);
+
             }
+            //if(cl.contains(QRegularExpression("Don't have special case yet"))){
+            //}else{
+            //    c = new LayoutCell();
+            //}
 
             if(c){
+
                 c->fromJson(o);
                 this->add(c);
                 Cell::addCell(c);
                 _cell_names.append(c->name());
+                ckt = c->subckt();
+                if(ckt){
+                    ckt->addSubckt();
+                }
+                c->updateBoundingRect();
+
+            }else{
+                console->comment("Unknown cell " + cl,ConsoleOutput::red);
             }
         }
 
@@ -647,6 +705,7 @@ namespace cIcCore{
 
         for(int i=0;i<_cell_names.count();i++){
             Cell * c = Cell::getCell(_cell_names[i]);
+            c->setPrefix(this->prefix_);
             if(c){
                 QJsonObject o = c->toJson();
                 ar.append(o);
@@ -740,7 +799,7 @@ namespace cIcCore{
         file.open(QIODevice::WriteOnly | QIODevice::Text);
         QJsonObject o = this->toJson();
         o["info"] = info;
-        //qDebug() << o["info"] ;
+
         QJsonDocument d(o);
         file.write(d.toJson());
         file.close();

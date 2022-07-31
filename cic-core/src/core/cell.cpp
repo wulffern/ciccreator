@@ -46,6 +46,7 @@ namespace cIcCore{
     }
 
 
+
     void Cell::boundaryIgnoreRouting(QJsonValue obj)
     {
 //        if(!obj) return;
@@ -255,7 +256,7 @@ namespace cIcCore{
     Port * Cell::updatePort(QString name,Rect* r)
     {
 
-        Port* p_ptr;
+        Port* p_ptr = 0;
         if(ports_.contains(name)){
             p_ptr = ports_[name];
             p_ptr->spicePort = this->isASpicePort(name);
@@ -324,6 +325,7 @@ namespace cIcCore{
             children_by_type[type].append(child);
 
             if(child->isPort()){
+
                 Port* p = (Port*) child;
                 //Remove old port
 //                if(allports_.contains(p->name())){
@@ -332,17 +334,25 @@ namespace cIcCore{
                 ports_[p->name()] = p;
                 allPortNames_.append(p->name());
                 allports_[p->name()].append(p);
+
             }
 
             if(child->isRoute()){
+
                 routes_.append(child);
             }
+
             child->parent(this);
+
             this->_children.append(child);
+
             connect(child,SIGNAL(updated()),this, SLOT(updateBoundingRect()));
+
         }
 
+
         this->updateBoundingRect();
+
     }
 
     void Cell::translate(int dx, int dy) {
@@ -432,6 +442,7 @@ namespace cIcCore{
     // Bounding rectangle functions
     //-------------------------------------------------------------
     void Cell::updateBoundingRect(){
+
         Rect r = this->calcBoundingRect();
         this->setRect(r);
     }
@@ -442,6 +453,9 @@ namespace cIcCore{
 
 
     Rect Cell::calcBoundingRect(QList<Rect*> children,bool ignoreBoundaryRouting){
+
+
+        
         int x1  = std::numeric_limits<int>::max();
         int y1  = std::numeric_limits<int>::max();
         int x2  = -std::numeric_limits<int>::max();
@@ -453,8 +467,6 @@ namespace cIcCore{
         foreach(Rect* cr, children) {
 
             if(ignoreBoundaryRouting && (!cr->isInstance() || cr->isCut())) continue;
-
-
 
 
 
@@ -489,7 +501,6 @@ namespace cIcCore{
     }
 
     Rect Cell::calcBoundingRect(){
-
         return this->calcBoundingRect(this->children(),this->boundaryIgnoreRouting());
     }
 
@@ -551,22 +562,81 @@ namespace cIcCore{
         Rect::fromJson(o);
         this->setName(o["name"].toString());
         _has_pr = o["has_pr"].toBool();
-        //QJsonArray ar = o["children"].toArray();
+        this->boundaryIgnoreRouting_ = o["boundaryIgnoreRouting"].toBool();
+        //this->instanceName_ = o["instanceName"].toString();
+        this->abstract_ = o["abstract"].toBool();
+        this->_physicalOnly = o["physicalOnly"].toBool();
 
+        if(!o.contains("children")) return;
+        QJsonArray car = o["children"].toArray();
+
+        if(o.contains("ckt")){
+            cIcSpice::Subckt * subckt = new cIcSpice::Subckt();
+            subckt->fromJson(o["ckt"].toObject());
+            _subckt = subckt;
+        }
+
+        foreach(QJsonValue child,car){
+            QJsonObject co = child.toObject();
+
+            auto c = cellFromJson(co);
+            if(c == 0){
+                qDebug() << this << "Unknown cell " << co["name"] << co["class"];
+            }else{
+                this->add(c);
+            }
+
+
+        }
     }
+
+    Rect * Cell::cellFromJson(QJsonObject co){
+
+        QString cl = co["class"].toString();
+
+        if(cl == "Rect"){
+                Rect * r = new Rect();
+                r->fromJson(co);
+                return r;
+            }else if(cl == "Text"){
+                Text * t = new Text();
+                t->fromJson(co);
+                return t;
+            }else if(cl == "Port"){
+                Port * p = new Port();
+                p->fromJson(co);
+                return p;
+            }else if(cl == "Cell" || cl== "cIcCore::Route" || cl == "cIcCore::RouteRing" || cl == "cIcCore::Guard" || cl == "cIcCore::Cell"){
+                Cell * l = new Cell();
+                l->fromJson(co);
+                return l;
+        }
+        return 0;
+    }
+
 
     QJsonObject Cell::toJson(){
         QJsonObject o = Rect::toJson();
         o["class"] =  this->metaObject()->className();
-        o["name"] = this->name();
+        if(this->isText() or this->isPort() or this->isRoute()  ){
+            o["name"] = this->name();
+        }else{
+            o["name"] = this->prefix_ + this->name();
+        }
+
         o["has_pr"] = this->_has_pr;
 
         o["abstract"] = this->abstract_;
         o["meta"] = meta_;
         o["physicalOnly"] = this->_physicalOnly;
+        //o["instanceName"] = this->instanceName_;
+        o["boundaryIgnoreRouting"] = this->boundaryIgnoreRouting_;
+
 
         cIcSpice::Subckt * ckt = this->subckt();
+
         if(ckt){
+            ckt->setPrefix(this->prefix_);
             QJsonObject ockt = ckt->toJson();
             ockt["class"] = this->metaObject()->className();
             o["ckt"] = ockt;
@@ -589,6 +659,7 @@ namespace cIcCore{
                     ar.append(child);
                 }
             }else{
+                r->setPrefix(this->prefix_);
                 QJsonObject child = r->toJson();
                 ar.append(child);
             }

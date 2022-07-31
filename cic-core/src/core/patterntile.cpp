@@ -60,6 +60,8 @@ namespace cIcCore {
         int x2  = ((float)xmax_ + (float)widthoffset_)*(float)xspace_;
         int y2  = ((float)ymax_ + (float)heightoffset_)*(float)yspace_;
 
+        //qDebug() << "Bounding pattern" << x1 << y1 << x2 << y2;
+
         Rect r;
         r.setPoint1(x1,y1);
         r.setPoint2(x2,y2);
@@ -719,6 +721,40 @@ namespace cIcCore {
 
     void PatternTile::onPaintEnd()
     {
+
+    }
+
+    QJsonObject PatternTile::toJson(){
+        QJsonObject o = Cell::toJson();
+
+
+        o["xmax"]  = xmax_;
+        o["ymax"] = ymax_;
+        o["yoffset"] = yoffset_;
+        o["xspace"] = xspace_;
+        o["yspace"] = yspace_;
+        //o["minPolyLength"] = minPolyLength_;
+        o["widthoffset"] = widthoffset_;
+        o["heightoffset"] = heightoffset_;
+        //o["mirrorPatternString"] = mirrorPatternString_;
+        //o["polyWidthAdjust"] = polyWidthAdjust_;
+        //o["verticalGrid"] = verticalGrid_;
+        //o["verticalGridMultiplier"] =
+
+        return o;
+    }
+
+    void PatternTile::fromJson(QJsonObject o){
+        Cell::fromJson(o);
+
+        xmax_ = o["xmax"].toInt();
+        ymax_ = o["ymax"].toInt();
+        yoffset_ = o["yoffset"].toDouble();
+        xoffset_ = o["xoffset"].toDouble();
+        widthoffset_ = o["widthoffset"].toDouble();
+        heightoffset_ = o["heightoffset"].toDouble();
+        xspace_ = o["xspace"].toInt();
+        yspace_ = o["yspace"].toInt();
 
     }
 

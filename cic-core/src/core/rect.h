@@ -172,10 +172,12 @@ namespace cIcCore{
 
         virtual QJsonObject toJson();
         virtual void fromJson(QJsonObject o);
+                        void setPrefix(QString prefix);
 
 
     protected:
         Rules* rules;
+            QString prefix_;
 
     private:
         QString _layer;

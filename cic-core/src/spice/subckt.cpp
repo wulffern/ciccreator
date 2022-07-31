@@ -38,6 +38,8 @@ namespace cIcSpice{
 
     }
 
+
+
     Subckt* Subckt::getInstanceSubckt(SubcktInstance* inst){
         Subckt * ckt = NULL;
         if(_allsubckt.contains(inst->subcktName())){
@@ -60,17 +62,22 @@ namespace cIcSpice{
         }
         QJsonArray dev = o["devices"].toArray();
         foreach(auto d, dev){
-
+            auto od = d.toObject();
             //TODO: Parse devices
+            if(od["class"] == "cIcSpice::Mosfet"){
+                Mosfet * m = new Mosfet();
+                m->fromJson(od);
+                this->add(m);
+            }else{
+                qDebug() << "Unknown device class " << o["class"];
+            }
         }
 
         QJsonArray prop = o["properties"].toArray();
         foreach(auto p, prop){
 
-
+            //TODO parse properties
         }
-
-        
 
     }
     
@@ -80,12 +87,14 @@ namespace cIcSpice{
         QJsonObject o = SpiceObject::toJson();
         QJsonArray ar;
         foreach(SubcktInstance* i, _instances){
+            i->setPrefix(this->prefix_);
             QJsonObject oi = i->toJson();
             ar.append(oi);
         }
 
         QJsonArray ar1;        
         foreach(SpiceDevice* i, _devices){
+            i->setPrefix(this->prefix_);
             QJsonObject oi = i->toJson();
             ar1.append(oi);
         }
@@ -93,7 +102,7 @@ namespace cIcSpice{
         
         o.remove("deviceName");            
             
-        o["name"] = name();
+        o["name"] = this->prefix_ + name();
         o["instances"] = ar;
         o["devices"] = ar1;
         return o;

@@ -128,4 +128,13 @@ namespace cIcCore{
             mos->setProperty("sourceWidth",this->rules->toMicron(this->yspace_));
         }
     }
+
+    QJsonObject PatternTransistor::toJson(){
+        QJsonObject o = PatternTile::toJson();
+        return o;
+    }
+
+    void PatternTransistor::fromJson(QJsonObject o){
+        PatternTile::fromJson(o);
+    }
 }

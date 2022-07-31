@@ -1065,43 +1065,38 @@ namespace cIcCore{
 
     void LayoutCell::fromJson(QJsonObject o){
         Cell::fromJson(o);
-        QJsonArray car = o["children"].toArray();
 
-        if(o.contains("ckt")){
-            cIcSpice::Subckt * subckt = new cIcSpice::Subckt();
-            subckt->fromJson(o["ckt"].toObject());
-            _subckt = subckt;
-        }
-        
-        foreach(QJsonValue child,car){
-            QJsonObject co = child.toObject();
-            QString cl = co["class"].toString();
-            if(cl == "Rect"){
-                Rect * r = new Rect();
-                r->fromJson(co);
-                this->add(r);
-            }else if(cl == "Text"){
-                Text * t = new Text();
-                t->fromJson(co);
-                this->add(t);
-            }else if(cl == "Port"){
-                Port * p = new Port();
-                p->fromJson(co);
-                this->add(p);
-            }else if(cl == "Instance"){
-                Instance * i = new Instance();
-                i->fromJson(co);
-                this->add(i);
-            }else if(cl == "Cell" || cl== "cIcCore::Route" || cl == "cIcCore::RouteRing" || cl == "cIcCore::Guard" || cl == "cIcCore::Cell"){
-                LayoutCell * l = new LayoutCell();
-                l->fromJson(co);
-                this->add(l);
-            }else{
-                qDebug() << "Error(laoyutcell.cpp): Unknown class " << cl ;
-            }
-        }
         this->updateBoundingRect();
 
+
+        this->useHalfHeight = o["useHalfHeight"].toBool();
+        this->alternateGroup_ = o["alternateGroup"].toBool();
+        this->noPowerRoute_ = o["noPowerRoute"].toBool();
+    }
+
+    Rect * LayoutCell::cellFromJson(QJsonObject co){
+
+        auto c = Cell::cellFromJson(co);
+
+        //qDebug() << this << c;
+
+        if(c == 0){
+            QString cl = co["class"].toString();
+            if(cl == "Instance"){
+                Instance * i = new Instance();
+                i->fromJson(co);
+                this->addToNodeGraph(i);
+                return i;
+            }else if(cl== "cIcCore::LayoutCell"){
+                LayoutCell * l = new LayoutCell();
+                l->fromJson(co);
+                return l;
+            }else{
+                return 0;
+            }
+        }
+
+        return c;
     }
 
 
@@ -1130,8 +1125,8 @@ namespace cIcCore{
      QJsonObject LayoutCell::toJson(){
         QJsonObject o = Cell::toJson();
         o["useHalfHeight"] = this->useHalfHeight;
-        o["boundaryIgnoreRouting"] = this->boundaryIgnoreRouting_;
         o["alternateGroup"] = this->alternateGroup_;
+        o["noPowerRoute"] = this->noPowerRoute_;
 
         return o;
     }
