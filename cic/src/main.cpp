@@ -37,6 +37,8 @@ int main(int argc, char *argv[])
     {
 
         QStringList includePaths;
+        QStringList libPaths;
+        QString prefix = "";
 
         QStringList arguments;
 
@@ -46,6 +48,12 @@ int main(int argc, char *argv[])
 
             if(arg == "--I" && (i+1)< argc){
                 includePaths.append(argv[i+1]);
+                i  = i+1;
+            }else if(arg == "--L" && (i+1)< argc){
+                libPaths.append(argv[i+1]);
+                i  = i+1;
+            }else if(arg == "--prefix" && (i+1)< argc){
+                prefix = argv[i+1];
                 i  = i+1;
             }else if(arg == "--nogds"){
                 gds = false;
@@ -57,6 +65,7 @@ int main(int argc, char *argv[])
                 arguments.append(arg);
             }
         }
+
 
 
 
@@ -75,6 +84,8 @@ int main(int argc, char *argv[])
             info["--gds"] = gds;
             info["--spi"] = spice;
             info["arguments"] = arguments.join(" ");
+            info["libpaths"] = libPaths.join(" ");
+            info["prefix"] = prefix;
 
 
             QString library ="" ;
@@ -98,6 +109,8 @@ int main(int argc, char *argv[])
 
             //Load design, this is where the magic happens
             cIcCore::Design * d = new cIcCore::Design();
+
+            d->setPrefix(prefix);
 
             foreach(QString path,includePaths){
                 d->addIncludePath(path);

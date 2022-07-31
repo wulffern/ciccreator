@@ -63,7 +63,7 @@ namespace cIcCore{
         Point* getCellPoint();
         
         virtual QJsonObject toJson();
-        void fromJson(QJsonObject o);
+        virtual void fromJson(QJsonObject o);
         void setCell(QString cell);
 
     private:

@@ -48,86 +48,87 @@
 namespace cIcCore{
 
 
-    bool fexists(char * str);
-    
-
-    class Design: public Cell
-    {
-        Q_OBJECT
-
-    public:
-        Design();
-
-        //Read a JSON file and compainon SPICE file
-        bool read(QString filename);
-        bool readCells(QString filename);
-
-        //List of cells in the design
-        QList<QString> cellNames(){return _cell_names;}
-
-        cIcSpice::Subckt * getSpiceSubckt(QJsonObject jobj, QList<QJsonObject>* reverse_parents, QString name);
-
-        void runMethod(QJsonValue v, QMetaMethod m, Cell* c);
-
-        QJsonObject toJson();
-        void fromJson(QJsonObject o);
-
-        QJsonObject readJson(QString filename);
-        void readJsonFile(QString filename);
-        void writeJsonFile(QString filename,QJsonObject info);
-
-        void addIncludePath(QString path);
-        
-    private:
-
-        //Check if an object (c) can run methods defined in object (jobj)
-        void runIfObjectCanMethods(Cell * c, QJsonObject jobj, QString theme = "");
-
-        //Check if an object (c) can run methods defined in parents
-        void runParentsIfObjectCanMethods(Cell * c, QList<QJsonObject> * parents, QString theme = "");
-
-        //Run all methods defined under name (jname) in object (jobj)
-        void runAllMethods(QString jname, Cell *c, QJsonObject jobj);
-
-        //Check all parents (parents) for methods matching name (jname)
-        void runAllParentMethods(QString jname, Cell *c, QList<QJsonObject> * parents);
-
-        //Guess, it's quite obvious
-        void comment(QString str);
-
-        //List of conversions between ciccreator object names and cnano (Perl version) object names
-        QMap<QString,QString> cellTranslator;
-
-        //List of conversion between ciccreator method names and cnano method names
-        QMap<QString,QString> nameTranslator;
-
-        //Search through JSON and find all parents
-        void findAllParents(QList<QJsonObject > *reverse_parents,QString inh);
-
-        //Make a cell, main entry point after reading JSON file
-        void createCell(QJsonObject jobj);
-
-        QStringList _includePaths;
-        //Yes, it's the parser object for spice
-        cIcSpice::SpiceParser _spice_parser;
-
-        //List of all the cells, QString = cellname
-        QMap<QString,QJsonObject>  _cells;
-
-        //List of all cellnames
-        QList<QString> _cell_names;
-
-        //Output object for console
-        ConsoleOutput * console;
+        bool fexists(char * str);
 
 
-        bool readError;
-                    bool ignoreSetYoffsetHalf;
-                    bool metalUnderMetalRes;
-        
+        class Design: public Cell
+        {
+                Q_OBJECT
 
-    signals:
+                public:
+                        Design();
 
-    };
+                        //Read a JSON file and compainon SPICE file
+                        bool read(QString filename);
+                        bool readCells(QString filename);
+
+                        //List of cells in the design
+                        QList<QString> cellNames(){return _cell_names;}
+
+                        cIcSpice::Subckt * getSpiceSubckt(QJsonObject jobj, QList<QJsonObject>* reverse_parents, QString name);
+
+                        void runMethod(QJsonValue v, QMetaMethod m, Cell* c);
+
+                        QJsonObject toJson();
+                        void fromJson(QJsonObject o);
+
+                        QJsonObject readJson(QString filename);
+                        void readJsonFile(QString filename);
+                        void writeJsonFile(QString filename,QJsonObject info);
+
+                        void addIncludePath(QString path);
+                        void setPrefix(QString prefix);
+                private:
+
+                        //Check if an object (c) can run methods defined in object (jobj)
+                        void runIfObjectCanMethods(Cell * c, QJsonObject jobj, QString theme = "");
+
+                        //Check if an object (c) can run methods defined in parents
+                        void runParentsIfObjectCanMethods(Cell * c, QList<QJsonObject> * parents, QString theme = "");
+
+                        //Run all methods defined under name (jname) in object (jobj)
+                        void runAllMethods(QString jname, Cell *c, QJsonObject jobj);
+
+                        //Check all parents (parents) for methods matching name (jname)
+                        void runAllParentMethods(QString jname, Cell *c, QList<QJsonObject> * parents);
+
+                        //Guess, it's quite obvious
+                        void comment(QString str);
+
+                        //List of conversions between ciccreator object names and cnano (Perl version) object names
+                        QMap<QString,QString> cellTranslator;
+
+                        //List of conversion between ciccreator method names and cnano method names
+                        QMap<QString,QString> nameTranslator;
+
+                        //Search through JSON and find all parents
+                        void findAllParents(QList<QJsonObject > *reverse_parents,QString inh);
+
+                        //Make a cell, main entry point after reading JSON file
+                        void createCell(QJsonObject jobj);
+
+                        QStringList _includePaths;
+                        //Yes, it's the parser object for spice
+                        cIcSpice::SpiceParser _spice_parser;
+
+                        //List of all the cells, QString = cellname
+                        QMap<QString,QJsonObject>  _cells;
+
+                        //List of all cellnames
+                        QList<QString> _cell_names;
+
+                        //Output object for console
+                        ConsoleOutput * console;
+
+                        QString prefix_;
+
+                        bool readError;
+                        bool ignoreSetYoffsetHalf;
+                        bool metalUnderMetalRes;
+
+
+                signals:
+
+        };
 }
 #endif

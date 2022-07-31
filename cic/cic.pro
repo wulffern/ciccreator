@@ -19,6 +19,7 @@
 
 CONFIG += qt console
 CONFIG += static
+CONFIG += debug
 TEMPLATE = app
 TARGET = cic
 

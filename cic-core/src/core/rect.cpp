@@ -71,6 +71,11 @@ namespace cIcCore{
         rules = Rules::getRules();
     }
 
+    void Rect::setPrefix(QString prefix){
+        prefix_ = prefix;
+    }
+
+
     //----------------------------------------------------------------------
     // Properties
     //----------------------------------------------------------------------

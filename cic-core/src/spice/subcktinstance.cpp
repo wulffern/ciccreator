@@ -22,7 +22,7 @@
 namespace cIcSpice{
 
     QString SubcktInstance::setName(QString val){
-        QRegularExpression re_group("^([^\\d]+)(\\S+)?$");
+        QRegularExpression re_group("^([^\\d<>]+)(\\S+)?$");
         QRegularExpressionMatch m_group = re_group.match(val);
         if(m_group.hasMatch()){
             this->_group_name = m_group.captured(1);
@@ -101,7 +101,7 @@ namespace cIcSpice{
     QJsonObject SubcktInstance::toJson()
     {
         QJsonObject o = SpiceObject::toJson();
-        o["subcktName"] = _subckt_name;
+        o["subcktName"] = this->prefix_ + _subckt_name;
         o["groupName"] = _group_name;
 //        o["groupTag"] = _group_name;
 

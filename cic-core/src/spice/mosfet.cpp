@@ -78,7 +78,10 @@ namespace cIcSpice{
 //        cIcCore::Device * mtype = rules->getDevice(this->deviceName());
         QJsonObject o = SpiceDevice::toJson();
         return o;
+    }
 
+    void Mosfet::fromJson(QJsonObject o){
+        SpiceDevice::fromJson(o);
     }
 
 }

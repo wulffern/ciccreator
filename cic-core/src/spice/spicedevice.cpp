@@ -64,5 +64,9 @@ QJsonObject SpiceDevice::toJson()
 
 
 }
-}
 
+    void SpiceDevice::fromJson(QJsonObject o){
+        SpiceObject::fromJson(o);
+    }
+
+}

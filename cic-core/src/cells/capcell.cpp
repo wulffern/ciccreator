@@ -1,5 +1,5 @@
 //====================================================================
-//        Copyright (c) 2016 Carsten Wulff Software, Norway 
+//        Copyright (c) 2016 Carsten Wulff Software, Norway
 // ===================================================================
 // Created       : wulff at 2016-9-3
 // ===================================================================
@@ -7,12 +7,12 @@
 //   it under the terms of the GNU General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
-// 
+//
 //   This program is distributed in the hope that it will be useful,
 //   but WITHOUT ANY WARRANTY; without even the implied warranty of
 //   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //   GNU General Public License for more details.
-// 
+//
 //   You should have received a copy of the GNU General Public License
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //====================================================================
@@ -26,6 +26,22 @@ using namespace cIcSpice;
 using namespace cIcCore;
 
 namespace cIcCells{
+
+
+    void CapCell::usem3(QJsonValue obj){
+        if(obj.toInt()){
+            usem3_ = true;
+        }else{
+            usem3_ = false;
+        }
+
+    }
+
+    void CapCell::heightIncreaseMult(QJsonValue obj){
+        heightIncreaseMult_ = obj.toInt();
+
+    }
+
 
     Rect CapCell::calcBoundingRect()
     {
@@ -41,18 +57,18 @@ namespace cIcCells{
         c->moveTo(ports_["AVSS"]->x1(),rect->centerY() - c->height()/2.0);
 
         return c;
-        
+
     }
 
 
-    
-    
+
+
 
     void CapCell::place()
     {
         this->noPowerRoute();
         this->setBoundaryIgnoreRouting(false);
-        
+
 
         LayoutCell::place();
 
@@ -65,7 +81,7 @@ namespace cIcCells{
         msw = ms + mw;
         int mswy = ms + mw + ct->width()/2 - mw/2;
 
-        int msc = ct->width()/2 + ms*2;
+        int msc = ct->width()/2 + ms*2*heightIncreaseMult_;
         int b = 5;
 
         int height = mswy*2 + msc*b + mw;
@@ -87,7 +103,9 @@ namespace cIcCells{
             }
             rects.append(new Rect("M2",x,y, mw, height - mw));
             rects.append(new Rect("M4",x + msw ,y + msw, mw, height - msw*2));
-            rects.append(new Rect("M3",x + msw ,y + msw, mw, height - msw*2));
+            if(usem3_){
+                rects.append(new Rect("M3",x + msw ,y + msw, mw, height - msw*2));
+            }
             rects.append(new Rect("M5",x + msw ,y , mw, height));
             x = x + (msw)*2;
         }
@@ -176,9 +194,9 @@ namespace cIcCells{
         QList<int> cint4 = QList<int>() <<13 << 19 <<45 <<51;
         QList<int> cint8 = QList<int>() <<9 <<11 <<21 <<23 <<41<<43<<53<<55;
         QList<int> cint16 = QList<int>() <<1<<3<<5<<7<<25<<27<<29<<31<<33<<35<<37<<39<<57<<59<<61<<63;
-        
-        
-        
+
+
+
         this->addContacts("XRES1A","C1A",y1a ,cint1a,c1a);
         this->addContacts("XRES1B","C1B",y1b ,cint1b,c1b);
         this->addContacts("XRES2","C2",y2,cint2,c2);
@@ -217,7 +235,7 @@ namespace cIcCells{
             if(rb->height() - mw > mw){
                 this->add(rb);
             }
-            
+
 
         }
     }
