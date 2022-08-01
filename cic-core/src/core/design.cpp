@@ -492,6 +492,7 @@ namespace cIcCore{
             Cell::addCell(c);
             _cell_names.append(c->name());
             ckt = c->subckt();
+            c->updateUsedChildren();
 
             //Make sure this subckt is added to all subckts
             if(ckt){
@@ -679,6 +680,7 @@ namespace cIcCore{
             if(c){
 
                 c->fromJson(o);
+                c->setLibCell(true);
                 this->add(c);
                 Cell::addCell(c);
                 _cell_names.append(c->name());

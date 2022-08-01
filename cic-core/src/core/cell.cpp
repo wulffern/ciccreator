@@ -28,6 +28,8 @@ namespace cIcCore{
         boundaryIgnoreRouting_ = false;
         _physicalOnly = false;
         abstract_ = false;
+        lib_cell_ = false;
+        cell_used_ = false;
 
     }
 
@@ -35,6 +37,8 @@ namespace cIcCore{
         _subckt = NULL;
         boundaryIgnoreRouting_ = false;
         _physicalOnly = false;
+        lib_cell_ = false;
+        cell_used_ = false;
     }
 
     Cell::~Cell() {
@@ -455,7 +459,7 @@ namespace cIcCore{
     Rect Cell::calcBoundingRect(QList<Rect*> children,bool ignoreBoundaryRouting){
 
 
-        
+
         int x1  = std::numeric_limits<int>::max();
         int y1  = std::numeric_limits<int>::max();
         int x2  = -std::numeric_limits<int>::max();
@@ -561,11 +565,14 @@ namespace cIcCore{
     void Cell::fromJson(QJsonObject o){
         Rect::fromJson(o);
         this->setName(o["name"].toString());
-        _has_pr = o["has_pr"].toBool();
-        this->boundaryIgnoreRouting_ = o["boundaryIgnoreRouting"].toBool();
-        //this->instanceName_ = o["instanceName"].toString();
-        this->abstract_ = o["abstract"].toBool();
-        this->_physicalOnly = o["physicalOnly"].toBool();
+
+        if(!this->isInstance()){
+            _has_pr = o["has_pr"].toBool();
+            this->boundaryIgnoreRouting_ = o["boundaryIgnoreRouting"].toBool();
+            //this->instanceName_ = o["instanceName"].toString();
+            this->abstract_ = o["abstract"].toBool();
+            this->_physicalOnly = o["physicalOnly"].toBool();
+        }
 
         if(!o.contains("children")) return;
         QJsonArray car = o["children"].toArray();
@@ -595,21 +602,21 @@ namespace cIcCore{
         QString cl = co["class"].toString();
 
         if(cl == "Rect"){
-                Rect * r = new Rect();
-                r->fromJson(co);
-                return r;
-            }else if(cl == "Text"){
-                Text * t = new Text();
-                t->fromJson(co);
-                return t;
-            }else if(cl == "Port"){
-                Port * p = new Port();
-                p->fromJson(co);
-                return p;
-            }else if(cl == "Cell" || cl== "cIcCore::Route" || cl == "cIcCore::RouteRing" || cl == "cIcCore::Guard" || cl == "cIcCore::Cell"){
-                Cell * l = new Cell();
-                l->fromJson(co);
-                return l;
+            Rect * r = new Rect();
+            r->fromJson(co);
+            return r;
+        }else if(cl == "Text"){
+            Text * t = new Text();
+            t->fromJson(co);
+            return t;
+        }else if(cl == "Port"){
+            Port * p = new Port();
+            p->fromJson(co);
+            return p;
+        }else if(cl == "Cell" || cl== "cIcCore::Route" || cl == "cIcCore::RouteRing" || cl == "cIcCore::Guard" || cl == "cIcCore::Cell"){
+            Cell * l = new Cell();
+            l->fromJson(co);
+            return l;
         }
         return 0;
     }
@@ -624,13 +631,15 @@ namespace cIcCore{
             o["name"] = this->prefix_ + this->name();
         }
 
-        o["has_pr"] = this->_has_pr;
-
-        o["abstract"] = this->abstract_;
-        o["meta"] = meta_;
-        o["physicalOnly"] = this->_physicalOnly;
-        //o["instanceName"] = this->instanceName_;
-        o["boundaryIgnoreRouting"] = this->boundaryIgnoreRouting_;
+        if(!this->isInstance()){
+            o["has_pr"] = this->_has_pr;
+            o["abstract"] = this->abstract_;
+            o["meta"] = meta_;
+            o["physicalOnly"] = this->_physicalOnly;
+            o["libcell"] = this->lib_cell_;
+            o["cellused"] = this->cell_used_;
+            o["boundaryIgnoreRouting"] = this->boundaryIgnoreRouting_;
+        }
 
 
         cIcSpice::Subckt * ckt = this->subckt();
@@ -698,6 +707,16 @@ namespace cIcCore{
             this->add(r_enc);
         }
 
+    }
+
+    void Cell::updateUsedChildren(){
+        foreach(Rect * r, this->_children){
+            if(r->isCell()){
+                Cell * c = static_cast<Cell*>(r);
+                c->setUsed(this->cell_used_);
+                c->updateUsedChildren();
+            }
+        }
     }
 
 
