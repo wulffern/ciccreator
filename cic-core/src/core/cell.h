@@ -116,6 +116,9 @@ namespace cIcCore{
                 }
                 return _name;}
 
+            void setLibCell(bool isLibCell){lib_cell_ = isLibCell; }
+            void setUsed(bool isUsed){cell_used_ = isUsed; }
+
             //! Get the port linked to net name (name)
             Port * getPort(QString name);
             Port * getCellPort(QString name);
@@ -161,7 +164,8 @@ namespace cIcCore{
             //! that the cell exists in this cell first
             static Cell* getCell(QString cell){
                 if(Cell::_allcells.contains(cell)){
-                    return Cell::_allcells[cell];
+                    auto c = Cell::_allcells[cell];
+                    return c;
                 }else{
                     Cell * c = new Cell();
                     return c;
@@ -203,6 +207,8 @@ namespace cIcCore{
 
             void addEnclosingLayers(QList<QString> layers);
 
+            void updateUsedChildren();
+
 
 
         protected:
@@ -242,6 +248,8 @@ namespace cIcCore{
             bool boundaryIgnoreRouting_;
             bool _has_pr;
             bool abstract_;
+            bool lib_cell_;
+            bool cell_used_;
 
 
         private:
