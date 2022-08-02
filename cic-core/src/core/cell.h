@@ -118,6 +118,7 @@ namespace cIcCore{
 
             void setLibCell(bool isLibCell){lib_cell_ = isLibCell; }
             void setUsed(bool isUsed){cell_used_ = isUsed; }
+            bool isUsed(){return cell_used_;}
 
             //! Get the port linked to net name (name)
             Port * getPort(QString name);
@@ -207,7 +208,7 @@ namespace cIcCore{
 
             void addEnclosingLayers(QList<QString> layers);
 
-            void updateUsedChildren();
+            virtual void updateUsedChildren();
 
 
 

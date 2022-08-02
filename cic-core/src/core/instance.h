@@ -65,6 +65,7 @@ namespace cIcCore{
         virtual QJsonObject toJson();
         virtual void fromJson(QJsonObject o);
         void setCell(QString cell);
+                    virtual void updateUsedChildren();
 
     private:
         Cell * _cell;

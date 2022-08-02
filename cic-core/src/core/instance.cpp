@@ -213,8 +213,6 @@ namespace cIcCore{
     void Instance::setCell(QString cell){
         if(Cell::_allcells.contains(cell)){
             this->_cell  = _allcells[cell];
-            //Mark cell as used
-            this->_cell->setUsed(true);
             this->setName(this->_cell->name());
             Rect r = this->_cell->calcBoundingRect();
             this->setLayer("PR");
@@ -290,6 +288,14 @@ namespace cIcCore{
 
 
         return o;
+    }
+
+    void Instance::updateUsedChildren(){
+        Cell::updateUsedChildren();
+        if(this->_cell){
+            this->_cell->setUsed(this->cell_used_);
+            this->_cell->updateUsedChildren();
+        }
     }
 
 

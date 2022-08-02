@@ -62,6 +62,13 @@ namespace cIcCore{
         ignoreSetYoffsetHalf = false;
 
     }
+
+    bool Design::hasTopCells(){
+        if(topcells_.count() > 0){
+            return true;
+        }
+        return false;
+    }
     void Design::setPrefix(QString prefix){
         prefix_ = prefix;
     }
@@ -104,9 +111,17 @@ namespace cIcCore{
             if(opt.contains("ignoreSetYoffsetHalf")){
                 ignoreSetYoffsetHalf = opt["ignoreSetYoffsetHalf"].toBool();
             }
-             if(opt.contains("prefix")){
+            if(opt.contains("prefix")){
                 this->prefix_ = opt["prefix"].toString();
             }
+
+            if(opt.contains("topcells")){
+                QJsonArray a = opt["topcells"].toArray();
+                    foreach(const QJsonValue & v, a){
+                        topcells_.append(v.toString());
+                    }
+            }
+
         }
 
 
@@ -142,7 +157,7 @@ namespace cIcCore{
                 if(fexists(libfile.toStdString().c_str())){
                     console->comment("Reading library '" + libfile + "'",ConsoleOutput::green);
                     this->readJsonFile(libfile);
-                     fileNotFound = false;
+                    fileNotFound = false;
                 }
 
                 if(fileNotFound){
@@ -228,6 +243,16 @@ namespace cIcCore{
                 _cell_names.insert(0,cut->name());
             }
 
+            //If topcells is set, then mark which cells have been used
+            foreach(QString s,topcells_){
+                Cell * c = Cell::getCell(s);
+                if(c){
+                    c->setUsed(true);
+                    c->updateUsedChildren();
+                }
+
+            }
+
         }else{
             retval = false;
 
@@ -304,11 +329,6 @@ namespace cIcCore{
 
             _spice_parser.parseSubckt(0,strlist);
             ckt = _spice_parser.getSubckt(name);
-
-
-
-
-
         }
 
 
@@ -492,7 +512,7 @@ namespace cIcCore{
             Cell::addCell(c);
             _cell_names.append(c->name());
             ckt = c->subckt();
-            c->updateUsedChildren();
+
 
             //Make sure this subckt is added to all subckts
             if(ckt){
@@ -669,7 +689,7 @@ namespace cIcCore{
             int id = QMetaType::type(cl.toUtf8().data());
             if(id != 0){
                 void* vp = QMetaType::create(id);
-                 c  = static_cast<Cell*>(vp);
+                c  = static_cast<Cell*>(vp);
 
             }
             //if(cl.contains(QRegularExpression("Don't have special case yet"))){
@@ -709,8 +729,13 @@ namespace cIcCore{
             Cell * c = Cell::getCell(_cell_names[i]);
             c->setPrefix(this->prefix_);
             if(c){
-                QJsonObject o = c->toJson();
-                ar.append(o);
+                if(topcells_.count() > 0 and !c->isUsed()){
+                    //Skip if cell is not used and topcell has been set
+                    continue;
+                }else{
+                    QJsonObject o = c->toJson();
+                    ar.append(o);
+                }
             }
         }
         o["cells"] = ar;

@@ -78,6 +78,7 @@ namespace cIcCore{
 
                         void addIncludePath(QString path);
                         void setPrefix(QString prefix);
+                        bool hasTopCells();
                 private:
 
                         //Check if an object (c) can run methods defined in object (jobj)
@@ -116,6 +117,8 @@ namespace cIcCore{
 
                         //List of all cellnames
                         QList<QString> _cell_names;
+
+                        QList<QString> topcells_;
 
                         //Output object for console
                         ConsoleOutput * console;
