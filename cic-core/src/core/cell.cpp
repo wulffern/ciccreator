@@ -38,6 +38,7 @@ namespace cIcCore{
         boundaryIgnoreRouting_ = false;
         _physicalOnly = false;
         lib_cell_ = false;
+        lib_path_ = "";
         cell_used_ = false;
     }
 
@@ -577,6 +578,17 @@ namespace cIcCore{
         if(!o.contains("children")) return;
         QJsonArray car = o["children"].toArray();
 
+        if(o.contains("libpath")){
+            QString tmp = o["libpath"].toString();
+            if(tmp != ""){
+                lib_path_ = tmp;
+            }
+        }
+
+        if(o.contains("meta")){
+            meta_ = o["meta"].toObject();
+        }
+
         if(o.contains("ckt")){
             cIcSpice::Subckt * subckt = new cIcSpice::Subckt();
             subckt->fromJson(o["ckt"].toObject());
@@ -637,6 +649,7 @@ namespace cIcCore{
             o["meta"] = meta_;
             o["physicalOnly"] = this->_physicalOnly;
             o["libcell"] = this->lib_cell_;
+            o["libpath"] = this->lib_path_;
             o["cellused"] = this->cell_used_;
             o["boundaryIgnoreRouting"] = this->boundaryIgnoreRouting_;
         }

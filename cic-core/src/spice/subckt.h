@@ -27,6 +27,7 @@
 #include "subcktinstance.h"
 #include "spicedevice.h"
 #include "mosfet.h"
+#include "resistor.h"
 #include <QString>
 #include <QMap>
 #include <iostream>

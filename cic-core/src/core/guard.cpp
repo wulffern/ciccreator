@@ -67,7 +67,7 @@ namespace cIcCore{
             
         foreach( Rect* r2, rects){
 
-            //Need to write a fill-cut function to add cuts
+            //TODO  Need to write a fill-cut function to add cuts
             Cut* c= new Cut("OD","M1",r2);
             this->add(c);
             

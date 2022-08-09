@@ -115,5 +115,14 @@ namespace cIcCore{
         this->add(rc);
     }
 
+     QJsonObject PatternCapacitor::toJson(){
+        QJsonObject o = PatternTile::toJson();
+        return o;
+    }
+
+    void PatternCapacitor::fromJson(QJsonObject o){
+        PatternTile::fromJson(o);
+    }
+
 
 }

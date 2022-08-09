@@ -68,6 +68,10 @@ namespace cIcSpice{
                 Mosfet * m = new Mosfet();
                 m->fromJson(od);
                 this->add(m);
+            }else if(od["class"] == "cIcSpice::Resistor"){
+                Resistor * r = new Resistor();
+                r->fromJson(od);
+                this->add(r);
             }else{
                 qDebug() << "Unknown device class " << o["class"];
             }
@@ -130,8 +134,22 @@ namespace cIcSpice{
 
         _allsubckt[this->name()] = this;
 
-        //TOOD: I assume there are no parameters on subckt
         firstLine = firstLine.trimmed();
+
+        //Remove parameters
+        QRegularExpression re_params("\\s+(\\S+)\\s*=\\s*(\\S+)");
+        QRegularExpressionMatchIterator it= re_params.globalMatch(firstLine);
+        while (it.hasNext()) {
+
+            QRegularExpressionMatch m_params = it.next();
+
+            //- TODO do I want to use parameters for anything on subckt??
+            //_properties[m_params.captured(1)] = m_params.captured(2);
+        }
+
+
+        firstLine.replace(re_params,"");
+
 
         //Split on space
         const QRegularExpression re_space("\\s+");

@@ -41,7 +41,8 @@ namespace cIcCore{
         PatternCapacitor();
         ~PatternCapacitor();
         void onPaintEnd();
-        
+        virtual QJsonObject toJson();
+        virtual void fromJson(QJsonObject o);
         
         void onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data);
 

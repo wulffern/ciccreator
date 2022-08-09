@@ -45,6 +45,7 @@ namespace cIcSpice{
         ~Resistor();
         virtual QString toSpice( QString instance, QStringList nodes);
         virtual QJsonObject toJson();
+            virtual void fromJson(QJsonObject o);
         virtual QString toSpice( );
 
         double width;
