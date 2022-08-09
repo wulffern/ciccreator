@@ -276,7 +276,9 @@ namespace cIcCore{
         o["class"]  = "Instance";
         if(_cell){
             o["cell"] = this->prefix_ + _cell->name();
+            o["libpath"] = _cell->libPath();
         }
+
         o["angle"] = angle_;
         o["xcell"] = xcell;
         o["ycell"] = ycell;

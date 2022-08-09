@@ -666,6 +666,7 @@ namespace cIcCore{
         QString includeInstances = obj[1].toString();
         QString location = obj[2].toString();
 
+
         this->addPowerConnection(name,includeInstances,location);
     }
 

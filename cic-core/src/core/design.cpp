@@ -674,9 +674,9 @@ namespace cIcCore{
 
     }
 
-    void Design::fromJson(QJsonObject o){
+    void Design::fromJson(QJsonObject obj){
 
-        QJsonArray ar =  o["cells"].toArray();
+        QJsonArray ar =  obj["cells"].toArray();
         cIcSpice::Subckt* ckt = 0;
         foreach(QJsonValue v,ar){
             ckt = 0;
@@ -701,6 +701,7 @@ namespace cIcCore{
 
                 c->fromJson(o);
                 c->setLibCell(true);
+                c->setLibPath(obj["libpath"].toString());
                 this->add(c);
                 Cell::addCell(c);
                 _cell_names.append(c->name());
@@ -716,8 +717,6 @@ namespace cIcCore{
         }
 
     }
-
-
 
 
     QJsonObject Design::toJson(){
@@ -815,6 +814,7 @@ namespace cIcCore{
     void Design::readJsonFile(QString filename){
 
         QJsonObject obj = this->readJson(filename);
+        obj["libpath"] = filename.replace(".cic","");
         this->fromJson(obj);
     }
 

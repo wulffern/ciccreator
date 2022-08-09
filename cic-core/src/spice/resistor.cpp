@@ -85,8 +85,6 @@ namespace cIcSpice{
     QJsonObject Resistor::toJson()
     {
 
-
-
         QList<SubcktInstance*> instances;
         SubcktInstance* ins = new SubcktInstance();
         QStringList sn;
@@ -97,13 +95,13 @@ namespace cIcSpice{
         ins->setDeviceName("resistor");
         instances.append(ins);
 
-
         QJsonObject o = SpiceDevice::toJson();        
 
         return o;
+    }
 
-
-
+    void Resistor::fromJson(QJsonObject o){
+        SpiceDevice::fromJson(o);
     }
     
 

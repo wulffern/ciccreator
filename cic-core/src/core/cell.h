@@ -117,6 +117,8 @@ namespace cIcCore{
                 return _name;}
 
             void setLibCell(bool isLibCell){lib_cell_ = isLibCell; }
+            void setLibPath(QString path){lib_path_ = path; }
+            QString libPath(){return lib_path_;}
             void setUsed(bool isUsed){cell_used_ = isUsed; }
             bool isUsed(){return cell_used_;}
 
@@ -251,6 +253,7 @@ namespace cIcCore{
             bool abstract_;
             bool lib_cell_;
             bool cell_used_;
+            QString lib_path_;
 
 
         private:
