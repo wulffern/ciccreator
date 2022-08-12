@@ -125,7 +125,7 @@
         "routeType" : {
             "help" : [
                 "- -|-- => LEFT",
-                "- --1- => RIGHT",
+                "- --|- => RIGHT",
                 "- - => STRAIGHT",
                 "- -| => U_RIGHT",
                 "- |- => U_LEFT",
