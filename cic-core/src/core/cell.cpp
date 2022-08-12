@@ -600,7 +600,13 @@ namespace cIcCore{
 
             auto c = cellFromJson(co);
             if(c == 0){
-                qDebug() << this << "Unknown cell " << co["name"] << co["class"];
+
+                //TODO cuts are not handled correctly, don't know what to do yet
+
+                if( !(co["name"].toString().startsWith("cut_"))){
+
+                    qDebug() << this << "Unknown cell " << co["name"] << co["class"];
+                }
             }else{
                 this->add(c);
             }

@@ -28,7 +28,8 @@ include(etc/mac_sdk.pro)
 TEMPLATE=subdirs
   CONFIG += ordered
   SUBDIRS = cic-core \
-  cic 
+  cic \
+  cic-gui
 
   cic.depends = cic-core
 

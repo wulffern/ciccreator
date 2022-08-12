@@ -43,6 +43,7 @@ endif
 
 ifeq ($(UNAME_S),Darwin)
 CIC=../bin/${OSBIN}/cic.app/Contents/MacOS/cic
+CICGUI=../bin/${OSBIN}/cic-gui.app/Contents/MacOS/cic-gui
 else
 CIC= ../bin/${OSBIN}/cic
 endif
@@ -62,6 +63,7 @@ compile:
 	qmake -o qmake.make  ciccreator.pro
 	${MAKE} -f qmake.make
 	cp build/${CIC} build/cic.${OSBIN}_${VERSION}
+	#cp build/${CICGUI} build/cic-gui.${OSBIN}_${VERSION}
 
 clean:
 	${MAKE} -f qmake.make clean
@@ -98,6 +100,10 @@ GDS3D:
 	tar -zxvf download
 	ln -s GDS3D_1.8 GDS3D
 	rm download
+
+view:
+	cd lay; ${CICGUI} SAR_ESSCIRC16_28N.cic  ${TECHFILE}
+
 
 view3d: GDS3D
 	echo ${GDS3D}
