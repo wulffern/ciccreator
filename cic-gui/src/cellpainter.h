@@ -41,7 +41,6 @@ namespace cIcPainter{
         CellPainter(){
             _instanceName = "";
             _paint = true;
-
         }
         ~CellPainter(){
         }
@@ -52,22 +51,22 @@ namespace cIcPainter{
         
         virtual void paintPort(QPainter &painter,Port *);
         virtual void paintText(QPainter &painter,Text *);
-        virtual void paintAText(QPainter &painter,int x, int y, QString txt, QString colorName);
+
         virtual void paint(QPainter &painter, Cell *,int x, int y, int width, int height,QString instanceName);
         virtual void paint(QPainter &painter, Cell *,int x, int y, int width, int height);
         virtual void paintCell(QPainter &painter, Cell *,QString hierarchy);
         virtual void paintRect(QPainter &painter, Rect * rect);
         virtual void paintReference(QPainter &painter,Instance *,QString hiearchy);
+        void paintMyText(QPainter &painter,int x, int y, QString txt, QString colorName,int size);
         double toUnit(int angstrom);
         int unit;
+
 
     private:
         QString _instanceName;
         bool _paint;
         QString _hasPainted;
-        
-        
-        
+
 
 
     };

@@ -23,7 +23,7 @@
 namespace cIcPainter{
 
     void CellPainter::paintPort(QPainter &painter,Port * p){
-        return;
+
 
         Layer *l = Rules::getRules()->getLayer(p->pinLayer());
         if(!l->visible){
@@ -38,26 +38,14 @@ namespace cIcPainter{
             Qt::BrushStyle bstyle = Qt::SolidPattern;
             painter.setBrush(QBrush(color,bstyle));
         }
-        painter.drawRect(toUnit(p->x1()),toUnit(p->y1()),toUnit(p->width()),toUnit(p->height()));
+        painter.drawRect(p->x1(),p->y1(),p->width(),p->height());
 
-        this->paintAText(painter,p->x1(),p->y1(),p->name(),l->color);
+        int size = int(sqrt(abs(p->width()*p->height())))/4;
+
+        this->paintMyText(painter,p->x1(),p->y1(),p->name(),l->color,size);
     }
 
-    void CellPainter::paintAText(QPainter &painter, int x, int y, QString txt, QString colorName){
 
-        QFont font=painter.font() ;
-        font.setFamily("Arial");
-        font.setPointSize (5000 );
-        QColor color(colorName);
-        color.setAlpha(150);
-        painter.setPen(QPen(color,Qt::SolidLine));
-        painter.setFont(font);
-        painter.scale(1,-1);
-        painter.drawText(x,-y,txt);
-        painter.scale(1,-1);
-
-
-    }
 
     void CellPainter::paintText(QPainter &painter,Text * text){
         return;
@@ -66,7 +54,7 @@ namespace cIcPainter{
         if(!l->visible){
             return;
         }
-        this->paintAText(painter,text->x1(),text->y1(),text->name(),l->color);
+        this->paintMyText(painter,text->x1(),text->y1(),text->name(),l->color,text->width());
 
     }
 
@@ -90,15 +78,12 @@ namespace cIcPainter{
             trans.scale(-1,1);
         }
 
-
-        
-        
-
         Point* p = inst->getCellPoint();
         painter.translate(p->x,p->y);
 
         //Paint with rotated transform
         QTransform old_trans = painter.transform();
+
         painter.setTransform(trans,true);
 
         hierarchy.append(":" + inst->instanceName());
@@ -116,8 +101,9 @@ namespace cIcPainter{
 
         
 
-        
+
         this->paintCell(painter,inst->cell(),hierarchy);
+
 
         if(isPainting){
             _paint = false;
@@ -127,18 +113,14 @@ namespace cIcPainter{
         painter.setTransform(old_trans,false);
         painter.translate(-p->x,-p->y);
 
+
     }
 
     void CellPainter::paintRect(QPainter &painter, Rect * r){
-        //if(r->layer() == "PR") return;
 
         Layer *l = Rules::getRules()->getLayer(r->layer());
         if(!_paint) return;
-        if(l->nofill || l->color == "" || l->visible == false) return;
-        if(!(l->material == Layer::poly ||
-             l->material == Layer::metal ||
-             l->material == Layer::diffusion ||
-             l->material == Layer::cut))return;
+        if( l->color == "" || l->visible == false) return;
 
         QColor color(l->color);
 
@@ -162,8 +144,6 @@ namespace cIcPainter{
 
     void CellPainter::startCell(QPainter & painter,Cell *c){
         if(Cell::isEmpty(c)) return;
-
-
     }
 
     void CellPainter::endCell(QPainter & painter){
@@ -193,7 +173,7 @@ namespace cIcPainter{
         painter.translate(0,-height);
         painter.translate(x,y);
         painter.drawRect(c->x1(),c->y1(),c->width(),c->height());
-        
+
         this->paintCell(painter,c,"");
 
         painter.restore();
@@ -217,6 +197,26 @@ namespace cIcPainter{
 
         this->paintChildren(painter,c->children(),hierarchy);
 
+        if(hierarchy.count(QLatin1Char(':')) == 1){
+            Layer *l = Rules::getRules()->getLayer(c->layer());
+            if(l->visible){
+
+                this->paintRect(painter,c);
+
+                //Need to avoid wraparound
+                int w = c->width();
+                QFont font = painter.font();
+                font.setPointSize(1);
+                QFontMetrics fm(font);
+                int psize = c->width()/fm.width(c->name())*0.7;
+
+
+
+                this->paintMyText(painter,c->centerX(),c->centerY(),c->name(),l->color,psize);
+            }
+        }
+
+
         this->endCell(painter);
     }
 
@@ -225,6 +225,7 @@ namespace cIcPainter{
 
     void CellPainter::paintChildren(QPainter &painter,QList<Rect*> children,QString hierarchy){
         foreach(Rect * child,children){
+
             if(!child){continue;}
             if(child->isInstance()){
                 Instance * inst = (Instance*)child;
@@ -248,7 +249,23 @@ namespace cIcPainter{
             }
 
         }
+    }
 
+    void CellPainter::paintMyText(QPainter &painter, int x, int y, QString txt, QString colorName,int size){
+
+        QFont font=painter.font() ;
+        font.setFamily("Arial");
+        font.setPointSize (size );
+        QFontMetrics fm(font);
+        int width=fm.width(txt);
+        int height = fm.height();
+        QColor color(colorName);
+        color.setAlpha(150);
+        painter.setPen(QPen(color,Qt::SolidLine));
+        painter.setFont(font);
+        painter.scale(1,-1);
+        painter.drawText(x - width/2,-(y - height/2),txt);
+        painter.scale(1,-1);
     }
 
 
