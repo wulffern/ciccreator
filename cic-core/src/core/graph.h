@@ -31,7 +31,12 @@ namespace cIcCore{
 		QList<Port*> ports;
 		QString name;
 		void append(Port * p){
-			ports.append(p);
+
+			//- Don't add a port to the graph if it's already there
+			if(!ports.contains(p)){
+				ports.append(p);
+			}
+
 		}
 
 
@@ -51,8 +56,12 @@ namespace cIcCore{
 				if(includeInstances != "" && !(i->name().contains(QRegularExpression(includeInstances))
                                               || instanceName.contains(QRegularExpression(includeInstances)) ) ) continue;
 				Rect * rp = p->get(layer);
+
 				if(rp == NULL) rp = p->get();
-				if(rp != NULL) rects.append(rp);
+				if(rp != NULL) {
+					rects.append(rp);
+
+				}
 			}
 			return rects;
 		}

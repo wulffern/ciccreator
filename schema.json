@@ -157,6 +157,8 @@
             "track(\\d+),help=Move route by grid x track",
             "offsethigh",
             "offsetlow",
+            "nostartcut",
+            "noendcut",
             "offsethighend",
             "offsetlowend",
             "(\\d+)startcuts",
