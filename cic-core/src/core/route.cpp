@@ -79,6 +79,9 @@ namespace cIcCore{
     if(options.contains(QRegularExpression("fillvcut"))){ fillvcut_ = true ;}
     if(options.contains(QRegularExpression("antenna"))){ antenna_ = true ;}
 
+
+
+
     //- Sort direction
     if(options.contains(QRegularExpression("onTopR"))){
       start_rects_ = Rect::sortRightOnTop(start_rects_);
@@ -96,12 +99,13 @@ namespace cIcCore{
       stop_rects_ = Rect::sortLeftOnTop(stop_rects_);
     }
 
+
+
     if(start_rects_.count() == 0 && stop_rects_.count() > 0){
       Rect * r = stop_rects_[0];
       stop_rects_.removeFirst();
       start_rects_.append(r);
     }
-
 
 
     //- Start trim
@@ -180,6 +184,8 @@ namespace cIcCore{
 
 
 
+
+
   }
 
   Route::Route(const Route&){
@@ -192,6 +198,7 @@ namespace cIcCore{
 
   void Route::addStartCuts(){
     if(!this->options_.contains(QRegularExpression("nostartcut"))){
+
 
       int lcuts = startCuts_ > 0 ? startCuts_: cuts_;
       int lvcuts = startVCuts_ > 0 ? startVCuts_: vcuts_;
@@ -425,7 +432,7 @@ namespace cIcCore{
     int space = rules->get(routeLayer_,"space");
 
     Rect start_bound = this->calcBoundingRect(start_rects_);
-    int hgrid = this->rules->get("ROUTE","horizontalgrid");
+    //int hgrid = this->rules->get("ROUTE","horizontalgrid");
 
     int x = 0;
 
@@ -468,7 +475,7 @@ namespace cIcCore{
 
 
     Rect start_bound = this->calcBoundingRect(start_rects_);
-    int hgrid = this->rules->get("ROUTE","horizontalgrid");
+    //int hgrid = this->rules->get("ROUTE","horizontalgrid");
 
     int x = 0;
     x = start_bound.x2() + space*2;
@@ -587,8 +594,8 @@ namespace cIcCore{
 
     }else{
 
-      int y1_m = this->y1();
-      int y2_m = this->y2();
+      //int y1_m = this->y1();
+      //int y2_m = this->y2();
 
 
       Rect * r = Rect::getVerticalRectangleFromTo(routeLayer_,x,this->y1(),this->y2(),width);
