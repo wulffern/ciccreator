@@ -148,6 +148,8 @@
             "trimstartright, help: Trim right start",
             "trimendleft, help: Trim end left",
             "trimendright, help: Trim end right",
+            "startLayer=Mx, help: Override start rectangle layers",
+            "stopLayer=Mx, help: Override stop rectangle layers",
             "startoffsetcuthigh",
             "startoffsetcutlow",
             "endoffsetcuthigh",

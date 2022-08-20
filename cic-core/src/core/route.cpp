@@ -80,8 +80,6 @@ namespace cIcCore{
     if(options.contains(QRegularExpression("antenna"))){ antenna_ = true ;}
 
 
-
-
     //- Sort direction
     if(options.contains(QRegularExpression("onTopR"))){
       start_rects_ = Rect::sortRightOnTop(start_rects_);
@@ -146,12 +144,36 @@ namespace cIcCore{
     endCuts_ = getIntegerFromMatch("(\\d+)endcuts(\\s+|,|$)", options,0);
     endVCuts_ = getIntegerFromMatch("(\\d+)endvcuts(\\s+|,|$)", options,0);
 
+    //control the number of horizontal cuts
     cuts_  = getIntegerFromMatch("(\\d+)cuts", options,2);
+
+    //Control the number of vertical cuts
     vcuts_  = getIntegerFromMatch("(\\d+)vcuts", options,1);
     routeWidthRule_ = getQStringFromMatch("routeWidth=([^,\\s+,$]+)",options,"width");
 
-    //Route
+    //Ability to force the start layer. Overerrides start rectangle layer
+    startLayer_ = getQStringFromMatch("startLayer=([^,\\s+,$]+)",options,"");
 
+    if(startLayer_ != ""){
+      foreach( auto *r,start_rects_){
+        r->setLayer(startLayer_);
+      }
+    }
+
+    //Ability to force the stop layer. Overerrides stop rectangles layer
+    stopLayer_ = getQStringFromMatch("stopLayer=([^,\\s+,$]+)",options,"");
+
+    if(stopLayer_ != ""){
+      foreach( auto *r,stop_rects_){
+        r->setLayer(stopLayer_);
+      }
+    }
+
+
+
+
+
+    //Route
 
     if(routeType == "-|--"){routeType_ = LEFT;}
     else if(routeType == "--|-"){routeType_ = RIGHT; leftAlignCut = false;}
@@ -520,44 +542,38 @@ namespace cIcCore{
 
   }
 
-  void Route::routeStrap(){
+  void Route::routeStrapRects(Rect * sr,QList<Rect*> rects){
     int width = rules->get(routeLayer_,routeWidthRule_);
 
-    if(start_rects_.count() == 1){
-      auto sr = start_rects_[0];
-      foreach(Rect* r, stop_rects_){
+    foreach(auto r, rects){
+        if(!r){continue;}
         int lcuts = startCuts_ > 0 ? startCuts_: 1;
         int lvcuts = startVCuts_ > 0 ? startVCuts_: 2;
 
-        auto cs = Cut::getInstance(sr->layer(),routeLayer_,lcuts,lvcuts);
         auto rc = new Rect(routeLayer_,sr->x1(),r->y1(),r->x1()-sr->x1(),width);
-        cs->moveTo(rc->x1(),rc->y2());
         this->add(rc);
 
-        if( sr->layer() != routeLayer_){
+        if(routeLayer_ != sr->layer()){
+          auto cs = Cut::getInstance(sr->layer(),routeLayer_,lcuts,lvcuts);
+          cs->moveTo(rc->x1(),rc->y2());
           this->add(cs);
         }
+
       }
+  }
+
+  void Route::routeStrap(){
+
+
+    if(start_rects_.count() == 1){
+      auto sr = start_rects_[0];
+      this->routeStrapRects(sr,stop_rects_);
     }else if (stop_rects_.count() == 1){
       auto sr = stop_rects_[0];
-      foreach(Rect* r, start_rects_){
-        int lcuts = endCuts_ > 0 ? endCuts_: 1;
-        int lvcuts = endVCuts_ > 0 ? endVCuts_: 2;
-        auto cs = Cut::getInstance(sr->layer(),routeLayer_,lcuts,lvcuts);
-        auto rc = new Rect(routeLayer_,r->x2(),r->y1(),sr->x2()-r->x2(),width);
-        cs->moveTo(rc->x2()-cs->width(),rc->y1());
-        this->add(rc);
-        if( sr->layer() != routeLayer_){
-          this->add(cs);
-        }
-
-      }
+      this->routeStrapRects(sr,start_rects_);
     }else{
       qDebug() << "Error: Cannot route strap!";
     }
-
-
-
   }
 
 
