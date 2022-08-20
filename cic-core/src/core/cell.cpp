@@ -30,6 +30,7 @@ namespace cIcCore{
         abstract_ = false;
         lib_cell_ = false;
         cell_used_ = false;
+        _has_pr = false;
 
     }
 
@@ -40,6 +41,7 @@ namespace cIcCore{
         lib_cell_ = false;
         lib_path_ = "";
         cell_used_ = false;
+        _has_pr = false;
     }
 
     Cell::~Cell() {
@@ -54,7 +56,6 @@ namespace cIcCore{
 
     void Cell::boundaryIgnoreRouting(QJsonValue obj)
     {
-//        if(!obj) return;
         int bir = obj.toInt();
         if(bir==1) setBoundaryIgnoreRouting(true);
         else setBoundaryIgnoreRouting(false);

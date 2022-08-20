@@ -62,6 +62,7 @@ compile:
 	echo "#define CICHASH \""${VERSION_HASH}"\""  >> cic/src/version.h
 	qmake -o qmake.make  ciccreator.pro
 	${MAKE} -f qmake.make
+	test -d build || mkdir build
 	cp build/${CIC} build/cic.${OSBIN}_${VERSION}
 	#cp build/${CICGUI} build/cic-gui.${OSBIN}_${VERSION}
 
