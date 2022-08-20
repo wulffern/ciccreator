@@ -603,7 +603,7 @@ namespace cIcCore{
 
                 //TODO cuts are not handled correctly, don't know what to do yet
 
-                if( !(co["name"].toString().startsWith("cut_"))){
+                if( !(co["name"].toString().contains("cut_"))){
 
                     qDebug() << this << "Unknown cell " << co["name"] << co["class"];
                 }

@@ -104,12 +104,32 @@ namespace cIcPainter{
 
         this->paintCell(painter,inst->cell(),hierarchy);
 
+        if(hierarchy.count(QLatin1Char(':')) == 1){
+            auto *c = inst->cell();
+            Layer *l = Rules::getRules()->getLayer(c->layer());
+            if(l->visible){
+
+                this->paintRect(painter,c);
+
+                //Need to avoid wraparound
+                int w = c->width();
+                QFont font = painter.font();
+                font.setPointSize(1);
+                QFontMetrics fm(font);
+                QString cn = c->name()  + "(" + inst->instanceName() + ")";
+                int psize = c->width()/fm.width(cn)*0.7;
+
+                this->paintMyText(painter,c->centerX(),c->centerY(),cn,l->color,psize);
+            }
+        }
+
+
 
         if(isPainting){
             _paint = false;
         }
 
-        
+
         painter.setTransform(old_trans,false);
         painter.translate(-p->x,-p->y);
 
@@ -197,26 +217,6 @@ namespace cIcPainter{
 
         this->paintChildren(painter,c->children(),hierarchy);
 
-        if(hierarchy.count(QLatin1Char(':')) == 1){
-            Layer *l = Rules::getRules()->getLayer(c->layer());
-            if(l->visible){
-
-                this->paintRect(painter,c);
-
-                //Need to avoid wraparound
-                int w = c->width();
-                QFont font = painter.font();
-                font.setPointSize(1);
-                QFontMetrics fm(font);
-                int psize = c->width()/fm.width(c->name())*0.7;
-
-
-
-                this->paintMyText(painter,c->centerX(),c->centerY(),c->name(),l->color,psize);
-            }
-        }
-
-
         this->endCell(painter);
     }
 
@@ -236,7 +236,6 @@ namespace cIcPainter{
                 if(p->spicePort){
                     this->paintPort(painter,p);
                 }
-
             }else if(child->isText()){
                 Text * p = (Text *) child;
                 this->paintText(painter,p);

@@ -542,13 +542,23 @@ namespace cIcCore{
 
   }
 
-  void Route::routeStrapRects(Rect * sr,QList<Rect*> rects){
-    int width = rules->get(routeLayer_,routeWidthRule_);
+  void Route::routeStrapRects(Rect * sr,QList<Rect*> rects,bool start){
 
-    foreach(auto r, rects){
+
+
+  }
+
+  void Route::routeStrap(){
+
+     int lcuts = startCuts_ > 0 ? startCuts_: 1;
+     int lvcuts = startVCuts_ > 0 ? startVCuts_: 2;
+     int width = rules->get(routeLayer_,routeWidthRule_);
+
+    if(start_rects_.count() == 1){
+      auto sr = start_rects_[0];
+       foreach(auto r, stop_rects_){
         if(!r){continue;}
-        int lcuts = startCuts_ > 0 ? startCuts_: 1;
-        int lvcuts = startVCuts_ > 0 ? startVCuts_: 2;
+
 
         auto rc = new Rect(routeLayer_,sr->x1(),r->y1(),r->x1()-sr->x1(),width);
         this->add(rc);
@@ -560,17 +570,23 @@ namespace cIcCore{
         }
 
       }
-  }
-
-  void Route::routeStrap(){
-
-
-    if(start_rects_.count() == 1){
-      auto sr = start_rects_[0];
-      this->routeStrapRects(sr,stop_rects_);
     }else if (stop_rects_.count() == 1){
       auto sr = stop_rects_[0];
-      this->routeStrapRects(sr,start_rects_);
+      foreach(Rect* r, start_rects_){
+        if(!r){continue;}
+
+        auto rc = new Rect(routeLayer_,r->x2(),r->y1(),sr->x2()-r->x2(),width);
+
+        if(routeLayer_ != sr->layer()){
+          auto cs = Cut::getInstance(sr->layer(),routeLayer_,lcuts,lvcuts);
+          cs->moveTo(rc->x2()-cs->width(),rc->y1());
+          this->add(cs);
+        }
+        this->add(rc);
+
+      }
+
+
     }else{
       qDebug() << "Error: Cannot route strap!";
     }
