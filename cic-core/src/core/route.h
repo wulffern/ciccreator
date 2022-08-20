@@ -97,6 +97,8 @@ namespace cIcCore{
         QList<Rect*> endcuts;
 	QList<Rect*> add_after_route;
         bool leftAlignCut;
+        QString startLayer_;
+        QString stopLayer_;
         
         
         
@@ -107,6 +109,7 @@ namespace cIcCore{
         void routeLeftDownLeftUp();
         void routeLeftUpLeftDown();
         void routeStrap();
+        void routeStrapRects(Rect * sr, QList<Rect*> rects);
         
 	};
 
