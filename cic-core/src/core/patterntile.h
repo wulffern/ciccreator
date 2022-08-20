@@ -155,7 +155,7 @@ namespace cIcCore{
             qreal setMinPolyLength(qreal val){ minPolyLength_ = val*this->rules->gamma(); return minPolyLength_;  }
 
             bool metalUnderMetalRes(){return metalUnderMetalRes_;}
-            bool setMetalUnderMetalRes(bool val){ metalUnderMetalRes_ = val;  }
+            void setMetalUnderMetalRes(bool val){ metalUnderMetalRes_ = val;  }
 
             qreal verticalGrid(){return verticalGrid_;}
             qreal setVerticalGrid(qreal val){ verticalGrid_ = val; return verticalGrid_;  }

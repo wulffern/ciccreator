@@ -109,7 +109,7 @@ namespace cIcCore{
         void routeLeftDownLeftUp();
         void routeLeftUpLeftDown();
         void routeStrap();
-        void routeStrapRects(Rect * sr, QList<Rect*> rects);
+        void routeStrapRects(Rect * sr, QList<Rect*> rects, bool start);
         
 	};
 
