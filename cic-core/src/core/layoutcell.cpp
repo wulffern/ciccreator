@@ -580,9 +580,8 @@ namespace cIcCore{
         }
 
         Rect* m1 = g->getRect("M1");
-        
         if(p && m1){
-            p->set(m1);
+            p->set(m1->getCopy());
         }
 
     }

@@ -508,6 +508,7 @@ namespace cIcCore{
                 }
             }
 
+
             this->add(c);
             Cell::addCell(c);
             _cell_names.append(c->name());
