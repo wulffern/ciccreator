@@ -60,14 +60,11 @@ namespace cIcCore{
                         Q_INVOKABLE void addHorizontalRect(QJsonArray obj);
                         Q_INVOKABLE void alternateGroup(QJsonValue obj);
                         Q_INVOKABLE void resetOrigin(QJsonValue obj);
+                        Q_INVOKABLE void addPortOnEdge(QJsonArray obj);
 
-                        //Set meta information on ports
-
-
+                        void addPortOnEdge(QString layer, QString port, QString location,QString routeType,QString options);
 
                         void addGuard(QString port, double gridMultiplier, QList<QString> layers);
-
-
                         QList<Graph*> getNodeGraphs(QString regex);
                         void noPowerRoute();
                         Instance* addInstance(cIcSpice::SubcktInstance* ckt,int x, int y);

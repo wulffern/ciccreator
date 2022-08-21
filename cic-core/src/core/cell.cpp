@@ -108,7 +108,7 @@ namespace cIcCore{
         foreach(Rect* child, children()){
             if(child == NULL) continue;
             if(child->isInstance()){
-                Cell * inst = (Cell *) child;
+                Cell * inst = static_cast<Cell *>(child);
                 if(inst == NULL) continue;
                 foreach(Port *p, inst->ports()){
                     if(p->name() == name){
@@ -147,7 +147,7 @@ namespace cIcCore{
                 QRegularExpression re_inst(instname);
                 foreach(Rect * child, children()){
                     if(child->isInstance()){
-                        Cell * inst = (Cell*) child;
+                        Cell * inst = static_cast<Cell *>(child);
                         QRegularExpressionMatch m_inst = re_inst.match(inst->instanceName_);
                         if(m_inst.hasMatch()){
                             QList<Rect*> child_rects = inst->findRectanglesByRegex(path,layer);
@@ -331,11 +331,10 @@ namespace cIcCore{
             children_by_type[type].append(child);
 
             if(child->isPort()){
-                Port* p = (Port*) child;
+                Port* p = static_cast<Port *>(child);
                 ports_[p->name()] = p;
                 allPortNames_.append(p->name());
                 allports_[p->name()].append(p);
-
             }
 
             if(child->isRoute()){
@@ -526,12 +525,9 @@ namespace cIcCore{
     Rect* Cell::getBottomLeftRect(){
         int xmin = std::numeric_limits<int>::max();
         int ymin = std::numeric_limits<int>::max();
-        Rect * bottomLeft;
+        Rect * bottomLeft = NULL;
         foreach(Rect * r, this->_children){
             if(r->x1() < xmin && r->y1() < ymin){
-                if(bottomLeft){
-                    delete(bottomLeft);
-                }
                 xmin = r->x1();
                 ymin = r->y1();
                 bottomLeft = new Rect(r);
@@ -544,12 +540,9 @@ namespace cIcCore{
     Rect* Cell::getTopLeftRect(){
         int xmin = std::numeric_limits<int>::max();
         int ymax = -std::numeric_limits<int>::max();
-        Rect * topLeft;
+        Rect * topLeft = NULL;
         foreach(Rect * r, this->_children){
             if(r->x1() < xmin && r->y2() > ymax){
-                if(topLeft){
-                    delete(topLeft);
-                }
                 xmin = r->x1();
                 ymax = r->y2();
                 topLeft = new Rect(r);
@@ -696,7 +689,7 @@ namespace cIcCore{
 
     bool Cell::isEmpty(Cell * c){
         if(c->name() == ""){
-            Cell * r = (Cell * ) c->parent();
+            //Cell * r = (Cell * ) c->parent();
             return true;
         }
         return false;
