@@ -122,6 +122,7 @@ namespace cIcCore{
 		}else if(location == "left"){
 			return left->getCopy();
 		}
+        return NULL;
 	}
 
     Rect* RouteRing::getPointer(QString location){

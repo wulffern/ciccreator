@@ -155,6 +155,7 @@ namespace cIcCore{
             options = obj[3].toString();
         }
 
+
         if(obj.size() > 4){
             cuts = obj[4].toString();
         }
@@ -181,6 +182,7 @@ namespace cIcCore{
             if(rects.count() > 0){
                 QList<Rect*> empty;
                 Route * r = new Route(node,layer,empty,rects,options,routeType);
+                
                 this->add(r);
             }
         }
@@ -542,6 +544,57 @@ namespace cIcCore{
 
         this->addRouteHorizontalRect(layer,rectpath,x,name);
     }
+
+     void LayoutCell::addPortOnEdge(QJsonArray obj)
+    {
+        if(obj.size() < 5){
+            qDebug() << "Error: addPortOnEdge must contain at least 3 element\n";
+            return;
+        }
+        QString layer = obj[0].toString();
+        QString node = obj[1].toString();
+        QString location = obj[2].toString();
+        QString routeType = obj[3].toString();
+        QString options = obj[4].toString();
+
+        this->addPortOnEdge(layer,node,location,routeType,options);
+    }
+
+    void LayoutCell::addPortOnEdge(QString layer,QString node,QString location,QString routeType, QString options){
+
+        if(!ports_.contains(node)){
+            qDebug() << ports_.keys();
+            qDebug() << "Error: " << node << " not a port";
+            return;
+        }
+        auto *p = ports_[node];
+        auto *r = p->get();
+        if(!r){
+            qDebug() << "Error: no port rectangle";
+            return;
+        }
+
+        auto rp = r->getCopy(layer);
+        if(location == "bottom"){
+            rp->moveTo(rp->x1(),this->y1());
+        }else if (location == "top"){
+            rp->moveTo(rp->x1(),this->y2()-rp->height());
+        }else if (location == "right"){
+            rp->moveTo(this->x2() - r->width(),rp->y1());
+        }else if (location == "left"){
+            rp->moveTo(this->x1(),rp->y1());
+        }
+        QList<Rect*> start;
+        start.append(p);
+        QList<Rect*> stop;
+        stop.append(rp);
+        auto *route = new Route(node,layer,start,stop,options,routeType);
+        route->route();
+        this->add(rp);
+        this->add(route);
+        p->set(rp);
+    }
+
 
     void LayoutCell::addGuard(QJsonArray obj)
     {
@@ -964,8 +1017,6 @@ namespace cIcCore{
 
 
     void LayoutCell::route(){
-
-
         foreach(Rect *r, routes_){
             if(r->isRoute()){
                 Route * route = (Route *) r;
@@ -998,7 +1049,6 @@ namespace cIcCore{
             foreach(Rect *r, childRects){
                 rects.append(r);
             }
-
         }
         return rects;
 
@@ -1108,11 +1158,13 @@ namespace cIcCore{
     void LayoutCell::addAllPorts(){
         if(!_subckt) return;
         QStringList nodes = _subckt->nodes();
+
         QString filterChild = "^B$";
         QString filterInstance = "";
         foreach(QString node,nodes){            
             if(ports_.contains(node)) continue;
             QList<Rect*> rects = this->findRectanglesByNode(node+"$",filterChild,filterInstance);
+
             if(rects.count() > 0){
                 Port * p = new Port(node);
                 p->set(rects[0]);

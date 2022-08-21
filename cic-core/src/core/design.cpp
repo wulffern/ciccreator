@@ -683,7 +683,7 @@ namespace cIcCore{
             ckt = 0;
             QJsonObject o = v.toObject();
             QString cl = o["class"].toString();
-            Cell *c;
+            Cell *c = NULL;
 
 
             //Make the object, let's see how that works in Qt

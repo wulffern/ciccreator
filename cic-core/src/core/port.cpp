@@ -139,5 +139,9 @@ namespace cIcCore{
         return o;
     }
 
+    QString Port::toString(){
+        return QString("%7: name=%1 layer=%2 X=%3 Y=%4 W=%5 H=%6").arg(name()).arg(layer()).arg(left()).arg(bottom()).arg(width()).arg(height()).arg(this->metaObject()->className());
+    }
+
 
 }

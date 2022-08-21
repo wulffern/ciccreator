@@ -41,7 +41,7 @@ namespace cIcCore{
     class Cell: public Rect
     {
         Q_OBJECT
-        Q_PROPERTY(QString name READ name WRITE setName)
+        //Q_PROPERTY(QString name READ name WRITE setName)
         Q_PROPERTY(bool physicalOnly READ isPhysicalOnly WRITE setPhysicalOnly)
         Q_INVOKABLE void moveTo(QJsonArray obj);
         Q_INVOKABLE void abstract(QJsonValue obj);
