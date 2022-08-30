@@ -82,7 +82,7 @@ namespace cIcCore{
 
             this->translate(-this->x1(),-this->y1());
         }
-        
+
     }
 
 
@@ -182,7 +182,7 @@ namespace cIcCore{
             if(rects.count() > 0){
                 QList<Rect*> empty;
                 Route * r = new Route(node,layer,empty,rects,options,routeType);
-                
+
                 this->add(r);
             }
         }
@@ -241,7 +241,7 @@ namespace cIcCore{
 
         QList<Rect*> rects = this->findAllRectangles(path,startlayer);
 
-        
+
         foreach(Rect* r, rects){
             if(r == 0) continue;
             Instance * inst= Cut::getInstance(startlayer,stoplayer,hcuts,vcuts);
@@ -272,7 +272,7 @@ namespace cIcCore{
         }
         return 0;
     }
-    
+
 
 
     void LayoutCell::addConnectivityVia(QJsonArray obj)
@@ -295,8 +295,8 @@ namespace cIcCore{
         int grid = this->rules->get("ROUTE","horizontalgrid");
         grid = int(grid*gridMultiplier/10)*10;
 
-        
-        
+
+
         QList<Rect*> rects = this->findAllRectangles(name,startlayer);
         int xgrid = 0;
         bool setPort = true;
@@ -394,16 +394,16 @@ namespace cIcCore{
 
         QList<Rect*> rects = this->findAllRectangles(path,layer);
 
-        
+
         foreach(Rect* r, rects){
             int width = r->width();
             if(cuts > 0){
                 Instance * inst= Cut::getInstance("M1",layer,cuts,1);
                 //TODO: Not sure why it can't be the cut size?
 //                if((r->width() - inst->width()) < this->rules->get("M1","width")/2.0){
-                    width = inst->width();
-                    // }
-                
+                width = inst->width();
+                // }
+
 
             }
             Rect * rn = new Rect(layer,r->x1(), this->y1(),width,this->height());
@@ -428,16 +428,16 @@ namespace cIcCore{
 
         int xspace = this->rules->get("ROUTE","horizontalgrid")*xsize;
         int yspace = this->rules->get("ROUTE","verticalgrid")*ysize;
-        
+
         QList<Rect*> rects = this->findAllRectangles(path,layer);
 
         foreach(Rect* r, rects){
 
             int x;
             int y;
-            
+
             int width;
-            
+
             if(xspace > 0){
                 x = r->x1();
                 y = r->y1() + yspace;
@@ -447,7 +447,7 @@ namespace cIcCore{
                 y = r->y1() + yspace;
                 width = -xspace;
             }
-            
+
             Rect * rn = new Rect(layer, x, y,width,r->height());
             this->add(rn);
         }
@@ -506,7 +506,7 @@ namespace cIcCore{
         this->addPowerRing(layer,name,location,widthmult,spacemult);
     }
 
-  void LayoutCell::addPowerRing(QString layer, QString name, QString location, int widthmult,int spacemult)
+    void LayoutCell::addPowerRing(QString layer, QString name, QString location, int widthmult,int spacemult)
     {
         Instance* c = Cut::getInstance("M3","M4",2,2);
         int metalwidth = c->height()*widthmult;
@@ -545,7 +545,7 @@ namespace cIcCore{
         this->addRouteHorizontalRect(layer,rectpath,x,name);
     }
 
-     void LayoutCell::addPortOnEdge(QJsonArray obj)
+    void LayoutCell::addPortOnEdge(QJsonArray obj)
     {
         if(obj.size() < 5){
             qDebug() << "Error: addPortOnEdge must contain at least 3 element\n";
@@ -620,7 +620,7 @@ namespace cIcCore{
         Rect* r = this->getCopy();
         int yenc = this->rules->get("ROUTE","verticalgrid")*gridMultiplier;
         int xenc = this->rules->get("ROUTE","verticalgrid")*gridMultiplier;
-        
+
         r->adjust(-xenc,-yenc,xenc,yenc);
 
         Guard* g = new Guard(r,layers);
@@ -638,8 +638,8 @@ namespace cIcCore{
         }
 
     }
-    
-    
+
+
     void LayoutCell::addRouteHorizontalRect(QString layer, QString rectpath, int x, QString name)
     {
         QList<Rect*> rects = this->findAllRectangles(rectpath,layer);
@@ -651,14 +651,14 @@ namespace cIcCore{
             if(name != ""){
                 if(r != 0) named_rects_[name] = p;
                 else qDebug() << "Error: Unknown rect " << name;
-                
+
             }
             this->add(p);
-    }
+        }
 
 
     }
-    
+
 
 
     void LayoutCell::addRouteRing(QJsonArray obj)
@@ -679,7 +679,7 @@ namespace cIcCore{
     void LayoutCell::addRouteRing(QString layer, QString name, QString location, int widthmult, int spacemult)
     {
         this->addRouteRing(layer,name,location,widthmult,spacemult,true);
-        
+
     }
 
 
@@ -702,7 +702,16 @@ namespace cIcCore{
             RouteRing* rr = new RouteRing(layer,n,this->getCopy(),location,ygrid,xgrid,metalwidth);
             this->updatePort(n,rr->getDefault());
             QString rail = "rail_" + n;
-            if(rr != 0) named_rects_[rail] = rr;
+            if(rr != 0){
+                named_rects_[rail] = rr;
+
+                //Add all rects as named
+                named_rects_["rail_b_"+ n] = rr->getPointer("bottom");
+                named_rects_["rail_t_"+ n] = rr->getPointer("top");
+                named_rects_["rail_l_"+ n] = rr->getPointer("left");
+                named_rects_["rail_r_"+ n] = rr->getPointer("right");
+            }
+
             this->add(rr);
         }
     }
@@ -800,7 +809,7 @@ namespace cIcCore{
             RouteRing* rr = (RouteRing*) named_rects_["rail_" + node];
             Rect* routering = rr->get(location);
             QList<Rect*> empty;
-            
+
             foreach(Rect* r, rects){
                 QList<Rect*> stop;
                 stop.append(r);
@@ -878,8 +887,8 @@ namespace cIcCore{
         int y = 0;
         bool mirror_y = false;
         if(!_subckt) return;
-        
-            
+
+
         foreach(cIcSpice::SubcktInstance * ckt_inst,_subckt->instances()){
             QString group = ckt_inst->groupName();
 
@@ -895,7 +904,7 @@ namespace cIcCore{
 
             int instance_x = x;
             int instance_y = y;
-            
+
 
             if(ckt_inst->hasProperty("xoffset")){
                 QString offset = ckt_inst->getPropertyString("xoffset");
@@ -918,8 +927,8 @@ namespace cIcCore{
                     instance_y = instance_y + this->rules->get("ROUTE","verticalgrid")*yoffset;
                 }
             }
-            
-            
+
+
             Instance* inst = this->addInstance(ckt_inst,instance_x,instance_y);
 
 
@@ -937,7 +946,7 @@ namespace cIcCore{
 
             }
 
-            
+
             if(alternateGroup_ && mirror_y){
                 inst->setAngle("MY");
 
@@ -945,14 +954,14 @@ namespace cIcCore{
             }else  if(alternateGroup_ && !mirror_y){
 
             }
-            
+
 
             next_x = inst->x2();
             next_y = inst->y2();
 
             x = inst->x1();
-            
-            
+
+
             if(useHalfHeight){
                 y += (inst->y2() - instance_y)/2;
             }else{
@@ -985,7 +994,7 @@ namespace cIcCore{
 
         auto allp = inst->allports();
         auto keys = inst->allPortNames();
-        
+
         foreach(QString s, keys){
 
             foreach(Port * p,allp[s]){
@@ -993,7 +1002,7 @@ namespace cIcCore{
                 if(nodeGraph_.contains(p->name())){
 
                     nodeGraph_[p->name()]->append(p);
-                    
+
                 }else{
                     Graph *g = new Graph();
                     g->name = p->name();
@@ -1001,19 +1010,19 @@ namespace cIcCore{
                     nodeGraphList_.append(p->name());
                     nodeGraph_[p->name()] = g;
                 }
-                                    
+
             }
         }
 
     }
 
     QList<QString> LayoutCell::nodeGraphList()
-        {
+    {
 
-            
-            return nodeGraphList_;
 
-        }
+        return nodeGraphList_;
+
+    }
 
 
     void LayoutCell::route(){
@@ -1065,7 +1074,7 @@ namespace cIcCore{
                 Cell *c = (Cell*) parent;
                 QString name = c->name();
                 bool skip = false;
-                
+
                 if(excludeInstances != "" && c->isInstance()){
                     Instance* i = (Instance*) c;
                     QString name = i->name();
@@ -1073,10 +1082,10 @@ namespace cIcCore{
                     if(name.contains(QRegularExpression(excludeInstances))) skip = true;
                     if(instName.contains(QRegularExpression(excludeInstances))) skip = true;
                 }
-                
+
                 if(!skip)
                     rects.append(r);
-                
+
             }else{
                 rects.append(r);
             }
@@ -1161,7 +1170,7 @@ namespace cIcCore{
 
         QString filterChild = "^B$";
         QString filterInstance = "";
-        foreach(QString node,nodes){            
+        foreach(QString node,nodes){
             if(ports_.contains(node)) continue;
             QList<Rect*> rects = this->findRectanglesByNode(node+"$",filterChild,filterInstance);
 
@@ -1174,7 +1183,7 @@ namespace cIcCore{
 
     }
 
-     QJsonObject LayoutCell::toJson(){
+    QJsonObject LayoutCell::toJson(){
         QJsonObject o = Cell::toJson();
         o["useHalfHeight"] = this->useHalfHeight;
         o["alternateGroup"] = this->alternateGroup_;

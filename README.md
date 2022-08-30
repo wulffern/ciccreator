@@ -66,3 +66,10 @@ it might take some time to get through them all.
 Email: carsten@ciccreator.com
 
 
+# Changelog
+
+## v0.1.4
+
+## Added ability to route to rails. 
+With addDirectedRoute one can do ["M1","AVSS","xa:S-|--rail_r_AVSS","strap"], which will strap all mosfet sources to right route rail.
+The rails are named rail_(t|b|r|l)_(NAME) 
