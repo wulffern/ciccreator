@@ -70,6 +70,8 @@ Email: carsten@ciccreator.com
 
 ## v0.1.4
 
-* Added ability to route to rails.
+* layoutcell: Added ability to route to rails.
 With addDirectedRoute one can do ["M1","AVSS","xa:S-|--rail_r_AVSS","strap"], which will strap all mosfet sources to right route rail.
-The rails are named rail_(t|b|r|l)_(NAME) 
+The rails are named rail_(t|b|r|l)_(NAME)
+* cic-gui: Increased step size for arrow keys
+* cic-gui: Added rubber band zoom.
