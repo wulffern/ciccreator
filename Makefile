@@ -17,7 +17,7 @@
 ##   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ######################################################################
 
-VERSION=0.1.4
+VERSION=0.1.4+
 VERSION_DATE=${VERSION} built on $(shell date)
 VERSION_HASH=${shell git describe --tags}
 
@@ -60,11 +60,13 @@ lay:
 compile:
 	echo "#define CICVERSION \""${VERSION_DATE}"\""  > cic/src/version.h
 	echo "#define CICHASH \""${VERSION_HASH}"\""  >> cic/src/version.h
+	echo "#define CICVERSION \""${VERSION_DATE}"\""  > cic-gui/src/version.h
+	echo "#define CICHASH \""${VERSION_HASH}"\""  >> cic-gui/src/version.h
 	qmake -o qmake.make  ciccreator.pro
 	${MAKE} -f qmake.make
 	test -d build || mkdir build
 	cp build/${CIC} build/cic.${OSBIN}_${VERSION}
-	#cp build/${CICGUI} build/cic-gui.${OSBIN}_${VERSION}
+	cp build/${CICGUI} build/cic-gui.${OSBIN}_${VERSION}
 
 clean:
 	${MAKE} -f qmake.make clean
