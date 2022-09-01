@@ -65,9 +65,9 @@ compile:
 	echo "#define CICHASH \""${VERSION_HASH}"\""  >> cic-gui/src/version.h
 	qmake -o qmake.make  ciccreator.pro
 	${MAKE} -f qmake.make
-	test -d build || mkdir build
-	cp build/${CIC} build/cic.${OSBIN}_${VERSION}
-	cp build/${CICGUI} build/cic-gui.${OSBIN}_${VERSION}
+	test -d release || mkdir release
+	cp release/${CIC} release/cic.${OSBIN}_${VERSION}
+	cp release/${CICGUI} release/cic-gui.${OSBIN}_${VERSION}
 
 clean:
 	${MAKE} -f qmake.make clean
@@ -116,10 +116,10 @@ view3d: GDS3D
 CONT=cic_qt_groovy:latest
 
 docker:
-	docker build   -t ${CONT} .
+	docker release   -t ${CONT} .
 
 run:
-	docker run --rm -it -v `pwd`:/lcic ${CONT} sh -c 'cd /lcic && make && cp /lcic/bin/linux/cic /lcic/build/cic.ubuntu_groovy_${VERSION}'
+	docker run --rm -it -v `pwd`:/lcic ${CONT} sh -c 'cd /lcic && make && cp /lcic/bin/linux/cic /lcic/release/cic.ubuntu_groovy_${VERSION}'
 
 sh:
 	docker run --rm -it -v `pwd`:/lcic ${CONT} bash
