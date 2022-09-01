@@ -46,6 +46,7 @@ CIC=../bin/${OSBIN}/cic.app/Contents/MacOS/cic
 CICGUI=../bin/${OSBIN}/cic-gui.app/Contents/MacOS/cic-gui
 else
 CIC= ../bin/${OSBIN}/cic
+CICGUI=../bin/${OSBIN}/cic-gui
 endif
 
 
@@ -58,7 +59,6 @@ lay:
 	mkdir lay
 
 compile:
-	-mkdir build
 	echo "#define CICVERSION \""${VERSION_DATE}"\""  > cic/src/version.h
 	echo "#define CICHASH \""${VERSION_HASH}"\""  >> cic/src/version.h
 	echo "#define CICVERSION \""${VERSION_DATE}"\""  > cic-gui/src/version.h
