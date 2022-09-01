@@ -27,17 +27,23 @@ ifeq ($(OS),Windows_NT)
 OSNAME=Windows
 OSBIN=windows
 GDS3D=WINDOWS
+OSVER=
+OSID=
 else
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
 OSNAME=macOS
 OSBIN=darwin
 GDS3D=GDS3D/mac/GDS3D.app/Contents/MacOS/GDS3D
+OSID =
+OSVER =
 endif
 ifeq ($(UNAME_S),Linux)
 OSNAME=Linux
 OSBIN=linux
 GDS3D=GDS3D/linux/GDS3D
+OSID=$(shell lsb_release -is)
+OSVER=$(shell lsb_release -rs)
 endif
 endif
 
@@ -66,8 +72,8 @@ compile:
 	qmake -o qmake.make  ciccreator.pro
 	${MAKE} -f qmake.make
 	test -d build || mkdir build
-	cp build/${CIC} build/cic.${OSBIN}_${VERSION}
-	cp build/${CICGUI} build/cic-gui.${OSBIN}_${VERSION}
+	cp build/${CIC} build/cic.${OSBIN}${OSID}${OSVER}_${VERSION}
+	cp build/${CICGUI} build/cic-gui.${OSBIN}${OSID}${OSVER}_${VERSION}
 
 clean:
 	${MAKE} -f qmake.make clean
