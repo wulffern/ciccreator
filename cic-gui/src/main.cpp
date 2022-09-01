@@ -1,9 +1,11 @@
 #include "window.h"
+#include "version.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
 
+    int error =0;
 	if(argc >=  2){
 		
         QString file = argv[1];
@@ -22,11 +24,16 @@ int main(int argc, char *argv[])
 	return app.exec();
 	
 	}else{
-		qDebug() << " Usage: cic-gui <json file> <rule file> \n ";
-		
+        qWarning() << "Usage: cic-gui <JSON file> <Technology file>";
+        qWarning() << "Example: cic-gui ALGIC003_STDLIB.json ST_28NM_FDSOI.tech";
+        qWarning() << "About: \n\tcIcCreator reads a JSON object definition file, technology rule file\n" <<
+            "\tand a SPICE netlist (assumes same name as object definition file)\n\tand outputs a cic description file (.cic)." <<
+            "\n\tVersion" << CICVERSION <<
+            "\n\tHash" << CICHASH << "\n";
+		error = 1;
 	}
 	
-	return 0;
+	return error;
 	
 
 }
