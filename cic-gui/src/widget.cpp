@@ -20,44 +20,44 @@
 
 #include "widget.h"
 
- QPixmap Widget::getIcon(Layer *l){
-         return QPixmap::fromImage(drawColorIconProof(l->color, icon(200)));
-       }
-	
-	QImage Widget::icon(int size) {
-         QImage image(size, size, QImage::Format_ARGB32_Premultiplied);
-         image.fill(Qt::transparent);
-         QPainter p(&image);
-         p.setRenderHint(QPainter::Antialiasing);
-         p.setPen(Qt::NoPen);
-         p.translate(image.rect().center());
-         p.scale(image.width()/2.2, image.height()/2.2);
-         p.setBrush(Qt::white);
-         p.drawRect(0,0,image.width(),image.height());
-         return image;
-      }
+QPixmap Widget::getIcon(Layer *l){
+    return QPixmap::fromImage(drawColorIconProof(l->color, icon(200)));
+}
 
-	void Widget::drawColorIcon(QPainter & p, QColor color, const QImage & alpha)
-      {
-        p.save();
-        p.setCompositionMode(QPainter::CompositionMode_SourceOver);
-        p.fillRect(QRect(0, 0, alpha.width(), alpha.height()), color);
-        p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
-        p.drawImage(0, 0, alpha);
-        p.restore();
-      }
+QImage Widget::icon(int size) {
+    QImage image(size, size, QImage::Format_ARGB32_Premultiplied);
+    image.fill(Qt::transparent);
+    QPainter p(&image);
+    p.setRenderHint(QPainter::Antialiasing);
+    p.setPen(Qt::NoPen);
+    p.translate(image.rect().center());
+    p.scale(image.width()/2.2, image.height()/2.2);
+    p.setBrush(Qt::white);
+    p.drawRect(0,0,image.width(),image.height());
+    return image;
+}
 
-	QImage Widget::drawColorIconProof(QColor color, const QImage & alpha) {
-         QImage result(alpha.size(), alpha.format());
-         QPainter p(&result);
-         drawColorIcon(p, color, alpha);
-         p.setPen(Qt::NoPen);
-         QBrush brush;
-         //brush.setTextureImage(checkers(10));
-         p.setCompositionMode(QPainter::CompositionMode_DestinationAtop);
-         p.fillRect(alpha.rect(), brush);
-         return result;
-      }
+void Widget::drawColorIcon(QPainter & p, QColor color, const QImage & alpha)
+{
+    p.save();
+    p.setCompositionMode(QPainter::CompositionMode_SourceOver);
+    p.fillRect(QRect(0, 0, alpha.width(), alpha.height()), color);
+    p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+    p.drawImage(0, 0, alpha);
+    p.restore();
+}
+
+QImage Widget::drawColorIconProof(QColor color, const QImage & alpha) {
+    QImage result(alpha.size(), alpha.format());
+    QPainter p(&result);
+    drawColorIcon(p, color, alpha);
+    p.setPen(Qt::NoPen);
+    QBrush brush;
+    //brush.setTextureImage(checkers(10));
+    p.setCompositionMode(QPainter::CompositionMode_DestinationAtop);
+    p.fillRect(alpha.rect(), brush);
+    return result;
+}
 
 Widget::Widget( QWidget *parent)
     : QWidget(parent)
@@ -67,10 +67,10 @@ Widget::Widget( QWidget *parent)
     cellPainter = new CellPainter();
     ycenter = 0;
     xcenter = 0;
-    step = 20;
-    
+    step = 100;
+
     QPalette pal = palette();
-  
+
 // set black background
     pal.setColor(QPalette::Background, Qt::white);
     this->setAutoFillBackground(true);
@@ -156,7 +156,8 @@ void Widget::fit()
     double x = 0;
     double y = 0;
 
-    y = cell->centerY()/ratio ;
+
+    y = cell->centerY()/ratio;
     x = cell->centerX()/ratio;
 
     if(isHigh){
@@ -167,30 +168,37 @@ void Widget::fit()
 
     visibleArea.rect.moveTo(x,y);
     this->update();
-
-
-
 }
 
 
-void Widget::zoomArea(QRect r)
-{
-    if(r.width() == 0 || r.height() == 0|| visibleArea.zoom == 0) return;
 
+
+void Widget::zoomArea(Rect r)
+{
+    if(r.width() < 10 || r.height() < 10|| visibleArea.zoom == 0) return;
+
+
+    //- This zoom took me fucking forever to figure out, so some comments
+    //- Figure out new ratio
     double wratio = ((double)r.width())/this->width();
     double hratio = ((double)r.height())/this->height();
-    double ratio = wratio > hratio ? wratio : hratio;
-    visibleArea.zoom /= ratio;
+    double nratio = wratio > hratio ? wratio : hratio;
+    visibleArea.zoom /= nratio;
 
-    //Visible area is reffered to center of window
-    double y = ( this->height() - (origin.y() + r.height()/2.0));
-    double x = ( (origin.x() + r.width()/2.0) );
+    //- Move the visibleArea to the new zoom location scaled by the new ratio scale
+    visibleArea.rect.moveTo(visibleArea.rect.x1()/nratio,visibleArea.rect.y1()/nratio);
 
-    double ya = y/visibleArea.zoom;
-    double xa = x/visibleArea.zoom;
+    //visibleArea is in screen space, but referred to center of cell
+    //Rubberband is referred to screen space, but absolute
+    //1. Figure out distance from center screen to rubber band center
+    //2. Scale to visibleArea space with the new ratio
+    //2. Translate the view area, but flip Y direction
 
+    double xc = (r.centerX() - xcenter)/nratio;
+    double yc = (r.centerY() - ycenter)/nratio;
 
-    visibleArea.rect.translate(x,0);
+    visibleArea.rect.translate(xc,-yc);
+
     this->update();
 }
 
@@ -199,7 +207,7 @@ void Widget::zoomArea(QRect r)
 void Widget::wheelEvent(QWheelEvent *event)
 {
 
-      if (event->modifiers().testFlag(Qt::ControlModifier) ||event->modifiers().testFlag(Qt::MetaModifier) )
+    if (event->modifiers().testFlag(Qt::ControlModifier) ||event->modifiers().testFlag(Qt::MetaModifier) )
     {
         if(event->delta() < 0){
             zoomIn();
@@ -269,15 +277,9 @@ void Widget::paintEvent(QPaintEvent *event)
     if(cell){
 
         //Zoom and invert
-//        painter.translate(-visibleArea.rect.x1(),
-//        -visibleArea.rect.y1());
-//        painter.translate(-cell->width()*visibleArea.zoom/2,-cell->height()*visibleArea.zoom/2);
-
+        painter.translate(xcenter, ycenter);
+        painter.translate(-visibleArea.rect.x1(),visibleArea.rect.y1());
         painter.scale(visibleArea.zoom,-visibleArea.zoom);
-        painter.translate(xcenter/visibleArea.zoom, -ycenter/visibleArea.zoom);
-        painter.translate(-visibleArea.rect.x1()/visibleArea.zoom,-visibleArea.rect.y1()/visibleArea.zoom);
-
-//        painter.translate(visibleArea.rect.x1()/visibleArea.zoom, -visibleArea.rect.y1()/visibleArea.zoom);
         cellPainter->paintCell(painter,cell,"");
     }
 
@@ -355,24 +357,35 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
 
 void Widget::mousePressEvent(QMouseEvent *event)
 {
-    //origin = event->pos();
-    //if (!rubberBand)
-//        rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
-    //rubberBand->setGeometry(QRect(origin, QSize()));
-    //rubberBand->show();
+    //if(static_cast<QMouseEvent*>(event)->button() == Qt::RightButton)  {
+    origin = event->pos();
+    if (!rubberBand)
+        rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
+    rubberBand->setGeometry(QRect(origin, QSize()));
+    rubberBand->show();
+    rubberBandActive = true;
+
 }
 
 void Widget::mouseMoveEvent(QMouseEvent *event)
 {
-    //rubberBand->setGeometry(QRect(origin, event->pos()).normalized());
+
+    if(rubberBand){
+        rubberBand->setGeometry(QRect(origin, event->pos()).normalized());
+    }
 }
 
 void Widget::mouseReleaseEvent(QMouseEvent *event)
 {
 
-    //zoomArea(rubberBand->rect());
-    //rubberBand->hide();
+    if(rubberBand){
+        QPoint end = event->pos();
+
+        Rect r1 = Rect("",origin.x(),origin.y(),(end.x() - origin.x()),(end.y() - origin.y()));
+        zoomArea(r1);
+        rubberBand->hide();
+    }
+
 
 
 }
-

@@ -60,7 +60,7 @@ public:
     void moveUp();
     void moveDown();
     void fit();
-    void zoomArea(QRect r);
+    void zoomArea(Rect r);
     QPixmap getIcon(Layer *l);
     QImage drawColorIconProof(QColor color, const QImage & alpha);
     QImage icon(int size);
@@ -84,7 +84,7 @@ private:
     CellPainter* cellPainter;
     VisibleArea visibleArea;
     QRubberBand* rubberBand;
-    
+    bool rubberBandActive;
     
     int step;
 
