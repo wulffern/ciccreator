@@ -56,16 +56,17 @@ namespace cIcSpice{
         cIcCore::Device * mtype = rules->getDevice(this->deviceName());
 
 
-
         if(mtype){
-            ts << "M" << instance << " " << nodes.join(' ') <<  " " << mtype->name ;
-
+            ts << mtype->devicetype << instance << " " << nodes.join(' ') <<  " " << mtype->name ;
         }else{
             ts << "M" << instance << " " << nodes.join(' ') <<  " " << this->deviceName() ;
 
         }
 
-        ts << " w=" << getPropertyString("width") << "u l=" << getPropertyString("length") << "u nf=" << getPropertyString("nf") << " M=" << getPropertyString("multiplier") << "\n";
+        double w = _properties["width"].toDouble()*rules->spiceUnit();
+        double l = _properties["length"].toDouble()*rules->spiceUnit();
+
+        ts << " w=" << w << " l=" << l << " nf=" << getPropertyString("nf") << " M=" << getPropertyString("multiplier") << "\n";
 
         return s;
     }
@@ -77,7 +78,10 @@ namespace cIcSpice{
 //        cIcCore::Device * mtype = rules->getDevice(this->deviceName());
         QJsonObject o = SpiceDevice::toJson();
         return o;
+    }
 
+    void Mosfet::fromJson(QJsonObject o){
+        SpiceDevice::fromJson(o);
     }
 
 }

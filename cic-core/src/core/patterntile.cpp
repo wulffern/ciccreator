@@ -42,12 +42,15 @@ namespace cIcCore {
         horizontalGrid_ = 0;
         verticalGridMultiplier_ = 1;
         horizontalGridMultiplier_ = 1;
+        metalUnderMetalRes_ = true;
 
 
         prev_rect_  = 0;
         _has_pr = true;
 
     }
+
+
 
     Rect PatternTile::calcBoundingRect(){
 
@@ -56,6 +59,8 @@ namespace cIcCore {
         int y1  = 0;
         int x2  = ((float)xmax_ + (float)widthoffset_)*(float)xspace_;
         int y2  = ((float)ymax_ + (float)heightoffset_)*(float)yspace_;
+
+        //qDebug() << "Bounding pattern" << x1 << y1 << x2 << y2;
 
         Rect r;
         r.setPoint1(x1,y1);
@@ -353,7 +358,6 @@ namespace cIcCore {
                     
                     
                     if(Pattern.contains(c)){
-                        
 
                         PatternData *p = Pattern[c];
                         if(p){
@@ -375,16 +379,29 @@ namespace cIcCore {
                     }
 
                     //Don't combine rectangles if it's a metal resistor
+
                     if(c != 'r' &&prev_rect_ && prev_rect_->abutsLeft(rect)){
                         prev_rect_->setRight(rect->x2());
                         delete(rect);
                         rect = prev_rect_;
                     }else if(!rect->empty() && !this->_children.contains(rect)){
+
+                        if(c == 'r'){
+                            //Some technologies don't want metal under metal resistor
+                            if(this->metalUnderMetalRes()){
+                                this->add(rect);
+                                rectangles_[layer][y][x] = rect;
+                                prev_rect_ = rect;
+                            }else{
+                            }
+                        }else{
                             this->add(rect);
                             rectangles_[layer][y][x] = rect;
+                            prev_rect_ = rect;
+                        }
+
                     }
-                    
-                    prev_rect_ = rect;
+
 
                     if(p){
                         p->set(rect);
@@ -589,8 +606,23 @@ namespace cIcCore {
                 e->width = w.toDouble();
                 if(this->copyColumn_.count() > 0){
                     foreach(CopyColumn c,copyColumn_){
+                        
                         if(e->x1 < c.offset && (e->x1 + e->width) > c.offset){
                             e->width += (c.length)*c.count;
+                        }else if(mirrorPatternString_) {
+
+                            cout << "\n" << e->x1 << "," << e->y1 << "," << e->width << "," <<e->height << "\n";
+                            int xmax = this->xmax_ + 1 - (c.length)*c.count;
+                            int x2mir = xmax - e->x1;
+                            int x1mir = xmax - e->x1 - e->width;
+
+                            cout << "x1mir=" << x1mir << " x2mir=" << x2mir << "\n";
+                            cout << c.offset<< "\n";
+
+                            if(x1mir < c.offset && x2mir > c.offset){
+                                e->width += (c.length)*c.count;
+                            }
+
                         }
                     }
 
@@ -689,6 +721,40 @@ namespace cIcCore {
 
     void PatternTile::onPaintEnd()
     {
+
+    }
+
+    QJsonObject PatternTile::toJson(){
+        QJsonObject o = Cell::toJson();
+
+
+        o["xmax"]  = xmax_;
+        o["ymax"] = ymax_;
+        o["yoffset"] = yoffset_;
+        o["xspace"] = xspace_;
+        o["yspace"] = yspace_;
+        //o["minPolyLength"] = minPolyLength_;
+        o["widthoffset"] = widthoffset_;
+        o["heightoffset"] = heightoffset_;
+        //o["mirrorPatternString"] = mirrorPatternString_;
+        //o["polyWidthAdjust"] = polyWidthAdjust_;
+        //o["verticalGrid"] = verticalGrid_;
+        //o["verticalGridMultiplier"] =
+
+        return o;
+    }
+
+    void PatternTile::fromJson(QJsonObject o){
+        Cell::fromJson(o);
+
+        xmax_ = o["xmax"].toInt();
+        ymax_ = o["ymax"].toInt();
+        yoffset_ = o["yoffset"].toDouble();
+        xoffset_ = o["xoffset"].toDouble();
+        widthoffset_ = o["widthoffset"].toDouble();
+        heightoffset_ = o["heightoffset"].toDouble();
+        xspace_ = o["xspace"].toInt();
+        yspace_ = o["yspace"].toInt();
 
     }
 

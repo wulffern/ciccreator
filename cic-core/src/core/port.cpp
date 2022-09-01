@@ -34,7 +34,6 @@ namespace cIcCore{
 
     Port::Port(QString name){
         name_ = name;
-        
         routeLayer_ = 0;
         rect_ = 0;
         spicePort = true;
@@ -125,8 +124,10 @@ namespace cIcCore{
     void Port::fromJson(QJsonObject o){
         Rect::fromJson(o);
         name_ = o["name"].toString();
-	spicePort = o["spicePort"].toBool();
+        spicePort = o["spicePort"].toBool();
         routeLayer_ = rules->getLayer(this->layer());
+        rect_ = this->getCopy();
+        rect_->setNet(this->name());
     }
 
     QJsonObject Port::toJson(){
@@ -136,6 +137,10 @@ namespace cIcCore{
         o["spicePort"] = spicePort;
         o["pinLayer"] = this->pinLayer();
         return o;
+    }
+
+    QString Port::toString(){
+        return QString("%7: name=%1 layer=%2 X=%3 Y=%4 W=%5 H=%6").arg(name()).arg(layer()).arg(left()).arg(bottom()).arg(width()).arg(height()).arg(this->metaObject()->className());
     }
 
 

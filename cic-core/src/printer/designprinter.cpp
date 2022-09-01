@@ -116,16 +116,20 @@ namespace cIcPrinter{
         bool skip = false;
         QList<QString> cells = d->cellNames();
 
+        bool hastopcells = d->hasTopCells();
+
         for(int i=0;i<cells.count();i++){
             if(skip) {
-
                 continue;
             }
 
-
             Cell * c = Cell::getCell(cells[i]);
             if(c ){
-                this->printCell(c);
+                if(hastopcells and !c->isUsed()){
+                    continue;
+                }else{
+                    this->printCell(c);
+                }
             }
             if("" != stopcell && cells[i] == stopcell){
 

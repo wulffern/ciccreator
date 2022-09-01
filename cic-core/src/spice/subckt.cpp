@@ -38,6 +38,8 @@ namespace cIcSpice{
 
     }
 
+
+
     Subckt* Subckt::getInstanceSubckt(SubcktInstance* inst){
         Subckt * ckt = NULL;
         if(_allsubckt.contains(inst->subcktName())){
@@ -60,17 +62,26 @@ namespace cIcSpice{
         }
         QJsonArray dev = o["devices"].toArray();
         foreach(auto d, dev){
-
+            auto od = d.toObject();
             //TODO: Parse devices
+            if(od["class"] == "cIcSpice::Mosfet"){
+                Mosfet * m = new Mosfet();
+                m->fromJson(od);
+                this->add(m);
+            }else if(od["class"] == "cIcSpice::Resistor"){
+                Resistor * r = new Resistor();
+                r->fromJson(od);
+                this->add(r);
+            }else{
+                qDebug() << "Unknown device class " << o["class"];
+            }
         }
 
         QJsonArray prop = o["properties"].toArray();
         foreach(auto p, prop){
 
-
+            //TODO parse properties
         }
-
-        
 
     }
     
@@ -80,12 +91,14 @@ namespace cIcSpice{
         QJsonObject o = SpiceObject::toJson();
         QJsonArray ar;
         foreach(SubcktInstance* i, _instances){
+            i->setPrefix(this->prefix_);
             QJsonObject oi = i->toJson();
             ar.append(oi);
         }
 
         QJsonArray ar1;        
         foreach(SpiceDevice* i, _devices){
+            i->setPrefix(this->prefix_);
             QJsonObject oi = i->toJson();
             ar1.append(oi);
         }
@@ -93,7 +106,7 @@ namespace cIcSpice{
         
         o.remove("deviceName");            
             
-        o["name"] = name();
+        o["name"] = this->prefix_ + name();
         o["instances"] = ar;
         o["devices"] = ar1;
         return o;
@@ -121,8 +134,22 @@ namespace cIcSpice{
 
         _allsubckt[this->name()] = this;
 
-        //TOOD: I assume there are no parameters on subckt
         firstLine = firstLine.trimmed();
+
+        //Remove parameters
+        QRegularExpression re_params("\\s+(\\S+)\\s*=\\s*(\\S+)");
+        QRegularExpressionMatchIterator it= re_params.globalMatch(firstLine);
+        while (it.hasNext()) {
+
+            QRegularExpressionMatch m_params = it.next();
+
+            //- TODO do I want to use parameters for anything on subckt??
+            //_properties[m_params.captured(1)] = m_params.captured(2);
+        }
+
+
+        firstLine.replace(re_params,"");
+
 
         //Split on space
         const QRegularExpression re_space("\\s+");

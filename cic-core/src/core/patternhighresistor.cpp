@@ -48,12 +48,11 @@ namespace cIcCore{
 
 
 
-        if(layer == "PO"){
+        if(layer.startsWith("PO")){
 
             int pofinger = data["pofinger"].toInt();
             if(pofinger < x){
                 data["nf"] = data["nf"].toInt() +  1;
-
                 data["pofinger"] = x;
             }
 
@@ -88,9 +87,7 @@ namespace cIcCore{
     {
 
         if(data.contains("nf")){
-
-            //-2 is for the dummies
-            int nf = data["nf"].toInt() - 1;
+            int nf = data["nf"].toInt();
             res->setProperty("nf",nf);
         }
 

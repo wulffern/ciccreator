@@ -200,6 +200,7 @@ namespace cIcCore{
             devices_[key] = new Device();
             QJsonObject dev = devices[key].toObject();
             devices_[key]->name = dev["name"].toString();
+            devices_[key]->devicetype = dev["devicetype"].toString();
             QJsonArray ar = dev["ports"].toArray();
             foreach(QJsonValue p, ar){
                 devices_[key]->ports.append(p.toString());

@@ -39,8 +39,8 @@ namespace cIcCore{
                         LayoutCell(const LayoutCell&);
                         ~LayoutCell() ;
 
-                        Q_INVOKABLE void setYoffsetHalf(QJsonValue obj);
-                        Q_INVOKABLE void noPowerRoute(QJsonValue obj);
+                        Q_INVOKABLE void setYoffsetHalf(QJsonValue obj); //doc
+                        Q_INVOKABLE void noPowerRoute(QJsonValue obj); //doc
                         Q_INVOKABLE void addDirectedRoute(QJsonArray obj);
                         Q_INVOKABLE void addConnectivityRoute(QJsonArray obj);
                         Q_INVOKABLE void addPortOnRect(QJsonArray obj);
@@ -48,8 +48,8 @@ namespace cIcCore{
                         Q_INVOKABLE void addConnectivityVia(QJsonArray obj);
                         Q_INVOKABLE void addPortVia(QJsonArray obj);
                         Q_INVOKABLE void addVerticalRect(QJsonArray obj);
-                        Q_INVOKABLE void addRouteRing(QJsonArray obj);
-                        Q_INVOKABLE void addPowerRing(QJsonArray obj);
+                        Q_INVOKABLE void addRouteRing(QJsonArray obj); //doc
+                        Q_INVOKABLE void addPowerRing(QJsonArray obj); //doc
                         Q_INVOKABLE void addRouteConnection(QJsonArray obj);
                         Q_INVOKABLE void addPowerConnection(QJsonArray obj);
                         Q_INVOKABLE void trimRouteRing(QJsonArray obj);
@@ -59,14 +59,12 @@ namespace cIcCore{
                         Q_INVOKABLE void addGuard(QJsonArray obj);
                         Q_INVOKABLE void addHorizontalRect(QJsonArray obj);
                         Q_INVOKABLE void alternateGroup(QJsonValue obj);
+                        Q_INVOKABLE void resetOrigin(QJsonValue obj);
+                        Q_INVOKABLE void addPortOnEdge(QJsonArray obj);
 
-
-
-
+                        void addPortOnEdge(QString layer, QString port, QString location,QString routeType,QString options);
 
                         void addGuard(QString port, double gridMultiplier, QList<QString> layers);
-
-
                         QList<Graph*> getNodeGraphs(QString regex);
                         void noPowerRoute();
                         Instance* addInstance(cIcSpice::SubcktInstance* ckt,int x, int y);
@@ -101,6 +99,7 @@ namespace cIcCore{
 
 
                         virtual void fromJson(QJsonObject obj);
+                        virtual Rect * cellFromJson(QJsonObject co);
                         virtual  QJsonObject  toJson();
 
                         void addPowerRoute(QString net,QString excludeInstances);
@@ -113,6 +112,7 @@ namespace cIcCore{
                         QHash<QString,Graph*> nodeGraph_;
 
                         bool noPowerRoute_;
+
 
                         void addToNodeGraph(Instance * inst);
 

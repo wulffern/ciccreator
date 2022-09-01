@@ -24,12 +24,13 @@ namespace cIcCore{
     Design::Design(){
         //Need to register celltypes for reflection later on
         qRegisterMetaType<cIcCore::Cell>("cIcCore::Cell");
+        qRegisterMetaType<cIcCore::Rect>("cIcCore::Rect");
+        qRegisterMetaType<cIcCore::Text>("cIcCore::Text");
+        qRegisterMetaType<cIcCore::Port>("cIcCore::Port");
         qRegisterMetaType<cIcCore::LayoutCell>("cIcCore::LayoutCell");
         qRegisterMetaType<cIcCore::PatternTile>("cIcCore::PatternTile");
         qRegisterMetaType<cIcCore::PatternTransistor>("cIcCore::PatternTransistor");
         qRegisterMetaType<cIcCore::PatternCapacitor>("cIcCore::PatternCapacitor");
-        qRegisterMetaType<cIcCore::LayoutCell>("cIcCore::LayoutCell");
-        qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
         qRegisterMetaType<cIcCore::LayoutRotateCell>("cIcCore::LayoutRotateCell");
         qRegisterMetaType<cIcCells::SAR>("cIcCells::SAR");
         qRegisterMetaType<cIcCells::CapCell>("cIcCells::CapCell");
@@ -38,7 +39,8 @@ namespace cIcCore{
         qRegisterMetaType<cIcCore::PatternHighResistor>("cIcCore::PatternHighResistor");
         qRegisterMetaType<cIcCore::PatternResistor>("cIcCore::PatternResistor");
         qRegisterMetaType<cIcCore::ConnectSourceDrain>("ConnectSourceDrain");
-       qRegisterMetaType<cIcCells::CapCellV2>("cIcCells::CapCellV2");
+        qRegisterMetaType<cIcCells::CapCellV2>("cIcCells::CapCellV2");
+
 
 
         //Translate from Perl names to c++ names
@@ -49,6 +51,7 @@ namespace cIcCore{
         cellTranslator["Gds::GdsPatternCapacitorGnd"] = "cIcCore::PatternCapacitor";
         cellTranslator["cIcCore::PatternCapacitorGnd"] = "cIcCore::PatternCapacitor";
         cellTranslator["Layout::LayoutDigitalCell"] = "cIcCore::LayoutCell";
+        cellTranslator["cIcCore::LayoutCell"] = "cIcCore::LayoutCell";
         cellTranslator["Layout::LayoutRotateCell"] = "cIcCore::LayoutRotateCell";
         cellTranslator["Layout::LayoutSARCDAC"] = "cIcCells::SAR";
         cellTranslator["Layout::LayoutCDACSmall"] = "cIcCells::CDAC";
@@ -57,7 +60,17 @@ namespace cIcCore{
         console = new ConsoleOutput();
         readError = false;
         ignoreSetYoffsetHalf = false;
-        
+
+    }
+
+    bool Design::hasTopCells(){
+        if(topcells_.count() > 0){
+            return true;
+        }
+        return false;
+    }
+    void Design::setPrefix(QString prefix){
+        prefix_ = prefix;
     }
 
     bool fexists(const char *filename)
@@ -67,7 +80,7 @@ namespace cIcCore{
             return true;
         } else {
             return false;
-        } 
+        }
 
     }
 
@@ -75,7 +88,7 @@ namespace cIcCore{
     {
         _includePaths.append(filename);
     }
-    
+
 
     bool Design::readCells(QString filename)
     {
@@ -98,6 +111,17 @@ namespace cIcCore{
             if(opt.contains("ignoreSetYoffsetHalf")){
                 ignoreSetYoffsetHalf = opt["ignoreSetYoffsetHalf"].toBool();
             }
+            if(opt.contains("prefix")){
+                this->prefix_ = opt["prefix"].toString();
+            }
+
+            if(opt.contains("topcells")){
+                QJsonArray a = opt["topcells"].toArray();
+                    foreach(const QJsonValue & v, a){
+                        topcells_.append(v.toString());
+                    }
+            }
+
         }
 
 
@@ -109,36 +133,61 @@ namespace cIcCore{
                 QStringList lst;
                 QJsonValue jv = pat[str];
                 if(jv.isArray()){
-                    
+
                     QJsonArray a = jv.toArray();
                     foreach(const QJsonValue & v, a){
                         lst.append(v.toString());
-                        
-                    }                    
-                    PatternTile::Patterns[str] = lst;                    
-                }                         
+
+                    }
+                    PatternTile::Patterns[str] = lst;
+                }
             }
-            
+
         }
 
-        
+        //Read libraries
+        QJsonValue library = obj["library"];
+        if(library.isArray()){
+            QJsonArray libraryArray  = library.toArray();
+            foreach (const QJsonValue & value, libraryArray) {
+                QString libfile = value.toString();
+
+                bool fileNotFound = true;
+
+                if(fexists(libfile.toStdString().c_str())){
+                    console->comment("Reading library '" + libfile + "'",ConsoleOutput::green);
+                    this->readJsonFile(libfile);
+                    fileNotFound = false;
+                }
+
+                if(fileNotFound){
+                    console->error("Could not find file '" + libfile + "'");
+                    return false;
+                }
+
+            }
+
+        }
+
+
+
         //Read includes
         QJsonValue include = obj["include"];
         if(include.isArray()){
             QJsonArray includeArray  = include.toArray();
-            foreach (const QJsonValue & value, includeArray) { 
+            foreach (const QJsonValue & value, includeArray) {
                 QString incfile = value.toString();
 
                 bool fileNotFound = true;
-                
+
                 if(fexists(incfile.toStdString().c_str())){
                     if(this->readCells(incfile))
                     {
-                         fileNotFound = false;
-                        
+                        fileNotFound = false;
+
                     }
                 }
-                
+
                 foreach (QString incpath,_includePaths){
                     QString incf = QString("%1/%2").arg(incpath).arg(incfile);
 
@@ -146,22 +195,20 @@ namespace cIcCore{
                         if(this->readCells(incf)){
                             fileNotFound = false;
                         }
-                        
+
                     }
-                    
+
                 }
 
                 if(fileNotFound){
                     console->error("Could not find file '" + incfile + "'");
                     return false;
                 }
-                
-                
+
             }
 
-            
         }
-        
+
         QJsonValue cells = obj["cells"];
         if(cells.isArray()){
             //Run through the array of design cells, and try an match objects
@@ -176,30 +223,41 @@ namespace cIcCore{
         }else{
             console->error("Could not find 'cells' array in json file\n");
             return false;
-            
+
         }
         return true;
     }
-    
-    
+
+
     bool Design::read(QString filename){
 
         bool retval = true;
-        
-        
+
+
         if(readCells(filename)){
             //Import all cuts, and put them on top
             foreach(Cut* cut,Cut::getCuts()){
                 Cell::addCell(cut);
+
                 this->add(cut);
                 _cell_names.insert(0,cut->name());
             }
 
+            //If topcells is set, then mark which cells have been used
+            foreach(QString s,topcells_){
+                Cell * c = Cell::getCell(s);
+                if(c){
+                    c->setUsed(true);
+                    c->updateUsedChildren();
+                }
+
+            }
+
         }else{
             retval = false;
-            
+
         }
-        
+
         return retval;
     }
 
@@ -228,6 +286,7 @@ namespace cIcCore{
 
             _spice_parser.parseSubckt(0,strlist);
             ckt = _spice_parser.getSubckt(name);
+
         }
 
 
@@ -263,14 +322,16 @@ namespace cIcCore{
                 QJsonArray reg_arr = rval.toArray();
                 QString from = reg_arr[0].toString();
                 QString to = reg_arr[1].toString();
+
                 strlist.replaceInStrings(QRegularExpression(from),to);
             }
+
 
             _spice_parser.parseSubckt(0,strlist);
             ckt = _spice_parser.getSubckt(name);
         }
 
-        
+
 
         return ckt;
     }
@@ -318,7 +379,8 @@ namespace cIcCore{
         if(cellTranslator.contains(cl)){
             cl = cellTranslator[cl];
         }else{
-            cerr << "Error(design.cpp): Unknown class " << cl.toStdString() << " for " << name.toStdString() <<  "\n";
+            //TODO: Not correct that it's an unknown class
+            //cerr << "Error(design.cpp): Unknown class " << cl.toStdString() << " for " << name.toStdString() <<  "\n";
         }
 
         //- Set default class name
@@ -327,7 +389,7 @@ namespace cIcCore{
         }
 
         QList<LayoutCellDecorator*> decorators;
-        
+
         //Find decorators
         if( jobj.contains("decorator") ){
             QJsonArray ar = jobj["decorator"].toArray();
@@ -335,19 +397,17 @@ namespace cIcCore{
                 QJsonObject djob = dcjv.toObject();
                 QString decorator = djob.keys()[0];
                 QJsonValue jv = djob[decorator];
-                
+
                 //Make the object, let's see how that works in Qt
                 int id = QMetaType::type(decorator.toUtf8().data());
                 if(id != 0){
                     void* vp = QMetaType::create(id);
                     LayoutCellDecorator * c  = static_cast<LayoutCellDecorator*>(vp);
-                    c->setOptions(jv);                    
+                    c->setOptions(jv);
                     decorators.append(c);
-                }                
+                }
             }
         }
-
-        
 
 
         //Make the object, let's see how that works in Qt
@@ -356,6 +416,7 @@ namespace cIcCore{
             void* vp = QMetaType::create(id);
 
             Cell * c  = static_cast<Cell*>(vp);
+
             c->setName(name);
             console->increaseIndent();
             console->commentStartClass(name);
@@ -367,7 +428,7 @@ namespace cIcCore{
                 if(c->isLayoutCell()){
                     lcd->setCell((LayoutCell*) c);
                     lcd->afterNew();
-                }                
+                }
             }
             //- Run instancemethods
             this->runParentsIfObjectCanMethods(c,reverse_parents);
@@ -384,14 +445,14 @@ namespace cIcCore{
                 if(c->isLayoutCell()){
                     lcd->setCell((LayoutCell*) c);
                     lcd->beforePlace();
-                }                
+                }
             }
             c->place();
             foreach(auto lcd, decorators){
                 if(c->isLayoutCell()){
                     lcd->setCell((LayoutCell*) c);
                     lcd->place();
-                }                
+                }
             }
             this->runAllParentMethods("afterPlace",c,reverse_parents);
             this->runAllMethods("afterPlace",c,jobj);
@@ -399,9 +460,9 @@ namespace cIcCore{
                 if(c->isLayoutCell()){
                     lcd->setCell((LayoutCell*) c);
                     lcd->afterPlace();
-                }                
+                }
             }
-            
+
             //- Route
             this->runAllParentMethods("beforeRoute",c,reverse_parents);
             this->runAllMethods("beforeRoute",c,jobj);
@@ -409,7 +470,7 @@ namespace cIcCore{
                 if(c->isLayoutCell()){
                     lcd->setCell((LayoutCell*) c);
                     lcd->beforeRoute();
-                }                
+                }
             }
             c->route();
             this->runAllParentMethods("afterRoute",c,reverse_parents);
@@ -418,7 +479,7 @@ namespace cIcCore{
                 if(c->isLayoutCell()){
                     lcd->setCell((LayoutCell*) c);
                     lcd->afterRoute();
-                }                
+                }
             }
             c->addAllPorts();
 
@@ -429,14 +490,14 @@ namespace cIcCore{
                 if(c->isLayoutCell()){
                     lcd->setCell((LayoutCell*) c);
                     lcd->beforePaint();
-                }                
+                }
             }
             c->paint();
             foreach(auto lcd, decorators){
                 if(c->isLayoutCell()){
                     lcd->setCell((LayoutCell*) c);
                     lcd->paint();
-                }                
+                }
             }
             this->runAllParentMethods("afterPaint",c,reverse_parents);
             this->runAllMethods("afterPaint",c,jobj);
@@ -444,22 +505,21 @@ namespace cIcCore{
                 if(c->isLayoutCell()){
                     lcd->setCell((LayoutCell*) c);
                     lcd->afterPaint();
-                }                
+                }
             }
-            
-            
-            
-            
+
+
             this->add(c);
             Cell::addCell(c);
             _cell_names.append(c->name());
             ckt = c->subckt();
 
+
             //Make sure this subckt is added to all subckts
             if(ckt){
                 ckt->addSubckt();
             }
-            
+
             console->decreaseIndent();
         }
     }
@@ -560,15 +620,15 @@ namespace cIcCore{
         }
 
         //Search throught the json file and find methods that can be run
-        QRegularExpression re("^new|inherit|leech|class|name|before.*|after.*|comment|decorator");
+        QRegularExpression re("^new|inherit|leech|class|name|before.*|after.*|comment|decorator|spiceRegex");
 
 
         foreach( QString key, jobj.keys()){
             if(re.match(key).hasMatch()){ continue;}
             if( ignoreSetYoffsetHalf && key == "setYoffsetHalf"){continue;}
-            
-            
-                
+
+
+
             QString method_key = key;
             if(nameTranslator.contains(key)){
                 method_key = nameTranslator[key];
@@ -615,29 +675,49 @@ namespace cIcCore{
 
     }
 
-    void Design::fromJson(QJsonObject o){
+    void Design::fromJson(QJsonObject obj){
 
-        QJsonArray ar =  o["cells"].toArray();
+        QJsonArray ar =  obj["cells"].toArray();
+        cIcSpice::Subckt* ckt = 0;
         foreach(QJsonValue v,ar){
+            ckt = 0;
             QJsonObject o = v.toObject();
             QString cl = o["class"].toString();
-            Cell *c;
-            if(cl.contains(QRegularExpression("Don't have special case yet"))){
-            }else{
-                c = new LayoutCell();
+            Cell *c = NULL;
+
+
+            //Make the object, let's see how that works in Qt
+            int id = QMetaType::type(cl.toUtf8().data());
+            if(id != 0){
+                void* vp = QMetaType::create(id);
+                c  = static_cast<Cell*>(vp);
+
             }
+            //if(cl.contains(QRegularExpression("Don't have special case yet"))){
+            //}else{
+            //    c = new LayoutCell();
+            //}
 
             if(c){
+
                 c->fromJson(o);
+                c->setLibCell(true);
+                c->setLibPath(obj["libpath"].toString());
                 this->add(c);
                 Cell::addCell(c);
                 _cell_names.append(c->name());
+                ckt = c->subckt();
+                if(ckt){
+                    ckt->addSubckt();
+                }
+                c->updateBoundingRect();
+
+            }else{
+                console->comment("Unknown cell " + cl,ConsoleOutput::red);
             }
         }
 
     }
-
-
 
 
     QJsonObject Design::toJson(){
@@ -647,9 +727,15 @@ namespace cIcCore{
 
         for(int i=0;i<_cell_names.count();i++){
             Cell * c = Cell::getCell(_cell_names[i]);
+            c->setPrefix(this->prefix_);
             if(c){
-                QJsonObject o = c->toJson();
-                ar.append(o);
+                if(topcells_.count() > 0 and !c->isUsed()){
+                    //Skip if cell is not used and topcell has been set
+                    continue;
+                }else{
+                    QJsonObject o = c->toJson();
+                    ar.append(o);
+                }
             }
         }
         o["cells"] = ar;
@@ -664,7 +750,7 @@ namespace cIcCore{
         if(!file.exists()){
             console->comment("Could not find file '" + filename + "'",ConsoleOutput::red);
             throw "Die";
-            
+
             QJsonObject obj;
             return obj;
         }
@@ -694,20 +780,20 @@ namespace cIcCore{
         QJsonDocument d = QJsonDocument::fromJson(val.toUtf8(),&err);
         if(QJsonParseError::NoError != err.error ){
             readError = true;
-            
+
             QString verr = val.mid(0,err.offset);
             int charcount =0;
             int line_count = 0;
-            
+
             foreach(QString s, valList){
                 charcount += s.length();
                 if(charcount < err.offset){
                     line_count += 1;
                 }
-                
+
             }
             line_count -=3;
-            
+
 
             QString error("%1%2%3%4\n%5\n%6\n%7\n%8\n%9");
             console->comment(error.arg("JSON ERROR (line ")
@@ -729,16 +815,18 @@ namespace cIcCore{
     void Design::readJsonFile(QString filename){
 
         QJsonObject obj = this->readJson(filename);
+        obj["libpath"] = filename.replace(".cic","");
         this->fromJson(obj);
     }
 
 
-    void Design::writeJsonFile(QString filename){
+    void Design::writeJsonFile(QString filename,QJsonObject info){
 
         QFile file;
         file.setFileName(filename);
         file.open(QIODevice::WriteOnly | QIODevice::Text);
         QJsonObject o = this->toJson();
+        o["info"] = info;
 
         QJsonDocument d(o);
         file.write(d.toJson());

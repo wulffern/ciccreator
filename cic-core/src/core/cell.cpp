@@ -28,6 +28,9 @@ namespace cIcCore{
         boundaryIgnoreRouting_ = false;
         _physicalOnly = false;
         abstract_ = false;
+        lib_cell_ = false;
+        cell_used_ = false;
+        _has_pr = false;
 
     }
 
@@ -35,15 +38,24 @@ namespace cIcCore{
         _subckt = NULL;
         boundaryIgnoreRouting_ = false;
         _physicalOnly = false;
+        lib_cell_ = false;
+        lib_path_ = "";
+        cell_used_ = false;
+        _has_pr = false;
     }
 
     Cell::~Cell() {
 
     }
 
+    void Cell::meta(QJsonObject obj){
+        meta_ = obj;
+    }
+
+
+
     void Cell::boundaryIgnoreRouting(QJsonValue obj)
     {
-//        if(!obj) return;
         int bir = obj.toInt();
         if(bir==1) setBoundaryIgnoreRouting(true);
         else setBoundaryIgnoreRouting(false);
@@ -60,7 +72,7 @@ namespace cIcCore{
 
     }
 
-     void Cell::abstract(QJsonValue obj){
+    void Cell::abstract(QJsonValue obj){
         auto v = obj.toInt();
         if(v == 1)
             abstract_ = true;
@@ -96,7 +108,7 @@ namespace cIcCore{
         foreach(Rect* child, children()){
             if(child == NULL) continue;
             if(child->isInstance()){
-                Cell * inst = (Cell *) child;
+                Cell * inst = static_cast<Cell *>(child);
                 if(inst == NULL) continue;
                 foreach(Port *p, inst->ports()){
                     if(p->name() == name){
@@ -135,7 +147,7 @@ namespace cIcCore{
                 QRegularExpression re_inst(instname);
                 foreach(Rect * child, children()){
                     if(child->isInstance()){
-                        Cell * inst = (Cell*) child;
+                        Cell * inst = static_cast<Cell *>(child);
                         QRegularExpressionMatch m_inst = re_inst.match(inst->instanceName_);
                         if(m_inst.hasMatch()){
                             QList<Rect*> child_rects = inst->findRectanglesByRegex(path,layer);
@@ -250,7 +262,7 @@ namespace cIcCore{
     Port * Cell::updatePort(QString name,Rect* r)
     {
 
-        Port* p_ptr;
+        Port* p_ptr = 0;
         if(ports_.contains(name)){
             p_ptr = ports_[name];
             p_ptr->spicePort = this->isASpicePort(name);
@@ -319,25 +331,28 @@ namespace cIcCore{
             children_by_type[type].append(child);
 
             if(child->isPort()){
-                Port* p = (Port*) child;
-                //Remove old port
-//                if(allports_.contains(p->name())){
-//                    allports_.remove(p->name());
-//                }
+                Port* p = static_cast<Port *>(child);
                 ports_[p->name()] = p;
                 allPortNames_.append(p->name());
                 allports_[p->name()].append(p);
             }
 
             if(child->isRoute()){
+
                 routes_.append(child);
             }
+
             child->parent(this);
+
             this->_children.append(child);
+
             connect(child,SIGNAL(updated()),this, SLOT(updateBoundingRect()));
+
         }
 
+
         this->updateBoundingRect();
+
     }
 
     void Cell::translate(int dx, int dy) {
@@ -427,6 +442,7 @@ namespace cIcCore{
     // Bounding rectangle functions
     //-------------------------------------------------------------
     void Cell::updateBoundingRect(){
+
         Rect r = this->calcBoundingRect();
         this->setRect(r);
     }
@@ -437,6 +453,9 @@ namespace cIcCore{
 
 
     Rect Cell::calcBoundingRect(QList<Rect*> children,bool ignoreBoundaryRouting){
+
+
+
         int x1  = std::numeric_limits<int>::max();
         int y1  = std::numeric_limits<int>::max();
         int x2  = -std::numeric_limits<int>::max();
@@ -448,8 +467,6 @@ namespace cIcCore{
         foreach(Rect* cr, children) {
 
             if(ignoreBoundaryRouting && (!cr->isInstance() || cr->isCut())) continue;
-
-
 
 
 
@@ -484,7 +501,6 @@ namespace cIcCore{
     }
 
     Rect Cell::calcBoundingRect(){
-
         return this->calcBoundingRect(this->children(),this->boundaryIgnoreRouting());
     }
 
@@ -509,12 +525,9 @@ namespace cIcCore{
     Rect* Cell::getBottomLeftRect(){
         int xmin = std::numeric_limits<int>::max();
         int ymin = std::numeric_limits<int>::max();
-        Rect * bottomLeft;
+        Rect * bottomLeft = NULL;
         foreach(Rect * r, this->_children){
             if(r->x1() < xmin && r->y1() < ymin){
-                if(bottomLeft){
-                    delete(bottomLeft);
-                }
                 xmin = r->x1();
                 ymin = r->y1();
                 bottomLeft = new Rect(r);
@@ -527,12 +540,9 @@ namespace cIcCore{
     Rect* Cell::getTopLeftRect(){
         int xmin = std::numeric_limits<int>::max();
         int ymax = -std::numeric_limits<int>::max();
-        Rect * topLeft;
+        Rect * topLeft = NULL;
         foreach(Rect * r, this->_children){
             if(r->x1() < xmin && r->y2() > ymax){
-                if(topLeft){
-                    delete(topLeft);
-                }
                 xmin = r->x1();
                 ymax = r->y2();
                 topLeft = new Rect(r);
@@ -545,21 +555,105 @@ namespace cIcCore{
     void Cell::fromJson(QJsonObject o){
         Rect::fromJson(o);
         this->setName(o["name"].toString());
-        _has_pr = o["has_pr"].toBool();
-        //QJsonArray ar = o["children"].toArray();
 
+        if(!this->isInstance()){
+            _has_pr = o["has_pr"].toBool();
+            this->boundaryIgnoreRouting_ = o["boundaryIgnoreRouting"].toBool();
+            //this->instanceName_ = o["instanceName"].toString();
+            this->abstract_ = o["abstract"].toBool();
+            this->_physicalOnly = o["physicalOnly"].toBool();
+        }
+
+        if(!o.contains("children")) return;
+        QJsonArray car = o["children"].toArray();
+
+        if(o.contains("libpath")){
+            QString tmp = o["libpath"].toString();
+            if(tmp != ""){
+                lib_path_ = tmp;
+            }
+        }
+
+        if(o.contains("meta")){
+            meta_ = o["meta"].toObject();
+        }
+
+        if(o.contains("ckt")){
+            cIcSpice::Subckt * subckt = new cIcSpice::Subckt();
+            subckt->fromJson(o["ckt"].toObject());
+            _subckt = subckt;
+        }
+
+        foreach(QJsonValue child,car){
+            QJsonObject co = child.toObject();
+
+            auto c = cellFromJson(co);
+            if(c == 0){
+
+                //TODO cuts are not handled correctly, don't know what to do yet
+
+                if( !(co["name"].toString().contains("cut_"))){
+
+                    qDebug() << this << "Unknown cell " << co["name"] << co["class"];
+                }
+            }else{
+                this->add(c);
+            }
+
+
+        }
     }
+
+    Rect * Cell::cellFromJson(QJsonObject co){
+
+        QString cl = co["class"].toString();
+
+        if(cl == "Rect"){
+            Rect * r = new Rect();
+            r->fromJson(co);
+            return r;
+        }else if(cl == "Text"){
+            Text * t = new Text();
+            t->fromJson(co);
+            return t;
+        }else if(cl == "Port"){
+            Port * p = new Port();
+            p->fromJson(co);
+            return p;
+        }else if(cl == "Cell" || cl== "cIcCore::Route" || cl == "cIcCore::RouteRing" || cl == "cIcCore::Guard" || cl == "cIcCore::Cell"){
+            Cell * l = new Cell();
+            l->fromJson(co);
+            return l;
+        }
+        return 0;
+    }
+
 
     QJsonObject Cell::toJson(){
         QJsonObject o = Rect::toJson();
         o["class"] =  this->metaObject()->className();
-        o["name"] = this->name();
-        o["has_pr"] = this->_has_pr;
+        if(this->isText() or this->isPort() or this->isRoute()  ){
+            o["name"] = this->name();
+        }else{
+            o["name"] = this->prefix_ + this->name();
+        }
 
-        o["abstract"] = this->abstract_;
+        if(!this->isInstance()){
+            o["has_pr"] = this->_has_pr;
+            o["abstract"] = this->abstract_;
+            o["meta"] = meta_;
+            o["physicalOnly"] = this->_physicalOnly;
+            o["libcell"] = this->lib_cell_;
+            o["libpath"] = this->lib_path_;
+            o["cellused"] = this->cell_used_;
+            o["boundaryIgnoreRouting"] = this->boundaryIgnoreRouting_;
+        }
+
 
         cIcSpice::Subckt * ckt = this->subckt();
+
         if(ckt){
+            ckt->setPrefix(this->prefix_);
             QJsonObject ockt = ckt->toJson();
             ockt["class"] = this->metaObject()->className();
             o["ckt"] = ockt;
@@ -567,9 +661,27 @@ namespace cIcCore{
 
         QJsonArray ar;
 
+        QMap<QString,bool> _printedRects;
+
         foreach(Rect * r, children()){
-            QJsonObject child = r->toJson();
-            ar.append(child);
+
+            //If it's a rectangle, then don't print duplicates
+            if(r->isRect()){
+                QString rid = r->toString();
+                if(_printedRects.contains(rid)){
+                    //Skip duplicate rectangles
+                }else{
+                    _printedRects[rid] = true;
+                    QJsonObject child = r->toJson();
+                    ar.append(child);
+                }
+            }else{
+                r->setPrefix(this->prefix_);
+                QJsonObject child = r->toJson();
+                ar.append(child);
+            }
+
+
         }
         o["children"] = ar;
         return o;
@@ -577,7 +689,7 @@ namespace cIcCore{
 
     bool Cell::isEmpty(Cell * c){
         if(c->name() == ""){
-            Cell * r = (Cell * ) c->parent();
+            //Cell * r = (Cell * ) c->parent();
             return true;
         }
         return false;
@@ -603,6 +715,16 @@ namespace cIcCore{
             this->add(r_enc);
         }
 
+    }
+
+    void Cell::updateUsedChildren(){
+        foreach(Rect * r, this->_children){
+            if(r->isCell()){
+                Cell * c = static_cast<Cell*>(r);
+                c->setUsed(this->cell_used_);
+                c->updateUsedChildren();
+            }
+        }
     }
 
 

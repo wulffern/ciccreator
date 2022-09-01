@@ -71,6 +71,11 @@ namespace cIcCore{
         rules = Rules::getRules();
     }
 
+    void Rect::setPrefix(QString prefix){
+        prefix_ = prefix;
+    }
+
+
     //----------------------------------------------------------------------
     // Properties
     //----------------------------------------------------------------------
@@ -346,6 +351,21 @@ namespace cIcCore{
 
     QJsonObject Rect::toJson(){
         QJsonObject o;
+
+        //Not all programs like negative width/height, so fix it
+        int tmp;
+        if(x2_ < x1_){
+            tmp = x2_;
+            x2_ = x1_;
+            x1_ = tmp;
+        }
+
+        if(y2_ < y1_){
+            tmp = y2_;
+            y2_ = y1_;
+            y1_ = tmp;
+        }
+
         o["class"] = "Rect";
         o["x1"] = x1_;
         o["y1"] = y1_;
@@ -356,9 +376,20 @@ namespace cIcCore{
         return o;
     }
 
+    bool Rect::isRect(){
+        QString c = this->metaObject()->className();
+        if(c == "cIcCore::Rect"){
+            return true;
+        }
+
+        return false;
+    }
+
+
     //! Check if this is an cIcCore::Instance object
     bool Rect::isInstance(){
-        if(this->metaObject()->className() == "cIcCore::Instance"){
+        QString c = this->metaObject()->className();
+        if(c == "cIcCore::Instance"){
             return true;
         }else if(this->inherits("cIcCore::Instance")){
             //
@@ -369,7 +400,8 @@ namespace cIcCore{
 
     //! Check if this is a cIcCore::Routeobject
     bool Rect::isRoute(){
-        if(this->metaObject()->className() == "cIcCore::Route"){
+        QString c = this->metaObject()->className();
+        if(c == "cIcCore::Route"){
             return true;
         }else if(this->inherits("cIcCore::Route")){
             return true;
@@ -379,11 +411,12 @@ namespace cIcCore{
 
     //! Check if this is a cIcCore::Cut object
     bool Rect::isCut(){
-        if(this->metaObject()->className() == "cIcCore::Cut"){
+        QString c = this->metaObject()->className();
+        if(c == "cIcCore::Cut"){
             return true;
         }else if(this->inherits("cIcCore::Cut")){
             return true;
-        }else if(this->metaObject()->className() == "cIcCore::InstanceCut"){
+        }else if(c == "cIcCore::InstanceCut"){
             return true;
         }else if(this->inherits("cIcCore::InstanceCut")){
             return true;
@@ -393,7 +426,8 @@ namespace cIcCore{
 
     //! Check if this is a cIcCore::Cell object
     bool Rect::isCell(){
-        if(this->metaObject()->className() == "cIcCore::Cell" ){
+        QString c = this->metaObject()->className();
+        if(c == "cIcCore::Cell" ){
 
             return true;
         }else  if(this->inherits("cIcCore::Cell")){
@@ -404,7 +438,8 @@ namespace cIcCore{
 
     //! Check if this is a cIcCore::LayoutCell object
     bool Rect::isLayoutCell(){
-        if(this->metaObject()->className() == "cIcCore::LayoutCell" ){
+        QString c = this->metaObject()->className();
+        if(c == "cIcCore::LayoutCell" ){
             return true;
         }else  if(this->inherits("cIcCore::LayoutCell")){
             return true;
@@ -415,7 +450,8 @@ namespace cIcCore{
 
     //! Check if this is a cIcCore::Port object
     bool Rect::isPort(){
-        if(this->metaObject()->className() == "cIcCore::Port" ){
+        QString c = this->metaObject()->className();
+        if(c == "cIcCore::Port" ){
             return true;
         }else if(this->inherits("cIcCore::Port")){
             return true;
@@ -426,7 +462,8 @@ namespace cIcCore{
 
     //! Check if this is a cIcCore::Text object
     bool Rect::isText(){
-        if(this->metaObject()->className() == "cIcCore::Text"){
+        QString c = this->metaObject()->className();
+        if(c == "cIcCore::Text"){
             return true;
         }else if(this->inherits("cIcCore::Text")){
             return true;
@@ -434,7 +471,4 @@ namespace cIcCore{
         return false;
 
     }
-
-    
-
 }

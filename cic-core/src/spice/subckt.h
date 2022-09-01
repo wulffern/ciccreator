@@ -26,62 +26,65 @@
 #include "spiceobject.h"
 #include "subcktinstance.h"
 #include "spicedevice.h"
+#include "mosfet.h"
+#include "resistor.h"
 #include <QString>
 #include <QMap>
 #include <iostream>
 
 namespace cIcSpice{
-	using namespace std;
+    using namespace std;
     class Subckt: public SpiceObject
     {
         Q_OBJECT
         Q_PROPERTY(QString name READ name WRITE setName)
 
-    public:
-        Subckt();
-        Subckt(QList<QString> buffer);
-        Subckt(const Subckt&);
-        ~Subckt();
+        public:
+            Subckt();
+            Subckt(QList<QString> buffer);
+            Subckt(const Subckt&);
+            ~Subckt();
 
-        virtual QJsonObject toJson();
-        virtual void fromJson(QJsonObject o);
-        
-
-        static Subckt* getInstanceSubckt(SubcktInstance*);
-        void parse(QList<QString> buffer, int line);
-        QList<SubcktInstance*> instances(){ return _instances;}
-        QList<SpiceDevice*> devices(){ return _devices;}
-
-        void add(SubcktInstance* s)
-        {
-            _instances.append(s);
-        }
-
-        void add(SpiceDevice* s)
-        {
-            _devices.append(s);
-        }
-
-        void addSubckt()
-        {
-            _allsubckt[this->name()] = this;            
-        }
-
-        
-        
-
-        
+            virtual QJsonObject toJson();
+            virtual void fromJson(QJsonObject o);
 
 
-    protected:
-        static QMap<QString,Subckt*> _allsubckt;
+            static Subckt* getInstanceSubckt(SubcktInstance*);
+            void parse(QList<QString> buffer, int line);
+            QList<SubcktInstance*> instances(){ return _instances;}
+            QList<SpiceDevice*> devices(){ return _devices;}
 
-    private:
-        QHash<QString,int> _inst_index;
-        QList<SubcktInstance*> _instances;
-        QList<SpiceDevice*> _devices;
+            void add(SubcktInstance* s)
+            {
+                _instances.append(s);
+            }
 
-		
+            void add(SpiceDevice* s)
+            {
+                _devices.append(s);
+            }
+
+            void addSubckt()
+            {
+                _allsubckt[this->name()] = this;
+            }
+
+
+
+
+
+
+
+
+        protected:
+            static QMap<QString,Subckt*> _allsubckt;
+
+        private:
+            QHash<QString,int> _inst_index;
+            QList<SubcktInstance*> _instances;
+            QList<SpiceDevice*> _devices;
+
+
     };
 
 

@@ -1,0 +1,179 @@
+{
+
+    "options,type:object,help:Global options" :
+    {
+        "ignoreSetYoffsetHalf" : "type:bool,help:Ignore the setYoffsetHalf parameter. Global override",
+
+    },
+    "patterns,type:object,help:Define special patterns for PatternTile" :{
+        "type:string,help:Name of pattern string" : [ "type:string,help: - for no fill, x for fill" ]
+    },
+    "include,type:array,help: Path to include files. Relative to --I" : [
+        "type:string,help:path to include file"
+    ]
+    "cells,type:list,help:List of cells": [
+        {
+            "class" : "default,type:string,help:classname"
+            "spiceRegex,type:list,help:List of list" :[
+                ["type:regex,help:from pattern","type:regex,help:to pattern"]
+            ],
+            "class": "type:string,help:Classname,default:cicCore::LayoutCell",
+            "inherit" : "type:string,help:Name to inherit from",
+            "leech" : "type:string,help:Steal all properties from cell, but ignore parents",
+            "decorator,type:list,help:List of decorators" : [
+                [
+                    {"ConnectSourceDrain" : ["type:string,help:Layer","type:route","type:routeOptions"]}
+                ]
+            ],
+            "afterNew" : [],
+            "beforePlace" : [],
+            "afterPlace" : [],
+            "beforeRoute" : [],
+            "afterRoute" : [ ],
+            "beforePaint" : [ ],
+            "afterPaint" : [ ]
+
+        }
+        {
+            "class" : "cIcCore::Cell",
+            "name" : "default,type:string,help:cellname",
+            "physicalOnly" : "type:bool,help: Don't remember what this does. Don't think it's used",
+            "moveTo,type:list,help:Move cell" : ["x,type:int","y,type:int" ],
+            "abstract,help: Abstract, don't print" : "type:int,help: 1|0",
+            "boundaryIgnoreRouting,help:Ignore routing for updateBoundary": "type:int,help: 1|0,default:0",
+            "mirrorCenterX,help:Not sure if this works" : "type:none",
+            "mirrorCenterY,help:Not sure if this works" : "type:none"
+        },
+        {
+            "class" : "cIcCore::LayoutCell",
+            "setYoffsetHalf,help:Used for digital cells to overlay drain/source": "type:dontcare,default:false,help:if set, true",
+            "noPowerRoute,help:Disable automatic power routing" : "type:dontcare,default:false,help:if set,true",
+            "alternateGroup,help:Alternate mirror Y" : "type:dontcare,default:false,help:if set,true",
+            "afterPlace" : [
+                "addPowerRings,type:list,help:Wide power routing. Names RAIL_(TOP|BOTTOM|LEFT|RIGHT)_<NAME>" : [
+                    [
+                        "layer,type:string",
+                        "name,type:string,help:net name",
+                        "location,type:string,default:rtbl",
+                        "widthmult,type:int,help: cut_2x2.width x widthmult,default:1",
+                        "spacemult,type:int,help: grid x spacemult,default:2" ]
+                ],
+                "addRouteRings,type:list,help: Route rings" : [
+                    [
+                        "layer,type:string",
+                        "netname,type:string,help:Will expand bus <x:0>",
+                        "location,type:string,defautl:rtbl",
+                        "widthmult,type:int,help: cut_2x2.width x widthmult,default:1",
+                        "spacemult,type:int,help: grid x spacemult,default:10" ]
+
+                ]
+            ]
+            "beforeRoute" : [
+                "addDirectedRoutes,type:list" :[
+                    [
+                        "layer,type:string",
+                        "netname,type:string",
+                        "route,type:routeDirection",
+                        "option,type:routeOptions",
+                    ],
+                    "addConnectivityRoutes,type:list" : [
+                        [
+                            "layer",
+                            "regex",
+                            "routeType,type:routeType",
+                            "options,type:routeOptions",
+                            "cuts,type:int,help:Number of cuts",
+                            "excludeInstances,type:regexInstance,default:empty",
+                            "includeInstances,type:regexInstance,default:empty"
+                        ]
+
+                    ]
+                ]
+            ],
+            "afterRoute" : [ ],
+            "beforePaint" : [ ],
+            "afterPaint" : [ ]
+
+        },
+        {"class" : "cIcCore::LayoutRotateCell"},
+        {"class" : "cIcCore::PatternTile"},
+        {"class" : "cIcCore::PatternTransistor"},
+        {"class" : "cIcCore::PatternCapacitor"},
+        {"class" : "cIcCore::PatternHighResistor"},
+        {"class" : "cIcCore::PatternResistor"},
+        {"class" : "cIcCore::PatternHighResistor"},
+        {"class" : "cIcCells::SAR"},
+        {"class" : "cIcCells::CapCell"},
+        {"class" : "cIcCells::CDAC"}
+    ],
+    "types" : {
+        "routeDirection" : {
+            "help" : "Runs a regex set by ^([^-\\|<>]*)([-\\|<>]+)([^-\\|<>]*)$ turns into startRegex;routeType;stopRegex",
+            "startRegex,type:findAllRectangles",
+            "routeType,type:routeType",
+            "stopRegex,type:findAllRectangles"
+        },
+        "findAllRectangles" : {
+            "help" : [
+                "1. findRectanglesByRegex. Search ports by regex. Split list delim=, "
+                "   - if contains :, inst:path, if has instancname search recursively",
+                "   - else search ports, match exact, no regex. If port has layer, return rect "
+                "2. Searches all instances and finds ports that match. If port has layer, return rect",
+                "3. Search custom named ports (RAIL_ etc). return rects"
+            ]
+        },
+        "routeType" : {
+            "help" : [
+                "- -|-- => LEFT",
+                "- --|- => RIGHT",
+                "- - => STRAIGHT",
+                "- -| => U_RIGHT",
+                "- |- => U_LEFT",
+                "- --| => U_TOP",
+                "- |-- => U_BOTTOM",
+                "- -> => STRAIGHT",
+                "- || => VERTICAL"
+            ]
+        }
+        "routeOptions" : [
+            "help" : "Options separated by space or , . See route.cpp for details",
+            "fillhcut, help: Fill horizontal cut",
+            "fillvcut, help: Fill vertical cut",
+            "antenna, help: Make an atenna route, up, short, down",
+            "onTopR, help: Put Right as the first rect",
+            "onTopB, help: Put Bottom rect as first rect",
+            "onTopT, help: Put Top rect as first rect",
+            "onTopL, help: Put Left rect as first rect",
+            "trimstartleft, help: Trim left start",
+            "trimstartright, help: Trim right start",
+            "trimendleft, help: Trim end left",
+            "trimendright, help: Trim end right",
+            "startLayer=Mx, help: Override start rectangle layers",
+            "stopLayer=Mx, help: Override stop rectangle layers",
+            "startoffsetcuthigh",
+            "startoffsetcutlow",
+            "endoffsetcuthigh",
+            "endoffsetcutlow",
+            "offsethighend",
+            "offsetlowend",
+            "track(\\d+),help=Move route by grid x track",
+            "offsethigh",
+            "offsetlow",
+            "nostartcut",
+            "noendcut",
+            "offsethighend",
+            "offsetlowend",
+            "(\\d+)startcuts",
+            "(\\d+)startvcuts",
+            "(\\d+)endcuts",
+            "(\\d+)endvcuts",
+            "(\\d+)cuts",
+            "(\\d+)vcuts",
+            "routeWidth=([^,\\s+,$]+)",
+            "cutalignright",
+            "leftdownleftup",
+            "leftupleftdown",
+            "strap,help: if one stop rect, strap all start rects with straight route to stop. Reverse if one start rect"
+        ]
+    }
+}

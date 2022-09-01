@@ -51,10 +51,15 @@ namespace cIcPrinter{
     if(ckt->name() != ""){
         ts << ".SUBCKT " << ckt->name() << " " << ckt->nodes().join(' ')  << "\n";
         foreach(SpiceDevice* sd,ckt->devices()){
+          if(sd){
+
             ts << sd->toSpice();
+          }
         }
         
-      }
+    }
+
+
     this->subcktInPrint = true;
 
   }

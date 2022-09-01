@@ -21,6 +21,7 @@
 
   CONFIG += qt console
   CONFIG += staticlib
+  CONFIG += debug
   CONFIG += c++11
 
   include(../etc/mac_sdk.pro)

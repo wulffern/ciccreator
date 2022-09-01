@@ -34,14 +34,18 @@ namespace cIcCells{
     public:
         virtual void place();
         virtual Rect calcBoundingRect();
-        void addContacts(QString name, QString node,int y,QList<int> array);
+        void addContacts(QString name, QString node,int y,QList<int> array, Rect* r);
         Rect* getAvssConnectRect(Rect* rect);
-        
+
+            Q_INVOKABLE void usem3(QJsonValue obj);
+            Q_INVOKABLE void heightIncreaseMult(QJsonValue obj);
         
     private:
         int msw;
         int xorg;
-        int yMax;
+            int yMax;
+            bool usem3_ = true;
+            int heightIncreaseMult_ = 1;
         
 
     };

@@ -120,6 +120,7 @@ namespace cIcCore{
 		void setPoint1(int x1, int y1){x1_ = x1;y1_ = y1;}
         void setPoint2(int x2, int y2){x2_ = x2;y2_ = y2;}
 
+        bool isRect();
 	    bool isInstance();
 
         //! Check if this is a cIcCore::Routeobject
@@ -171,10 +172,12 @@ namespace cIcCore{
 
         virtual QJsonObject toJson();
         virtual void fromJson(QJsonObject o);
+                        void setPrefix(QString prefix);
 
 
     protected:
         Rules* rules;
+            QString prefix_;
 
     private:
         QString _layer;

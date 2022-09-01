@@ -1,0 +1,6 @@
+[submodule "ciccreator-bin"]
+	path = ciccreator-bin
+	url = git@github.com:wulffern/ciccreator-bin.git
+[submodule "release"]
+	path = release
+	url = git@github.com:wulffern/ciccreator-bin.git

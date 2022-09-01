@@ -1,4 +1,4 @@
-FROM ubuntu:bionic
+FROM ubuntu
 
 RUN apt-get update -q && \
     DEBIAN_FRONTEND=noninteractive apt-get install -qy make git && \
@@ -43,8 +43,9 @@ RUN mkdir $QT_PATH && cd $QT_PATH \
     && /tmp/qt/installer.run --runoperation QtPatch linux $QT_DESKTOP qt5 || exit 0;
     #&& rm -rf /tmp/qt
 
+WORKDIR /eda
 RUN git clone https://github.com/wulffern/ciccreator.git
 WORKDIR ciccreator
-#RUN git checkout develop
+RUN git checkout develop
 RUN git pull
 RUN make all

@@ -79,6 +79,7 @@ namespace cIcCore{
     if(options.contains(QRegularExpression("fillvcut"))){ fillvcut_ = true ;}
     if(options.contains(QRegularExpression("antenna"))){ antenna_ = true ;}
 
+
     //- Sort direction
     if(options.contains(QRegularExpression("onTopR"))){
       start_rects_ = Rect::sortRightOnTop(start_rects_);
@@ -96,12 +97,13 @@ namespace cIcCore{
       stop_rects_ = Rect::sortLeftOnTop(stop_rects_);
     }
 
+
+
     if(start_rects_.count() == 0 && stop_rects_.count() > 0){
       Rect * r = stop_rects_[0];
       stop_rects_.removeFirst();
       start_rects_.append(r);
     }
-
 
 
     //- Start trim
@@ -124,34 +126,12 @@ namespace cIcCore{
     if(options.contains(QRegularExpression("endoffsetcuthigh(,|\\s+|$)"))){ endOffsetCut_ = HIGH ;}
     else if(options.contains(QRegularExpression("endoffsetcutlow(,|\\s+|$)"))){ endOffsetCut_ = LOW ;}
 
-
-
-
     //- Stop offset;
     if(options.contains(QRegularExpression("offsethighend"))){ stopOffset_ = HIGH ;}
     else if(options.contains(QRegularExpression("offsetlowend"))){ stopOffset_ = LOW ;}
 
     if(options.contains(QRegularExpression("track(\\d+)")))
       hasTrack_ = true;
-
-
-
-
-    track_  = getIntegerFromMatch("track(\\d+)", options,0);
-
-    //- Start offset
-    if(options.contains(QRegularExpression("offsethigh(\\s+|,|$)"))){ startOffset_ = HIGH ;}
-    else if(options.contains(QRegularExpression("offsetlow(\\s+|,|$)"))){ startOffset_ = LOW ;}
-
-
-    //- Stop offset;
-    if(options.contains(QRegularExpression("offsethighend(\\s+|,|$)"))){ stopOffset_ = HIGH ;}
-    else if(options.contains(QRegularExpression("offsetlowend(\\s+|,|$)"))){ stopOffset_ = LOW ;}
-
-    if(options.contains(QRegularExpression("track(\\d+)")))
-      hasTrack_ = true;
-
-
 
 
     track_  = getIntegerFromMatch("track(\\d+)", options,0);
@@ -164,12 +144,36 @@ namespace cIcCore{
     endCuts_ = getIntegerFromMatch("(\\d+)endcuts(\\s+|,|$)", options,0);
     endVCuts_ = getIntegerFromMatch("(\\d+)endvcuts(\\s+|,|$)", options,0);
 
+    //control the number of horizontal cuts
     cuts_  = getIntegerFromMatch("(\\d+)cuts", options,2);
+
+    //Control the number of vertical cuts
     vcuts_  = getIntegerFromMatch("(\\d+)vcuts", options,1);
     routeWidthRule_ = getQStringFromMatch("routeWidth=([^,\\s+,$]+)",options,"width");
 
-    //Route
+    //Ability to force the start layer. Overerrides start rectangle layer
+    startLayer_ = getQStringFromMatch("startLayer=([^,\\s+,$]+)",options,"");
 
+    if(startLayer_ != ""){
+      foreach( auto *r,start_rects_){
+        r->setLayer(startLayer_);
+      }
+    }
+
+    //Ability to force the stop layer. Overerrides stop rectangles layer
+    stopLayer_ = getQStringFromMatch("stopLayer=([^,\\s+,$]+)",options,"");
+
+    if(stopLayer_ != ""){
+      foreach( auto *r,stop_rects_){
+        r->setLayer(stopLayer_);
+      }
+    }
+
+
+
+
+
+    //Route
 
     if(routeType == "-|--"){routeType_ = LEFT;}
     else if(routeType == "--|-"){routeType_ = RIGHT; leftAlignCut = false;}
@@ -202,6 +206,8 @@ namespace cIcCore{
 
 
 
+
+
   }
 
   Route::Route(const Route&){
@@ -214,6 +220,7 @@ namespace cIcCore{
 
   void Route::addStartCuts(){
     if(!this->options_.contains(QRegularExpression("nostartcut"))){
+
 
       int lcuts = startCuts_ > 0 ? startCuts_: cuts_;
       int lvcuts = startVCuts_ > 0 ? startVCuts_: vcuts_;
@@ -447,7 +454,7 @@ namespace cIcCore{
     int space = rules->get(routeLayer_,"space");
 
     Rect start_bound = this->calcBoundingRect(start_rects_);
-    int hgrid = this->rules->get("ROUTE","horizontalgrid");
+    //int hgrid = this->rules->get("ROUTE","horizontalgrid");
 
     int x = 0;
 
@@ -490,7 +497,7 @@ namespace cIcCore{
 
 
     Rect start_bound = this->calcBoundingRect(start_rects_);
-    int hgrid = this->rules->get("ROUTE","horizontalgrid");
+    //int hgrid = this->rules->get("ROUTE","horizontalgrid");
 
     int x = 0;
     x = start_bound.x2() + space*2;
@@ -533,50 +540,56 @@ namespace cIcCore{
 
     this->updateBoundingRect();
 
+  }
 
-    //        auto r = new Rect(routeLayer_,x,yca,width,this->y2() - yca);
-    //        this->add(r);
+  void Route::routeStrapRects(Rect * sr,QList<Rect*> rects,bool start){
+
+
 
   }
 
   void Route::routeStrap(){
-    int width = rules->get(routeLayer_,routeWidthRule_);
+
+     int lcuts = startCuts_ > 0 ? startCuts_: 1;
+     int lvcuts = startVCuts_ > 0 ? startVCuts_: 2;
+     int width = rules->get(routeLayer_,routeWidthRule_);
 
     if(start_rects_.count() == 1){
       auto sr = start_rects_[0];
-      foreach(Rect* r, stop_rects_){
-        int lcuts = startCuts_ > 0 ? startCuts_: 1;
-        int lvcuts = startVCuts_ > 0 ? startVCuts_: 2;
+       foreach(auto r, stop_rects_){
+        if(!r){continue;}
 
-        auto cs = Cut::getInstance(sr->layer(),routeLayer_,lcuts,lvcuts);
+
         auto rc = new Rect(routeLayer_,sr->x1(),r->y1(),r->x1()-sr->x1(),width);
-        cs->moveTo(rc->x1(),rc->y2());
         this->add(rc);
 
-        if( sr->layer() != routeLayer_){
+        if(routeLayer_ != sr->layer()){
+          auto cs = Cut::getInstance(sr->layer(),routeLayer_,lcuts,lvcuts);
+          cs->moveTo(rc->x1(),rc->y2());
           this->add(cs);
         }
+
       }
     }else if (stop_rects_.count() == 1){
       auto sr = stop_rects_[0];
       foreach(Rect* r, start_rects_){
-        int lcuts = endCuts_ > 0 ? endCuts_: 1;
-        int lvcuts = endVCuts_ > 0 ? endVCuts_: 2;
-        auto cs = Cut::getInstance(sr->layer(),routeLayer_,lcuts,lvcuts);
+        if(!r){continue;}
+
         auto rc = new Rect(routeLayer_,r->x2(),r->y1(),sr->x2()-r->x2(),width);
-        cs->moveTo(rc->x2()-cs->width(),rc->y1());
-        this->add(rc);
-        if( sr->layer() != routeLayer_){
+
+        if(routeLayer_ != sr->layer()){
+          auto cs = Cut::getInstance(sr->layer(),routeLayer_,lcuts,lvcuts);
+          cs->moveTo(rc->x2()-cs->width(),rc->y1());
           this->add(cs);
         }
+        this->add(rc);
 
       }
+
+
     }else{
       qDebug() << "Error: Cannot route strap!";
     }
-
-
-
   }
 
 
@@ -613,8 +626,8 @@ namespace cIcCore{
 
     }else{
 
-      int y1_m = this->y1();
-      int y2_m = this->y2();
+      //int y1_m = this->y1();
+      //int y2_m = this->y2();
 
 
       Rect * r = Rect::getVerticalRectangleFromTo(routeLayer_,x,this->y1(),this->y2(),width);

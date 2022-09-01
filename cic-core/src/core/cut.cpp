@@ -300,8 +300,6 @@ namespace cIcCore {
         }
 
         if(c->name() != ""){
-
-
             instance= new InstanceCut();
             instance->setCell(c);
             instance->setName(c->name());

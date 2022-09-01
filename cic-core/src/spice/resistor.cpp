@@ -58,17 +58,32 @@ namespace cIcSpice{
         QTextStream ts(&s);
 
         cIcCore::Rules * rules = cIcCore::Rules::getRules();
-        cIcCore::Device * mtype = rules->getDevice(this->deviceName());
 
-        ts << "XR" << instance << " " << nodes.join(" ") << " "<< mtype->name << "\n";
+        QString deviceName = this->deviceName();
+        if(this->hasProperty("layer")){
+            deviceName += this->getPropertyString("layer");
+        }
+
+        cIcCore::Device * mtype = rules->getDevice(deviceName);
+
+        QString type  = this->deviceName();
+        QString dtype = "X";
+        if(!mtype){
+            qWarning() << "ERROR: Could not find resistor type for " << this->deviceName() << " in rule file";
+    }else{
+            dtype = mtype->devicetype;
+            type = mtype->name;
+        }
+
+
+
+        ts << dtype << instance << " " << nodes.join(" ") << " "<< type << " w=" << this->getPropertyString("width") << " l=" << this->getPropertyString("length")<< "\n";
 
         return s;
     }
 
     QJsonObject Resistor::toJson()
     {
-
-
 
         QList<SubcktInstance*> instances;
         SubcktInstance* ins = new SubcktInstance();
@@ -80,13 +95,13 @@ namespace cIcSpice{
         ins->setDeviceName("resistor");
         instances.append(ins);
 
-
         QJsonObject o = SpiceDevice::toJson();        
 
         return o;
+    }
 
-
-
+    void Resistor::fromJson(QJsonObject o){
+        SpiceDevice::fromJson(o);
     }
     
 

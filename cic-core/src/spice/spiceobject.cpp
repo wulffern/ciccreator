@@ -33,6 +33,10 @@ namespace cIcSpice{
 
     }
 
+    void SpiceObject::setPrefix(QString prefix){
+        prefix_ = prefix;
+    }
+
     QString SpiceObject::name(){return _name;}
     QString SpiceObject::setName(QString val){ _name = val; return _name;}
 
@@ -109,17 +113,15 @@ namespace cIcSpice{
     void SpiceObject::fromJson(QJsonObject o)
     {
         this->setName(o["name"].toString());
-        deviceName_ = o["deviceName"].toString();
+        this->setDeviceName(o["deviceName"].toString());
+        _nodes.clear();
         QJsonArray ar = o["nodes"].toArray();
         foreach(auto n,ar){
             _nodes.append(n.toString());
         }
 
-
         QVariantMap vm = o["properties"].toObject().toVariantMap();
         _properties = vm;
-
-        
 
     }
     

@@ -42,6 +42,7 @@ namespace cIcSpice{
         virtual QJsonObject toJson();
         virtual QString toSpice( QString instance, QStringList nodes);
         virtual QString toSpice();
+            virtual void fromJson(QJsonObject o);
         
 
     protected:
