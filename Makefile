@@ -64,12 +64,15 @@ all: compile
 lay:
 	mkdir lay
 
+debug:
+	${MAKE} compile QTOPT="CONFIG+=debug"
+
 compile:
 	echo "#define CICVERSION \""${VERSION_DATE}"\""  > cic/src/version.h
 	echo "#define CICHASH \""${VERSION_HASH}"\""  >> cic/src/version.h
 	echo "#define CICVERSION \""${VERSION_DATE}"\""  > cic-gui/src/version.h
 	echo "#define CICHASH \""${VERSION_HASH}"\""  >> cic-gui/src/version.h
-	qmake -o qmake.make  ciccreator.pro
+	qmake -o qmake.make  ciccreator.pro ${QTOPT}
 	${MAKE} -f qmake.make
 	test -d release || mkdir release
 	cp release/${CIC} release/cic.${OSBIN}${OSID}${OSVER}_${VERSION}
@@ -87,10 +90,9 @@ doxygen:
 
 help:
 	@echo " make               Compile ciccreator"
-	@echo " make docker        Make a docker image, and compile ciccreator"
-	@echo " make run           Compile stuff inside docker"
-	@echo " make esscirc       Compile SAR ADC from ESSCIRC paper"
-	@echo " make view3d         View SAR in GDS3D"
+	@echo " make bdocker        Make a docker image, and compile ciccreator"
+	@echo " make sh             Run a docker shell"
+	@echo " make esscirc        Compile SAR ADC from ESSCIRC paper"
 
 #- Run the program with the example json file
 EXAMPLE=../examples
@@ -103,23 +105,28 @@ routes: lay
 	cd lay; ${CIC} ${EXAMPLE}/routes.json ${TECHFILE} routes ${OPT}
 
 esscirc: lay
-	cd lay; ${CIC} --gds ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
+	cd lay; ${CIC} ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
 
-GDS3D:
-	wget https://sourceforge.net/projects/gds3d/files/GDS3D%201.8/GDS3D_1.8.tar.bz2/download
-	tar -zxvf download
-	ln -s GDS3D_1.8 GDS3D
-	rm download
+#GDS3D:
+#	wget https://sourceforge.net/projects/gds3d/files/GDS3D%201.8/GDS3D_1.8.tar.bz2/download
+#	tar -zxvf download
+#	ln -s GDS3D_1.8 GDS3D
+#	rm download
 
 view:
 	cd lay; ${CICGUI} SAR_ESSCIRC16_28N.cic  ${TECHFILE}
 
+cppcheck:
+	cppcheck --std=c++11 --enable=all --template="* TODO {file}({line}): {message}" cic-core/src/ cic/src cic-gui/src  2> errors.org
 
-view3d: GDS3D
-	echo ${GDS3D}
-	 ${GDS3D} -p examples/tech_gds3d.txt -i lay/SAR_ESSCIRC16_28N.gds -t SAR9B_EV
+#view3d: GDS3D
+#	echo ${GDS3D}
+#	 ${GDS3D} -p examples/tech_gds3d.txt -i lay/SAR_ESSCIRC16_28N.gds -t SAR9B_EV
 
-CONT=cic_qt_groovy:latest
+CONT=cic_qt:latest
+
+bdocker:
+	docker build . --file Dockerfile --tag cic_qt
 
 docker:
 	docker release   -t ${CONT} .
@@ -129,11 +136,3 @@ run:
 
 sh:
 	docker run --rm -it -v `pwd`:/lcic ${CONT} bash
-
-gds: esscirc_gds routes_gds
-
-esscirc_gds:
-	cd lay; docker run --rm --workdir /lcic/lay -v `pwd`/../:/lcic -t ${CONT} sh -c  '/lcic/bin/cic --gds --spi /lcic/examples/SAR_ESSCIRC16_28N.json /lcic/examples/tech.json SAR_ESSCIRC16_28N'
-
-routes_gds:
-	cd lay; docker run --rm --workdir /lcic/lay -v `pwd`/../:/lcic -t ${CONT} sh -c  '/lcic/bin/cic --gds --spi /lcic/examples/routes.json /lcic/examples/tech.json routes'

@@ -112,7 +112,6 @@ namespace cIcPainter{
                 this->paintRect(painter,c);
 
                 //Need to avoid wraparound
-                int w = c->width();
                 QFont font = painter.font();
                 font.setPointSize(1);
                 QFontMetrics fm(font);
@@ -228,19 +227,19 @@ namespace cIcPainter{
 
             if(!child){continue;}
             if(child->isInstance()){
-                Instance * inst = (Instance*)child;
+                Instance * inst = static_cast<Instance*>(child);
                 if(inst->name() == ""){continue;}
-                this->paintReference(painter,(Instance*)child,hierarchy);
+                this->paintReference(painter,inst,hierarchy);
             }else if(child->isPort()){
-                Port * p = (Port *) child;
+                Port * p = static_cast<Port *>(child);
                 if(p->spicePort){
                     this->paintPort(painter,p);
                 }
             }else if(child->isText()){
-                Text * p = (Text *) child;
+                Text * p = static_cast<Text*>(child);
                 this->paintText(painter,p);
             }else if (child->isCell()){
-                Cell * c = (Cell * ) child;
+                Cell * c = static_cast<Cell*>(child);
                 this->paintChildren(painter,c->children(),hierarchy);
 
             }else{

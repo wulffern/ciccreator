@@ -65,25 +65,25 @@ namespace cIcCells{
         msw = (ms + mw);
         int mswy = msw + ms + ct->width();
         int bits = 5;
-        int msc = ct->width()/2 + ms*2;
+        //int msc = ct->width()/2 + ms*2;
 
         // Height is the same as bits x spacing x width
         int height = msw*bits;
-        int xm1 = 0;
+        //int xm1 = 0;
         xorg = ct->width() + ms*2;
         int x= xorg;
 
-        int first = 1;
+        //int first = 1;
 
         
-        int y_delta =y + msw;
+
         //- First dummy
         QList<Rect*> rects;
         //rects.append(new Rect("M5",x-  msw ,y , mw, height));
         for (auto i =0; i<count;i +=1) {
             auto r = new Rect("M4",x,y, mw, height);
             rects.append(r);
-            y_delta = y + msw;
+            int y_delta = y + msw;
             
             for(auto z=0;z<bits-1;z +=1){
                 
@@ -213,7 +213,6 @@ namespace cIcCells{
     void CapCellV2::addContacts(QString name, QString node,int y,QList<int> array){
 
         auto ms =  this->getRules()->get("M2","space");
-        auto mw =  this->getRules()->get("M2","width");
 
         auto ctres =  Cut::getInstance("M1","M4",2,1);
         auto inst = this->getInstanceFromInstanceName(name);

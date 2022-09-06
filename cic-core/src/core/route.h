@@ -53,7 +53,7 @@ namespace cIcCore{
 		virtual void addEndCuts(); 
 //		virtual QList<Rect*> addCuts(QList<Rect*>,QList<Rect*>&);
         virtual QList<Rect*> addCuts(QList<Rect*>,QList<Rect*>&,int cuts_, int vcuts_);
-		virtual void route();
+		void route() override;
 
         void routeUHorizontal();
 		void addVertical(int x);
@@ -64,10 +64,10 @@ namespace cIcCore{
         QString getQStringFromMatch(QString regex,QString options, QString defaultValue);
 
 	protected:
-		QString routeLayer_;
-		RouteType routeType_;
+		QString routeLayer_ = "";
+		RouteType routeType_ = ROUTE_UNKNOWN;
 		QString route_;
-		QString net_;
+		QString net_ = "";
 		SortDirection sortDirection_;
 		Offset startOffset_;
         Offset startOffsetCut_;
@@ -84,13 +84,13 @@ namespace cIcCore{
 
 
         
-		int cuts_;
-		int vcuts_;
+		int cuts_ = 2;
+		int vcuts_ = 1;
         QString routeWidthRule_;
 		bool fillvcut_;
 		bool fillhcut_;
 		bool antenna_;
-		QString options_;
+		QString options_ = "";
 		QList<Rect*> start_rects_;
 		QList<Rect*> stop_rects_;
         QList<Rect*> startcuts;

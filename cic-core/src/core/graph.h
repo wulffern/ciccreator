@@ -46,7 +46,7 @@ namespace cIcCore{
 				Rect * r = p->parent();
 				if(r == NULL) continue;
 				if(!r->isInstance()) continue;
-				Instance *i = (Instance *) r;
+				Instance *i = static_cast<Instance *>(r);
 				
 				QString instanceName = i->instanceName();
 

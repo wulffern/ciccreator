@@ -56,10 +56,10 @@ namespace cIcCore{
         foreach(auto cell, layoutcell->children()){
             if(cell && cell->isInstance())
             {
-                Instance * inst = (Instance*) cell;
-                if(inst && inst->cell() && strcmp(inst->cell()->metaObject()->className(),"cIcCore::PatternTransistor") == 0)
+                Instance * inst = static_cast<Instance*>(cell);
+                if(inst->cell() && strcmp(inst->cell()->metaObject()->className(),"cIcCore::PatternTransistor") == 0)
                 {
-                    transistors.append((Instance*) inst);
+                    transistors.append(inst);
                 }                
             }
         }

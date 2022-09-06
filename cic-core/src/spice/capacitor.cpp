@@ -41,11 +41,10 @@ namespace cIcSpice{
         this->spiceType_ = "X";
         this->setNodes(nodes);
 
-        SubcktInstance* ins ;
+
         for(int i=0;i< nodes.count();i++){
             QString node = _nodes[i];
-            ins = new SubcktInstance();
-
+            SubcktInstance* ins = new SubcktInstance();
             QStringList sn;
             sn.append(node);
             sn.append(QString("%1%2").arg("NC").arg(i));

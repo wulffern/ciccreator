@@ -21,10 +21,11 @@
 
   CONFIG += qt console
   CONFIG += staticlib
-  CONFIG += debug
   CONFIG += c++11
 
   include(../etc/mac_sdk.pro)
+
+  include(../etc/config.pro)
   
   TEMPLATE = lib
 
@@ -43,7 +44,8 @@
 
   DEPENDPATH +=.
 
-  INCLUDEPATH += src/ external/libgds_dist/
+  INCLUDEPATH += src/
+  ##external/libgds_dist/
 
   # Input
   HEADERS +=  src/core/rules.h  \
@@ -65,15 +67,12 @@
   src/core/patternhighresistor.h \
   src/core/patternresistor.h \
   src/core/design.h \
-  src/printer/gds.h \
   src/printer/designprinter.h \
   src/spice/spiceparser.h\
   src/spice/subckt.h \
   src/spice/subcktinstance.h \
   src/core/consoleoutput.h \
-  external/libgds_dist/libgds.h \
   src/core/layer.h \
-  src/printer/spice.h \
   src/printer/cics.h \
   src/core/port.h \
   src/core/route.h \
@@ -94,7 +93,7 @@
   src/cells/capcellv2.h
 
 
-  SOURCES +=         src/printer/gds.cpp \
+  SOURCES += \
   src/core/console.cpp \
   src/core/rules.cpp \
   src/core/rect.cpp \
@@ -115,8 +114,6 @@
   src/core/layoutcell.cpp \
   src/core/layer.cpp \
   src/core/consoleoutput.cpp \
-  external/libgds_dist/libgds.c \
-  src/printer/spice.cpp \
   src/printer/cics.cpp \
   src/core/port.cpp\
   src/spice/mosfet.cpp\

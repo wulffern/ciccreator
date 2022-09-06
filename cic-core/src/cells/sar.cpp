@@ -48,16 +48,19 @@ namespace cIcCells{
     {
         Instance* inst = NULL;
 
+        int ind = i;
+        int xc = x;
+
         if(groups.contains(group)){
             foreach(SubcktInstance* ckt, groups[group]){
-                if(i % 2 == 0){
-                    inst = this->addInstance(ckt,x,y);
+                if(ind % 2 == 0){
+                    inst = this->addInstance(ckt,xc,y);
                 }else{
-                    inst = this->addInstance(ckt,x,y);
+                    inst = this->addInstance(ckt,xc,y);
                     inst->setAngle("MY");
                 }
-                i++;
-                x += inst->width() + xoffset;
+                ind++;
+                xc += inst->width() + xoffset;
             }
         }
         return inst;

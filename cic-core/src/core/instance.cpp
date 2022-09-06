@@ -97,9 +97,9 @@ namespace cIcCore{
         foreach(Rect * r,this->children()){
 
             if(! r->isPort()) continue;
-            Port * p = (Port *) r;
+            Port * p = static_cast<Port *>(r);
             if(! p->isInstancePort()) continue;
-            InstancePort * pi = (InstancePort*) p;
+            InstancePort * pi = static_cast<InstancePort*>(p);
             if(pi== NULL) continue;
 
             if(pi->name().contains(QRegularExpression(node)) &&
@@ -192,8 +192,7 @@ namespace cIcCore{
         //- Somehow the cell is not set, so keep the bounding box
         if(this->_cell == 0){
             qDebug() << "_cell in " << this->name() << " instance is null, that should not happen";
-
-            return this;
+            return Rect(static_cast<Rect *>(this));
         }
 
         Rect r = this->_cell->calcBoundingRect();

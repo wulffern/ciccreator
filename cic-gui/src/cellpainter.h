@@ -39,8 +39,6 @@ namespace cIcPainter{
     class CellPainter : public QObject{
     public:
         CellPainter(){
-            _instanceName = "";
-            _paint = true;
         }
         ~CellPainter(){
         }
@@ -59,13 +57,13 @@ namespace cIcPainter{
         virtual void paintReference(QPainter &painter,Instance *,QString hiearchy);
         void paintMyText(QPainter &painter,int x, int y, QString txt, QString colorName,int size);
         double toUnit(int angstrom);
-        int unit;
+        int unit = 1;
 
 
     private:
-        QString _instanceName;
-        bool _paint;
-        QString _hasPainted;
+        QString _instanceName = "";
+        bool _paint = true;
+        QString _hasPainted = "";
 
 
 

@@ -210,8 +210,22 @@ namespace cIcCore{
 
   }
 
-  Route::Route(const Route&){
-
+  Route::Route(const Route& r){
+    routeType_ = r.routeType_;
+    sortDirection_ = r.sortDirection_;
+    startOffset_ = r.startOffset_;
+    startOffsetCut_ = r.startOffsetCut_;
+    endOffsetCut_ = r.endOffsetCut_;
+    stopOffset_ = r.stopOffset_;
+    startTrim_ = r.startTrim_;
+    endTrim_ = r.endTrim_;
+    track_ = r.track_;
+    startCuts_ = r.startCuts_;
+    startVCuts_ = r.startVCuts_;
+    endCuts_ = r.endCuts_;
+    cuts_ = r.cuts_;
+    vcuts_= r.vcuts_;
+    endVCuts_ = r.endVCuts_;
   }
 
   Route::~Route(){

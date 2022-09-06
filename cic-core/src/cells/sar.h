@@ -51,8 +51,8 @@ namespace cIcCells{
         
     private:
 
-        Rect* sarn;
-        Rect* sarp;
+        Rect* sarn = NULL;
+        Rect* sarp = NULL;
 
     };
     

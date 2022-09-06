@@ -209,7 +209,6 @@ namespace cIcCells{
     void CapCell::addContacts(QString name, QString node,int y,QList<int> array, Rect * cp){
 
         auto ms =  this->getRules()->get("M2","space");
-        auto mw =  this->getRules()->get("M2","width");
 
         auto ctres =  Cut::getInstance("M1","M4",2,1);
         auto inst = this->getInstanceFromInstanceName(name);

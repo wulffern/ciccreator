@@ -39,9 +39,9 @@ namespace cIcCells{
         
         
     private:
-        int msw;
-        int xorg;
-        int yMax;
+        int msw = 0;
+        int xorg = 0;
+        int yMax = 0;
         
 
     };

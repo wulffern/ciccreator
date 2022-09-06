@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT += core widgets
-CONFIG += qt console debug
+CONFIG += qt console
 TEMPLATE = app
 mac {
 ICON = ALGIC003_STDLIB.icns
@@ -22,3 +22,4 @@ src/window.h
 
 include(../etc/console_config.pro)
 include(../etc/mac_sdk.pro)
+include(../etc/config.pro)

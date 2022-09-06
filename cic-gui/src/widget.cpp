@@ -301,7 +301,7 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
 
     Qt::KeyboardModifiers keyMod = QApplication::keyboardModifiers ();
     isSHIFT = keyMod.testFlag(Qt::ShiftModifier);
-    bool isCTRL = keyMod.testFlag(Qt::ControlModifier);
+    //bool isCTRL = keyMod.testFlag(Qt::ControlModifier);
 
     if(event->type() == QEvent::KeyPress){
 

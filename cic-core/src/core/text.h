@@ -38,14 +38,14 @@ namespace cIcCore{
 
 	  Text();
 	  ~Text();
-	  Text(QString name);
+	  explicit Text(QString name);
 
 	  //! Net name
 	  QString name();
 	  void setName(QString name);
 	  
-	  virtual QJsonObject toJson();
-	  virtual void fromJson(QJsonObject o);
+	  QJsonObject toJson() override;
+	  void fromJson(QJsonObject o) override;
 
   protected:
 	  QString name_;	  

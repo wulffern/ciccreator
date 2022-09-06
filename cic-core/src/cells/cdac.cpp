@@ -63,8 +63,8 @@ namespace cIcCells{
         
 
         //Add the route rings
-        for(auto x=i;x>=0;x--){
-            QString name = QString("CP<%1>").arg(x);
+        for(auto k=i;k>=0;k--){
+            QString name = QString("CP<%1>").arg(k);
             this->addRouteRing("M2",name,"l",1,2,false);
             
         }
@@ -73,16 +73,16 @@ namespace cIcCells{
         foreach(Graph* graph,graphs){
             foreach(Port* p, graph->ports){
                 if(!p->isInstancePort()) continue;
-                InstancePort* ip = (InstancePort*) p;
+                InstancePort* ip = static_cast<InstancePort*>(p);
                 if(!ip->childName().contains("C")) continue;
                 Rect * r = p->parent();
                 if(!r->isInstance()) continue;
-                Instance* i = (Instance *) r;
-                Cell* c = (Cell*) i->cell();
+                Instance* inst = static_cast<Instance *>(r);
+                Cell* c = static_cast<Cell*>(inst->cell());
                 if(c && strcmp(c->metaObject()->className(),"cIcCells::CapCell") == 0){
-                    CapCell* cap = (CapCell*) c;
+                    CapCell* cap = static_cast<CapCell*>(c);
                     Rect* rect = cap->getAvssConnectRect(p);
-                    rect->translate(i->x1(),0);
+                    rect->translate(inst->x1(),0);
                     this->add(rect);
                 }
                         

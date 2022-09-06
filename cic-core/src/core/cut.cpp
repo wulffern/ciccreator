@@ -182,8 +182,8 @@ namespace cIcCore {
 
                 for(int x = 0;x < horizontal_cuts; x++){
                     for( int y = 0;y < vertical_cuts; y++){
-                        Rect * r = new Rect(l->name,xa1,ya1,cut_width,cut_height);
-                        this->add(r);
+                        Rect * r1 = new Rect(l->name,xa1,ya1,cut_width,cut_height);
+                        this->add(r1);
                         ya1 += cut_height + cut_space;
                     }
                     ya1 = enc_y;

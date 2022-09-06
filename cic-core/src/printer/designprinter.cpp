@@ -57,19 +57,19 @@ namespace cIcPrinter{
         foreach(Rect * child,children){
             if(!child){continue;}
             if(child->isInstance()){
-                Instance * inst = (Instance*)child;
+                Instance * inst = static_cast<Instance*>(child);
                 if(inst->name() == ""){continue;}
-                this->printReference((Instance*)child);
+                this->printReference(inst);
             }else if(child->isPort()){
-                Port * p = (Port *) child;
+                Port * p =  static_cast<Port*>(child);
                 if(p->spicePort){
                     this->printPort(p);
                 }
             }else if(child->isText()){
-                Text * p = (Text *) child;
+                Text * p =  static_cast<Text*>(child);
                 this->printText(p);
             }else if (child->isCell()){
-                Cell * c = (Cell * ) child;
+                Cell * c =  static_cast<Cell*>(child);
                 this->printChildren(c->children());
 
             }else{

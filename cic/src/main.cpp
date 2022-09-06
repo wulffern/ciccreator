@@ -26,8 +26,7 @@
 
 
 //- Default
-bool gds = false;
-bool spice = false;
+
 
 
 int main(int argc, char *argv[])
@@ -55,18 +54,10 @@ int main(int argc, char *argv[])
             }else if(arg == "--prefix" && (i+1)< argc){
                 prefix = argv[i+1];
                 i  = i+1;
-            }else if(arg == "--nogds"){
-                gds = false;
-            }else if(arg == "--gds"){
-                gds = true;
-            }else if(arg == "--spi"){
-                spice = true;
             }else{
                 arguments.append(arg);
             }
         }
-
-
 
 
         if(arguments.length() >=  3){
@@ -81,8 +72,6 @@ int main(int argc, char *argv[])
             QString rules = arguments[2];
             info["rules"] = rules;
             info["includepaths"] = includePaths.join(" ");
-            info["--gds"] = gds;
-            info["--spi"] = spice;
             info["arguments"] = arguments.join(" ");
             info["libpaths"] = libPaths.join(" ");
             info["prefix"] = prefix;
@@ -119,34 +108,12 @@ int main(int argc, char *argv[])
 
             if(d->read(file)){
 
-                if(spice){
-
-                    //Print SPICE file
-                    cIcPrinter::Spice * sp = new cIcPrinter::Spice(library);
-                    sp->print(d);
-                    delete(sp);
-                }
-
-
-
-                if(gds){
-                    //Write GDS
-                    cIcCore::ConsoleOutput console;
-                    console.comment("Writing GDS");
-                    cIcPrinter::Gds * gd = new cIcPrinter::Gds(library);
-                    gd->print(d);
-                    delete(gd);
-                }
-
-
-
                 info["version"] = CICVERSION;
                 info["hash"] = CICHASH;
 
 
                 //Write JSON
                 d->writeJsonFile(library + ".cic",info);
-
 
             }
 
@@ -157,16 +124,15 @@ int main(int argc, char *argv[])
 
     }catch(...){
         qWarning() << "Usage: cic <JSON file> <Technology file> [<Output name>]";
-        qWarning() << "Example: cic ALGIC003_STDLIB.json ST_28NM_FDSOI.tech";
+        qWarning() << "Example: cic examples/SAR_ESSCIRC16_28N.json examples/tech.json SAR_ESSCIRC16_28N";
         qWarning() << "About: \n\tcIcCreator reads a JSON object definition file, technology rule file\n" <<
             "\tand a SPICE netlist (assumes same name as object definition file)\n\tand outputs a cic description file (.cic)." <<
+            "\n\tUse cicpy (https://github.com/wulffern/cicpy) to transpile to other formats."
             "\n\tVersion" << CICVERSION <<
             "\n\tHash" << CICHASH <<
             "\nOptions:\n" <<
             "\t --I\t <path> \t Path to search for include files\n" <<
-             "\t --nogds\t     \t Don't write GDSII file (default)\n" <<
-             "\t --gds\t      \t \t Write GDSII file \n" <<
-             "\t --spi\t      \t \t Write SPICE file \n" <<
+            "\t --L\t <cic file> \t Import compiled CIC file as a library\n" <<
              "";
         error = 1;
 

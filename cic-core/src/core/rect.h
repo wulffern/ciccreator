@@ -42,7 +42,7 @@ namespace cIcCore{
 		~Rect();
 
 		//! Copy rectangle from pointer (r)
-		Rect(Rect *r);
+		explicit Rect(Rect *r);
 
 		Rect(QString layer, int left, int bottom, int width, int height);
 
@@ -260,12 +260,12 @@ namespace cIcCore{
     inline void Rect::setWidth(int width){ x2_ = x1_ + width; emit updated();}
 
     inline void Rect::moveTo(int x, int y){
-        int width = this->width();
-        int height = this->height();
+        int lwidth = this->width();
+        int lheight = this->height();
         x1_ = x;
         y1_ = y;
-        x2_ = x + width;
-        y2_ = y + height;
+        x2_ = x + lwidth;
+        y2_ = y + lheight;
         emit updated();}
 
     inline void Rect::moveCenter(int xc, int yc){

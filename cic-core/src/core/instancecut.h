@@ -31,7 +31,7 @@ namespace cIcCore{
 
   public:
       InstanceCut():Instance(){};
-      InstanceCut(const Instance& inst):Instance(inst){};
+      explicit InstanceCut(const Instance& inst):Instance(inst){};
       ~InstanceCut(){};
   };
 

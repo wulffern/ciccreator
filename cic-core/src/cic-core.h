@@ -1,8 +1,6 @@
 #include "core/design.h"
 #include "core/rules.h"
 #include "core/consoleoutput.h"
-#include "printer/gds.h"
-#include "printer/spice.h"
 #include "printer/cics.h"
 #include "core/consoleoutput.h"
 #include "decorator/layoutcelldecorator.h"

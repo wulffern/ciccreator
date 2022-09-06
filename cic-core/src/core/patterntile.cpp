@@ -226,8 +226,8 @@ namespace cIcCore {
 
             if(this->mirrorPatternString()){
                 QString tmp;
-                for(int i=str.length()-1;i >= 0; i--){
-                    tmp.append(str[i]);
+                for(int k=str.length()-1;k >= 0; k--){
+                    tmp.append(str[k]);
                 }
                 str = tmp;
             }
@@ -359,10 +359,10 @@ namespace cIcCore {
                     
                     if(Pattern.contains(c)){
 
-                        PatternData *p = Pattern[c];
-                        if(p){
+                        PatternData *pl = Pattern[c];
+                        if(pl){
                             rect->setRect(xs,ys,xspace_,yspace_);                            
-                            QList<Rect*> rects = p->getRectangles(rect);
+                            QList<Rect*> rects = pl->getRectangles(rect);
                             foreach(Rect* r,rects){
                                 this->add(rects);
                             }

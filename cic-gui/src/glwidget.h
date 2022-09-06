@@ -45,7 +45,7 @@ class GLWidget : public QOpenGLWidget
     Q_OBJECT
 
 public:
-    GLWidget(QWidget * parent);
+    explicit GLWidget(QWidget * parent);
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
     void setCell(Cell* c);
     void zoomOut();

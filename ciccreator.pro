@@ -18,9 +18,13 @@
 ######################################################################
 
 QMAKE_CFLAGS += $$(CFLAGS)  -g
+QMAKE_CXXFLAGS += $$(CCFLAGS)  -g
 CONFIG += c++11
-CONFIG += debug
+#CONFIG += debug
 CONFIG += static
+
+
+
 
 include(etc/mac_sdk.pro)
 
@@ -32,6 +36,4 @@ TEMPLATE=subdirs
   cic-gui
 
   cic.depends = cic-core
-
-
-
+  cic-gui.depends = cic-core

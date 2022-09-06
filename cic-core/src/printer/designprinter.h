@@ -41,7 +41,7 @@ namespace cIcPrinter{
 	QString stopcell;
 
     public:
-        DesignPrinter(QString filename);
+        explicit DesignPrinter(QString filename);
         ~DesignPrinter();
         char * toChar(QString str);
         bool isEmpty(Cell * c);

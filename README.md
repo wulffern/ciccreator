@@ -21,42 +21,14 @@ compiler, but with a vastly improved performance.
 # Compile and run, the easy version
 
 Although it's possible to run "make" to compile ciccreator on most platforms,
-the compile does require qt 5.4, which is starting to be hard to come by.
-
-As such, the easiest is to use the docker environment (although, for some
-reason, the GDS output is super slow)
-
-    make docker run
-
-To compile the SAR and the routes example do
-
-    make gds
-
-, which will generate the following files in lay/
-
-Example of routing options:
-
-    routes.cic                      JSON output
-    routes.gds                      Layout stream file (KLayout openable)
-    
-Successive-Approximation Analog-To-Digital Converter:
-
-    SAR_ESSCIRC16_28N.cic           JSON output
-    SAR_ESSCIRC16_28N.gds           Layout stream file (KLayout openable)
-
-Another nice option for viewing GDS is [GDS3D](https://sourceforge.net/projects/gds3d/)
+the compile does require qt 5. Head over to ciccreator-bin repository for latest binaries.
 
 For simulation in Skywater 130 nm PDK, head over to [aicex](https://github.com/wulffern/aicex)
  
-
 # Videos
 
 Minecraft video - https://youtu.be/J9lhEt0f3Wk 
 cIcCreator in action - https://youtu.be/hv9u9aQGHQc
-
-# Directions
-I have a full-time job, and three kids, which means that my time for this
-project is unplannable, so things will be coded when they are coded.
 
 
 # Comments/Questions
@@ -68,8 +40,11 @@ Email: carsten@ciccreator.com
 
 # Changelog
 
+## v0.1.5
+* removed GDS and SPICE output. Only *.cic will be supported from now on. Use
+  cicpy to convert to other formats
+  
 ## v0.1.4
-
 * layoutcell: Added ability to route to rails.
 With addDirectedRoute one can do ["M1","AVSS","xa:S-|--rail_r_AVSS","strap"], which will strap all mosfet sources to right route rail.
 The rails are named rail_(t|b|r|l)_(NAME)

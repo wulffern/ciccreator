@@ -50,7 +50,7 @@ class Widget : public QWidget
     Q_OBJECT
 
 public:
-    Widget(QWidget * parent);
+    explicit Widget(QWidget * parent);
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
     void setCell(Cell* c);
     void zoomOut();

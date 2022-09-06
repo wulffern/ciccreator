@@ -61,19 +61,19 @@ namespace cIcCore{
             void add(QList<Rect*> rects);
 
             //! Move this cell, and all children by dx and dy
-            virtual void translate(int dx, int dy);
+            void translate(int dx, int dy) override;
 
             //! Mirror this cell, and all children around ax
-            virtual void mirrorX(int ax);
+            void mirrorX(int ax) override;
 
             //! Mirror this cell, and all children around ay
-            virtual void mirrorY(int ay);
+            void mirrorY(int ay) override;
 
             //! Move this cell, and all children to ax and ay
-            virtual void moveTo(int ax, int ay);
+            void moveTo(int ax, int ay) override;
 
             //! Center this cell, and all children on ax and ay
-            Q_INVOKABLE void moveCenter(int ax, int ay);
+            Q_INVOKABLE void moveCenter(int ax, int ay) override;
 
             Q_INVOKABLE void meta(QJsonObject obj);
 
@@ -203,8 +203,8 @@ namespace cIcCore{
             virtual void findRectangles(QList<Rect*> &rects,QString name,QString layer);
             virtual QList<Rect *> findAllRectangles(QString regex, QString layer);
 
-            virtual QJsonObject toJson();
-            virtual void fromJson(QJsonObject o);
+            QJsonObject toJson() override;
+            void fromJson(QJsonObject o) override;
             virtual Rect * cellFromJson(QJsonObject co);
             QList<Rect*> getChildren(QString type);
 

@@ -265,7 +265,7 @@ namespace cIcCore{
     {
         QList<Rect*> instances = this->getChildren("cIcCore::Instance");
         foreach(Rect* r, instances){
-            Instance* i = (Instance*) r;
+            Instance* i = static_cast<Instance*>(r);
             if(i->instanceName() == instanceName){
                 return i;
             }
@@ -298,14 +298,13 @@ namespace cIcCore{
 
 
         QList<Rect*> rects = this->findAllRectangles(name,startlayer);
-        int xgrid = 0;
         bool setPort = true;
         foreach(Rect* r, rects){
             if(r == 0) continue;
 
             Instance * inst= Cut::getInstance(startlayer,stoplayer,hcuts,vcuts);
 
-            xgrid = (grid != 0) ? grid: inst->width();
+            int xgrid = (grid != 0) ? grid: inst->width();
 
             inst->moveTo(r->x1() + xoffset*grid,r->centerY() + yoffset*inst->height());
 
@@ -523,11 +522,12 @@ namespace cIcCore{
             named_rects_[QString("RAIL_TOP_" + name)] =  rr->getPointer("top");
             named_rects_[QString("RAIL_LEFT_" + name)] =  rr->getPointer("left");
             named_rects_[QString("RAIL_RIGHT_" + name)] =  rr->getPointer("right");
+            this->updatePort(name,rr->getDefault());
+
+            this->add(rr);
         }
 
-        this->updatePort(name,rr->getDefault());
 
-        this->add(rr);
 
     }
 
@@ -700,9 +700,9 @@ namespace cIcCore{
         QStringList names = expandBus(name);
         foreach(QString n,names){
             RouteRing* rr = new RouteRing(layer,n,this->getCopy(),location,ygrid,xgrid,metalwidth);
-            this->updatePort(n,rr->getDefault());
             QString rail = "rail_" + n;
-            if(rr != 0){
+            if(rr){
+                this->updatePort(n,rr->getDefault());
                 named_rects_[rail] = rr;
 
                 //Add all rects as named
@@ -710,9 +710,10 @@ namespace cIcCore{
                 named_rects_["rail_t_"+ n] = rr->getPointer("top");
                 named_rects_["rail_l_"+ n] = rr->getPointer("left");
                 named_rects_["rail_r_"+ n] = rr->getPointer("right");
+                this->add(rr);
             }
 
-            this->add(rr);
+
         }
     }
 
@@ -738,7 +739,7 @@ namespace cIcCore{
 
         Graph* g  = nodeGraph_[name];
         QList<Rect*>  rects = g->getRectangles("",includeInstances,"");
-        RouteRing* routering = (RouteRing*) named_rects_["power_" + name];
+        RouteRing* routering = static_cast<RouteRing*>(named_rects_["power_" + name]);
         Rect* rrect = routering->get(location);
         foreach(Rect* r, rects){
             Instance* ct = Cut::getInstance(r->layer(),rrect->layer(),2,2);
@@ -806,17 +807,19 @@ namespace cIcCore{
 
             Graph * g = nodeGraph_[node];
             QList<Rect*>  rects = g->getRectangles("",includeInstances,layer);
-            RouteRing* rr = (RouteRing*) named_rects_["rail_" + node];
-            Rect* routering = rr->get(location);
-            QList<Rect*> empty;
+            RouteRing* rr = static_cast<RouteRing*>(named_rects_["rail_" + node]);
+            if(rr){
+                Rect* routering = rr->get(location);
+                QList<Rect*> empty;
 
-            foreach(Rect* r, rects){
-                QList<Rect*> stop;
-                stop.append(r);
-                stop.append(routering);
-                Route* ro = new Route(node,layer,empty,stop,options,routeType);
-                routes_.append(ro);
-                rr->add(ro);
+                foreach(Rect* r, rects){
+                    QList<Rect*> stop;
+                    stop.append(r);
+                    stop.append(routering);
+                    Route* ro = new Route(node,layer,empty,stop,options,routeType);
+                    routes_.append(ro);
+                    rr->add(ro);
+                }
             }
 
         }
@@ -839,7 +842,7 @@ namespace cIcCore{
         QList<Rect*> rects = this->getChildren("cIcCore::RouteRing");
         foreach(Rect* r,rects){
 
-            RouteRing* rr = (RouteRing*) r;
+            RouteRing* rr = static_cast<RouteRing*>(r);
 
             if(rr->name().contains(QRegularExpression(path))){
 
@@ -880,9 +883,9 @@ namespace cIcCore{
     void LayoutCell::place(){
 
         QString prev_group = "";
-        int prev_width = 0;
+
         int next_x = 0;
-        int next_y = 0;
+
         int x = 0;
         int y = 0;
         bool mirror_y = false;
@@ -895,7 +898,7 @@ namespace cIcCore{
             if(prev_group.compare(group) != 0  && prev_group.compare("")  != 0){
                 y = 0;
                 x = next_x;
-                prev_width = 0;
+
                 mirror_y = !mirror_y;
             }
 
@@ -957,7 +960,7 @@ namespace cIcCore{
 
 
             next_x = inst->x2();
-            next_y = inst->y2();
+            int next_y = inst->y2();
 
             x = inst->x1();
 
@@ -1028,7 +1031,7 @@ namespace cIcCore{
     void LayoutCell::route(){
         foreach(Rect *r, routes_){
             if(r->isRoute()){
-                Route * route = (Route *) r;
+                Route * route = static_cast<Route *>(r);
                 route->route();
             }
         }
@@ -1050,7 +1053,7 @@ namespace cIcCore{
         QList<Rect *> rects;
         foreach(Rect * r, this->children()){
             if(!r->isInstance()) continue;
-            Instance * i = (Instance *)r;
+            Instance * i = static_cast<Instance *>(r);
             if(i == NULL){continue;}
 
             if(matchInstance != "" && !i->name().contains(QRegularExpression(matchInstance))){continue;}
@@ -1071,15 +1074,15 @@ namespace cIcCore{
         foreach(Rect * r, foundrects){
             Rect * parent  = r->parent();
             if(parent && parent->isCell() ){
-                Cell *c = (Cell*) parent;
+                Cell *c = static_cast<Cell*>(parent);
                 QString name = c->name();
                 bool skip = false;
 
                 if(excludeInstances != "" && c->isInstance()){
-                    Instance* i = (Instance*) c;
-                    QString name = i->name();
+                    Instance* i = static_cast<Instance*>(c);
+                    QString lname = i->name();
                     QString instName = i->instanceName();
-                    if(name.contains(QRegularExpression(excludeInstances))) skip = true;
+                    if(lname.contains(QRegularExpression(excludeInstances))) skip = true;
                     if(instName.contains(QRegularExpression(excludeInstances))) skip = true;
                 }
 

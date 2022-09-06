@@ -19,7 +19,6 @@
 
 CONFIG += qt console
 CONFIG += static
-CONFIG += debug
 TEMPLATE = app
 TARGET = cic
 
@@ -28,5 +27,4 @@ HEADERS +=  src/version.h  \
 
 include(../etc/mac_sdk.pro)
 include(../etc/console_config.pro)
-
-
+include(../etc/config.pro)

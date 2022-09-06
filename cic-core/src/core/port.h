@@ -40,7 +40,7 @@ namespace cIcCore{
 
 	  Port();
 	  ~Port();
-	  Port(QString name);
+	  explicit Port(QString name);
 //		Port(string name):Port(QString::fromLocal8Bit(name.c_str())){}
 
 	  //! Net name
@@ -51,12 +51,12 @@ namespace cIcCore{
       bool spicePort;
       
 
-	  virtual void set(Rect * r );
-	  virtual Rect* get();
-	  virtual Rect* get(QString layer);
+	 virtual void set(Rect * r );
+    virtual Rect* get() ;
+	  virtual Rect* get(QString layer) ;
       virtual QList<Rect*> getAll(QString layer);
-      virtual void mirrorX(int ay);
-      virtual void mirrorY(int ax);
+      void mirrorX(int ay) override;
+      void mirrorY(int ax) override;
 
       QString toString();
 
@@ -71,8 +71,8 @@ namespace cIcCore{
 	      return false;
 	  }
 
-	  virtual QJsonObject toJson();
-	   virtual void fromJson(QJsonObject o);
+	  QJsonObject toJson() override;
+	  void fromJson(QJsonObject o) override;
 
 
   protected:

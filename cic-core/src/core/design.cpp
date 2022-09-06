@@ -426,7 +426,7 @@ namespace cIcCore{
 
             foreach(auto lcd, decorators){
                 if(c->isLayoutCell()){
-                    lcd->setCell((LayoutCell*) c);
+                    lcd->setCell(static_cast<LayoutCell*>(c));
                     lcd->afterNew();
                 }
             }
@@ -443,14 +443,14 @@ namespace cIcCore{
             this->runAllMethods("beforePlace",c,jobj);
             foreach(auto lcd, decorators){
                 if(c->isLayoutCell()){
-                    lcd->setCell((LayoutCell*) c);
+                    lcd->setCell(static_cast<LayoutCell*>(c));
                     lcd->beforePlace();
                 }
             }
             c->place();
             foreach(auto lcd, decorators){
                 if(c->isLayoutCell()){
-                    lcd->setCell((LayoutCell*) c);
+                    lcd->setCell(static_cast<LayoutCell*>(c));
                     lcd->place();
                 }
             }
@@ -458,7 +458,7 @@ namespace cIcCore{
             this->runAllMethods("afterPlace",c,jobj);
             foreach(auto lcd, decorators){
                 if(c->isLayoutCell()){
-                    lcd->setCell((LayoutCell*) c);
+                    lcd->setCell(static_cast<LayoutCell*>(c));
                     lcd->afterPlace();
                 }
             }
@@ -468,7 +468,7 @@ namespace cIcCore{
             this->runAllMethods("beforeRoute",c,jobj);
             foreach(auto lcd, decorators){
                 if(c->isLayoutCell()){
-                    lcd->setCell((LayoutCell*) c);
+                    lcd->setCell(static_cast<LayoutCell*>(c));
                     lcd->beforeRoute();
                 }
             }
@@ -477,7 +477,7 @@ namespace cIcCore{
             this->runAllMethods("afterRoute",c,jobj);
             foreach(auto lcd, decorators){
                 if(c->isLayoutCell()){
-                    lcd->setCell((LayoutCell*) c);
+                    lcd->setCell(static_cast<LayoutCell*>(c));
                     lcd->afterRoute();
                 }
             }
@@ -488,14 +488,14 @@ namespace cIcCore{
             this->runAllMethods("beforePaint",c,jobj);
             foreach(auto lcd, decorators){
                 if(c->isLayoutCell()){
-                    lcd->setCell((LayoutCell*) c);
+                    lcd->setCell(static_cast<LayoutCell*>(c));
                     lcd->beforePaint();
                 }
             }
             c->paint();
             foreach(auto lcd, decorators){
                 if(c->isLayoutCell()){
-                    lcd->setCell((LayoutCell*) c);
+                    lcd->setCell(static_cast<LayoutCell*>(c));
                     lcd->paint();
                 }
             }
@@ -503,7 +503,7 @@ namespace cIcCore{
             this->runAllMethods("afterPaint",c,jobj);
             foreach(auto lcd, decorators){
                 if(c->isLayoutCell()){
-                    lcd->setCell((LayoutCell*) c);
+                    lcd->setCell(static_cast<LayoutCell*>(c));
                     lcd->afterPaint();
                 }
             }
@@ -563,10 +563,10 @@ namespace cIcCore{
             QJsonArray job = jo.toArray();
             foreach(QJsonValue cjv, job){
 
-                QJsonObject job = cjv.toObject();
-                job["name"] = name;
+                QJsonObject ljob = cjv.toObject();
+                ljob["name"] = name;
 //              cjo["name"] = jobj["name"].toString();
-                this->runIfObjectCanMethods(c,job,jname);
+                this->runIfObjectCanMethods(c,ljob,jname);
             }
 
         }
@@ -678,9 +678,9 @@ namespace cIcCore{
     void Design::fromJson(QJsonObject obj){
 
         QJsonArray ar =  obj["cells"].toArray();
-        cIcSpice::Subckt* ckt = 0;
+
         foreach(QJsonValue v,ar){
-            ckt = 0;
+
             QJsonObject o = v.toObject();
             QString cl = o["class"].toString();
             Cell *c = NULL;
@@ -693,20 +693,15 @@ namespace cIcCore{
                 c  = static_cast<Cell*>(vp);
 
             }
-            //if(cl.contains(QRegularExpression("Don't have special case yet"))){
-            //}else{
-            //    c = new LayoutCell();
-            //}
 
             if(c){
-
                 c->fromJson(o);
                 c->setLibCell(true);
                 c->setLibPath(obj["libpath"].toString());
                 this->add(c);
                 Cell::addCell(c);
                 _cell_names.append(c->name());
-                ckt = c->subckt();
+                auto ckt = c->subckt();
                 if(ckt){
                     ckt->addSubckt();
                 }
@@ -727,14 +722,14 @@ namespace cIcCore{
 
         for(int i=0;i<_cell_names.count();i++){
             Cell * c = Cell::getCell(_cell_names[i]);
-            c->setPrefix(this->prefix_);
             if(c){
+                c->setPrefix(this->prefix_);
                 if(topcells_.count() > 0 and !c->isUsed()){
                     //Skip if cell is not used and topcell has been set
                     continue;
                 }else{
-                    QJsonObject o = c->toJson();
-                    ar.append(o);
+                    QJsonObject lo = c->toJson();
+                    ar.append(lo);
                 }
             }
         }
@@ -758,10 +753,11 @@ namespace cIcCore{
         QString val;
         QStringList valList;
         QList<int> lineList;
-        int linecount = 0;
+
 
         if (file.open(QIODevice::ReadOnly | QIODevice::Text))
         {
+            int linecount = 0;
             QTextStream in(&file);
             while (!in.atEnd())
             {

@@ -84,11 +84,11 @@ namespace cIcCore{
 
 
 
-                        virtual void place();
-                        virtual void route();
-                        virtual  void addAllPorts();
+                        void place() override;
+                        void route() override;
+                        void addAllPorts() override;
                         virtual void routePower();
-                        virtual void paint();
+                        void paint() override;
                         QList<QString> nodeGraphList();
 
 
@@ -98,15 +98,14 @@ namespace cIcCore{
                         virtual QList<Rect*> findRectanglesByNode(QString node, QString filterChild,QString filterInstance);
 
 
-                        virtual void fromJson(QJsonObject obj);
-                        virtual Rect * cellFromJson(QJsonObject co);
-                        virtual  QJsonObject  toJson();
+                        void fromJson(QJsonObject obj) override;
+                        Rect * cellFromJson(QJsonObject co) override;
+                        QJsonObject  toJson() override;
 
                         void addPowerRoute(QString net,QString excludeInstances);
 
                 private:
                         bool useHalfHeight;
-                        bool abstract_;
                         bool alternateGroup_;
                         QList<QString> nodeGraphList_;
                         QHash<QString,Graph*> nodeGraph_;

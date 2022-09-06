@@ -28,16 +28,16 @@ namespace cIcPrinter{
     class Cics : public DesignPrinter
     {
     public:
-        Cics(QString name);
+        explicit Cics(QString name);
         ~Cics();
 
-        virtual void startCell(Cell * cell);
-        virtual void endCell();
-        virtual void printRect(Rect *rect);
-        virtual void printReference(Cell *c);
-        virtual void printPort(Port *);
-        virtual void endLib();
-        virtual void startLib(QString name);
+         void startCell(Cell * cell) override;
+         void endCell() override;
+        void printRect(Rect *rect) override;
+        void printReference(Cell *c) override;
+        void printPort(Port *) override;
+        void endLib() override;
+        void startLib(QString name) override;
 
 
 

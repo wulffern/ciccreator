@@ -17,9 +17,9 @@ public:
   ~LayoutRotateCell();
 
   Q_INVOKABLE void rotateAngle(QString s);
-  virtual void place();
+  void place() override;
 
-    virtual void paint();
+  void paint() override;
 
 protected:
   QString rotateAngle_;

@@ -615,15 +615,15 @@ namespace cIcCore{
         }else if(cl == "Text"){
             Text * t = new Text();
             t->fromJson(co);
-            return t;
+            return static_cast<Rect *>(t);
         }else if(cl == "Port"){
             Port * p = new Port();
             p->fromJson(co);
-            return p;
+            return static_cast<Rect *>(p);
         }else if(cl == "Cell" || cl== "cIcCore::Route" || cl == "cIcCore::RouteRing" || cl == "cIcCore::Guard" || cl == "cIcCore::Cell"){
             Cell * l = new Cell();
             l->fromJson(co);
-            return l;
+            return static_cast<Rect *>(l);
         }
         return 0;
     }

@@ -24,10 +24,9 @@ int main(int argc, char *argv[])
 	return app.exec();
 	
 	}else{
-        qWarning() << "Usage: cic-gui <JSON file> <Technology file>";
-        qWarning() << "Example: cic-gui ALGIC003_STDLIB.json ST_28NM_FDSOI.tech";
-        qWarning() << "About: \n\tcIcCreator reads a JSON object definition file, technology rule file\n" <<
-            "\tand a SPICE netlist (assumes same name as object definition file)\n\tand outputs a cic description file (.cic)." <<
+        qWarning() << "Usage:   cic-gui <JSON file> <Technology file>";
+        qWarning() << "Example: cic-gui SAR_ESSCIRC16_28N.cic examples/tech.json ";
+        qWarning() << "About: \n\tcIcCreator GUI reads .cic file and shows the cells in a GUI" <<
             "\n\tVersion" << CICVERSION <<
             "\n\tHash" << CICHASH << "\n";
 		error = 1;

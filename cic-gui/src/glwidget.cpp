@@ -27,7 +27,9 @@ GLWidget::GLWidget( QWidget *parent)
     cellPainter = new CellPainter();
     ycenter = 0;
     xcenter = 0;
-    
+
+    visibleArea.rect.setRect(0,0,1,1);
+    visibleArea.zoom = 1;
     //setAttribute(Qt::WA_PaintOnScreen);
     //setAttribute(Qt::WA_NoSystemBackground);
         

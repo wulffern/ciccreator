@@ -2,7 +2,7 @@
     "layers" : {
         "CO"  : { "number" : 14, "datatype" : 0,  "material" : "cut",       "previous" : "PO",  "next" : "M1", "color" : "yellow"},
         "OD"  : { "number" : 2,  "datatype" : 0,  "material" : "diffusion", "previous" : "",  "next" : "CO", "pin" : "OD_pin", "color" : "green" },
-        "OD2" : { "number" : 12, "datatype" : 43, "material" : "implant", "previous" : "",  "next" : "CO", "pin" : "OD_pin" , "color" : "nofill" },
+        "OD2" : { "number" : 12, "datatype" : 43, "material" : "implant", "previous" : "",  "next" : "CO", "pin" : "OD_pin" , "color" : "black", "fill" : "nofill" },
         "PO"  : { "number" : 7,  "datatype" : 0,  "material" : "poly",      "previous" : "",  "next" : "CO", "pin" : "PO_pin" , "color" : "red"},
 		
         "PO_pin" : { "number" : 7, "datatype" : 20 },

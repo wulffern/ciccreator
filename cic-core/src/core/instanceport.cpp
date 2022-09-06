@@ -16,6 +16,7 @@ namespace cIcCore{
     InstancePort::InstancePort(QString name, Port * p, Rect * parent):Port(name)
     {
         childport_ = p;
+        parent_ = parent;
         Rect *r = p->get();
         if(r){
             Layer * l = rules->getLayer(r->layer());
