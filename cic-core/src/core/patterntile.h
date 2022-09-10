@@ -68,7 +68,7 @@ namespace cIcCore{
                 int xa = x1;
                 int ya = y1;
 
-                Rect* prevrect;
+                Rect* prevrect = NULL;
 
                 for(int y=0;y<ycount;y++){
                     QString s = pattern[y];
@@ -147,7 +147,7 @@ namespace cIcCore{
             virtual void endFillCoordinate(QMap<QString,QVariant> &){};
             virtual void paintRect(Rect*, QChar ,int , int ){};
 
-            void paint();
+            void paint() override;
 
             virtual Rect calcBoundingRect();
 

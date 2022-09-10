@@ -357,7 +357,7 @@ namespace cIcCore {
 
                     
                     
-                    if(Pattern.contains(c)){
+                    if(rect && Pattern.contains(c)){
 
                         PatternData *pl = Pattern[c];
                         if(pl){

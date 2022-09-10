@@ -184,10 +184,10 @@ namespace cIcCore{
 		QString net_;
 		
         Rect* _parent;
-        int x1_;
-        int y1_;
-        int x2_;
-        int y2_;
+        int x1_ = 0;
+        int y1_ = 0;
+        int x2_ = 0;
+        int y2_ = 0;
         bool isDevice_;
 
     signals:
