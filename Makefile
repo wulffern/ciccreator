@@ -55,6 +55,11 @@ CIC= ../bin/${OSBIN}/cic
 CICGUI=../bin/${OSBIN}/cic-gui
 endif
 
+QMAKE=qmake
+ifeq (, $(shell which qmake))
+ QMAKE=qmake-qt5
+endif
+
 
 
 .PHONY: doxygen coverage sim
@@ -72,7 +77,7 @@ compile:
 	echo "#define CICHASH \""${VERSION_HASH}"\""  >> cic/src/version.h
 	echo "#define CICVERSION \""${VERSION_DATE}"\""  > cic-gui/src/version.h
 	echo "#define CICHASH \""${VERSION_HASH}"\""  >> cic-gui/src/version.h
-	qmake -o qmake.make  ciccreator.pro ${QTOPT}
+	${QMAKE} -o qmake.make  ciccreator.pro ${QTOPT}
 	${MAKE} -f qmake.make
 	test -d release || mkdir release
 	cp release/${CIC} release/cic.${OSBIN}${OSID}${OSVER}_${VERSION}
