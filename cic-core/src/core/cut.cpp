@@ -226,9 +226,6 @@ namespace cIcCore {
         foreach(Rect *r, rects){
             if(r == NULL) continue;
             if(layer1 == r->layer()) continue;
-
-
-
         }
 
     }

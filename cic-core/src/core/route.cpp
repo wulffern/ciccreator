@@ -239,8 +239,6 @@ namespace cIcCore{
       int lcuts = startCuts_ > 0 ? startCuts_: cuts_;
       int lvcuts = startVCuts_ > 0 ? startVCuts_: vcuts_;
 
-
-
       QList<Rect*> cuts = this->addCuts(start_rects_,startcuts,lcuts,lvcuts);
       if(startOffsetCut_ == HIGH){
         foreach(auto *cut, cuts){
@@ -258,6 +256,8 @@ namespace cIcCore{
         }
       }
 
+      this->add(cuts);
+
     }
   }
 
@@ -266,8 +266,6 @@ namespace cIcCore{
 
       int lcuts = endCuts_ > 0 ? endCuts_: cuts_;
       int lvcuts = endVCuts_ > 0 ? endVCuts_: vcuts_;
-
-
 
       QList<Rect*> cuts = this->addCuts(stop_rects_,endcuts,lcuts,lvcuts);
 
@@ -286,6 +284,10 @@ namespace cIcCore{
           r->translate(0,-r->height()/2);
         }
       }
+
+
+
+      this->add(cuts);
 
     }
   }
@@ -306,12 +308,9 @@ namespace cIcCore{
 
 
     cuts = Cut::getCutsForRects(routeLayer_,rects,cuts_,vcuts_,leftAlignCut);
-    foreach(Rect* r,cuts){
-      allcuts.append(r);
-    }
-    this->add(cuts);
-
-
+    //foreach(Rect* r,cuts){
+    //  allcuts.append(r);
+    //}
 
     return cuts;
   }
@@ -330,10 +329,6 @@ namespace cIcCore{
     foreach(Rect* r, stop_rects_org){
       stop_rects_.append(r->getCopy());
     }
-
-
-    this->addStartCuts();
-    this->addEndCuts();
 
 
     switch(routeType_){
@@ -377,6 +372,9 @@ namespace cIcCore{
 
 
     }
+
+    this->addStartCuts();
+    this->addEndCuts();
 
     if(start_rects_.count() > 0){
       Rect * r = start_rects_[0];
@@ -621,7 +619,6 @@ namespace cIcCore{
       auto c1 = Cut::getInstance(routeLayer_,nextlayer,1,2);
       auto c2 = Cut::getInstance(routeLayer_,nextlayer,1,2);
 
-
       Rect* r;
 
       if(this->height() > c1->height()*2 + width*2){
@@ -632,7 +629,6 @@ namespace cIcCore{
         this->add(c2);
       }else{
         r = new Rect(routeLayer_,x,this->y1(),width,this->height());
-
       }
 
       this->add(r);
@@ -640,11 +636,10 @@ namespace cIcCore{
 
     }else{
 
-      //int y1_m = this->y1();
-      //int y2_m = this->y2();
+      int y1_m = this->y1();
+      int y2_m = this->y2();
 
-
-      Rect * r = Rect::getVerticalRectangleFromTo(routeLayer_,x,this->y1(),this->y2(),width);
+      Rect * r = Rect::getVerticalRectangleFromTo(routeLayer_,x,y1_m,y2_m,width);
       if(r){
         this->add(r);
       }
