@@ -93,15 +93,17 @@ namespace cIcCore{
 		QString options_ = "";
 		QList<Rect*> start_rects_;
 		QList<Rect*> stop_rects_;
+        QList<Rect*> routes_;
         QList<Rect*> startcuts;
         QList<Rect*> endcuts;
-	QList<Rect*> add_after_route;
+        QList<Rect*> add_after_route;
         bool leftAlignCut;
         QString startLayer_;
         QString stopLayer_;
         
         
-        
+        void add(Rect* r) override;
+        void add(QList<Rect*> rects) override;
 		void routeStraight();
 		void routeLeft();
 		void routeRight();

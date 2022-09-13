@@ -61,6 +61,7 @@ namespace cIcGui{
         void shapeSelected(int index);
         void layerClicked(QModelIndex index);
         void reloadFile();
+        void toggleVisible();
 
     protected:
 //        bool eventFilter(QObject *obj, QEvent *event);
@@ -74,8 +75,10 @@ namespace cIcGui{
         QSplitter * splitter;
         QString filename;
         QWidget * leftside;
+        bool showAll = true;
 
         QShortcut *shift_r;
+            QShortcut *key_t;
         CellPainter *cellPainter;
 
     };

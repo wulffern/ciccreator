@@ -57,8 +57,8 @@ namespace cIcCore{
             Rect * getRect(QString layer);
 
             //! Add a rectangle to the cell, hooks updated() of the child to updateBoundingRect
-            void add(Rect* rect);
-            void add(QList<Rect*> rects);
+            virtual void add(Rect* rect);
+            virtual void add(QList<Rect*> rects);
 
             //! Move this cell, and all children by dx and dy
             void translate(int dx, int dy) override;

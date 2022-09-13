@@ -232,6 +232,20 @@ namespace cIcCore{
 
   }
 
+  void Route::add(Rect *r){
+    Cell::add(r);
+    if(r){
+      if(!r->isCut()){
+        routes_.append(r);
+      }
+    }
+  }
+   void Route::add(QList<Rect *> children){
+     foreach(Rect * r, children){
+       this->add(r);
+     }
+  }
+
   void Route::addStartCuts(){
     if(!this->options_.contains(QRegularExpression("nostartcut"))){
 
@@ -308,9 +322,9 @@ namespace cIcCore{
 
 
     cuts = Cut::getCutsForRects(routeLayer_,rects,cuts_,vcuts_,leftAlignCut);
-    //foreach(Rect* r,cuts){
-    //  allcuts.append(r);
-    //}
+    foreach(Rect* r,cuts){
+      allcuts.append(r);
+    }
 
     return cuts;
   }
@@ -331,9 +345,22 @@ namespace cIcCore{
     }
 
 
+    //- TODO To make it horribly confusing, it matters for the routing which
+    //sequence the cuts are added. Should they be added first, or after.
+    //
+    //For LEFT/RIGHT routes, the bounding box for routing will include the
+    //cuts, which may lead to a extra nub on the routes
+    //
+    //If the cuts are added after, then the routing might not reach the cuts.
+    //
+
+      this->addStartCuts();
+      this->addEndCuts();
+
     switch(routeType_){
     case LEFT:
       this->routeOne();
+
       break;
     case RIGHT:
       this->routeOne();
@@ -352,6 +379,7 @@ namespace cIcCore{
       break;
     case U_TOP:
       this->routeUHorizontal();
+
       break;
     case U_BOTTOM:
       this->routeUHorizontal();
@@ -373,8 +401,7 @@ namespace cIcCore{
 
     }
 
-    this->addStartCuts();
-    this->addEndCuts();
+
 
     if(start_rects_.count() > 0){
       Rect * r = start_rects_[0];
@@ -636,8 +663,14 @@ namespace cIcCore{
 
     }else{
 
-      int y1_m = this->y1();
-      int y2_m = this->y2();
+      int y1_m =0;
+      int y2_m = 0;
+
+      //- Don't include cuts into the equation for start and stop rects
+      Rect route_bound = Cell::calcBoundingRect(routes_);
+      y1_m = route_bound.y1();
+      y2_m = route_bound.y2();
+
 
       Rect * r = Rect::getVerticalRectangleFromTo(routeLayer_,x,y1_m,y2_m,width);
       if(r){

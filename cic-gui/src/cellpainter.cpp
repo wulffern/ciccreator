@@ -224,7 +224,6 @@ namespace cIcPainter{
 
     void CellPainter::paintChildren(QPainter &painter,QList<Rect*> children,QString hierarchy){
         foreach(Rect * child,children){
-
             if(!child){continue;}
             if(child->isInstance()){
                 Instance * inst = static_cast<Instance*>(child);

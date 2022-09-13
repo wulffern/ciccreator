@@ -56,10 +56,13 @@ namespace cIcGui{
         connect(listCells,SIGNAL(currentRowChanged(int)),this,SLOT(shapeSelected(int)));
         connect(listLayers,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(layerClicked(QModelIndex)));
 
-        setWindowTitle(tr("Custom IC Creator Viewer: Zoom In = Shift+Z, Zoom Out = Z, Fit = F, Move = Arrows, Refresh=Shift+R"));
+        setWindowTitle(tr("Custom IC Creator Viewer: Zoom In = Shift+Z, Zoom Out = Z, Fit = F, Move = Arrows, Refresh=Shift+R, Toggle layer visibility=t"));
         shift_r= new QShortcut(QKeySequence(Qt::SHIFT + Qt::Key_R),this);
-
         connect(shift_r,SIGNAL(activated()),this,SLOT(reloadFile()));
+        key_t= new QShortcut(QKeySequence(Qt::Key_T),this);
+        connect(key_t,SIGNAL(activated()),this,SLOT(toggleVisible()));
+
+
         listLayers->clear();
 
         Rules * rules = Rules::getRules();
@@ -114,6 +117,31 @@ namespace cIcGui{
         }
 
 
+    }
+
+    void Window::toggleVisible(){
+
+        if(!designs)
+            return;
+
+        if(showAll){
+            showAll = false;
+        }else{
+            showAll = true;
+        }
+        for(int i = 0; i < listLayers->count(); ++i)
+        {
+            QListWidgetItem * item = listLayers->item(i);
+            Layer *l = Rules::getRules()->getLayer(item->text());
+        l->visible = showAll;
+        if(l->visible){
+            item->setBackgroundColor(QColor("white"));
+        }else{
+            item->setBackgroundColor(QColor("gray"));
+        }
+        }
+        //- TODO: Update renderer
+        widget->update();
     }
 
     void Window::layerClicked(QModelIndex index){
