@@ -49,31 +49,50 @@ namespace cIcCore{
         r->adjust(d1->height());
 
 
-//        this->add(d1);
-        
-        
+        //this->add(d1);
 
         
-        QList<Rect*> rects;
-        rects.append(new Rect("OD",r->x1() + xod, r->y1() + yod, r->width() - xod*2,odw));
-        
-        rects.append(new Rect("OD",r->x1() + xod, r->y1() + yod,odw,r->height() - yod*2));
-        rects.append(new Rect("OD",r->x1() + xod, r->y1() + r->height() - yod - odw, r->width() - xod*2,odw));
-        rects.append(new Rect("OD",r->x1() + r->width()  - xod - odw, r->y1() + yod, odw, r->height() - yod*2));
+        QList<Cell*> rects;
+
+        auto * c_bot = new Cell();
+        c_bot->add(new Rect("OD",r->x1() + xod, r->y1() + yod, r->width() - xod*2,odw));
+        auto * c_left = new Cell();
+        c_left->add(new Rect("OD",r->x1() + xod, r->y1() + yod,odw,r->height() - yod*2));
+        auto * c_top = new Cell();
+        c_top->add(new Rect("OD",r->x1() + xod, r->y1() + r->height() - yod - odw, r->width() - xod*2,odw));
+        auto * c_right = new Cell();
+        c_right->add(new Rect("OD",r->x1() + r->width()  - xod - odw, r->y1() + yod, odw, r->height() - yod*2));
+
+        rects.append(c_bot);
+        rects.append(c_top);
+        rects.append(c_left);
+        rects.append(c_right);
 
         Rect * b = new Rect("M1",r->x1() + xod, r->y1() + yod, r->width() - xod*2,odw);
         this->add(b);
         
             
-        foreach( Rect* r2, rects){
+        foreach( Cell* c2, rects){
 
             //TODO  Need to write a fill-cut function to add cuts
-            Cut* c= new Cut("OD","M1",r2);
+
+            auto* rcp = c2->getCopy();
+            if(rcp->isVertical()){
+                rcp->adjust(0,odw,0,-odw);
+            }else{
+                rcp->adjust(odw,0,-odw,0);
+            }
+
+            Cut* c= new Cut("OD","M1",rcp);
             this->add(c);
             
-            c->addEnclosingLayers(layers);
 
-            this->add(r2);
+
+            //Copy OD to metal
+            //this->add(r2->getCopy("M1"));
+            c2->addEnclosingLayers(layers);
+            this->add(c2);
+
         }
         
         
