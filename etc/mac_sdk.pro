@@ -6,6 +6,7 @@ mac {
 
 #mac::QMAKE_MAC_SDK = macosx11.3
 #mac::QMAKE_MAC_SDK = macosx12.1
-mac::QMAKE_MAC_SDK = macosx12.3
+#mac::QMAKE_MAC_SDK = macosx12.3
+mac::QMAKE_MAC_SDK = macosx13.0
 #  mac::QMAKE_MAC_SDK = 
   }
