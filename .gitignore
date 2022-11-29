@@ -2,6 +2,7 @@
 *~
 .#*
 bin
+version.h
 *.autosave
 lay
 build
