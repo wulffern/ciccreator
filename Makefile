@@ -69,6 +69,13 @@ all: compile
 lay:
 	mkdir lay
 
+binary:
+	git submodule init
+	git submodule update
+	-cd release; ls -1 cic.${OSBIN}${OSID}${OSVER}*|sort|head -n 1| xargs -I{} ln -s {} cic
+	-cd release; ls -1 cic-gui.${OSBIN}${OSID}${OSVER}*|sort|head -n 1| xargs -I{} ln -s {} cic-gui
+
+
 debug:
 	${MAKE} compile QTOPT="CONFIG+=debug"
 
