@@ -38,7 +38,7 @@ execfile=$dirname/${platform}/${appname}
 
 if [ ! -f "$execfile" ]; then
     echo "INFO: Trying pre-compiled "
-    execfile=${dirname}/../release/${appname}-${platform}-latest
+    execfile=${dirname}/../release/${appname}.${platform}-latest
 fi
 
 echo $execfile "$@"
@@ -57,7 +57,7 @@ if [ $platform == "darwin" ]; then
 
     if [ ! -f "$execfile" ]; then
         echo "INFO: Trying pre-compiled "
-        execfile=${dirname}/../release/${appname}-${platform}-latest
+        execfile=${dirname}/../release/${appname}.${platform}-latest
     fi
 
 	echo $execfile "$@"
