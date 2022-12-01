@@ -1,0 +1,4 @@
+
+release:
+  remote: git@github.com:wulffern/ciccreator-bin.git
+  revision: main
