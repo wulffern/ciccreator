@@ -34,7 +34,16 @@ if [ $platform == "linux" ] ; then
 LD_LIBRARY_PATH=$dirname
 export LD_LIBRARY_PATH
 
-$dirname/${platform}/${appname} "$@"
+execfile=$dirname/${platform}/${appname}
+
+if [ ! -f "$execfile" ]; then
+    echo "INFO: Trying pre-compiled "
+    execfile=${dirname}/../release/${appname}-${platform}-latest
+fi
+
+echo $execfile "$@"
+
+$execfile "$@"
 
 fi
 
@@ -43,21 +52,20 @@ if [ $platform == "darwin" ]; then
 
 	execfile=$dirname/${platform}/${appname}.app/Contents/MacOS/${appname}
 	if [ ! -f "$execfile" ]; then
-
 		execfile=$dirname/${platform}/${appname}
 	fi
+
+    if [ ! -f "$execfile" ]; then
+        echo "INFO: Trying pre-compiled "
+        execfile=${dirname}/../release/${appname}-${platform}-latest
+    fi
+
 	echo $execfile "$@"
 	$execfile "$@"
 
 
 else
-
-    export PATH=$dirname/windows/:$PATH
-    echo $PATH
-    execfile=$dirname/windows/${appname}.exe
-    if [ -f "$execfile" ]; then
-	$execfile "$@"
-    fi
+    echo "Windows no longer supported, use linux in WSL"
 fi
 
 

@@ -69,13 +69,6 @@ all: compile
 lay:
 	mkdir lay
 
-binary:
-	git submodule init
-	git submodule update
-	-cd release; ls -1 cic.${OSBIN}${OSID}${OSVER}*|sort|head -n 1| xargs -I{} ln -s {} cic
-	-cd release; ls -1 cic-gui.${OSBIN}${OSID}${OSVER}*|sort|head -n 1| xargs -I{} ln -s {} cic-gui
-
-
 debug:
 	${MAKE} compile QTOPT="CONFIG+=debug"
 
@@ -89,6 +82,10 @@ compile:
 	test -d release || mkdir release
 	cp release/${CIC} release/cic.${OSBIN}${OSID}${OSVER}_${VERSION}
 	cp release/${CICGUI} release/cic-gui.${OSBIN}${OSID}${OSVER}_${VERSION}
+	-rm release/cic.${OSBIN}-latest
+	-rm release/cic-gui.${OSBIN}-latest
+	cd release;ln -s  cic.${OSBIN}${OSID}${OSVER}_${VERSION} cic.${OSBIN}-latest
+	cd release;ln -s  cic-gui.${OSBIN}${OSID}${OSVER}_${VERSION} cic-gui.${OSBIN}-latest
 
 clean:
 	${MAKE} -f qmake.make clean
