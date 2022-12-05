@@ -9,6 +9,10 @@ closed source, and not available outside NTNU. cIcCreator is the C++ version,
 it's been written from scratch to support the same input files as the Perl
 compiler, but with a vastly improved performance.
 
+# Documentation
+
+Head over to [ciccreator.readthedocs.io](https://ciccreator.readthedocs.io)
+
 # Master plan
 :white_check_mark: Create prototype of compiler in Perl that can compile SAR ADCs (Aug 2014) 
 

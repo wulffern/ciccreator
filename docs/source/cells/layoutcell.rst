@@ -35,11 +35,11 @@ are determined based on the route command.
 
 **Route command** The routecommand is split with the following regex
 
-.. code:: regex
+.. code::
 
    ^([^-\|<>]*)([-\|<>]+)([^-\|<>]*)$
 
-A route is defined by the characters ‘-|<>’, everything before is put
+A route is defined by the characters ``-|<>``, everything before is put
 into a “start rectangle” path regex, and everything after is put into a
 “stop rectangle” path regex.
 

@@ -18,7 +18,7 @@ A route command looks like this
 
 .. code:: json
 
-   XA1:S-|--XB2:S
+   "XA1:S-|--XB2:S"
 
 The route command contains three parts, start rectangles path regex,
 route type, and stop rectangles path regex. See addDirectedRoute in
