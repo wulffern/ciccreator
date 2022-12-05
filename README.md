@@ -1,6 +1,7 @@
 
 [![Docker Image CI](https://github.com/wulffern/ciccreator/actions/workflows/docker-image.yml/badge.svg?branch=master)](https://github.com/wulffern/ciccreator/actions/workflows/docker-image.yml)
-
+[![Documentation Status](https://readthedocs.org/projects/ciccreator/badge/?version=latest)](https://ciccreator.readthedocs.io/en/latest/?badge=latest)
+      
 # ciccreator
 Back in 2013 I started playing with the thought of generating a SAR ADC with a
 script, such that it would be easy to port between technologies. The prototype
