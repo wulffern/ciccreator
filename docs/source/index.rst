@@ -6,17 +6,6 @@
 Custom IC Creator
 =============================================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   basics/basics
-   cells/cells
-   routing/route
-
-
-
-
 cIcCreator is a compiler for integrated circuits.
 
 cIcCreator reads a JSON object definition file, technology rule file
@@ -59,3 +48,16 @@ To view the output, do
 .. code-block:: bash
 
    release/cic-gui.darwin-latest SAR_TEST.cic examples/tech.json
+
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   basics/basics
+   cells/cells
+   routing/route
+
+
+
+
