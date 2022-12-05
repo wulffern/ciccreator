@@ -1,6 +1,6 @@
 
 [![Docker Image CI](https://github.com/wulffern/ciccreator/actions/workflows/docker-image.yml/badge.svg?branch=master)](https://github.com/wulffern/ciccreator/actions/workflows/docker-image.yml)
-[![Documentation Status](https://readthedocs.org/projects/ciccreator/badge/?version=latest)](https://ciccreator.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://github.com/wulffern/ciccreator/actions/workflows/documentation.yml/badge.svg?branch=master)](https://github.com/wulffern/ciccreator/actions/workflows/documentation.yml)
       
 # ciccreator
 Back in 2013 I started playing with the thought of generating a SAR ADC with a
@@ -12,7 +12,7 @@ compiler, but with a vastly improved performance.
 
 # Documentation
 
-Head over to [ciccreator.readthedocs.io](https://ciccreator.readthedocs.io)
+Head over to [wulffern.github.io/ciccreator](http://wulffern.github.io/ciccreator/index.html)
 
 # Master plan
 :white_check_mark: Create prototype of compiler in Perl that can compile SAR ADCs (Aug 2014) 
