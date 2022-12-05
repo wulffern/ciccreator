@@ -12,7 +12,9 @@ compiler, but with a vastly improved performance.
 
 # Documentation
 
-Head over to [wulffern.github.io/ciccreator](http://wulffern.github.io/ciccreator/index.html)
+Head over to
+[wulffern.github.io/ciccreator](http://wulffern.github.io/ciccreator/index.html)
+or [ciccreator.readthedocs.io](https://ciccreator.readthedocs.io/en/latest/index.html)
 
 # Master plan
 :white_check_mark: Create prototype of compiler in Perl that can compile SAR ADCs (Aug 2014) 
