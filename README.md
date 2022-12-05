@@ -1,6 +1,6 @@
 
 [![Docker Image CI](https://github.com/wulffern/ciccreator/actions/workflows/docker-image.yml/badge.svg?branch=master)](https://github.com/wulffern/ciccreator/actions/workflows/docker-image.yml)
-[![Documentation Status](https://github.com/wulffern/ciccreator/actions/workflows/documentation.yml/badge.svg?branch=master)](https://github.com/wulffern/ciccreator/actions/workflows/documentation.yml)
+[![Documentation Status](https://github.com/wulffern/ciccreator/actions/workflows/documentation.yaml/badge.svg?branch=master)](https://github.com/wulffern/ciccreator/actions/workflows/documentation.yaml)
       
 # ciccreator
 Back in 2013 I started playing with the thought of generating a SAR ADC with a
