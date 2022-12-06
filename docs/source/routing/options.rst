@@ -14,11 +14,33 @@ onTopB
 ''''''
 
 Put the bottom rectangle as start rectangle
-[[graphics/Options_onTopB.png]] ##### onTopT Put the top rectangle as
-start rectangle [[graphics/Options_onTopT.png]] ##### onTopR Put the
-right rectangle as start rectangle [[graphics/Options_onTopR.png]] #####
-onTopL Put the left rectangle as start rectangle
-[[graphics/Options_onTopL.png]]
+
+
+.. image:: ../graphics/Options_onTopB.png
+
+onTopT
+''''''
+
+Put the top rectangle as
+start rectangle
+
+.. image:: ../graphics/Options_onTopT.png
+
+onTopR
+'''''''
+
+Put the
+right rectangle as start rectangle
+
+
+.. image:: ../graphics/Options_onTopR.png
+
+onTopL
+''''''''
+
+Put the left rectangle as start rectangle
+
+.. image:: ../graphics/Options_onTopL.png
 
 Offset
 ^^^^^^
@@ -28,10 +50,22 @@ These options can offset the routing rectangle to avoid nearby routings
 offsethigh
 ''''''''''
 
-[[graphics/Options_offsethigh.png]] ##### offsetlow
-[[graphics/Options_offsetlow.png]] ##### offsethighend
-[[graphics/Options_offsethighend.png]] ##### offsetlowend
-[[graphics/Options_offsetlowend.png]]
+.. image:: ../graphics/Options_offsethigh.png
+
+offsetlow
+''''''''''
+
+.. image:: ../graphics/Options_offsetlow.png
+
+offsethighend
+''''''''''''''''''''
+
+.. image:: ../graphics/Options_offsethighend.png
+
+offsetlowend
+''''''''''''''''''''
+
+.. image:: ../graphics/Options_offsetlowend.png
 
 Track
 ^^^^^
@@ -39,9 +73,13 @@ Track
 ‘track’ can be used to specifiy how many grids the route is offset. It
 uses “ROUTE” and “horizontalgrid”.
 
-For example ‘track4’, gives [[graphics/Options_track4.png]]
+For example ‘track4’, gives
 
-For example ‘track8’, gives [[graphics/Options_track8.png]]
+.. image:: ../graphics/Options_track4.png
+
+For example ‘track8’, gives
+
+.. image:: ../graphics/Options_track8.png
 
 Cuts
 ^^^^
@@ -51,9 +89,13 @@ cuts for the horizontal via.
 
 .. _cuts-1:
 
-(:raw-latex:`\d+`)cuts
+\\d+cuts
 ''''''''''''''''''''''
 
-For example ‘3cuts’ [[graphics/Options_3cuts.png]]
+For example ‘3cuts’
 
-And for example ‘5cuts’ [[graphics/Options_5cuts.png]]
+.. image:: ../graphics/Options_3cuts.png
+
+And for example ‘5cuts’
+
+.. image:: ../graphics/Options_5cuts.png

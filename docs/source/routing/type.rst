@@ -4,8 +4,8 @@ Route Type
 The following route types can be used, all of them have a short-hand
 notation.
 
-Left (-|–)
-^^^^^^^^^^
+Left (-\|--)
+^^^^^^^^^^^^^
 
 The ‘Left’ route will go one metal space to the left, then up, and or
 down, and finish the route. The type of route will depend on whether the
@@ -22,7 +22,7 @@ Starting from the left
      ]
    }
 
-[[graphics/StartLeft_Left.png]]
+.. image:: ../graphics/StartLeft_Left.png
 
 Starting from the right
 
@@ -35,10 +35,11 @@ Starting from the right
      ]
    }
 
-[[graphics/StartRight_Left.png]]
+.. image:: ../graphics/StartRight_Left.png
 
-Right (–|-)
-^^^^^^^^^^^
+
+Right (--\|-)
+^^^^^^^^^^^^^
 
 The ‘Right’ route will go one metal spacing to the right, then up, and
 or down, and finish the route.
@@ -54,7 +55,7 @@ Starting from the left
      ]
    }
 
-[[graphics/StartLeft_Right.png]]
+.. image:: ../graphics/StartLeft_Right.png
 
 .. code:: json
 
@@ -65,10 +66,10 @@ Starting from the left
      ]
    }
 
-[[graphics/StartRight_Right.png]]
+.. image:: ../graphics/StartRight_Right.png
 
-U left route (|-)
-^^^^^^^^^^^^^^^^^
+U left route (\|-)
+^^^^^^^^^^^^^^^^^^
 
 The U route will go one metal spacing left, up or down, and back again.
 
@@ -81,10 +82,10 @@ The U route will go one metal spacing left, up or down, and back again.
      ]
    }       
 
-[[graphics/U_Left.png]]
+.. image:: ../graphics/U_Left.png
 
-U right route (-|)
-^^^^^^^^^^^^^^^^^^
+U right route (-\|)
+^^^^^^^^^^^^^^^^^^^^
 
 The U route will go one metal spacing right, up or down, and back again.
 
@@ -97,7 +98,7 @@ The U route will go one metal spacing right, up or down, and back again.
      ]
    }
 
-[[graphics/U_Right.png]]
+.. image:: ../graphics/U_Right.png
 
 Vertical route (||)
 ^^^^^^^^^^^^^^^^^^^
@@ -114,4 +115,4 @@ a straight vertical line up, or down to the stop rectangles.
      ]
    }
 
-[[graphics/Vertical.png]]
+.. image:: ../graphics/Vertical.png

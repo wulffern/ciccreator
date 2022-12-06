@@ -25,7 +25,7 @@ are determined based on the route command.
 
 **Arguments**
 
-::
+.. code-block:: json
 
     [ "M1",  //Layer name
       "CKN", //Net name
@@ -52,7 +52,7 @@ addConnectivityRoute: Array
 
 Adds a route based on the connectivity of the subcircuit.
 
-::
+.. code-block:: json
 
    [ "M1",    //Layer name
      "^ENO$", //Regular expression for net match
@@ -67,7 +67,7 @@ addPortOnRect: Array
 
 Define which rectangles to add ports on
 
-::
+.. code-block:: json
 
    [
     "CMP_OP",   //Port name
@@ -80,7 +80,7 @@ addVia: Array
 
 Add a via at an horizontal offset to a rectangle defined by a path regex
 
-::
+.. code-block:: json
 
    [ "M3",          //Start layer
      "M4",          //Stop layer
@@ -96,7 +96,7 @@ addConnectivityVia: Array
 
 Add a via on ports defined by a net name regular epression
 
-::
+.. code-block:: json
 
    ["M4",      //Start layer
     "M5",      //Stop layer
@@ -114,7 +114,7 @@ addPortVia: Array
 
 Adds a via, and places a port on the via
 
-::
+.. code-block:: json
 
    [ "M2",         //Start layer
      "M4",         //Stop layer
@@ -132,4 +132,10 @@ addVerticalrect: Array
 
 Adds a custom rectangle for the height of the module
 
-\`\ ``["M5",          //Layer  "CUST_C16",    //Path regex  1              //Cuts, default 0, if 0 then use rectangle width ]``
+
+.. code-block:: json
+
+    ["M5",          //Layer
+     "CUST_C16",    //Path regex
+     1              //Cuts, default 0, if 0 then use rectangle width
+    ]

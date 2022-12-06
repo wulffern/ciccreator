@@ -31,4 +31,4 @@ Routes will find the necessary transisitons for routes.
      ]}
    ]
 
-[[../graphics/TESTVIA.png]]
+.. image:: ../graphics/TESTVIA.png

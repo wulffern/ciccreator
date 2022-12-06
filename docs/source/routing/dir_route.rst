@@ -52,4 +52,6 @@ With the spice
      ]
    }
 
-Will produce [[../graphics/DirectedRoute.png]]
+Will produce
+
+.. image:: ../graphics/DirectedRoute.png
