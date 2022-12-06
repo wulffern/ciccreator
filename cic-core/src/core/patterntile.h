@@ -110,17 +110,77 @@ namespace cIcCore{
     class PatternTile: public Cell
     {
         Q_OBJECT
+        /**
+         * @brief minimum poly length
+         * @accessors minPolyLength(), setMinPolyLength()
+         **/
         Q_PROPERTY(qreal minPolyLength READ minPolyLength WRITE setMinPolyLength)
+
+        /**
+         * @brief offset to add to the width
+         * @accessors widthoffseth(), setWidthOffset()
+         **/
         Q_PROPERTY(qreal widthoffset READ widthoffset WRITE setWidthoffset)
+
+
+        /**
+         * @brief offset to add to the width
+         * @accessors height(), setHeightOffset()
+         **/
         Q_PROPERTY(qreal heightoffset READ heightoffset WRITE setHeightoffset)
+
+        /**
+         * @brief Override vertical grid
+         * @accessors verticalGrid(), setVerticalGrid()
+         **/
         Q_PROPERTY(qreal verticalGrid READ verticalGrid WRITE setVerticalGrid)
+
+        /**
+         * @brief Override horizontal grid
+         * @accessors horizontalGrid(), setHorizontalGrid()
+         **/
         Q_PROPERTY(qreal horizontalGrid READ horizontalGrid WRITE setHorizontalGrid)
+
+        /**
+         * @brief multiply vertical grid by an number
+         * @accessors verticalGridMultiplier(), setVerticalGridMultiplier()
+         **/
         Q_PROPERTY(double verticalGridMultiplier READ verticalGridMultiplier WRITE setVerticalGridMultiplier)
+
+        /**
+         * @brief multiply horizontal grid by an number
+         * @accessors horizontalGridMultiplier(), setHorizontalGridMultiplier()
+         **/
         Q_PROPERTY(double horizontalGridMultiplier READ horizontalGridMultiplier WRITE setHorizontalGridMultiplier)
+
+        /**
+         * @brief add offset to Y origin coordinate
+         * @accessors yoffset(), setYoffset()
+         **/
         Q_PROPERTY(qreal yoffset READ yoffset WRITE setYoffset)
+
+        /**
+         * @brief add offset to X origin coordinate
+         * @accessors xoffset(), setXoffset()
+         **/
         Q_PROPERTY(qreal xoffset READ xoffset WRITE setXoffset)
+
+        /**
+         * @brief Mirror the pattern string after creation
+         * @accessors mirrorPatternString(), setMirrorPatternString()
+         **/
         Q_PROPERTY(int mirrorPatternString READ mirrorPatternString WRITE setMirrorPatternString)
+
+         /**
+         * @brief Adjust the poly width
+         * @accessors polyWidthAdjustg(), setPolyWidthAdjust()
+         **/
         Q_PROPERTY(int polyWidthAdjust READ polyWidthAdjust WRITE setPolyWidthAdjust)
+
+         /**
+         * @brief Add metal under metal-resistor layer, depends on technology
+         * @accessors metalUnderMetalRes(), setMetalUnderMetalRes()
+         **/
         Q_PROPERTY(bool metalUnderMetalRes  READ metalUnderMetalRes WRITE setMetalUnderMetalRes)
 
 
@@ -131,14 +191,32 @@ namespace cIcCore{
             PatternTile(const PatternTile&);
             ~PatternTile();
 
-            Q_INVOKABLE void fillCoordinatesFromString(QJsonArray ar);
-            Q_INVOKABLE void getRuleForHorizontalGrid(QJsonArray ar);
-            Q_INVOKABLE void getRuleForVerticalGrid(QJsonArray ar);
-            Q_INVOKABLE void copyColumn(QJsonObject obj);
-            Q_INVOKABLE void copyLayer(QJsonArray ar);
-            Q_INVOKABLE void addEnclosure(QJsonArray ar);
-            Q_INVOKABLE void addEnclosureByRectangle(QJsonArray ar);
-            Q_INVOKABLE void addEnclosuresByRectangle(QJsonArray ar);
+            Q_INVOKABLE
+            /**
+             * @brief fillCoordinatesFromString
+             */
+            void fillCoordinatesFromString(QJsonArray ar);
+
+            Q_INVOKABLE
+            void getRuleForHorizontalGrid(QJsonArray ar);
+
+            Q_INVOKABLE
+            void getRuleForVerticalGrid(QJsonArray ar);
+
+            Q_INVOKABLE
+            void copyColumn(QJsonObject obj);
+
+            Q_INVOKABLE
+            void copyLayer(QJsonArray ar);
+
+            Q_INVOKABLE
+            void addEnclosure(QJsonArray ar);
+
+            Q_INVOKABLE
+            void addEnclosureByRectangle(QJsonArray ar);
+
+            Q_INVOKABLE
+            void addEnclosuresByRectangle(QJsonArray ar);
 
             virtual QMap<QString,QVariant> initFillCoordinates();
             virtual void onFillCoordinate(QChar , QString , int , int , QMap<QString,QVariant> &){};

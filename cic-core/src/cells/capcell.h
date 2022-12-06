@@ -37,8 +37,17 @@ namespace cIcCells{
             void addContacts(QString name, QString node,int y,QList<int> array, Rect* r);
             Rect* getAvssConnectRect(Rect* rect);
 
-            Q_INVOKABLE void usem3(QJsonValue obj);
-            Q_INVOKABLE void heightIncreaseMult(QJsonValue obj);
+            Q_INVOKABLE
+            /**
+             * @brief Use Metal 3
+             */
+            void usem3(QJsonValue obj);
+
+            Q_INVOKABLE
+            /**
+             * @brief Increase multiplier height
+             */
+            void heightIncreaseMult(QJsonValue obj);
 
         private:
             int msw = 0;

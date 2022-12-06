@@ -6,6 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+
 project = 'Custom IC Creator'
 copyright = '2022, Carsten Wulff'
 author = 'Carsten Wulff'
@@ -13,7 +14,14 @@ author = 'Carsten Wulff'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = []
+extensions = [ "breathe"]
+
+
+breathe_projects = {"ciccreator": "../../doxygen/xml/"}
+
+breathe_default_project = "ciccreator"
+
+breathe_implementation_filename_extensions = ['.c', '.cc', '.cpp']
 
 templates_path = ['_templates']
 exclude_patterns = []

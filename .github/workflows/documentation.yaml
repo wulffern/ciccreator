@@ -9,6 +9,18 @@ jobs:
       - name: Install dependencies
         run: |
           pip install sphinx sphinx_rtd_theme
+
+      - name: Install doxygen
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y doxygen
+      - name: Install breathe and run doxygen
+        run: |
+          git clone https://github.com/wulffern/breathe.git
+          cd breathe
+          python3 -m pip install .
+          cd ..
+          doxygen
       - name: Sphinx build
         run: |
           sphinx-build docs/source _build

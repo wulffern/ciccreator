@@ -42,9 +42,16 @@ namespace cIcCore{
     {
         Q_OBJECT
         //Q_PROPERTY(QString name READ name WRITE setName)
+        //
+         /**
+         * @brief Mark a cell as physical only
+         * @accessors isPhysicalOnly(), setPhysicalOnly()
+         **/
         Q_PROPERTY(bool physicalOnly READ isPhysicalOnly WRITE setPhysicalOnly)
-        Q_INVOKABLE void moveTo(QJsonArray obj);
-        Q_INVOKABLE void abstract(QJsonValue obj);
+        Q_INVOKABLE
+        void moveTo(QJsonArray obj);
+        Q_INVOKABLE
+        void abstract(QJsonValue obj);
 
 
 
@@ -73,12 +80,15 @@ namespace cIcCore{
             void moveTo(int ax, int ay) override;
 
             //! Center this cell, and all children on ax and ay
-            Q_INVOKABLE void moveCenter(int ax, int ay) override;
+            Q_INVOKABLE
+            void moveCenter(int ax, int ay) override;
 
-            Q_INVOKABLE void meta(QJsonObject obj);
+            Q_INVOKABLE
+            void meta(QJsonObject obj);
 
             //! Center this cell, and all children on ax and ay
-            Q_INVOKABLE void boundaryIgnoreRouting(QJsonValue obj);
+            Q_INVOKABLE
+            void boundaryIgnoreRouting(QJsonValue obj);
             void setBoundaryIgnoreRouting(bool bir);
             bool boundaryIgnoreRouting();
 
@@ -87,8 +97,10 @@ namespace cIcCore{
 
 
             //! Mirror this cell, and all children around horizontal center point (basically flip horizontal)
-            Q_INVOKABLE void mirrorCenterX();
-            Q_INVOKABLE void mirrorCenterY();
+            Q_INVOKABLE
+            void mirrorCenterX();
+            Q_INVOKABLE
+            void mirrorCenterY();
 
             //! Calculate the extent of this cell. Should be overriden by children
             virtual Rect calcBoundingRect();

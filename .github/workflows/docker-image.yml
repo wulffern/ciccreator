@@ -11,8 +11,14 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    container:
+      image: wulffern/aicex:latest
+      options: --user root
     steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag cic_qt_bionic:$(date +%s)
+    - name: ciccreator
+      uses: actions/checkout@v2
+    - name: Compile
+      run: |
+        make
+#    - name: Build the Docker image
+#      run: docker build . --file Dockerfile --tag cic_qt_bionic:$(date +%s)

@@ -39,28 +39,71 @@ namespace cIcCore{
                         LayoutCell(const LayoutCell&);
                         ~LayoutCell() ;
 
-                        Q_INVOKABLE void setYoffsetHalf(QJsonValue obj); //doc
-                        Q_INVOKABLE void noPowerRoute(QJsonValue obj); //doc
-                        Q_INVOKABLE void addDirectedRoute(QJsonArray obj);
-                        Q_INVOKABLE void addConnectivityRoute(QJsonArray obj);
-                        Q_INVOKABLE void addPortOnRect(QJsonArray obj);
-                        Q_INVOKABLE void addVia(QJsonArray obj);
-                        Q_INVOKABLE void addConnectivityVia(QJsonArray obj);
-                        Q_INVOKABLE void addPortVia(QJsonArray obj);
-                        Q_INVOKABLE void addVerticalRect(QJsonArray obj);
-                        Q_INVOKABLE void addRouteRing(QJsonArray obj); //doc
-                        Q_INVOKABLE void addPowerRing(QJsonArray obj); //doc
-                        Q_INVOKABLE void addRouteConnection(QJsonArray obj);
-                        Q_INVOKABLE void addPowerConnection(QJsonArray obj);
-                        Q_INVOKABLE void trimRouteRing(QJsonArray obj);
-                        Q_INVOKABLE void addRectangle(QJsonArray obj);
-                        Q_INVOKABLE void addRouteHorizontalRect(QString layer, QString rectpath, int x, QString name);
-                        Q_INVOKABLE void addRouteHorizontalRect(QJsonArray obj);
-                        Q_INVOKABLE void addGuard(QJsonArray obj);
-                        Q_INVOKABLE void addHorizontalRect(QJsonArray obj);
-                        Q_INVOKABLE void alternateGroup(QJsonValue obj);
-                        Q_INVOKABLE void resetOrigin(QJsonValue obj);
-                        Q_INVOKABLE void addPortOnEdge(QJsonArray obj);
+                        Q_INVOKABLE
+                        void setYoffsetHalf(QJsonValue obj); //doc
+
+                        Q_INVOKABLE
+                        void noPowerRoute(QJsonValue obj); //doc
+
+                        Q_INVOKABLE
+                        void addDirectedRoute(QJsonArray obj);
+
+                        Q_INVOKABLE
+                        void addConnectivityRoute(QJsonArray obj);
+
+                        Q_INVOKABLE
+                        void addPortOnRect(QJsonArray obj);
+
+                        Q_INVOKABLE
+                        void addVia(QJsonArray obj);
+
+                        Q_INVOKABLE
+                        void addConnectivityVia(QJsonArray obj);
+
+                        Q_INVOKABLE
+                        void addPortVia(QJsonArray obj);
+
+                        Q_INVOKABLE
+                        void addVerticalRect(QJsonArray obj);
+
+                        Q_INVOKABLE
+                        void addRouteRing(QJsonArray obj); //doc
+
+                        Q_INVOKABLE
+                        void addPowerRing(QJsonArray obj); //doc
+
+                        Q_INVOKABLE
+                        void addRouteConnection(QJsonArray obj);
+
+                        Q_INVOKABLE
+                        void addPowerConnection(QJsonArray obj);
+
+                        Q_INVOKABLE
+                        void trimRouteRing(QJsonArray obj);
+
+                        Q_INVOKABLE
+                        void addRectangle(QJsonArray obj);
+
+                        Q_INVOKABLE
+                        void addRouteHorizontalRect(QString layer, QString rectpath, int x, QString name);
+
+                        Q_INVOKABLE
+                        void addRouteHorizontalRect(QJsonArray obj);
+
+                        Q_INVOKABLE
+                        void addGuard(QJsonArray obj);
+
+                        Q_INVOKABLE
+                        void addHorizontalRect(QJsonArray obj);
+
+                        Q_INVOKABLE
+                        void alternateGroup(QJsonValue obj);
+
+                        Q_INVOKABLE
+                        void resetOrigin(QJsonValue obj);
+
+                        Q_INVOKABLE
+                        void addPortOnEdge(QJsonArray obj);
 
                         void addPortOnEdge(QString layer, QString port, QString location,QString routeType,QString options);
 
