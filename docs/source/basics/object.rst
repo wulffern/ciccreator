@@ -89,3 +89,16 @@ instance of the class, and run methods on that class.
 
         }
     ]
+
+
+Name
+^^^^
+
+All cells must have a name. The name is used to search the spice file (assumed
+to be called `dig.spi` for a `dig.json` file). The name will also be used for
+the cell in the output file
+
+Class
+^^^^^
+
+The class correspond to a class inside cic

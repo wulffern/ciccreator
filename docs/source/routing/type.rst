@@ -39,7 +39,7 @@ Starting from the right
 
 
 Right (--\|-)
-^^^^^^^^^^^^^
+^^^^^^^^^^^^^^
 
 The ‘Right’ route will go one metal spacing to the right, then up, and
 or down, and finish the route.
