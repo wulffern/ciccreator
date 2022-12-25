@@ -17,7 +17,7 @@
 ##   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ######################################################################
 
-VERSION=0.1.4+
+VERSION=0.1.5
 VERSION_DATE=${VERSION} built on $(shell date)
 VERSION_HASH=${shell git describe --tags}
 
