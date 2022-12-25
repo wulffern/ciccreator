@@ -78,7 +78,25 @@ namespace cIcCore {
         c.count =obj["count"].toInt();
         c.length = obj["length"].toInt();
         c.offset= obj["offset"].toInt();
+        if(obj.contains("position")){
+            c.position= obj["position"].toInt();
+        }else{
+            c.position= obj["offset"].toInt();
+        }
         copyColumn_.append(c);
+    }
+
+     void PatternTile::copyRow(QJsonObject obj){
+        CopyRow c;
+        c.count =obj["count"].toInt();
+        c.length = obj["length"].toInt();
+        c.offset= obj["offset"].toInt();
+        if(obj.contains("position")){
+            c.position= obj["position"].toInt();
+        }else{
+            c.position= obj["offset"].toInt();
+        }
+        copyRow_.append(c);
     }
 
     void PatternTile::copyLayer(QJsonArray ar){
@@ -185,7 +203,7 @@ namespace cIcCore {
 
         QMap<QString,QVariant> data = this->initFillCoordinates();
 
-        //TODO: implement copyRows function
+
         QString layer = ar[0].toString();
         ar.pop_front();
 
@@ -205,21 +223,62 @@ namespace cIcCore {
             }
 
        }
-        
+
+       //- Make a string list with the pattern
+       QList<QString> rstrs;
+       for(int i=0;i<ar.count();i++){
+            rstrs.append(ar[i].toString());
+       }
+
+       //Copy Rows
+       if(copyRow_.length() > 0){
+
+           for(int z=0;z<copyRow_.length();z++){
+               CopyRow c = copyRow_[z];
+
+
+               if(rstrs.count() < c.offset){
+                   qDebug() << " Warning: copyRow offset to large for " << rstrs.count();
+                   continue;
+               }
+               if(rstrs.count() < c.offset + c.length){
+                   qDebug() << " Warning: copyRow offset+length to large for " << rstrs.count();
+                   continue;
+               }
+
+
+               QList<QString> s;
+               for(int k=c.offset;k < c.offset + c.length;k++){
+                       s.append(rstrs[k]);
+
+                   }
+
+               for(int k=0;k < c.count;k++){
+                       for(int l=0;l < s.count();l++){
+                           rstrs.insert(c.position,s[l]);
+                       }
+                   }
+
+           }
+       }
         
         QList<QString> strs;
-        for(int i=0;i<ar.count();i++){
-            QString str = ar[i].toString();
-
+        for(int i=0;i<rstrs.count();i++){
+            QString str = rstrs[i];
 
             //Copy columns
             if(copyColumn_.length() > 0){
                 for(int z=0;z<copyColumn_.length();z++){
                     CopyColumn c = copyColumn_[z];
-                    if(str.length() < c.offset);
+                    if(str.length() < c.offset){
+                        qDebug() << " Warning: copyColumn offset to large for " << rstrs.count();
+                        continue;
+                    }
+
+
                     QString sorg = str.mid(c.offset,c.length);
                     for(int x=0;x<c.count;x++){
-                        str.insert(c.offset,sorg);
+                        str.insert(c.position,sorg);
                     }
                 }
             }
@@ -234,7 +293,7 @@ namespace cIcCore {
 
             for(int x=0;x < str.length();x++){
                 QChar c = str[x];
-                int y = ar.count() - i -1 ;
+                int y = rstrs.count() - i -1 ;
 
                 if(y > ymax_){ ymax_ = y;}
                 if(x > xmax_){ xmax_ = x;}

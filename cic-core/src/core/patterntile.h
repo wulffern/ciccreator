@@ -31,6 +31,14 @@ namespace cIcCore{
         int count;
         int offset;
         int length;
+        int position;
+    };
+
+    struct CopyRow{
+        int count;
+        int offset;
+        int length;
+        int position;
     };
 
     struct CopyLayer{
@@ -203,8 +211,57 @@ namespace cIcCore{
             Q_INVOKABLE
             void getRuleForVerticalGrid(QJsonArray ar);
 
+
             Q_INVOKABLE
+            /**
+             *
+             * Copy a column set of a fillCoordinateFromStrings
+             *
+             * @param QJsonObject Array of CopyColumn objects
+             *
+             * A CopyColumn object consists of the following
+             * {
+             *  "count" : int,
+             *  "offset" : int,
+             *  "length" : int,
+             *  ["position" : int]
+             * }
+             *
+             * - count is the number of times to copy the column set
+             * - offset is the column set index from left edge of string
+             * - length is the length of the column set
+             * - position is optional, and if not set will be equal to offset.
+             * If position is given, then the copies of a column is inserted at that point
+             *
+             *
+             **/
             void copyColumn(QJsonObject obj);
+
+            Q_INVOKABLE
+            /**
+             *
+             * Copy a row set of a fillCoordinateFromStrings
+             *
+             * @param QJsonObject Array of CopyRows objects
+             *
+             * A CopyRows object consists of the following
+             * {
+             *  "count" : int,
+             *  "offset" : int,
+             *  "length" : int,
+             *  ["position" : int]
+             * }
+             *
+             * - count is the number of times to copy the row set
+             * - offset is the row set index from top edge of string
+             * - length is the length of the row set
+             * - position is optional, and if not set will be equal to offset.
+             * If position is given, then the copies of a row set is inserted at that point
+             *
+             *
+             **/
+            void copyRow(QJsonObject obj);
+
 
             Q_INVOKABLE
             void copyLayer(QJsonArray ar);
@@ -296,6 +353,7 @@ namespace cIcCore{
             qreal widthoffset_;
             qreal heightoffset_;
             QList<CopyColumn> copyColumn_;
+            QList<CopyRow> copyRow_;
             QList<CopyLayer> copyLayer_;
             QMap<QString,QMap<int,QMap<int,Rect*> > > rectangles_;
             Rect * prev_rect_;
