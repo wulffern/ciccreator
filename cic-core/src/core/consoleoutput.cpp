@@ -50,7 +50,7 @@ void ConsoleOutput::endComment(QTextStream &out){
 #ifndef _WIN32
   out << "\033[0m" ;
 #endif
-  out << endl;
+  out << Qt::endl;
 }
 
  void ConsoleOutput::commentStartClass(QString cell){
@@ -67,7 +67,7 @@ void ConsoleOutput::endComment(QTextStream &out){
 #ifndef _WIN32
     out << "\033[0m" ;
 #endif
-   out << endl;
+   out << Qt::endl;
 
  }
 

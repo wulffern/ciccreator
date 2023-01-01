@@ -51,7 +51,7 @@ namespace cIcSpice{
     void Subckt::fromJson(QJsonObject o)
     {
         SpiceObject::fromJson(o);
-        
+
         this->setName(o["name"].toString());
         QJsonArray insts = o["instances"].toArray();
         foreach(auto i, insts){
@@ -84,7 +84,7 @@ namespace cIcSpice{
         }
 
     }
-    
+
 
     QJsonObject Subckt::toJson()
     {
@@ -96,23 +96,23 @@ namespace cIcSpice{
             ar.append(oi);
         }
 
-        QJsonArray ar1;        
+        QJsonArray ar1;
         foreach(SpiceDevice* i, _devices){
             i->setPrefix(this->prefix_);
             QJsonObject oi = i->toJson();
             ar1.append(oi);
         }
 
-        
-        o.remove("deviceName");            
-            
+
+        o.remove("deviceName");
+
         o["name"] = this->prefix_ + name();
         o["instances"] = ar;
         o["devices"] = ar1;
         return o;
-        
+
     }
-    
+
 
     void Subckt::parse(QList<QString> subckt_buffer,int line){
         _spice_str = subckt_buffer;
@@ -168,6 +168,8 @@ namespace cIcSpice{
 
             SubcktInstance * inst = new SubcktInstance();
 
+
+
             inst->parse(line,instance_line_number);
             if(this->_inst_index.contains(inst->name())){
                 qWarning() << "Error: " << this->name() << " already contains an " << inst->name();
@@ -175,22 +177,70 @@ namespace cIcSpice{
             this->_instances.append(inst);
             this->_inst_index[inst->name()] = this->_instances.count() -1;
 
-	    if(inst->properties().contains("M")){
-				int count  = inst->properties()["M"].toInt();
+            // Make paralell devices
+            if(inst->properties().contains("M")){
+                int count  = inst->properties()["M"].toInt();
                 QString name = inst->name();
                 inst->setName(inst->name() + "0");
-				for(int i=1;i<count;i++){                    
-					SubcktInstance * inst_mult = new SubcktInstance();
-					inst_mult->parse(line,instance_line_number);
-					inst_mult->setName(QString("%1%2").arg(name).arg(i));
+                for(int i=1;i<count;i++){
+                    SubcktInstance * inst_mult = new SubcktInstance();
+                    inst_mult->parse(line,instance_line_number);
+                    inst_mult->setName(QString("%1%2").arg(name).arg(i));
 
-					if(this->_inst_index.contains(inst_mult->name())){
-						qWarning() << "Error: " << this->name() << " already contains an " << inst_mult->name();
-					}
-					this->_instances.append(inst_mult);
-					this->_inst_index[inst_mult->name()] = this->_instances.count() -1;
-				}
-			}
+                    if(this->_inst_index.contains(inst_mult->name())){
+                        qWarning() << "Error: " << this->name() << " already contains an " << inst_mult->name();
+                    }
+                    this->_instances.append(inst_mult);
+                    this->_inst_index[inst_mult->name()] = this->_instances.count() -1;
+                }
+            }
+
+            //Make series devices. Only works for mosfets with
+            // D G S B nodes. Assume that bulk and gate is shared.
+            if(inst->properties().contains("S")){
+
+                QList<QString> nodes = inst->nodes();
+                //check for 4 nodes, and maybe mos status
+                if(nodes.count() != 4){
+                    qDebug() << "Error: Series parameter (S) can only be used for devices with 4 nodes";
+                }else{
+
+                    QString top_node = nodes[0];
+                    //fix first instance nodes
+                    nodes[0] += "_S0";
+                    inst->setNodes(nodes);
+                    QString prev_node = nodes[0];
+
+                    //Make series instances
+                    int count  = inst->properties()["S"].toInt();
+                    QString name = inst->name();
+                    inst->setName(inst->name() + "_S0");
+                    SubcktInstance * inst_ser = 0;
+                    for(int i=1;i<count;i++){
+                        inst_ser = new SubcktInstance();
+                        inst_ser->parse(line,instance_line_number);
+                        inst_ser->setName(QString("%1_S%2").arg(name).arg(i));
+                        auto inodes = inst_ser->nodes();
+
+                        inodes[2] = prev_node;
+                        inodes[0] = QString("%1_S%2").arg(inodes[0]).arg(i);
+                        inst_ser->setNodes(inodes);
+                        prev_node= inodes[0];
+
+                        if(this->_inst_index.contains(inst_ser->name())){
+                            qWarning() << "Error: " << this->name() << " already contains an " << inst_ser->name();
+                        }
+                        this->_instances.append(inst_ser);
+                        this->_inst_index[inst_ser->name()] = this->_instances.count() -1;
+                    }
+                    if(inst_ser){
+                        auto inodes = inst_ser->nodes();
+                        inodes[0] = top_node;
+                        inst_ser->setNodes(inodes);
+                    }
+                }
+            }
+
             instance_line_number++;
         }
     }

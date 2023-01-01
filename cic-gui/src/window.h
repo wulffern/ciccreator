@@ -29,11 +29,12 @@
 #include <QGridLayout>
 #include <QSplitter>
 #include <QScrollArea>
-#include <QDesktopWidget>
 #include <QShortcut>
 #include <QKeyEvent>
 #include "cic-core.h"
 #include "widget.h"
+#include <algorithm>
+#include <QScreen>
 
 QT_BEGIN_NAMESPACE
 class QComboBox;
@@ -63,9 +64,11 @@ namespace cIcGui{
         void reloadFile();
         void toggleVisible();
 
+
     protected:
 //        bool eventFilter(QObject *obj, QEvent *event);
     private:
+       static bool layerCompare(Layer * a, Layer * b);
 
         Widget *widget;
         QComboBox *shapeComboBox;

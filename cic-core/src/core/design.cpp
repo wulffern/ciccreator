@@ -41,8 +41,6 @@ namespace cIcCore{
         qRegisterMetaType<cIcCore::ConnectSourceDrain>("ConnectSourceDrain");
         qRegisterMetaType<cIcCells::CapCellV2>("cIcCells::CapCellV2");
 
-
-
         //Translate from Perl names to c++ names
         cellTranslator["Gds::GdsPatternTransistor"] = "cIcCore::PatternTransistor";
         cellTranslator["Gds::GdsPatternHighResistor"] = "cIcCore::PatternHighResistor";
@@ -51,6 +49,7 @@ namespace cIcCore{
         cellTranslator["Gds::GdsPatternCapacitorGnd"] = "cIcCore::PatternCapacitor";
         cellTranslator["cIcCore::PatternCapacitorGnd"] = "cIcCore::PatternCapacitor";
         cellTranslator["Layout::LayoutDigitalCell"] = "cIcCore::LayoutCell";
+        cellTranslator["LayoutCell"] = "cIcCore::LayoutCell";
         cellTranslator["cIcCore::LayoutCell"] = "cIcCore::LayoutCell";
         cellTranslator["Layout::LayoutRotateCell"] = "cIcCore::LayoutRotateCell";
         cellTranslator["Layout::LayoutSARCDAC"] = "cIcCells::SAR";
@@ -217,6 +216,7 @@ namespace cIcCore{
                 QJsonObject c = value.toObject();
                 QJsonValue name = c["name"];
                 _cells[name.toString()] = c;
+
                 this->createCell(c);
             }
 
@@ -341,7 +341,13 @@ namespace cIcCore{
 
         QString cl  = jobj["class"].toString();
         QString name = jobj["name"].toString();
-        if(name == "") return;
+        if(name == ""){
+            //- Skip error message if a cell has no name and class and contains comment
+            if(!jobj.contains("comment"))
+                qDebug() << "Error: no class name defined";
+            return;
+        }
+
 
         //- Find all parents
         QList<QJsonObject> * reverse_parents = new QList<QJsonObject>();
@@ -379,8 +385,10 @@ namespace cIcCore{
         if(cellTranslator.contains(cl)){
             cl = cellTranslator[cl];
         }else{
-            //TODO: Not correct that it's an unknown class
-            //cerr << "Error(design.cpp): Unknown class " << cl.toStdString() << " for " << name.toStdString() <<  "\n";
+            //- If leech, then skip the error message
+            if(!jobj.contains("leech"))
+                qDebug() << "Error(design.cpp): Unknown class " << cl << " for " << name <<  "\n";
+
         }
 
         //- Set default class name
@@ -521,6 +529,8 @@ namespace cIcCore{
             }
 
             console->decreaseIndent();
+        }else{
+            qDebug() << "Error(design.cpp): did not find " << cl;
         }
     }
 

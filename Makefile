@@ -17,7 +17,7 @@
 ##   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ######################################################################
 
-VERSION=0.1.5
+VERSION=0.1.5+
 VERSION_DATE=${VERSION} built on $(shell date)
 VERSION_HASH=${shell git describe --tags}
 
@@ -93,6 +93,7 @@ clean:
 	-rm -rf GDS3D_1.8
 	-rm cic/Makefile
 	-rm cic-core/Makefile
+	-rm cic-gui/Makefile
 
 doxygen:
 	doxygen

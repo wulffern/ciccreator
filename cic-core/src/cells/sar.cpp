@@ -149,7 +149,7 @@ namespace cIcCells{
 
 
         //Scramble routing
-        qSort(graphs.begin(), graphs.end(), sortGraph);
+        std::sort(graphs.begin(), graphs.end(), sortGraph);
 
         Instance* c;
         foreach(Graph* graph, graphs){

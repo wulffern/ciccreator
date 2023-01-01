@@ -46,6 +46,9 @@ namespace cIcCore{
                         void noPowerRoute(QJsonValue obj); //doc
 
                         Q_INVOKABLE
+                        void placeHorizontal(QJsonValue obj);
+
+                        Q_INVOKABLE
                         void addDirectedRoute(QJsonArray obj);
 
                         Q_INVOKABLE
@@ -149,6 +152,7 @@ namespace cIcCore{
 
                 private:
                         bool useHalfHeight;
+                        bool _placeHorizontal;
                         bool alternateGroup_;
                         QList<QString> nodeGraphList_;
                         QHash<QString,Graph*> nodeGraph_;

@@ -204,10 +204,6 @@ namespace cIcCore{
     }
 
 
-
-
-
-
   }
 
   Route::Route(const Route& r){
@@ -240,10 +236,10 @@ namespace cIcCore{
       }
     }
   }
-   void Route::add(QList<Rect *> children){
-     foreach(Rect * r, children){
-       this->add(r);
-     }
+  void Route::add(QList<Rect *> children){
+    foreach(Rect * r, children){
+      this->add(r);
+    }
   }
 
   void Route::addStartCuts(){
@@ -354,51 +350,49 @@ namespace cIcCore{
     //If the cuts are added after, then the routing might not reach the cuts.
     //
 
-      this->addStartCuts();
-      this->addEndCuts();
+    this->addStartCuts();
+    this->addEndCuts();
 
     switch(routeType_){
-    case LEFT:
-      this->routeOne();
+      case LEFT:
+        this->routeOne();
 
-      break;
-    case RIGHT:
-      this->routeOne();
-      break;
-    case STRAIGHT:
-      this->routeStraight();
-      break;
-    case VERTICAL:
-      this->routeVertical();
-      break;
-    case U_RIGHT:
-      this->routeU();
-      break;
-    case U_LEFT:
-      this->routeU();
-      break;
-    case U_TOP:
-      this->routeUHorizontal();
+        break;
+      case RIGHT:
+        this->routeOne();
+        break;
+      case STRAIGHT:
+        this->routeStraight();
+        break;
+      case VERTICAL:
+        this->routeVertical();
+        break;
+      case U_RIGHT:
+        this->routeU();
+        break;
+      case U_LEFT:
+        this->routeU();
+        break;
+      case U_TOP:
+        this->routeUHorizontal();
 
-      break;
-    case U_BOTTOM:
-      this->routeUHorizontal();
-      break;
-    case LEFT_DOWN_LEFT_UP:
-      this->routeLeftDownLeftUp();
-      break;
-    case LEFT_UP_LEFT_DOWN:
-      this->routeLeftUpLeftDown();
-      break;
-    case STRAP:
-      this->routeStrap();
-      break;
+        break;
+      case U_BOTTOM:
+        this->routeUHorizontal();
+        break;
+      case LEFT_DOWN_LEFT_UP:
+        this->routeLeftDownLeftUp();
+        break;
+      case LEFT_UP_LEFT_DOWN:
+        this->routeLeftUpLeftDown();
+        break;
+      case STRAP:
+        this->routeStrap();
+        break;
 
-    default:
-      cerr << "Error(route.cpp): Unknown route routeType=" << route_.toStdString() << " net=" << net_.toStdString() << " layer=" << routeLayer_.toStdString() << " options="<< options_.toStdString() << "\n";
-      break;
-
-
+      default:
+        cerr << "Error(route.cpp): Unknown route routeType=" << route_.toStdString() << " net=" << net_.toStdString() << " layer=" << routeLayer_.toStdString() << " options="<< options_.toStdString() << "\n";
+        break;
     }
 
 
@@ -416,14 +410,14 @@ namespace cIcCore{
   void Route::applyOffset(int width, Rect* rect,Offset offset)
   {
     switch(offset){
-    case HIGH:
-      rect->translate(0,+width);
-      break;
-    case LOW:
-      rect->translate(0,-width);
-      break;
-    case NO_OFFSET:
-      break;
+      case HIGH:
+        rect->translate(0,+width);
+        break;
+      case LOW:
+        rect->translate(0,-width);
+        break;
+      case NO_OFFSET:
+        break;
 
     }
 
@@ -435,6 +429,11 @@ namespace cIcCore{
   void Route::routeOne(){
     int width = rules->get(routeLayer_,routeWidthRule_);
     int space = rules->get(routeLayer_,"space");
+
+    if(this->options_.contains(QRegularExpression("noSpace"))){
+      space = -width;
+    }
+
 
     Rect start_bound = this->calcBoundingRect(start_rects_);
 
@@ -589,46 +588,88 @@ namespace cIcCore{
 
   void Route::routeStrap(){
 
-     int lcuts = startCuts_ > 0 ? startCuts_: 1;
-     int lvcuts = startVCuts_ > 0 ? startVCuts_: 2;
-     int width = rules->get(routeLayer_,routeWidthRule_);
+    int lcuts = startCuts_ > 0 ? startCuts_: 1;
+    int lvcuts = startVCuts_ > 0 ? startVCuts_: 2;
+    int width = rules->get(routeLayer_,routeWidthRule_);
 
-    if(start_rects_.count() == 1){
-      auto sr = start_rects_[0];
-       foreach(auto r, stop_rects_){
-        if(!r){continue;}
+    //Warning: it may look like the code below can be easily
+    //refractored, however, the decision where to route (x1,x2, etc)
+    //Depends on the start and stop (see rc line)
 
+    //Check if strap is horizontal or vertical
+    if(this->options_.contains(QRegularExpression("vertical(,|\\s+|$)"))){
+      if(start_rects_.count() == 1){
+        auto sr = start_rects_[0];
+        foreach(auto r, stop_rects_){
+          if(!r){continue;}
 
-        auto rc = new Rect(routeLayer_,sr->x1(),r->y1(),r->x1()-sr->x1(),width);
-        this->add(rc);
+          auto rc = new Rect(routeLayer_,r->x1(),sr->y1(),width,r->y1() - sr->y1());
+          this->add(rc);
 
-        if(routeLayer_ != sr->layer()){
-          auto cs = Cut::getInstance(sr->layer(),routeLayer_,lcuts,lvcuts);
-          cs->moveTo(rc->x1(),rc->y2());
-          this->add(cs);
+          if(routeLayer_ != sr->layer()){
+            auto cs = Cut::getInstance(sr->layer(),routeLayer_,lcuts,lvcuts);
+            cs->moveTo(rc->x1(),rc->y2());
+            this->add(cs);
+          }
+
         }
+      }else if (stop_rects_.count() == 1){
+        qDebug() << "Error: Not implemented";
+        /*
+        auto sr = stop_rects_[0];
+        foreach(Rect* r, start_rects_){
+          if(!r){continue;}
+          auto rc = new Rect(routeLayer_,r->x2(),r->y1(),sr->x2()-r->x2(),width);
 
-      }
-    }else if (stop_rects_.count() == 1){
-      auto sr = stop_rects_[0];
-      foreach(Rect* r, start_rects_){
-        if(!r){continue;}
-
-        auto rc = new Rect(routeLayer_,r->x2(),r->y1(),sr->x2()-r->x2(),width);
-
-        if(routeLayer_ != sr->layer()){
-          auto cs = Cut::getInstance(sr->layer(),routeLayer_,lcuts,lvcuts);
-          cs->moveTo(rc->x2()-cs->width(),rc->y1());
-          this->add(cs);
+          if(routeLayer_ != sr->layer()){
+            auto cs = Cut::getInstance(sr->layer(),routeLayer_,lcuts,lvcuts);
+            cs->moveTo(rc->x2()-cs->width(),rc->y1());
+            this->add(cs);
+          }
+          this->add(rc);
         }
-        this->add(rc);
-
+        */
+      }else{
+        qDebug() << "Error: Cannot route strap!";
       }
-
-
     }else{
-      qDebug() << "Error: Cannot route strap!";
+
+      if(start_rects_.count() == 1){
+        auto sr = start_rects_[0];
+        foreach(auto r, stop_rects_){
+          if(!r){continue;}
+
+          auto rc = new Rect(routeLayer_,sr->x1(),r->y1(),r->x1()-sr->x1(),width);
+          this->add(rc);
+
+          if(routeLayer_ != sr->layer()){
+            auto cs = Cut::getInstance(sr->layer(),routeLayer_,lcuts,lvcuts);
+            cs->moveTo(rc->x1(),rc->y2());
+            this->add(cs);
+          }
+
+        }
+      }else if (stop_rects_.count() == 1){
+        auto sr = stop_rects_[0];
+        foreach(Rect* r, start_rects_){
+          if(!r){continue;}
+          auto rc = new Rect(routeLayer_,r->x2(),r->y1(),sr->x2()-r->x2(),width);
+
+          if(routeLayer_ != sr->layer()){
+            auto cs = Cut::getInstance(sr->layer(),routeLayer_,lcuts,lvcuts);
+            cs->moveTo(rc->x2()-cs->width(),rc->y1());
+            this->add(cs);
+          }
+          this->add(rc);
+        }
+      }else{
+        qDebug() << "Error: Cannot route strap!";
+      }
     }
+
+
+
+
   }
 
 
@@ -699,7 +740,7 @@ namespace cIcCore{
 
     }
     int xc = start_bound.centerX() - width/2;
-    
+
 
     //Align cuts with center of start rectangle
     foreach(Rect * r, this->children()){
@@ -752,11 +793,11 @@ namespace cIcCore{
 
         //Exception, poly should only be routed minimum??
 //        if(routeLayer_ == "PO"){
-//            height = rules->get(routeLayer_,"width");            
+//            height = rules->get(routeLayer_,"width");
 
 //        }
-        
-        
+
+
         if(r1->height() > r2->height()){
           height = r2->height();
         }
@@ -856,31 +897,31 @@ namespace cIcCore{
 
     foreach(Rect *r, rects){
       if(offset == HIGH or offset == LOW){
-	int x1 = r->centerX();
-	if(x1 < x){ // Left to right
-	  Rect * rect1  = Rect::getHorizontalRectangleFromTo(routeLayer_,r->centerX(),r->x2(),r->y1(),width);
-	  Rect * rect2  = Rect::getHorizontalRectangleFromTo(routeLayer_,r->x2() - minwidth,x,r->y1(),width);
-	  if(rect1 && rect2){
+        int x1 = r->centerX();
+        if(x1 < x){ // Left to right
+          Rect * rect1  = Rect::getHorizontalRectangleFromTo(routeLayer_,r->centerX(),r->x2(),r->y1(),width);
+          Rect * rect2  = Rect::getHorizontalRectangleFromTo(routeLayer_,r->x2() - minwidth,x,r->y1(),width);
+          if(rect1 && rect2){
 
-	    this->add_after_route.append(rect1);
-	    this->add(rect2);
-	    this->applyOffset(width,rect2,offset);
-	  }
-	}else{//Right to left
-	  Rect * rect1  = Rect::getHorizontalRectangleFromTo(routeLayer_,r->x1(),r->centerX(),r->y1(),width);
-	  Rect * rect2  = Rect::getHorizontalRectangleFromTo(routeLayer_,r->x1() + minwidth,x,r->y1(),width);
-	  if(rect1 && rect2){
-	    this->add_after_route.append(rect1);
-	    this->add(rect2);
-	    this->applyOffset(width,rect2,offset);
-	  }
+            this->add_after_route.append(rect1);
+            this->add(rect2);
+            this->applyOffset(width,rect2,offset);
+          }
+        }else{//Right to left
+          Rect * rect1  = Rect::getHorizontalRectangleFromTo(routeLayer_,r->x1(),r->centerX(),r->y1(),width);
+          Rect * rect2  = Rect::getHorizontalRectangleFromTo(routeLayer_,r->x1() + minwidth,x,r->y1(),width);
+          if(rect1 && rect2){
+            this->add_after_route.append(rect1);
+            this->add(rect2);
+            this->applyOffset(width,rect2,offset);
+          }
 
-	}
+        }
       }else{
-	Rect * rect  = Rect::getHorizontalRectangleFromTo(routeLayer_,r->centerX(),x,r->y1(),width);
-	if(rect){
-	  this->add(rect);
-	}
+        Rect * rect  = Rect::getHorizontalRectangleFromTo(routeLayer_,r->centerX(),x,r->y1(),width);
+        if(rect){
+          this->add(rect);
+        }
       }
 
     }

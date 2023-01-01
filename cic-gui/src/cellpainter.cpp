@@ -116,7 +116,7 @@ namespace cIcPainter{
                 font.setPointSize(1);
                 QFontMetrics fm(font);
                 QString cn = c->name()  + "(" + inst->instanceName() + ")";
-                int psize = c->width()/fm.width(cn)*0.7;
+                int psize = c->width()/fm.horizontalAdvance(cn)*0.7;
 
                 this->paintMyText(painter,c->centerX(),c->centerY(),cn,l->color,psize);
             }
@@ -254,7 +254,7 @@ namespace cIcPainter{
         font.setFamily("Arial");
         font.setPointSize (size );
         QFontMetrics fm(font);
-        int width=fm.width(txt);
+        int width=fm.horizontalAdvance(txt);
         int height = fm.height();
         QColor color(colorName);
         color.setAlpha(150);

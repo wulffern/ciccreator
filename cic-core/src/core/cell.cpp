@@ -134,11 +134,11 @@ namespace cIcCore{
     QList<Rect*> Cell::findRectanglesByRegex(QString regex,QString layer){
 
         //If the regex contains : then search child ports, if it does not, then search local ports
-        QStringList re_s = regex.split(",",QString::SkipEmptyParts);
+        QStringList re_s = regex.split(",",Qt::SkipEmptyParts);
         QList<Rect*> rects;
         foreach(QString s,re_s){
             if(s.contains(":")){
-                QStringList str_tok = s.split(":",QString::SkipEmptyParts);
+                QStringList str_tok = s.split(":",Qt::SkipEmptyParts);
                 QString instname = str_tok[0];
                 str_tok.pop_front();
                 QString path = str_tok.join(":");

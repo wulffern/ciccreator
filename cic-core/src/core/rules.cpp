@@ -76,7 +76,7 @@ namespace cIcCore{
                 index = verr.indexOf("\n",position+1);
             }
 
-            console->error("Error[" + filename + "]:" +  err.errorString() + " at line " + QString(line_count)) ;
+            console->error("Error[" + filename + "]:" +  err.errorString() + " at line " + QString("%1").arg(line_count)) ;
             throw "Die";
         }
 

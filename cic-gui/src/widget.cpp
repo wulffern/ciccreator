@@ -72,7 +72,7 @@ Widget::Widget( QWidget *parent)
     QPalette pal = palette();
 
 // set black background
-    pal.setColor(QPalette::Background, Qt::white);
+    pal.setColor(QPalette::Window, Qt::white);
     this->setAutoFillBackground(true);
     this->setPalette(pal);
 
@@ -209,7 +209,7 @@ void Widget::wheelEvent(QWheelEvent *event)
 
     if (event->modifiers().testFlag(Qt::ControlModifier) ||event->modifiers().testFlag(Qt::MetaModifier) )
     {
-        if(event->delta() < 0){
+        if(event->angleDelta().y() < 0){
             zoomIn();
         }
         else{
@@ -218,7 +218,7 @@ void Widget::wheelEvent(QWheelEvent *event)
         }
     }else  if (event->modifiers().testFlag(Qt::ShiftModifier))
     {
-        if(event->delta() < 0){
+        if(event->angleDelta().y() < 0){
             moveLeft();
         }
         else{
@@ -227,7 +227,7 @@ void Widget::wheelEvent(QWheelEvent *event)
 
 
     } else {
-        if(event->delta() < 0){
+        if(event->angleDelta().y() < 0){
             moveDown();
         }
         else{

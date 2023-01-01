@@ -25,7 +25,9 @@ namespace cIcGui{
     Window::Window(QWidget *parent) : QWidget(parent)
     {
         qApp->installEventFilter(this);
-        resize(QDesktopWidget().availableGeometry(this).size() * 0.7);
+        QScreen *screen = QGuiApplication::primaryScreen();
+        QRect  screenGeometry = screen->geometry();
+        resize(screenGeometry.size() * 0.7);
 
 //        setWindowIcon(
 //        setWindowIcon();
@@ -68,7 +70,7 @@ namespace cIcGui{
         Rules * rules = Rules::getRules();
         QMap<QString,Layer *> layers = rules->layers();
         QList<Layer *> layerList = layers.values();
-        qSort(layerList);
+        std::sort(layerList.begin(),layerList.end(),this->layerCompare);
         foreach(Layer * l, layerList){
             Layer::MATERIAL_TYPE m = l->material;
             if(m == Layer::metalres || m == Layer::marker || m == Layer::metalres){
@@ -80,6 +82,11 @@ namespace cIcGui{
             listLayers->addItem(item);
         }
 
+    }
+
+    bool Window::layerCompare(Layer * a, Layer * b){
+
+        return a->name < b->name;
     }
 
     Window::~Window()
@@ -135,9 +142,9 @@ namespace cIcGui{
             Layer *l = Rules::getRules()->getLayer(item->text());
         l->visible = showAll;
         if(l->visible){
-            item->setBackgroundColor(QColor("white"));
+            item->setBackground(QColor("white"));
         }else{
-            item->setBackgroundColor(QColor("gray"));
+            item->setBackground(QColor("gray"));
         }
         }
         //- TODO: Update renderer
@@ -152,9 +159,9 @@ namespace cIcGui{
         Layer *l = Rules::getRules()->getLayer(item->text());
         l->visible = !l->visible;
         if(l->visible){
-            item->setBackgroundColor(QColor("white"));
+            item->setBackground(QColor("white"));
         }else{
-            item->setBackgroundColor(QColor("gray"));
+            item->setBackground(QColor("gray"));
         }
         //- TODO: Update renderer
         widget->update();

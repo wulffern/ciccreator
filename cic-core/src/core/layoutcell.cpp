@@ -27,11 +27,13 @@ namespace cIcCore{
         boundaryIgnoreRouting_ = true;
         alternateGroup_ = false;
         abstract_ = false;
+        _placeHorizontal = false;
     }
 
     LayoutCell::LayoutCell(const LayoutCell& cell): Cell(cell){
         useHalfHeight = false;
         noPowerRoute_ = false;
+        _placeHorizontal = false;
     }
 
     LayoutCell::~LayoutCell()
@@ -71,6 +73,15 @@ namespace cIcCore{
             graphs.append(nodeGraph_[node]);
         }
         return graphs;
+    }
+
+     void LayoutCell::placeHorizontal(QJsonValue obj){
+
+        int hor = obj.toInt();
+        if(hor> 0){
+            _placeHorizontal = true;
+        }
+
     }
 
     void LayoutCell::resetOrigin(QJsonValue obj){
@@ -182,7 +193,6 @@ namespace cIcCore{
             if(rects.count() > 0){
                 QList<Rect*> empty;
                 Route * r = new Route(node,layer,empty,rects,options,routeType);
-
                 this->add(r);
             }
         }
@@ -563,7 +573,6 @@ namespace cIcCore{
     void LayoutCell::addPortOnEdge(QString layer,QString node,QString location,QString routeType, QString options){
 
         if(!ports_.contains(node)){
-            qDebug() << ports_.keys();
             qDebug() << "Error: " << node << " not a port";
             return;
         }
@@ -885,6 +894,7 @@ namespace cIcCore{
         QString prev_group = "";
 
         int next_x = 0;
+        int next_y = 0;
 
         int x = 0;
         int y = 0;
@@ -895,9 +905,18 @@ namespace cIcCore{
         foreach(cIcSpice::SubcktInstance * ckt_inst,_subckt->instances()){
             QString group = ckt_inst->groupName();
 
-            if(prev_group.compare(group) != 0  && prev_group.compare("")  != 0){
+            if(_placeHorizontal){
                 y = 0;
                 x = next_x;
+            }
+
+            if(prev_group.compare(group) != 0  && prev_group.compare("")  != 0){
+
+                if(!_placeHorizontal){
+                    y = 0;
+                    x = next_x;
+                }
+
 
                 mirror_y = !mirror_y;
             }
@@ -958,12 +977,10 @@ namespace cIcCore{
 
             }
 
-
             next_x = inst->x2();
-            int next_y = inst->y2();
+            next_y = inst->y2();
 
             x = inst->x1();
-
 
             if(useHalfHeight){
                 y += (inst->y2() - instance_y)/2;
@@ -1140,7 +1157,6 @@ namespace cIcCore{
 
         auto c = Cell::cellFromJson(co);
 
-        //qDebug() << this << c;
 
         if(c == 0){
             QString cl = co["class"].toString();
@@ -1171,18 +1187,24 @@ namespace cIcCore{
         if(!_subckt) return;
         QStringList nodes = _subckt->nodes();
 
+
         QString filterChild = "^B$";
         QString filterInstance = "";
         foreach(QString node,nodes){
+
             if(ports_.contains(node)) continue;
-            QList<Rect*> rects = this->findRectanglesByNode(node+"$",filterChild,filterInstance);
+
+            QList<Rect*> rects = this->findRectanglesByNode("^" + node+"$",filterChild,filterInstance);
 
             if(rects.count() > 0){
-                Port * p = new Port(node);
-                p->set(rects[0]);
-                this->add(p);
+                this->updatePort(node,rects[0]);
+
+            }else{
+                qDebug() << "Error: No rects found on " <<node;
             }
         }
+
+
 
     }
 
