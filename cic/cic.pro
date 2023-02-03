@@ -27,4 +27,3 @@ HEADERS +=  src/version.h  \
 
 include(../etc/mac_sdk.pro)
 include(../etc/console_config.pro)
-include(../etc/config.pro)

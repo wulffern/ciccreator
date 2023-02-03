@@ -22,4 +22,3 @@ src/window.h
 
 include(../etc/console_config.pro)
 include(../etc/mac_sdk.pro)
-include(../etc/config.pro)

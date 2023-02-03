@@ -89,7 +89,7 @@ namespace cIcCore{
 
 
             //Copy OD to metal
-            //this->add(r2->getCopy("M1"));
+            this->add(c2->getCopy("M1"));
             c2->addEnclosingLayers(layers);
             this->add(c2);
 
