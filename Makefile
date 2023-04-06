@@ -117,11 +117,11 @@ routes: lay
 esscirc: lay
 	cd lay; ${CIC} ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
 
-#GDS3D:
-#	wget https://sourceforge.net/projects/gds3d/files/GDS3D%201.8/GDS3D_1.8.tar.bz2/download
-#	tar -zxvf download
-#	ln -s GDS3D_1.8 GDS3D
-#	rm download
+GDS3D:
+	wget https://sourceforge.net/projects/gds3d/files/GDS3D%201.8/GDS3D_1.8.tar.bz2/download
+	tar -zxvf download
+	ln -s GDS3D_1.8 GDS3D
+	rm download
 
 view:
 	cd lay; ${CICGUI} SAR_ESSCIRC16_28N.cic  ${TECHFILE}

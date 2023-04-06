@@ -9,31 +9,31 @@
 #include "port.h"
 
 namespace cIcCore{
-  class InstancePort: public Port{
+    class InstancePort: public Port{
 
 
-    Q_OBJECT
+            Q_OBJECT
 
-  public:
-    InstancePort(QString name, Port * p, Rect * parent);
-    ~InstancePort();
-      void mirrorX(int ay) override;
-      void mirrorY(int ax) override;
-
-
-     QString childName();
+        public:
+            InstancePort(QString name, Port * p, Rect * parent);
+            ~InstancePort();
+            void mirrorX(int ay) override;
+            void mirrorY(int ax) override;
+            Rect * parent(){return parent_;}
 
 
-
-  protected:
-     //! Parent, does this rectangle belong to any particular instance
-     Rect * parent_;
-
-     //! Link to a child port, provides connectivity through a hierarchy
-     Port * childport_;
+            QString childName();
 
 
-  };
+        protected:
+            //! Parent, does this rectangle belong to any particular instance
+            Rect * parent_;
+
+            //! Link to a child port, provides connectivity through a hierarchy
+            Port * childport_;
+
+
+    };
 
 }
 

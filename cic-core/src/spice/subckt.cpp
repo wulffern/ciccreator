@@ -38,6 +38,16 @@ namespace cIcSpice{
 
     }
 
+    SubcktInstance* Subckt::getInstance(QString name){
+
+        foreach(SubcktInstance* i, _instances){
+            //cout << i->name();
+            if(i->name() == name){
+                return i;
+            }
+        }
+    }
+
 
 
     Subckt* Subckt::getInstanceSubckt(SubcktInstance* inst){

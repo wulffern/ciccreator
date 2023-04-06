@@ -25,7 +25,7 @@
 
   include(../etc/mac_sdk.pro)
 
-  include(../etc/config.pro)
+  #include(../etc/config.pro)
   
   TEMPLATE = lib
 
@@ -105,6 +105,7 @@
   src/core/patternresistor.cpp \
   src/core/design.cpp \
   src/core/guard.cpp \
+  src/core/graph.cpp \
   src/printer/designprinter.cpp \
   src/spice/spiceparser.cpp \
   src/spice/spiceobject.cpp \

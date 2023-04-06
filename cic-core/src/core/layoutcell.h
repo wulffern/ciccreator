@@ -110,6 +110,10 @@ namespace cIcCore{
 
                         void addPortOnEdge(QString layer, QString port, QString location,QString routeType,QString options);
 
+                        Q_INVOKABLE
+                        void setSpiceParam(QJsonArray obj);
+
+
                         void addGuard(QString port, double gridMultiplier, QList<QString> layers);
                         QList<Graph*> getNodeGraphs(QString regex);
                         void noPowerRoute();

@@ -70,7 +70,7 @@ namespace cIcCore{
 
         foreach(QString node, nodeGraphList()){
             if(!node.contains(QRegularExpression(regex))) continue;
-            graphs.append(nodeGraph_[node]);
+           graphs.append(nodeGraph_[node]);
         }
         return graphs;
     }
@@ -96,6 +96,21 @@ namespace cIcCore{
 
     }
 
+
+    void LayoutCell::setSpiceParam(QJsonArray obj){
+        if(obj.size() < 3){
+            qDebug() << "Error: setCktParam <inst> <param> <value>\n";
+            return;
+        }
+
+        QString cktinst = obj[0].toString();
+        QString param = obj[1].toString();
+        QString value = obj[2].toString();
+
+        auto * inst = _subckt->getInstance(cktinst);
+        inst->setProperty(param,value);
+
+    }
 
 
 
@@ -916,8 +931,6 @@ namespace cIcCore{
                     y = 0;
                     x = next_x;
                 }
-
-
                 mirror_y = !mirror_y;
             }
 
@@ -1213,6 +1226,13 @@ namespace cIcCore{
         o["useHalfHeight"] = this->useHalfHeight;
         o["alternateGroup"] = this->alternateGroup_;
         o["noPowerRoute"] = this->noPowerRoute_;
+
+        QJsonArray graph;
+        foreach(QString node, nodeGraphList()){
+            Graph * g = nodeGraph_[node];
+            graph.append(g->toJson());
+        }
+        o["graph"] = graph;
 
         return o;
     }

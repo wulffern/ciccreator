@@ -64,6 +64,9 @@ namespace cIcSpice{
                 _devices.append(s);
             }
 
+            SubcktInstance* getInstance(QString name);
+
+
             void addSubckt()
             {
                 _allsubckt[this->name()] = this;

@@ -731,6 +731,7 @@ namespace cIcCore{
         QJsonArray ar;
 
         for(int i=0;i<_cell_names.count();i++){
+
             Cell * c = Cell::getCell(_cell_names[i]);
             if(c){
                 c->setPrefix(this->prefix_);

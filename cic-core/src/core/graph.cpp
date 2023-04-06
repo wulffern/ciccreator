@@ -19,3 +19,27 @@
 
 #include "graph.h"
 
+namespace cIcCore{
+
+    QJsonObject Graph::toJson(){
+        QJsonObject o;
+        o["node"] = name;
+        QJsonArray pa;
+        foreach(auto * p, this->ports){
+            QJsonObject op;
+
+            if(p->isInstancePort()){
+                InstancePort * pi = static_cast<InstancePort*>(p);
+                Instance* i = static_cast<Instance*>(pi->parent());
+                op["node"] = pi->childName();
+                op["inst"] = i->instanceName();
+                pa.append(op);
+            }
+
+        }
+        o["instances"] = pa;
+
+        return o;
+    }
+
+}
