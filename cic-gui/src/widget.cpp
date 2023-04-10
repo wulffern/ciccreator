@@ -246,13 +246,20 @@ void Widget::wheelEvent(QWheelEvent *event)
 
 void Widget::setCell(Cell* c)
 {
+    if(!c) return;
+
+    //Clear rubberband if we're jumping to a new cell
+    if(cell && cell->name() != c->name()){
+        rubberBand = 0;
+    }
+
     cell = c;
 
-    if(!cell || !this) return;
 
     cell->setBoundaryIgnoreRouting(false);
     cell->updateBoundingRect();
-    this->fit();
+    if(!rubberBand)
+        this->fit();
 
 }
 
@@ -320,10 +327,10 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
         if(keyEvent->key() == Qt::Key_Z){
             if (isSHIFT)
             {
-                this->zoomIn();
+                this->zoomOut();
                 return true;
             }else{
-                this->zoomOut();
+                this->zoomIn();
                 return true;
             }
         }

@@ -41,16 +41,15 @@ namespace cIcCore{
         qRegisterMetaType<cIcCore::ConnectSourceDrain>("ConnectSourceDrain");
         qRegisterMetaType<cIcCells::CapCellV2>("cIcCells::CapCellV2");
 
+
         //Translate from Perl names to c++ names
         cellTranslator["Gds::GdsPatternTransistor"] = "cIcCore::PatternTransistor";
         cellTranslator["Gds::GdsPatternHighResistor"] = "cIcCore::PatternHighResistor";
         cellTranslator["Gds::GdsPatternResistor"] = "cIcCore::PatternResistor";
         cellTranslator["Gds::GdsPatternCapacitor"] = "cIcCore::PatternCapacitor";
         cellTranslator["Gds::GdsPatternCapacitorGnd"] = "cIcCore::PatternCapacitor";
-        cellTranslator["cIcCore::PatternCapacitorGnd"] = "cIcCore::PatternCapacitor";
         cellTranslator["Layout::LayoutDigitalCell"] = "cIcCore::LayoutCell";
         cellTranslator["LayoutCell"] = "cIcCore::LayoutCell";
-        cellTranslator["cIcCore::LayoutCell"] = "cIcCore::LayoutCell";
         cellTranslator["Layout::LayoutRotateCell"] = "cIcCore::LayoutRotateCell";
         cellTranslator["Layout::LayoutSARCDAC"] = "cIcCells::SAR";
         cellTranslator["Layout::LayoutCDACSmall"] = "cIcCells::CDAC";
@@ -384,11 +383,6 @@ namespace cIcCore{
         //- Translate the class name if it exists in the translator
         if(cellTranslator.contains(cl)){
             cl = cellTranslator[cl];
-        }else{
-            //- If leech, then skip the error message
-            if(!jobj.contains("leech"))
-                qDebug() << "Error(design.cpp): Unknown class " << cl << " for " << name <<  "\n";
-
         }
 
         //- Set default class name

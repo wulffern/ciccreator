@@ -69,6 +69,7 @@ namespace cIcCells{
             
         }
 
+        //- Add AVSS connections
         QList<Graph*> graphs = this->getNodeGraphs("AVSS");
         foreach(Graph* graph,graphs){
             foreach(Port* p, graph->ports){
@@ -81,6 +82,8 @@ namespace cIcCells{
                 Cell* c = static_cast<Cell*>(inst->cell());
                 if(c && strcmp(c->metaObject()->className(),"cIcCells::CapCell") == 0){
                     CapCell* cap = static_cast<CapCell*>(c);
+
+                    //- Not really a rect, it's a cut
                     Rect* rect = cap->getAvssConnectRect(p);
                     rect->translate(inst->x1(),0);
                     this->add(rect);

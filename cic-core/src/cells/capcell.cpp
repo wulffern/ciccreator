@@ -53,15 +53,19 @@ namespace cIcCells{
 
     Rect* CapCell::getAvssConnectRect(Rect* rect)
     {
-        Instance* c = Cut::getInstance("M1","M2",1,2);
-        c->moveTo(ports_["AVSS"]->x1(),rect->centerY() - c->height()/2.0);
-
-        return c;
+        //- Return a "Cell" that can connect a port to AVSS
+        Cell * cell = new Cell();
+        Cut * c = new Cut("M1","M2",1,2);
+        int y = c->height()/2.0;
+        c->moveTo(0,-y);
+        Rect * r = new Rect("M2",0,-rect->height()/2.0,ports_["AVSS"]->x1(),c->width());
+        cell->add(c);
+        cell->add(r);
+        cell->updateBoundingRect();
+        cell->moveTo(0,rect->centerY() - y);
+        return cell;
 
     }
-
-
-
 
 
     void CapCell::place()

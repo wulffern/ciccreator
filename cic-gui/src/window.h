@@ -81,7 +81,7 @@ namespace cIcGui{
         bool showAll = true;
 
         QShortcut *shift_r;
-            QShortcut *key_t;
+        QShortcut *key_t;
         CellPainter *cellPainter;
 
     };

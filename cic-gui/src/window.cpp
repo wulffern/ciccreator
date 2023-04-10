@@ -58,7 +58,7 @@ namespace cIcGui{
         connect(listCells,SIGNAL(currentRowChanged(int)),this,SLOT(shapeSelected(int)));
         connect(listLayers,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(layerClicked(QModelIndex)));
 
-        setWindowTitle(tr("Custom IC Creator Viewer: Zoom In = Shift+Z, Zoom Out = Z, Fit = F, Move = Arrows, Refresh=Shift+R, Toggle layer visibility=t"));
+        setWindowTitle(tr("Custom IC Creator Viewer: Zoom In = Z, Zoom Out = Shift+Z, Fit = F, Move = Arrows, Refresh=Shift+R, Toggle layer visibility=t"));
         shift_r= new QShortcut(QKeySequence(Qt::SHIFT + Qt::Key_R),this);
         connect(shift_r,SIGNAL(activated()),this,SLOT(reloadFile()));
         key_t= new QShortcut(QKeySequence(Qt::Key_T),this);
