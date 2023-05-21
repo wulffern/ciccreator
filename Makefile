@@ -55,11 +55,8 @@ CIC= ../bin/${OSBIN}/cic
 CICGUI=../bin/${OSBIN}/cic-gui
 endif
 
-QMAKE=qmake
-ifeq (, $(shell which qmake))
- QMAKE=qmake-qt5
-endif
-
+#- Compile now only works on QT6
+QMAKE=qmake6
 
 
 .PHONY: doxygen coverage sim
