@@ -50,6 +50,14 @@ To view the output, do
    release/cic-gui.darwin-latest SAR_TEST.cic examples/tech.json
 
 
+The examples/routes.json show some examples of the routings, and other options
+
+.. code-block:: bash
+   release/cic.darwin-latest examples/routes.json examples/tech.json routes
+   release/cic-gui.darwin-latest routes.cic examples/tech.json
+
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:

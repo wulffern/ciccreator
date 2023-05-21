@@ -372,6 +372,8 @@ namespace cIcCore {
                         currentHeight_ = yspace_;
                     }
 
+                    int ch = 0;
+
                     //Make rectangle
                     switch(c.unicode()){
                         //Create ports
@@ -396,6 +398,11 @@ namespace cIcCore {
                     case 'r':
                     case 'c':
                         rect->setRect(xs,ys,xspace_,currentHeight_);
+                        rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
+                        break;
+                    case '3':
+                        ch = this->rules->get(layer,"height");
+                        rect->setRect(xs,ys,xspace_*3,ch);
                         rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
                         break;
                     case 'V':
@@ -472,7 +479,7 @@ namespace cIcCore {
 
                     //TODO: Implement Q
                     int cw = 0;
-                    int ch = 0;
+                    //int ch = 0;
                     int cs = 0;
                     QString lay;
                     Rect *cr;

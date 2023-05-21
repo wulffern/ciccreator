@@ -388,7 +388,9 @@ namespace cIcCore{
         //- Set default class name
         if (cl == "" ) {
             cl = "cIcCore::LayoutCell";
+
         }
+
 
         QList<LayoutCellDecorator*> decorators;
 
@@ -593,7 +595,8 @@ namespace cIcCore{
         if(v.isArray()){
             QJsonArray ar1 = v.toArray();
             m.invoke(c,Qt::DirectConnection, Q_ARG(QJsonArray, ar1));
-        }else if(v.isObject()){
+        }
+        else if(v.isObject()){
             QJsonObject ar1 = v.toObject();
             m.invoke(c,Qt::DirectConnection, Q_ARG(QJsonObject, ar1));
         }else{

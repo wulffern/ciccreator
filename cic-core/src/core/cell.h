@@ -111,7 +111,7 @@ namespace cIcCore{
 
 
             //! Convert cell to a human readable format, useful for debug
-            QString toString();
+            QString toString() override;
 
             //! Mark as a physcial only cell
             bool isPhysicalOnly(){return _physicalOnly;}

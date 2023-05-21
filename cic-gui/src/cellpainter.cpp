@@ -219,15 +219,15 @@ namespace cIcPainter{
         this->endCell(painter);
     }
 
-
-
-
     void CellPainter::paintChildren(QPainter &painter,QList<Rect*> children,QString hierarchy){
         foreach(Rect * child,children){
             if(!child){continue;}
             if(child->isInstance()){
                 Instance * inst = static_cast<Instance*>(child);
-                if(inst->name() == ""){continue;}
+
+                //- This excludes cuts!! They have no instance name, should they not have that??
+                //if(inst->name() == ""){continue;}
+
                 this->paintReference(painter,inst,hierarchy);
             }else if(child->isPort()){
                 Port * p = static_cast<Port *>(child);
@@ -240,7 +240,6 @@ namespace cIcPainter{
             }else if (child->isCell()){
                 Cell * c = static_cast<Cell*>(child);
                 this->paintChildren(painter,c->children(),hierarchy);
-
             }else{
                 this->paintRect(painter,child);
             }

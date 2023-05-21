@@ -154,62 +154,62 @@
           "class" : "cIcCore::LayoutCell"
         },
 
-        { "name" : "Directed_StartLeft_Left(-|--)",
+        { "name" : "Directed_StartLeft_Left",
           "inherit": "TEST",
           "beforeRoute": [
               {"addDirectedRoutes" : [["M1","S","XA1:S-|--XB2:S"]]}
           ]
         },
-        { "name" : "Directed_StartLeft_Right(--|-)",
+        { "name" : "Directed_StartLeft_Right",
           "inherit": "TEST",
           "beforeRoute": [
               {"addDirectedRoutes" : [["M1","S","XA1:S--|-XB2:S"]]}
           ]
         },
-        { "name" : "Directed_StartRight_Right(--|-)",
+        { "name" : "Directed_StartRight_Right",
           "inherit": "TEST",
           "beforeRoute": [
               {"addDirectedRoutes" : [["M1","S","XB1:S--|-XA2:S"]]}
           ]
         },
-        { "name" : "Directed_StartRight_Left(-|--)",
+        { "name" : "Directed_StartRight_Left",
           "inherit": "TEST",
           "beforeRoute": [
               {"addDirectedRoutes" : [["M1","S","XB1:S-|--XA2:S"]]}
           ]
         },
-        { "name" : "Directed_Vertical(||)",
+        { "name" : "Directed_Vertical",
           "inherit": "TEST",
           "beforeRoute": [
               {"addDirectedRoutes" : [["M1","S","XB1:S||XB2:S"]]}
           ]
         },
-        { "name" : "Directed_U_Right(-|)",
+        { "name" : "Directed_U_Right",
           "inherit": "TEST",
           "beforeRoute": [
               {"addDirectedRoutes" : [["M1","S","XB1:S-|XB2:S"]]}
           ]
         },
-        { "name" : "Directed_U_Left(|-)",
+        { "name" : "Directed_U_Left",
           "inherit": "TEST",
           "beforeRoute": [
               {"addDirectedRoutes" : [["M1","S","XB1:S|-XB2:S"]]}
           ]
         },
 
-        { "name" : "Connectivity_A_-|--",
+        { "name" : "Connectivity_A",
           "inherit": "TEST",
           "beforeRoute": [
               {"addConnectivityRoutes" : [["M1","A","-|--"]]}
           ]
         },
-        { "name" : "Connectivity_B_-|--",
+        { "name" : "Connectivity_B",
           "inherit": "TEST",
           "beforeRoute": [
               {"addConnectivityRoutes" : [["M1","B","-|--"]]}
           ]
         },
-        { "name" : "Connectivity_A|B_-",
+        { "name" : "Connectivity_A_or_B",
           "inherit": "TEST",
           "beforeRoute": [
               {"addConnectivityRoutes" : [["M1","A|B","-"]]}
@@ -330,7 +330,8 @@
           ]
         },
 
-        { "name" : "TEST_R", "class" : "Layout::LayoutRotateCell", "rotateAngle" : "R90",
+        { "name" : "TEST_R", "class" : "Layout::LayoutRotateCell",
+          "rotateAngle" : "R90",
           "boundaryIgnoreRouting" : 0,
           "spice" : [
               ".subckt TEST_R A B",
@@ -346,7 +347,8 @@
               ".ends"
           ]
         },
-        { "name" : "TEST_MY", "class" : "Layout::LayoutRotateCell",
+        { "name" : "TEST_MY",
+          "class" : "Layout::LayoutRotateCell",
           "boundaryIgnoreRouting" : 0,
           "spice" : [
               ".subckt TEST_MY A B",
@@ -365,8 +367,7 @@
 			  "XB1 A B TEST_NOANGLE",
               "XB2 A B TEST_MY",
               ".ends"
-          ],
-          "rotateAngle" : "MY"
+          ]
         }
 
     ]

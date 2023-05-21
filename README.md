@@ -29,10 +29,26 @@ or [ciccreator.readthedocs.io](https://ciccreator.readthedocs.io/en/latest/index
 # Compile and run, the easy version
 
 Although it's possible to run "make" to compile ciccreator on most platforms,
-the compile does require qt 5. Head over to ciccreator-bin repository for latest binaries.
+the compile does require QT. Head over to ciccreator-bin repository for latest binaries.
 
 For simulation in Skywater 130 nm PDK, head over to [aicex](https://github.com/wulffern/aicex)
- 
+
+# Test 
+Have a look at the SAR 
+
+``` bash
+make esscirc 
+make view 
+```
+
+Or the route tests
+
+``` bash
+make routes
+make viewroutes
+```
+
+
 # Videos
 
 Minecraft video - https://youtu.be/J9lhEt0f3Wk 
@@ -40,15 +56,18 @@ cIcCreator in action - https://youtu.be/hv9u9aQGHQc
 
 
 # Comments/Questions
-I'd be happy to answer most questions, but I do get around 100 emails a day, so
-it might take some time to get through them all.
+Should you find issues, don't hesitate to add an issue on gitub. 
 
-Email: carsten@ciccreator.com
+
+
 
 
 # Changelog
 
 ## v0.1.5
+* Route, RouteRing, Guard will be loaded as LayoutCell to fix view problem of cuts.
+* Fixed issue rotateAngle in LayoutRotateCell. Seems like QJsonValue is no
+  longer automatically casted to QString.
 * removed GDS and SPICE output. Only *.cic will be supported from now on. Use
   cicpy to convert to other formats
   
