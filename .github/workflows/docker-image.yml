@@ -19,6 +19,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Compile
       run: |
+        sudo git config --global --add safe.directory /__w/ciccreator/ciccreator
         make
 #    - name: Build the Docker image
 #      run: docker build . --file Dockerfile --tag cic_qt_bionic:$(date +%s)
