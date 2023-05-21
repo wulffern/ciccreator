@@ -162,7 +162,7 @@ namespace cIcCore{
 		int snap(int x);
 
 		//! Convert a rectangle to a string that can be printed to console, useful for debug
-        QString toString();
+        virtual QString toString();
 		
 
         static Rect* getHorizontalRectangleFromTo(QString layer, int x1, int x2, int y, int height);

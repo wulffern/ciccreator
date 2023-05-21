@@ -17,6 +17,7 @@ public:
   ~LayoutRotateCell();
 
   Q_INVOKABLE
+  void rotateAngle(QJsonValue s);
   void rotateAngle(QString s);
   void place() override;
 

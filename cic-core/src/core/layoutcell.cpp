@@ -1178,11 +1178,13 @@ namespace cIcCore{
                 i->fromJson(co);
                 this->addToNodeGraph(i);
                 return i;
-            }else if(cl== "cIcCore::LayoutCell"){
+            }else if(cl== "cIcCore::LayoutCell" || cl== "cIcCore::Route" || cl == "cIcCore::RouteRing" || cl == "cIcCore::Guard" ){
+
                 LayoutCell * l = new LayoutCell();
                 l->fromJson(co);
                 return l;
             }else{
+                qDebug() << "Could not read class " << cl;
                 return 0;
             }
         }

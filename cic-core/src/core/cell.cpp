@@ -589,9 +589,6 @@ namespace cIcCore{
 
             auto c = cellFromJson(co);
             if(c == 0){
-
-                //TODO cuts are not handled correctly, don't know what to do yet
-
                 if( !(co["name"].toString().contains("cut_"))){
 
                     qDebug() << this << "Unknown cell " << co["name"] << co["class"];
@@ -620,7 +617,7 @@ namespace cIcCore{
             Port * p = new Port();
             p->fromJson(co);
             return static_cast<Rect *>(p);
-        }else if(cl == "Cell" || cl== "cIcCore::Route" || cl == "cIcCore::RouteRing" || cl == "cIcCore::Guard" || cl == "cIcCore::Cell"){
+        }else if(cl == "Cell" || cl == "cIcCore::Cell"){
             Cell * l = new Cell();
             l->fromJson(co);
             return static_cast<Rect *>(l);

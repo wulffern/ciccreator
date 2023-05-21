@@ -616,18 +616,18 @@ namespace cIcCore{
       }else if (stop_rects_.count() == 1){
         qDebug() << "Error: Not implemented";
         /*
-        auto sr = stop_rects_[0];
-        foreach(Rect* r, start_rects_){
+          auto sr = stop_rects_[0];
+          foreach(Rect* r, start_rects_){
           if(!r){continue;}
           auto rc = new Rect(routeLayer_,r->x2(),r->y1(),sr->x2()-r->x2(),width);
 
           if(routeLayer_ != sr->layer()){
-            auto cs = Cut::getInstance(sr->layer(),routeLayer_,lcuts,lvcuts);
-            cs->moveTo(rc->x2()-cs->width(),rc->y1());
-            this->add(cs);
+          auto cs = Cut::getInstance(sr->layer(),routeLayer_,lcuts,lvcuts);
+          cs->moveTo(rc->x2()-cs->width(),rc->y1());
+          this->add(cs);
           }
           this->add(rc);
-        }
+          }
         */
       }else{
         qDebug() << "Error: Cannot route strap!";
@@ -925,6 +925,25 @@ namespace cIcCore{
       }
 
     }
+  }
+
+  Rect * Route::cellFromJson(QJsonObject co){
+
+    auto c = Cell::cellFromJson(co);
+
+    if(c == 0){
+      QString cl = co["class"].toString();
+      if(cl == "Instance"){
+        Instance * i = new Instance();
+        i->fromJson(co);
+        return i;
+      }else{
+        qDebug() << "Could not read class " << cl;
+        return 0;
+      }
+    }
+
+    return c;
   }
 
 

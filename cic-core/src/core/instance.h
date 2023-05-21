@@ -55,7 +55,7 @@ namespace cIcCore{
 
                         QList<Rect*> findRectanglesByRegex(QString regex,QString layer) override;
                         QList<Rect*> findRectanglesByNode(QString node, QString filterChild);
-                        QString toString();
+                        QString toString() override;
 
                         void transform(Rect* r);
 

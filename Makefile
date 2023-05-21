@@ -99,7 +99,7 @@ doxygen:
 	doxygen
 
 help:
-	@echo " make               Compile ciccreator"
+	@echo " make                Compile ciccreator"
 	@echo " make bdocker        Make a docker image, and compile ciccreator"
 	@echo " make sh             Run a docker shell"
 	@echo " make esscirc        Compile SAR ADC from ESSCIRC paper"
@@ -114,8 +114,14 @@ TECHFILE=${EXAMPLE}/tech.json
 routes: lay
 	cd lay; ${CIC} ${EXAMPLE}/routes.json ${TECHFILE} routes ${OPT}
 
+viewroutes:
+	cd lay; ${CICGUI} routes.cic  ${TECHFILE}
+
 esscirc: lay
 	cd lay; ${CIC} ${EXAMPLE}/${LIBNAME}.json ${TECHFILE} ${LIBNAME} ${OPT}
+
+view:
+	cd lay; ${CICGUI} SAR_ESSCIRC16_28N.cic  ${TECHFILE}
 
 GDS3D:
 	wget https://sourceforge.net/projects/gds3d/files/GDS3D%201.8/GDS3D_1.8.tar.bz2/download
@@ -123,15 +129,8 @@ GDS3D:
 	ln -s GDS3D_1.8 GDS3D
 	rm download
 
-view:
-	cd lay; ${CICGUI} SAR_ESSCIRC16_28N.cic  ${TECHFILE}
-
 cppcheck:
 	cppcheck --std=c++11 --enable=all --template="* TODO {file}({line}): {message}" cic-core/src/ cic/src cic-gui/src  2> errors.org
-
-#view3d: GDS3D
-#	echo ${GDS3D}
-#	 ${GDS3D} -p examples/tech_gds3d.txt -i lay/SAR_ESSCIRC16_28N.gds -t SAR9B_EV
 
 CONT=cic_qt:latest
 
