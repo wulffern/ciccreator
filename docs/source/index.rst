@@ -53,6 +53,7 @@ To view the output, do
 The examples/routes.json show some examples of the routings, and other options
 
 .. code-block:: bash
+
    release/cic.darwin-latest examples/routes.json examples/tech.json routes
    release/cic-gui.darwin-latest routes.cic examples/tech.json
 
