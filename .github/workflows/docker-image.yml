@@ -12,14 +12,12 @@ jobs:
 
     runs-on: ubuntu-latest
     container:
-      image: wulffern/aicex:22.04_0.1.3
+      image: wulffern/cic_qt:latest
       options: --user root
     steps:
     - name: ciccreator
       uses: actions/checkout@v2
     - name: Compile
       run: |
-        sudo git config --global --add safe.directory '*'
+        pip install cicpy
         make
-#    - name: Build the Docker image
-#      run: docker build . --file Dockerfile --tag cic_qt_bionic:$(date +%s)

@@ -21,6 +21,8 @@ VERSION=0.1.5+
 VERSION_DATE=${VERSION} built on $(shell date)
 VERSION_HASH=${shell git describe --tags}
 
+TESTS= sar routes
+
 #- Figure out which platform we're running on
 ifeq ($(OS),Windows_NT)
 	#- Not compatible with windows yet
@@ -85,12 +87,14 @@ compile:
 	cd release;ln -s  cic-gui.${OSBIN}${OSID}${OSVER}_${VERSION} cic-gui.${OSBIN}-latest
 
 clean:
-	${MAKE} -f qmake.make clean
+	-test -f qmake.make && ${MAKE} -f qmake.make clean
 	-rm -rf GDS3D
 	-rm -rf GDS3D_1.8
 	-rm cic/Makefile
 	-rm cic-core/Makefile
 	-rm cic-gui/Makefile
+	-rm qmake.make
+	${foreach f, ${TESTS}, cd tests/${f} ; make clean;cd ../../;}
 
 doxygen:
 	doxygen
@@ -131,14 +135,15 @@ cppcheck:
 
 CONT=cic_qt:latest
 
-bdocker:
+ci:
 	docker build . --file Dockerfile --tag cic_qt
 
-docker:
-	docker release   -t ${CONT} .
+citagpush:
+	docker tag ${CONT} wulffern/cic_qt:latest
+	docker push wulffern/cic_qt:latest
 
-run:
-	docker run --rm -it -v `pwd`:/lcic ${CONT} sh -c 'cd /lcic && make && cp /lcic/bin/linux/cic /lcic/release/cic.ubuntu_groovy_${VERSION}'
-
-sh:
+cirun:
 	docker run --rm -it -v `pwd`:/lcic ${CONT} bash
+
+test:
+	${foreach f, ${TESTS}, cd tests/${f}; make test; cd ../../;}

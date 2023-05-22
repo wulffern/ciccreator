@@ -320,6 +320,7 @@
           ]
         },
         { "name" : "Rotations",
+          "boundaryIgnoreRouting" : 0,
           "beforeRoute": [
               {"addRectangles" : [
                   ["M1",0,0,10000,20000,""],

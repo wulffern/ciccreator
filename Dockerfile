@@ -1,14 +1,13 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get -qq update && apt-get -qq dist-upgrade && apt-get install -qq -y --no-install-recommends \
+RUN apt-get -qq update && apt-get install -qq -y --no-install-recommends \
     git \
     make \
     openssh-client \
     ca-certificates \
-    #curl \
-    #p7zip \
+
     build-essential \
     pkg-config \
     libgl1-mesa-dev \
@@ -17,13 +16,10 @@ RUN apt-get -qq update && apt-get -qq dist-upgrade && apt-get install -qq -y --n
     libxext6 \
     libxrender1 \
     libfontconfig1 \
-    qtbase5-dev  \
+    qt6-base-dev  \
+    python3 python3-pip \
     && apt-get -qq clean
 
-#Install QT
+RUN python3 -m pip install matplotlib numpy click svgwrite pyyaml pandas tabulate wheel setuptools tikzplotlib
 
-WORKDIR /eda
-RUN git clone https://github.com/wulffern/ciccreator.git
-WORKDIR ciccreator
-RUN git pull
-RUN make all
+ENTRYPOINT /bin/bash
