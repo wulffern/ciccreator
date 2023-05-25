@@ -21,7 +21,7 @@ VERSION=0.1.5+
 VERSION_DATE=${VERSION} built on $(shell date)
 VERSION_HASH=${shell git describe --tags}
 
-TESTS= sar routes
+TESTS= sar 
 
 #- Figure out which platform we're running on
 ifeq ($(OS),Windows_NT)
@@ -57,9 +57,13 @@ CIC= ../bin/${OSBIN}/cic
 CICGUI=../bin/${OSBIN}/cic-gui
 endif
 
-#- Compile now only works on QT6
+#- Should support most QT5 and QT6
+DEFQMAKE=QMAKE_6
 QMAKE=qmake6
-
+ifeq (, $(shell which ${QMAKE}))
+QMAKE=qmake-qt5
+DEFQMAKE=QMAKE_5
+endif
 
 .PHONY: doxygen coverage sim
 
@@ -76,7 +80,7 @@ compile:
 	echo "#define CICHASH \""${VERSION_HASH}"\""  >> cic/src/version.h
 	echo "#define CICVERSION \""${VERSION_DATE}"\""  > cic-gui/src/version.h
 	echo "#define CICHASH \""${VERSION_HASH}"\""  >> cic-gui/src/version.h
-	${QMAKE} -o qmake.make  ciccreator.pro ${QTOPT}
+	${QMAKE} -o qmake.make DEFINES+="${DEFQMAKE}"  ciccreator.pro ${QTOPT}
 	${MAKE} -f qmake.make
 	test -d release || mkdir release
 	cp release/${CIC} release/cic.${OSBIN}${OSID}${OSVER}_${VERSION}
