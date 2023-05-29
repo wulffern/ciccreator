@@ -84,7 +84,7 @@ namespace cIcCore {
 
     double PatternTile::verticalMultiplyVectorSum(int y){
         int sum = 0;
-        if(verticalMultiplyVector_.count() >= y){
+        if(y >= 0 && verticalMultiplyVector_.count() >= y){
             for(int i=0;i<y;i++){
                 sum += verticalMultiplyVector_[i];
             }
@@ -738,8 +738,6 @@ namespace cIcCore {
             if(h.isString() && h.toString() == "height"){
                 e->height = verticalMultiplyVectorSum(ymax_+1);
             }else{
-
-
                 e->height = h.toDouble();
             }
         }
