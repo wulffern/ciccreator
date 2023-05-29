@@ -65,6 +65,7 @@ Should you find issues, don't hesitate to add an issue on gitub.
 # Changelog
 
 ## v0.1.5
+* Added verticalMultiplyVector to patterntile to simplify analog transistor generation
 * Route, RouteRing, Guard will be loaded as LayoutCell to fix view problem of cuts.
 * Fixed issue rotateAngle in LayoutRotateCell. Seems like QJsonValue is no
   longer automatically casted to QString.

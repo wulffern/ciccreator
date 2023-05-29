@@ -121,7 +121,7 @@ namespace cIcCells{
         //Get routing height
         QList<Graph*> graphs = this->getNodeGraphs("CN<|D<|CP<");
 
-
+        
 
         int yc = y + msw*2;
 

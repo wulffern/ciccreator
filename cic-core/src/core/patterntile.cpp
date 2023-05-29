@@ -60,9 +60,6 @@ namespace cIcCore {
 
         y2 += verticalMultiplyVectorSum(ymax_)*(double)yspace_;
 
-        // int y2 =  translateY(ymax_) + (float)heightoffset_*(float)yspace_;
-        //int y2  = ((float)ymax_ + (float)heightoffset_)*(float)yspace_;
-
         //qDebug() << "Bounding pattern" << x1 << y1 << x2 << y2 << ymax_ << verticalMultiplyVector_.count();
 
         Rect r;
@@ -83,7 +80,7 @@ namespace cIcCore {
     }
 
     double PatternTile::verticalMultiplyVectorSum(int y){
-        int sum = 0;
+        double sum = 0;
         if(y >= 0 && verticalMultiplyVector_.count() >= y){
             for(int i=0;i<y;i++){
                 sum += verticalMultiplyVector_[i];
@@ -95,9 +92,9 @@ namespace cIcCore {
     }
 
     int PatternTile::translateY(int y){
-        int yt = yoffset_*yspace_;
-        yt += verticalMultiplyVectorSum(y)*yspace_;
-        return yt;
+        double yt = yoffset_*yspace_;
+        yt += verticalMultiplyVectorSum(y)*(double)yspace_;
+        return (int)yt;
     }
 
     void PatternTile::copyColumn(QJsonObject obj){
@@ -730,10 +727,8 @@ namespace cIcCore {
                     }
 
                 }
-
-
             }
-
+            
             QJsonValue h = rect[3];
             if(h.isString() && h.toString() == "height"){
                 e->height = verticalMultiplyVectorSum(ymax_+1);
@@ -741,11 +736,6 @@ namespace cIcCore {
                 e->height = h.toDouble();
             }
         }
-
-
-
-
-
 
         QJsonArray encl = ar[2].toArray();
 
