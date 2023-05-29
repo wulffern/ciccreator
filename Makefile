@@ -21,7 +21,7 @@ VERSION=0.1.5+
 VERSION_DATE=${VERSION} built on $(shell date)
 VERSION_HASH=${shell git describe --tags}
 
-TESTS= sar 
+TESTS= sar routes sun_sar9b
 
 #- Figure out which platform we're running on
 ifeq ($(OS),Windows_NT)
