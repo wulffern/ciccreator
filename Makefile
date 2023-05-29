@@ -23,6 +23,8 @@ VERSION_HASH=${shell git describe --tags}
 
 TESTS= sar routes
 
+cwd = ${shell pwd}
+
 #- Figure out which platform we're running on
 ifeq ($(OS),Windows_NT)
 	#- Not compatible with windows yet
@@ -154,4 +156,7 @@ cirun:
 	docker run --rm -it -v `pwd`:/lcic ${CONT} bash
 
 test:
-	${foreach f, ${TESTS}, cd tests/${f}; make test || exit; cd ../../;}
+	${foreach f, ${TESTS}, cd ${cwd}; cd tests/${f} && make test || exit; }
+
+cleantest:
+	${foreach f, ${TESTS}, cd ${cwd};  cd tests/${f} && make clean; }

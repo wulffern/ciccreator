@@ -1,6 +1,7 @@
 *#
 *~
 .#*
+.vscode
 bin
 version.h
 *.autosave
