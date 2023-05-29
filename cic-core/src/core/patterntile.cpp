@@ -44,23 +44,26 @@ namespace cIcCore {
         horizontalGridMultiplier_ = 1;
         metalUnderMetalRes_ = true;
 
-
         prev_rect_  = 0;
         _has_pr = true;
 
     }
 
-
-
     Rect PatternTile::calcBoundingRect(){
-
 
         int x1  = 0;
         int y1  = 0;
         int x2  = ((float)xmax_ + (float)widthoffset_)*(float)xspace_;
-        int y2  = ((float)ymax_ + (float)heightoffset_)*(float)yspace_;
 
-        //qDebug() << "Bounding pattern" << x1 << y1 << x2 << y2;
+        //Find the sum of all heights
+        int y2 = (double)heightoffset_*(double)yspace_;
+
+        y2 += verticalMultiplyVectorSum(ymax_)*(double)yspace_;
+
+        // int y2 =  translateY(ymax_) + (float)heightoffset_*(float)yspace_;
+        //int y2  = ((float)ymax_ + (float)heightoffset_)*(float)yspace_;
+
+        //qDebug() << "Bounding pattern" << x1 << y1 << x2 << y2 << ymax_ << verticalMultiplyVector_.count();
 
         Rect r;
         r.setPoint1(x1,y1);
@@ -71,6 +74,30 @@ namespace cIcCore {
 
     PatternTile::~PatternTile()
     {
+    }
+
+    void PatternTile::verticalMultiplyVector(QJsonArray ar){
+        foreach(QJsonValue v, ar){
+            verticalMultiplyVector_.append(v.toDouble());
+        }
+    }
+
+    double PatternTile::verticalMultiplyVectorSum(int y){
+        int sum = 0;
+        if(verticalMultiplyVector_.count() >= y){
+            for(int i=0;i<y;i++){
+                sum += verticalMultiplyVector_[i];
+            }
+        }else{
+            sum = y;
+        }
+        return sum;
+    }
+
+    int PatternTile::translateY(int y){
+        int yt = yoffset_*yspace_;
+        yt += verticalMultiplyVectorSum(y)*yspace_;
+        return yt;
     }
 
     void PatternTile::copyColumn(QJsonObject obj){
@@ -175,15 +202,7 @@ namespace cIcCore {
 
     }
 
-
-
-
-
     void PatternTile::fillCoordinatesFromString(QJsonArray ar){
-
-
-
-        
         //Load rules
         this->xspace_ = this->rules->get("ROUTE","horizontalgrid")*horizontalGridMultiplier_;
         this->yspace_ = this->rules->get("ROUTE","verticalgrid")*verticalGridMultiplier_;
@@ -210,7 +229,7 @@ namespace cIcCore {
         if(arraylength == 0) arraylength = ar.count();
 
        if(arraylength != ar.count()){
-           qDebug() << " Warning " << " layer " << layer << " does not have " << arraylength << " lines \n";
+           qDebug() << " Error: " << " layer " << layer << " does not have " << arraylength << " lines \n";
 
        }
 
@@ -334,13 +353,27 @@ namespace cIcCore {
         //- Load all user-defined patterns
         readPatterns();
 
-
-        currentHeight_ = yspace_;
         foreach(QString layer, layerNames_){
 
             QList<QString> strs = layers_[layer];
+
+            //Set the start Y coordinate
             for(int y=0;y <= ymax_;y++){
-                currentHeight_ = yspace_;
+
+                //Get the vertical Multiplier, default no multiplier
+                double vmv = 1;
+                if(verticalMultiplyVector_.count() > y){
+                    vmv = verticalMultiplyVector_[y];
+                }else{
+                    if(verticalMultiplyVector_.count() > 0){
+                        qDebug() << "Error: verticalMultiplyVector does not contain index " << y;
+                    }
+                }
+
+                currentHeight_ = yspace_*vmv;
+                currentHeightDelta_ = currentHeight_ - yspace_;
+                int ys = translateY(y);
+                
                 for(int x=0;x <= xmax_;x++){
                     QString s = strs[strs.length() - y -1];
 
@@ -353,26 +386,28 @@ namespace cIcCore {
 
                     Port * p = 0;
 
+                    //Get the coordinate for the current x
                     int xs = translateX(x);
-                    int ys = translateY(y);
 
-                    //- Set height
+                    //- Set height, including the vertical Multiplier Vector
                     if(layer == "PO"){
-
-                        currentHeight_ = this->rules->get(layer,"width");
+                        currentHeight_ = this->rules->get(layer,"width") + currentHeightDelta_;
                         if(currentHeight_ < this->minPolyLength_){
-                            currentHeight_ = this->minPolyLength_;
+                            currentHeight_ = this->minPolyLength_+ currentHeightDelta_;
                         }
                     }else if( c== 'x'){
-                        currentHeight_ = yspace_;
+                        currentHeight_ = yspace_*vmv;
                     }
 
 
                     if(c == 'X' || polyWidthAdjust_ == 0){
-                        currentHeight_ = yspace_;
+                        currentHeight_ = yspace_*vmv;
                     }
 
                     int ch = 0;
+
+                    // Local yspace including multiplier
+                    int lyspace_ = yspace_*vmv;
 
                     //Make rectangle
                     switch(c.unicode()){
@@ -398,24 +433,24 @@ namespace cIcCore {
                     case 'r':
                     case 'c':
                         rect->setRect(xs,ys,xspace_,currentHeight_);
-                        rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
+                        rect->moveCenter(xs + xspace_/2.0, ys + lyspace_/2.0);
                         break;
                     case '3':
                         ch = this->rules->get(layer,"height");
                         rect->setRect(xs,ys,xspace_*3,ch);
-                        rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
+                        rect->moveCenter(xs + xspace_/2.0, ys + lyspace_/2.0);
                         break;
                     case 'V':
-                        rect->setRect(xs,ys - yspace_/2.0,xspace_,yspace_*2.0);
+                        rect->setRect(xs,ys - lyspace_/2.0,xspace_,lyspace_*2.0);
                         break;
                     case 'm':
-                        rect->setRect(xs,ys,xspace_,this->minPolyLength());
-                        rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
+                        rect->setRect(xs,ys,xspace_,this->minPolyLength()+ currentHeightDelta_);
+                        rect->moveCenter(xs + xspace_/2.0, ys + lyspace_/2.0);
                         break;
                     case 'w':
-                        int minw = rules->get(layer,"width");
+                        int minw = rules->get(layer,"width")+ currentHeightDelta_;
                         rect->setRect(xs,ys,xspace_,minw);
-                        rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
+                        rect->moveCenter(xs + xspace_/2.0, ys + lyspace_/2.0);
                         currentHeight_ = minw;
                         break;
                     }
@@ -427,7 +462,7 @@ namespace cIcCore {
 
                         PatternData *pl = Pattern[c];
                         if(pl){
-                            rect->setRect(xs,ys,xspace_,yspace_);                            
+                            rect->setRect(xs,ys,xspace_,lyspace_);                            
                             QList<Rect*> rects = pl->getRectangles(rect);
                             foreach(Rect* r,rects){
                                 this->add(rects);
@@ -440,12 +475,15 @@ namespace cIcCore {
 
                     //Adjustment to get poly transistors correct
                     if(c =='G' && layer == "PO"){
-                        rect->setRect(xs,ys,xspace_,this->minPolyLength());
-                        rect->moveCenter(xs + xspace_/2.0, ys + yspace_/2.0);
+                        rect->setRect(xs,ys,xspace_,this->minPolyLength()+ currentHeightDelta_);
+                        rect->moveCenter(xs + xspace_/2.0, ys + lyspace_/2.0);
                     }
 
-                    //Don't combine rectangles if it's a metal resistor
 
+
+
+
+                    //Don't combine rectangles if it's a metal resistor
                     if(c != 'r' &&prev_rect_ && prev_rect_->abutsLeft(rect)){
                         prev_rect_->setRight(rect->x2());
                         delete(rect);
@@ -468,18 +506,16 @@ namespace cIcCore {
 
                     }
 
-
+                    //Set port rectangle if we're on a port
                     if(p){
                         p->set(rect);
                     }
 
-
-
                     int cxoffset = 0;
 
-                    //TODO: Implement Q
+                  
+                    //- Handle contacts with care
                     int cw = 0;
-                    //int ch = 0;
                     int cs = 0;
                     QString lay;
                     Rect *cr;
@@ -501,7 +537,7 @@ namespace cIcCore {
                         cs = this->rules->get(lay,"space");
                         cr->setRect(xs,ys,cw,ch);
 
-                        cr->moveCenter(xs -cxoffset + xspace_/2.0, ys + yspace_/2.0);
+                        cr->moveCenter(xs -cxoffset + xspace_/2.0, ys + lyspace_/2.0);
 
                         this->add(cr);
 
@@ -540,7 +576,7 @@ namespace cIcCore {
                         cr1 = cr->getCopy();
 //                        if(this->mirrorPatternString()){cxoffset -= cs/2 - cw/2;}
 
-                        cr->moveCenter(xs + cxoffset, ys + yspace_/2.0);
+                        cr->moveCenter(xs + cxoffset, ys + lyspace_/2.0);
                         if(this->mirrorPatternString()){
                             cr1->moveCenter(cr->centerX() + cs + cw,cr->centerY());
                         }else{
@@ -554,6 +590,7 @@ namespace cIcCore {
                     this->paintRect(rect,c,x,y);
 
                 }
+            
             }
         }
 
@@ -659,7 +696,7 @@ namespace cIcCore {
             e->x1 = 0;
             e->y1 = 0;
             e->width = this->xmax_ + 1;
-            e->height = this->ymax_ + 1;
+            e->height = verticalMultiplyVectorSum(ymax_+1);
 
         }else{
             e->x1 = rect[0].toDouble();
@@ -677,13 +714,13 @@ namespace cIcCore {
                             e->width += (c.length)*c.count;
                         }else if(mirrorPatternString_) {
 
-                            cout << "\n" << e->x1 << "," << e->y1 << "," << e->width << "," <<e->height << "\n";
+                            //cout << "\n" << e->x1 << "," << e->y1 << "," << e->width << "," <<e->height << "\n";
                             int xmax = this->xmax_ + 1 - (c.length)*c.count;
                             int x2mir = xmax - e->x1;
                             int x1mir = xmax - e->x1 - e->width;
 
-                            cout << "x1mir=" << x1mir << " x2mir=" << x2mir << "\n";
-                            cout << c.offset<< "\n";
+                            //cout << "x1mir=" << x1mir << " x2mir=" << x2mir << "\n";
+                            //cout << c.offset<< "\n";
 
                             if(x1mir < c.offset && x2mir > c.offset){
                                 e->width += (c.length)*c.count;
@@ -699,7 +736,7 @@ namespace cIcCore {
 
             QJsonValue h = rect[3];
             if(h.isString() && h.toString() == "height"){
-                e->height = this->ymax_ + 1;
+                e->height = verticalMultiplyVectorSum(ymax_+1);
             }else{
 
 
@@ -802,6 +839,13 @@ namespace cIcCore {
         //o["minPolyLength"] = minPolyLength_;
         o["widthoffset"] = widthoffset_;
         o["heightoffset"] = heightoffset_;
+
+        QJsonArray ar;
+        foreach(double d, verticalMultiplyVector_){
+            ar.append(d);
+        }
+
+        o["verticalMultiplyVector"] = ar;
         //o["mirrorPatternString"] = mirrorPatternString_;
         //o["polyWidthAdjust"] = polyWidthAdjust_;
         //o["verticalGrid"] = verticalGrid_;
@@ -821,6 +865,13 @@ namespace cIcCore {
         heightoffset_ = o["heightoffset"].toDouble();
         xspace_ = o["xspace"].toInt();
         yspace_ = o["yspace"].toInt();
+
+        if(o.contains("verticalMultiplyVector")){
+            QJsonArray car = o["verticalMultiplyVector"].toArray();
+            foreach(QJsonValue c, car){
+                verticalMultiplyVector_.append(c.toDouble());
+            }
+        }
 
     }
 

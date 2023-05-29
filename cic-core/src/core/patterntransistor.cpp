@@ -49,30 +49,18 @@ namespace cIcCore{
     }
 
 	void PatternTransistor::paintRect(Rect *r, QChar c, int x, int y){
-		if(r->layer() == "PO" && rectangle_strings_.contains("OD") && rectangle_strings_["OD"].contains(x)           && rectangle_strings_["OD"][x].contains(y)){
-			
-//			if(ports_.contains("G")){
-//				Port * p = ports_["G"];
-//				Rect * rect = p->get("PO");
-                
-//				if(rect){
-//					rect->setRect(r);
-//				}else{
-//					p->add(r);
-//				}
-//			}else{
-//			    Port *p = new Port("G");
-//				p->set(r);
-//				this->add(p);
-//			}		
+		if(r->layer() == "PO" && rectangle_strings_.contains("OD") && rectangle_strings_["OD"].contains(x)  && rectangle_strings_["OD"][x].contains(y)){
+
+            //Update length of transistor
+            mos->setProperty("length",this->rules->toMicron(r->height()));
+
 		}
 	}
 
     void PatternTransistor::onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data){
 
 
-
-
+        // Is this a gate?
         if(layer == "PO" && c == 'G'){
             int pofinger = data["pofinger"].toInt();
             if(pofinger != y){
@@ -88,8 +76,6 @@ namespace cIcCore{
             data["isTransistor"] = true;            
 
 
-            //cout << x << " @ " << data["wmin"].toInt() << " to " << data["wmax"].toInt() << "\n";
-
             if(x < data["wmin"].toInt()){
                 data["wmin"] = x;
             }
@@ -98,7 +84,6 @@ namespace cIcCore{
                 data["wmax"] = x;
             }
 
-            //cout << x << " @ " << data["wmin"].toInt() << " to " << data["wmax"].toInt() << "\n";
 
             if(c == 'm'){
                 data["useMinLength"] = true;
@@ -113,8 +98,6 @@ namespace cIcCore{
 
 
             int width = (data["wmax"].toInt() - data["wmin"].toInt() + 1)*this->xspace_;
-
-            
 
             int minlength = this->minPolyLength_;
             if(minlength == 0){

@@ -206,6 +206,18 @@ namespace cIcCore{
             void fillCoordinatesFromString(QJsonArray ar);
 
             Q_INVOKABLE
+            /**
+             * @brief verticalMultiplyVector
+             *
+             * EXPERIMENTAL!
+             * Vector length must be the same length as the number of rows in fillCoordinatesFromString.
+             * Multiplies the height of a cell with the number in the vector multiplier
+             *
+             */
+            void verticalMultiplyVector(QJsonArray ar);
+
+
+            Q_INVOKABLE
             void getRuleForHorizontalGrid(QJsonArray ar);
 
             Q_INVOKABLE
@@ -334,6 +346,7 @@ namespace cIcCore{
             int mirrorPatternString_;
             qreal minPolyLength_;
             int currentHeight_;
+            int currentHeightDelta_;
             qreal horizontalGrid_;
             qreal verticalGrid_;
             double horizontalGridMultiplier_;
@@ -360,7 +373,9 @@ namespace cIcCore{
 
             int arraylength;
 
+            QList<double> verticalMultiplyVector_;
 
+            double verticalMultiplyVectorSum(int y);
 
             QList<Rect*> findPatternRects(QString layer);
             QList<Rect*> findPatternStrings(QString layer);
@@ -374,7 +389,7 @@ namespace cIcCore{
 
 
             inline int translateX(int x){  return (x + xoffset_)*xspace_;}
-            inline int translateY(int y){ return (y + yoffset_)*yspace_;}
+            int translateY(int y);
     };
 
 }
