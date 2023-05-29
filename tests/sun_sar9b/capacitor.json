@@ -1,0 +1,122 @@
+//====================================================================
+//        Copyright (c) 2017 Carsten Wulff Software, Norway
+// ===================================================================
+// Created       : wulff at 2017-6-11
+// ===================================================================
+//   This program is free software: you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
+//
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details.
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//====================================================================
+
+
+{ "cells" :
+  [
+    //Capacitor unit-cell
+
+
+    //Capacitor unit-cell
+    { "name" : "CAPBASE_LEFT_SIDE_PORT",
+      "boundaryIgnoreRouting" : 0,
+      "class" : "Gds::GdsPatternCapacitor",
+      "yoffset": -0.5,
+      "xoffset": -0.5,
+      "widthoffset" : -1,
+      "metalUnderMetalRes" : 0,
+      "fillCoordinatesFromStrings" : [
+
+        [   "M1",
+            "-----------------------",
+            "-----------------------",
+            "--xxxxxxxxxxxxxxxxxxx--",
+            "--x--------------------",
+            "--x-xxxxxxxxxxxxxxxxx--",
+            "--x-----------------x--",
+            "--xxxxxxxxxxxxxxxxx-x--",
+            "--x-----------------x--",
+            "--x-xxxxxxxxxxxxxxxxx--",
+            "--x-----------------x--",
+            "--xxxxxxxxxxxxxxxxx-x--",
+            "--------------------x--",
+            "--xxxxxxxxxxxxxxxxxxx--"
+
+        ],
+        [   "VIA1",
+            "-----------------------",
+            "-----------------------",
+            "-----EEE---------------",
+            "-----------------------",
+            "----------------EEE----",
+            "-----------------------",
+            "-----EEE---------------",
+            "-----------------------",
+            "----------------EEE----",
+            "-----------------------",
+            "-----EEE---------------",
+            "-----------------------",
+            "----------------EEE----"
+
+        ],
+        [   "M4",
+            "-----------------------",
+            "-----------------------",
+            "--xxxxxxxxxxAxxxxxxxx--",
+            "--x--------------------",
+            "--x-xxxxxxxxxxxxxxxxx--",
+            "--x-----------------x--",
+            "--xxxxxxxxxxxxxxxxx-x--",
+            "--x-----------------x--",
+            "--x-xrxxxxxxxxxxxxxxx--",
+            "--x-----------------x--",
+            "--xxxxxxxxxxxxxxrxx-x--",
+            "--------------------x--",
+            "--xxxxxxxxxxBxxxxxxxx--"
+        ]
+
+      ],
+      "afterNew" : {
+        "copyLayers" : [["M1","M2"],["M1","M3"],["VIA1","VIA2"],["VIA1","VIA3"]]
+      }
+    },
+    { "name" : "CAPBW",
+      "boundaryIgnoreRouting" : 0,
+      "noPowerRoute" : 1,
+      "beforeRoute" :{
+        "addConnectivityRoutes" : [
+          ["M4","OTAIP","||","routeWidth=cap_width,track1,onTopL"],
+          ["M4","OTAIP","-","routeWidth=cap_width,track1"],
+          ["M4","OTAIN","-","routeWidth=cap_width,track1"],
+          ["M4","OTAIN","||","routeWidth=cap_width,track1,onTopR"],
+          ["M4","OTAON","||","routeWidth=cap_width"],
+          ["M4","OTAOP","||","routeWidth=cap_width"]
+        ],
+        "addRouteConnections" : [
+          ["AI","X","bottom","M1","routeWidth=cap_width"],
+          ["OTAO","X","top","M1","routeWidth=cap_width"]
+        ],
+        "addPowerConnections" : [
+          ["AVSS","","bottom"]
+        ]
+      },
+      "afterPlace" :[
+        {"addRouteRings" :[
+          ["M2","OTAOP","t",2,4],
+          ["M2","OTAON","t",2,4],
+          ["M2","AIP","b",2,4],
+          ["M2","AIN","b",2,4]
+        ]},
+        {"addPowerRings" :[
+          ["M1","AVSS","tbrl"]
+        ]}
+      ]
+    }
+  ]
+}
