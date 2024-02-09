@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>PatternTile &#8212; Custom IC Creator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="PatternCapacitor" href="patterncapacitor.html" />
+    <link rel="prev" title="Cell" href="cell.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="patterncapacitor.html" title="PatternCapacitor"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cell.html" title="Cell"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Custom IC Creator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="cells.html" accesskey="U">Cells</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">PatternTile</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="patterntile">
+<h1>PatternTile<a class="headerlink" href="#patterntile" title="Permalink to this heading">¶</a></h1>
+<p>PatternTile is the base functions for all ASCII to Layout objects.
+PatternTile can be found in <code class="docutils literal notranslate"><span class="pre">cic-core/src/core/patterntile.cpp</span></code></p>
+<section id="properties">
+<h2>Properties<a class="headerlink" href="#properties" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>yoffset : number [optional] : Vertical grid offset of the origin</p></li>
+<li><p>xoffset : number [optional] : Horizontal grid offset of the origin</p></li>
+<li><p>widthoffset : number [optional] : Reduce the width by X grid</p></li>
+</ul>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h2>
+<section id="fillcoordinatesfromstring">
+<h3>fillCoordinatesFromString<a class="headerlink" href="#fillcoordinatesfromstring" title="Permalink to this heading">¶</a></h3>
+<p>The argument is an array of arrays that contain the ASCII</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+<span class="w">  </span><span class="p">[</span><span class="w"> </span><span class="s2">&quot;Layer Name&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="s2">&quot;rectangle definitions&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>for example</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+<span class="w">    </span><span class="p">[</span><span class="w"> </span><span class="s2">&quot;M1&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;--xxxQxxxxx---&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;----------x---&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;--xxxxxkx-x---&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;--------x-D---&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;--xxxxxxx-x---&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;--------x-x---&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;--xxxxxkx-x---&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;----------x---&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;--xxxQxxxxx---&quot;</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>The possible rectangle definitions are</p>
+<ul class="simple">
+<li><p>‘-’ : Empty rectangle</p></li>
+<li><p>‘x’ : Fill rectangle completely</p></li>
+<li><p>‘X’ :</p></li>
+<li><p>‘m’ : Fill rectangle horizontally, but use “mingatelength” rule for height</p></li>
+<li><p>‘w’ : Fill rectangle horizontally, but use “width” rule for height</p></li>
+<li><p>‘D,G,S,B,A’ : Add Port</p></li>
+<li><p>‘c’ : Add cut in the center of the current grid</p></li>
+<li><p>‘C’ : Add cut aligned on the left edge of the current grid</p></li>
+<li><p>‘K’ : Add two cuts with the first cut aligend on the left edge of the current grid</p></li>
+<li><p>‘k’ : Add two cuts with the first cut aligend in the center of the current grid</p></li>
+<li><p>‘Q’ : Add two cuts centered in the center of the current grid</p></li>
+<li><p>‘r’ : Add metal resistor</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../basics/basics.html">Basics</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="cells.html">Cells</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cell.html">Cell</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">PatternTile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="patterncapacitor.html">PatternCapacitor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="patterntransistor.html">PatternTransistor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="patternresistor.html">PatternResistor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="layoutcell.html">LayoutCell</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../routing/route.html">Routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="patterncapacitor.html" title="PatternCapacitor"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cell.html" title="Cell"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Custom IC Creator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="cells.html" >Cells</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">PatternTile</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Carsten Wulff.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

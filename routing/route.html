@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Routing &#8212; Custom IC Creator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Connectivity Route" href="con_route.html" />
+    <link rel="prev" title="LayoutCell" href="../cells/layoutcell.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="con_route.html" title="Connectivity Route"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../cells/layoutcell.html" title="LayoutCell"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Custom IC Creator  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Routing</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="routing">
+<h1>Routing<a class="headerlink" href="#routing" title="Permalink to this heading">¶</a></h1>
+<p>Routing in ciccreator is done using functions in LayoutCell,
+addDirectedRoutes and addConnectivityRoutes. One should start with
+addConnectivityRoutes, because that is easiest to use, however, it can
+only access the ports on instances in a subcircuit.</p>
+<p>See
+<a class="reference external" href="https://github.com/wulffern/ciccreator/tree/master/examples/routes.spi">https://github.com/wulffern/ciccreator/tree/master/examples/routes.spi</a>
+and
+<a class="reference external" href="https://github.com/wulffern/ciccreator/tree/master/examples/routes.json">https://github.com/wulffern/ciccreator/tree/master/examples/routes.json</a>
+for the example source code used in this wiki.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="con_route.html">Connectivity Route</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dir_route.html">Directed Route</a></li>
+<li class="toctree-l1"><a class="reference internal" href="via.html">Via/Cut</a></li>
+<li class="toctree-l1"><a class="reference internal" href="type.html">Route Type</a></li>
+<li class="toctree-l1"><a class="reference internal" href="options.html">Route Options</a></li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../basics/basics.html">Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cells/cells.html">Cells</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Routing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="con_route.html">Connectivity Route</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dir_route.html">Directed Route</a></li>
+<li class="toctree-l2"><a class="reference internal" href="via.html">Via/Cut</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type.html">Route Type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">Route Options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="con_route.html" title="Connectivity Route"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../cells/layoutcell.html" title="LayoutCell"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Custom IC Creator  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Routing</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Carsten Wulff.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>
