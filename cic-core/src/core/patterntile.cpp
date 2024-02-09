@@ -370,11 +370,23 @@ namespace cIcCore {
                 currentHeight_ = yspace_*vmv;
                 currentHeightDelta_ = currentHeight_ - yspace_;
                 int ys = translateY(y);
-                
+
+
+
                 for(int x=0;x <= xmax_;x++){
+
+
                     QString s = strs[strs.length() - y -1];
 
+
+
+
+                    if((s.length()-1) < x){
+                        qDebug() << "Error: To few columns in "  << s;
+                    }
+
                     QChar c = s[x];
+
 
                     if(c == '-'){continue;}
 
@@ -587,7 +599,8 @@ namespace cIcCore {
                     this->paintRect(rect,c,x,y);
 
                 }
-            
+
+
             }
         }
 

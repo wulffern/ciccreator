@@ -379,9 +379,11 @@ namespace cIcCore{
 
         QList<Rect*> rects = this->findAllRectangles(path,startlayer);
 
-        foreach(Rect* r, rects){
+        foreach(Rect* r, rects)
+        {
             if(r == 0) continue;
             Instance * inst= Cut::getInstance(startlayer,stoplayer,hcuts,vcuts);
+
             inst->moveTo(r->x2() + xoffset*inst->width(),r->centerY() + yoffset*inst->height());
 
             Rect * rstop = inst->getRect(stoplayer);

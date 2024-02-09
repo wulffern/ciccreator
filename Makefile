@@ -65,6 +65,11 @@ endif
 
 #- Should support most QT5 and QT6
 DEFQMAKE=QMAKE_6
+QMAKEOPT=
+ifeq (${UNAME_S},Darwin)
+#QMAKEOPT+= QMAKE_DEFAULT_LIBDIRS=${shell xcrun -show-sdk-path}/usr/lib
+endif
+
 QMAKE=qmake6
 ifeq (, $(shell which ${QMAKE}))
 QMAKE=qmake-qt5
@@ -86,7 +91,7 @@ compile:
 	echo "#define CICHASH \""${VERSION_HASH}"\""  >> cic/src/version.h
 	echo "#define CICVERSION \""${VERSION_DATE}"\""  > cic-gui/src/version.h
 	echo "#define CICHASH \""${VERSION_HASH}"\""  >> cic-gui/src/version.h
-	${QMAKE} -o qmake.make DEFINES+="${DEFQMAKE}"  ciccreator.pro ${QTOPT}
+	${QMAKE} -o qmake.make DEFINES+="${DEFQMAKE}" ${QMAKEOPT}  ciccreator.pro ${QTOPT}
 	${MAKE} -f qmake.make
 	test -d release || mkdir release
 	cp release/${CIC} release/cic.${OSBIN}${OSID}${OSVER}_${VERSION}
@@ -104,6 +109,7 @@ clean:
 	-rm cic-core/Makefile
 	-rm cic-gui/Makefile
 	-rm qmake.make
+	-rm -rf .qmake.stash
 	${foreach f, ${TESTS}, cd tests/${f} ; make clean;cd ../../;}
 
 doxygen:

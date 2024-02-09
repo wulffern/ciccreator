@@ -212,11 +212,16 @@ namespace cIcCore{
             //Run through the array of design cells, and try an match objects
             QJsonArray cellArray  = cells.toArray();
             foreach (const QJsonValue & value, cellArray) {
+                try{
                 QJsonObject c = value.toObject();
                 QJsonValue name = c["name"];
                 _cells[name.toString()] = c;
 
                 this->createCell(c);
+                }catch(const std::exception &exc){
+                    console->error(exc.what());
+                    throw exc;
+                }
             }
 
         }else{

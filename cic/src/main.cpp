@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
             throw "Die";
         }
 
-    }catch(...){
+    }catch(const std::exception &exc){
         qWarning() << "Usage: cic <JSON file> <Technology file> [<Output name>]";
         qWarning() << "Example: cic examples/SAR_ESSCIRC16_28N.json examples/tech.json SAR_ESSCIRC16_28N";
         qWarning() << "About: \n\tcIcCreator reads a JSON object definition file, technology rule file\n" <<

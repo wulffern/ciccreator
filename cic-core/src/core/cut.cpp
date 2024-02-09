@@ -281,6 +281,11 @@ namespace cIcCore {
 
     Instance * Cut::getInstance(QString layer1, QString layer2, int horizontal_cuts, int vertical_cuts){
 
+        //-No point in making a cut without layer transition
+        if(layer1 == layer2){
+            return nullptr;
+        }
+
         InstanceCut *instance = 0;
         QString tag1 =   Cut::makeName(layer1,layer2,horizontal_cuts,vertical_cuts);
         QString tag2 = Cut::makeName(layer2,layer1,horizontal_cuts,vertical_cuts);
@@ -292,7 +297,6 @@ namespace cIcCore {
             c = cuts_[tag2];
         }else{
             c = new Cut(layer1,layer2,horizontal_cuts,vertical_cuts);
-
             cuts_[c->name()] = c;
         }
 
@@ -302,6 +306,11 @@ namespace cIcCore {
             instance->setName(c->name());
             instance->updateBoundingRect();
 
+        }
+
+        if(!instance){
+            std::string errorMessage  = "Error: Could not create cut from " + layer1.toStdString() + " to " + layer2.toStdString();
+            throw std::runtime_error(errorMessage);
         }
 
         return instance;

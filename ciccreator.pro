@@ -20,7 +20,6 @@
 QMAKE_CFLAGS += $$(CFLAGS)  -g
 QMAKE_CXXFLAGS += $$(CCFLAGS)  -g
 CONFIG += c++11
-#CONFIG += debug
 CONFIG += static
 
 

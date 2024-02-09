@@ -1,12 +1,8 @@
 
 mac {
   #- This needs to point to the SDK usually in /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
-#  mac::QMAKE_MAC_SDK = macosx10.13
-#mac::QMAKE_MAC_SDK = macosx10.14
+  #CONFIG += sdk
+  EXPORT_QMAKE_MAC_SDK = macosx14.2
+  #QT_MAC_SDK_NO_VERSION_CHECK = 1
 
-#mac::QMAKE_MAC_SDK = macosx11.3
-#mac::QMAKE_MAC_SDK = macosx12.1
-#mac::QMAKE_MAC_SDK = macosx12.3
-#mac::QMAKE_MAC_SDK = macosx13.3
-#  mac::QMAKE_MAC_SDK = 
-  }
+}
