@@ -28,6 +28,15 @@ using namespace cIcCore;
 namespace cIcCells{
 
 
+    void SAR::usem5(QJsonValue obj){
+        if(obj.toInt()){
+            usem5_ = true;
+        }else{
+            usem5_ = false;
+        }
+
+    }
+
     int SAR::getCellWidth(SARgroup groups, QString group)
     {
         int width = 0;
@@ -278,13 +287,28 @@ namespace cIcCells{
             Rect* r = sarp_cmp[0];
             if(r){
 
-                auto ct2 = Cut::getInstance("M4","M5",2,1);
+
                 auto ct_cmp =Cut::getInstance("M2","M4",2,1);
-                auto ct1 =Cut::getInstance("M4","M5",1,2);
+                Instance * ct2 = nullptr;
+                Instance * ct1 = nullptr;
+                if(usem5_){
+                    ct2 = Cut::getInstance("M4","M5",2,1);
+                    ct1 =Cut::getInstance("M4","M5",1,2);
+                }else{
+                    ct2 = Cut::getInstance("M4","M3",2,1);
+                    ct1 =Cut::getInstance("M4","M3",1,2);
+                }
+
                 int ycc = sarp->y2() +ct2->height()*4;
                 auto ra = new Rect("M4",r->x1(),ycc,mw,r->y1()-ycc);
                 ct_cmp->moveTo(r->x1(),r->y1());
-                auto rb_cmp = new Rect("M5",ra->x1(),sarp->y1(),mw,ycc-sarp->y1());
+
+                Rect * rb_cmp = nullptr;
+                if(usem5_){
+                    rb_cmp = new Rect("M5",ra->x1(),sarp->y1(),mw,ycc-sarp->y1());
+                }else{
+                    rb_cmp = new Rect("M3",ra->x1(),sarp->y1(),mw,ycc-sarp->y1());
+                }
                 ct2->moveTo(ra->x1(),sarp->y1());
                 ct1->moveTo(ra->x1(),ra->y1());
                 QList<Rect*> rects = QList<Rect*>() << ct_cmp << rb_cmp << ra << ct2 << ct1<< rb_cmp;
@@ -299,16 +323,32 @@ namespace cIcCells{
 
             Rect* r = sarn_cmp[0];
             if(r){
-                auto ct2 = Cut::getInstance("M4","M5",2,1);
+
                 auto ct_cmp =Cut::getInstance("M2","M3",2,1);
                 auto cta_cmp =Cut::getInstance("M3","M4",2,1);
-                auto ct1 =Cut::getInstance("M4","M5",1,2);
+
+                Instance * ct2 = nullptr;
+                Instance * ct1 = nullptr;
+                if(usem5_){
+                    ct2 = Cut::getInstance("M4","M5",2,1);
+                    ct1 =Cut::getInstance("M4","M5",1,2);
+                }else{
+                    ct2 = Cut::getInstance("M4","M3",2,1);
+                    ct1 =Cut::getInstance("M4","M3",1,2);
+                }
+
+
                 int ycc = sarp->y2() +ct2->height()*4;
                 auto ra = new Rect("M4",r->x2()+ms,ycc,mw,r->y1()-ycc);
                 cta_cmp->moveTo(r->x2() + ms + mw - ct_cmp->width(),r->y1());
                 ct_cmp->moveTo(r->x1(),r->y1());
                 auto rmet = new Rect("M3",ct_cmp->x1(),ct_cmp->y1(),cta_cmp->x2() - ct_cmp->x1(),ct_cmp->height());
-                auto rb_cmp = new Rect("M5",ra->x1(),sarn->y1(),mw,ycc-sarn->y1());
+                Rect * rb_cmp = nullptr;
+                if(usem5_){
+                     rb_cmp = new Rect("M5",ra->x1(),sarn->y1(),mw,ycc-sarn->y1());
+                }else{
+                     rb_cmp = new Rect("M3",ra->x1(),sarn->y1(),mw,ycc-sarn->y1());
+                }
                 ct2->moveTo(ra->x1(),sarn->y1());
                 ct1->moveTo(ra->x1(),ra->y1());
                 QList<Rect*> rects = QList<Rect*>() << cta_cmp <<  ct_cmp << rb_cmp << ra << ct2 << ct1<< rb_cmp;

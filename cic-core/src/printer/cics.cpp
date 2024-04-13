@@ -34,8 +34,6 @@ namespace cIcPrinter{
     void Cics::startLib(QString name)
     {
         DesignPrinter::startLib(name);
-
-                
     }
 
     void Cics::endLib()
@@ -43,7 +41,6 @@ namespace cIcPrinter{
 
         QTextStream ts(&file);
         QJsonDocument  d(ar);
-
         ts << d.toJson();
         DesignPrinter::endLib();        
 

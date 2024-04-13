@@ -129,6 +129,7 @@ namespace cIcCore{
                         void addPowerRing(QString layer, QString name, QString location, int widthmult,int spacemult);
                         void addPowerConnection(QString name, QString includeInstances,  QString location);
                         void addRouteConnection(QString path, QString includeInstances, QString layer, QString location, QString options);
+                        void addRouteConnection(QString path, QString includeInstances, QString layer, QString location, QString options,QString routeTypeOverride);
 
                         Instance* getInstanceFromInstanceName(QString instanceName);
 

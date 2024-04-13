@@ -53,6 +53,8 @@ namespace cIcSpice{
             void parse(QList<QString> buffer, int line);
             QList<SubcktInstance*> instances(){ return _instances;}
             QList<SpiceDevice*> devices(){ return _devices;}
+            void setLibPath(QString path){_lib_path = path; }
+            QString libPath(){return _lib_path;}
 
             void add(SubcktInstance* s)
             {
@@ -86,6 +88,7 @@ namespace cIcSpice{
             QHash<QString,int> _inst_index;
             QList<SubcktInstance*> _instances;
             QList<SpiceDevice*> _devices;
+            QString _lib_path;
 
 
     };

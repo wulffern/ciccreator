@@ -143,8 +143,13 @@ namespace cIcPainter{
 
         QColor color(l->color);
 
+        QPen pen = QPen(color,Qt::SolidLine);
+
+        //Use 50 Ångstrøm for the width
+        pen.setWidth(50);
         color.setAlpha(150);
-        painter.setPen(QPen(color,Qt::SolidLine));
+        painter.setPen(pen);
+
 
         //Set pattern and fill
         Qt::BrushStyle bstyle = Qt::SolidPattern;
@@ -163,12 +168,15 @@ namespace cIcPainter{
 
     void CellPainter::startCell(QPainter & painter,Cell *c){
         if(Cell::isEmpty(c)) return;
+        this->paintRect(painter,c);
+
     }
 
     void CellPainter::endCell(QPainter & painter){
+
     }
 
-    void CellPainter::paint(QPainter & painter, Cell *c, int x, int y,int width, int height,QString instanceName)
+    /*    void CellPainter::paint(QPainter & painter, Cell *c, int x, int y,int width, int height,QString instanceName)
     {
 
         _instanceName = instanceName ;
@@ -191,7 +199,9 @@ namespace cIcPainter{
         painter.scale(1,-1);
         painter.translate(0,-height);
         painter.translate(x,y);
-        painter.drawRect(c->x1(),c->y1(),c->width(),c->height());
+        qDebug() << "Painting " << c->name();
+        this->paintRect(painter,c);
+        //painter.drawRect(c->x1(),c->y1(),c->width(),c->height());
 
         this->paintCell(painter,c,"");
 
@@ -204,7 +214,7 @@ namespace cIcPainter{
 
         this->paint(painter,c,x,y,width,height,"");
     }
-
+*/
 
     void CellPainter::paintCell(QPainter & painter,Cell * c,QString hierarchy){
 

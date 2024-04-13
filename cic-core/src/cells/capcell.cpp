@@ -37,6 +37,15 @@ namespace cIcCells{
 
     }
 
+    void CapCell::usem5(QJsonValue obj){
+        if(obj.toInt()){
+            usem5_ = true;
+        }else{
+            usem5_ = false;
+        }
+
+    }
+
     void CapCell::heightIncreaseMult(QJsonValue obj){
         heightIncreaseMult_ = obj.toInt();
 
@@ -97,7 +106,9 @@ namespace cIcCells{
 
         //- First dummy
         QList<Rect*> rects;
-        rects.append(new Rect("M5",x-  msw ,y , mw, height));
+        if(usem5_){
+            rects.append(new Rect("M5",x-  msw ,y , mw, height));
+        }
         for (auto i =0; i<count;i +=1) {
             auto r = new Rect("M4",x,y, mw, height);
             rects.append(r);
@@ -110,14 +121,21 @@ namespace cIcCells{
             if(usem3_){
                 rects.append(new Rect("M3",x + msw ,y + msw, mw, height - msw*2));
             }
+            if(usem5_){
             rects.append(new Rect("M5",x + msw ,y , mw, height));
+            }
             x = x + (msw)*2;
         }
 
 
         auto xdm = x;
         //- Add dumauto
-        auto ctdumauto  = Cut::getInstance("M2","M5",1,2);
+        Instance * ctdumauto = nullptr;
+        if(usem5_){
+            ctdumauto  = Cut::getInstance("M2","M5",1,2);
+        }else{
+            ctdumauto  = Cut::getInstance("M2","M4",1,2);
+        }
         ctdumauto->moveTo(x + msw,y + height/2 - ctdumauto->height());
         this->add(ctdumauto);
 
@@ -125,7 +143,9 @@ namespace cIcCells{
             rects.append(new Rect("M2",x + msw ,y , mw, height));
             rects.append(new Rect("M3",x + msw ,y , mw, height));
             rects.append(new Rect("M4",x + msw ,y , mw, height));
-            rects.append(new Rect("M5",x + msw ,y, mw, height));
+            if(usem5_){
+                rects.append(new Rect("M5",x + msw ,y, mw, height));
+            }
             xdm = xdm + (msw)*2;
         }
 
@@ -141,8 +161,11 @@ namespace cIcCells{
         auto y16 = y1a + msc*(b - 4);
         yMax = height;
 
-        rects.append(new Rect("M5",xorg - msw, y ,x - xorg + msw*2, mw));
-        rects.append(new Rect("M5",xorg - msw, height - mw ,x - xorg +  msw*2 , mw));
+        if(usem5_){
+            rects.append(new Rect("M5",xorg - msw, y ,x - xorg + msw*2, mw));
+            rects.append(new Rect("M5",xorg - msw, height - mw ,x - xorg +  msw*2 , mw));
+        }
+
 
         auto vss1 =  new Rect("M2",xorg, y ,x - xorg +msw, mw);
         auto ctop1 =  new Rect("M4",xorg, y ,x - xorg, mw);

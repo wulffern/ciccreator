@@ -285,7 +285,6 @@ namespace cIcCore{
                     QString to = reg_arr[1].toString();
                     strlist.replaceInStrings(QRegularExpression(from),to);
                 }
-
             }
 
             _spice_parser.parseSubckt(0,strlist);

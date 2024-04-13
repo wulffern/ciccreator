@@ -181,7 +181,7 @@ namespace cIcCore{
 
          /**
          * @brief Adjust the poly width
-         * @accessors polyWidthAdjustg(), setPolyWidthAdjust()
+         * @accessors polyWidthAdjust(), setPolyWidthAdjust()
          **/
         Q_PROPERTY(int polyWidthAdjust READ polyWidthAdjust WRITE setPolyWidthAdjust)
 

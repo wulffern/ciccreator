@@ -60,7 +60,14 @@ namespace cIcCore {
 
         y2 += verticalMultiplyVectorSum(ymax_)*(double)yspace_;
 
-        //qDebug() << "Bounding pattern" << x1 << y1 << x2 << y2 << ymax_ << verticalMultiplyVector_.count();
+        //There is an error when ymax_ == 0
+        //TODO: Look at the boundary, I think there is a think error on ymax
+        //The below is a bandaid
+        if(ymax_ == 0){
+            y2 = (double)yspace_;
+        }
+
+        //qDebug() << "Bounding pattern" << x1 << y1 << x2 << y2 << ymax_ << verticalMultiplyVector_.count() << widthoffset_ << heightoffset_;
 
         Rect r;
         r.setPoint1(x1,y1);
@@ -371,15 +378,10 @@ namespace cIcCore {
                 currentHeightDelta_ = currentHeight_ - yspace_;
                 int ys = translateY(y);
 
-
-
                 for(int x=0;x <= xmax_;x++){
 
 
                     QString s = strs[strs.length() - y -1];
-
-
-
 
                     if((s.length()-1) < x){
                         qDebug() << "Error: To few columns in "  << s;
@@ -407,7 +409,6 @@ namespace cIcCore {
                     }else if( c== 'x'){
                         currentHeight_ = yspace_*vmv;
                     }
-
 
                     if(c == 'X' || polyWidthAdjust_ == 0){
                         currentHeight_ = yspace_*vmv;

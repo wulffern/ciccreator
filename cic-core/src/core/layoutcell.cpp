@@ -70,12 +70,12 @@ namespace cIcCore{
 
         foreach(QString node, nodeGraphList()){
             if(!node.contains(QRegularExpression(regex))) continue;
-           graphs.append(nodeGraph_[node]);
+            graphs.append(nodeGraph_[node]);
         }
         return graphs;
     }
 
-     void LayoutCell::placeHorizontal(QJsonValue obj){
+    void LayoutCell::placeHorizontal(QJsonValue obj){
 
         int hor = obj.toInt();
         if(hor> 0){
@@ -803,79 +803,88 @@ namespace cIcCore{
         QString location = obj[2].toString();
         QString layer = (obj.size() > 3) ? obj[3].toString(): "";
         QString options = (obj.size() > 4) ? obj[4].toString(): "";
-        this->addRouteConnection(path,includeInstances,layer,location,options);
+        QString routeTypeOverride = (obj.size() > 5) ? obj[5].toString(): "";
+        this->addRouteConnection(path,includeInstances,layer,location,options,routeTypeOverride);
     }
 
     void LayoutCell::addRouteConnection(QString path, QString includeInstances, QString layer, QString location, QString options)
     {
+        this->addRouteConnection(path,includeInstances,layer,location,options,"");
+    }
+
+    void LayoutCell::addRouteConnection(QString path, QString includeInstances, QString layer, QString location, QString options,QString routeTypeOverride)
+    {
         QString routeType = "-|--";
+        if(routeTypeOverride == QString("")){
+                if(location == "top"){
+                    routeType = "||";
+                    options += ",onTopB,fillvcut";
+                }else if(location == "bottom"){
+                    routeType = "||";
+                    options += ",onTopT,fillvcut";
+                }else if(location == "right"){
+                    routeType = "-";
+                    options += ",onTopL,fillhcut";
+                }else if( location == "left"){
+                    options += ",onTopR,fillhcut";
+                    routeType = "-";
+                }
+            }else{
+                routeType = routeTypeOverride;
+            }
 
-        if(location == "top"){
-            routeType = "||";
-            options += ",onTopB,fillvcut";
-        }else if(location == "bottom"){
-            routeType = "||";
-            options += ",onTopT,fillvcut";
-        }else if(location == "right"){
-            routeType = "-";
-            options += ",onTopL,fillhcut";
-        }else if( location == "left"){
-            options += ",onTopR,fillhcut";
-            routeType = "-";
+            foreach(QString node, nodeGraphList()){
+
+                if(!node.contains(QRegularExpression(path))) continue;
+                if(!named_rects_.contains("rail_" + node)) continue;
+
+
+
+                Graph * g = nodeGraph_[node];
+                QList<Rect*>  rects = g->getRectangles("",includeInstances,layer);
+                RouteRing* rr = static_cast<RouteRing*>(named_rects_["rail_" + node]);
+                if(rr){
+                    Rect* routering = rr->get(location);
+                    QList<Rect*> empty;
+
+                    foreach(Rect* r, rects){
+                        QList<Rect*> stop;
+                        stop.append(r);
+                        stop.append(routering);
+                        Route* ro = new Route(node,layer,empty,stop,options,routeType);
+                        routes_.append(ro);
+                        rr->add(ro);
+                    }
+                }
+
+            }
+            }
+
+        void LayoutCell::trimRouteRing(QJsonArray obj)
+        {
+
+            if(obj.size() < 3){
+                qDebug() << "Error: trimRouteRings must contain at least 3 element\n";
+                return;
+            }
+            QString path = obj[0].toString();
+            QString location = obj[1].toString();
+            QString whichEndToTrim = obj[2].toString();
+            this->trimRouteRing(path,location,whichEndToTrim);
         }
+        void LayoutCell::trimRouteRing(QString path, QString location,QString whichEndToTrim)
+        {
+            QList<Rect*> rects = this->getChildren("cIcCore::RouteRing");
+            foreach(Rect* r,rects){
 
-        foreach(QString node, nodeGraphList()){
+                RouteRing* rr = static_cast<RouteRing*>(r);
 
-            if(!node.contains(QRegularExpression(path))) continue;
-            if(!named_rects_.contains("rail_" + node)) continue;
+                if(rr->name().contains(QRegularExpression(path))){
 
-
-
-            Graph * g = nodeGraph_[node];
-            QList<Rect*>  rects = g->getRectangles("",includeInstances,layer);
-            RouteRing* rr = static_cast<RouteRing*>(named_rects_["rail_" + node]);
-            if(rr){
-                Rect* routering = rr->get(location);
-                QList<Rect*> empty;
-
-                foreach(Rect* r, rects){
-                    QList<Rect*> stop;
-                    stop.append(r);
-                    stop.append(routering);
-                    Route* ro = new Route(node,layer,empty,stop,options,routeType);
-                    routes_.append(ro);
-                    rr->add(ro);
+                    rr->trimRouteRing(location,whichEndToTrim);
                 }
             }
-
         }
-    }
-
-    void LayoutCell::trimRouteRing(QJsonArray obj)
-    {
-
-        if(obj.size() < 3){
-            qDebug() << "Error: trimRouteRings must contain at least 3 element\n";
-            return;
-        }
-        QString path = obj[0].toString();
-        QString location = obj[1].toString();
-        QString whichEndToTrim = obj[2].toString();
-        this->trimRouteRing(path,location,whichEndToTrim);
-    }
-    void LayoutCell::trimRouteRing(QString path, QString location,QString whichEndToTrim)
-    {
-        QList<Rect*> rects = this->getChildren("cIcCore::RouteRing");
-        foreach(Rect* r,rects){
-
-            RouteRing* rr = static_cast<RouteRing*>(r);
-
-            if(rr->name().contains(QRegularExpression(path))){
-
-                rr->trimRouteRing(location,whichEndToTrim);
-            }
-        }
-    }
 
 
 
@@ -886,359 +895,364 @@ namespace cIcCore{
 // Internal functions
 //------------------------------------------------------------------------------------------
 
-    QStringList LayoutCell::expandBus(QString name){
+        QStringList LayoutCell::expandBus(QString name){
 
-        QStringList names;
-        QRegularExpression re_bus("<(\\d+):(\\d+)>");
-        QRegularExpressionMatch m_bus = re_bus.match(name);
-        if(m_bus.hasMatch()){
+            QStringList names;
+            QRegularExpression re_bus("<(\\d+):(\\d+)>");
+            QRegularExpressionMatch m_bus = re_bus.match(name);
+            if(m_bus.hasMatch()){
 
-            QString start = m_bus.captured(1);
-            QString stop = m_bus.captured(2);
-            int istart = start.toInt();
-            int istop = stop.toInt();
-            for(int i=istart;i>=istop;i=i-1){
-                names.append(name.replace(QRegularExpression("<.*>"),QString("<%1>").arg(i)));
+                QString start = m_bus.captured(1);
+                QString stop = m_bus.captured(2);
+                int istart = start.toInt();
+                int istop = stop.toInt();
+                for(int i=istart;i>=istop;i=i-1){
+                    names.append(name.replace(QRegularExpression("<.*>"),QString("<%1>").arg(i)));
+                }
+            }else{
+                names.append(name);
             }
-        }else{
-            names.append(name);
+            return names;
         }
-        return names;
-    }
 
-    void LayoutCell::place(){
+        void LayoutCell::place(){
 
-        QString prev_group = "";
+            QString prev_group = "";
 
-        int next_x = 0;
-        int next_y = 0;
+            int next_x = 0;
+            int next_y = 0;
 
-        int x = 0;
-        int y = 0;
-        bool mirror_y = false;
-        if(!_subckt) return;
+            int x = 0;
+            int y = 0;
+            bool mirror_y = false;
+            if(!_subckt) return;
 
 
-        foreach(cIcSpice::SubcktInstance * ckt_inst,_subckt->instances()){
-            QString group = ckt_inst->groupName();
+            foreach(cIcSpice::SubcktInstance * ckt_inst,_subckt->instances()){
+                QString group = ckt_inst->groupName();
 
-            if(_placeHorizontal){
-                y = 0;
-                x = next_x;
-            }
+                if(prev_group.compare(group) != 0  && prev_group.compare("")  != 0){
 
-            if(prev_group.compare(group) != 0  && prev_group.compare("")  != 0){
+                    if(!_placeHorizontal){
+                        y = 0;
+                        x = next_x;
+                    }else{
+                        x = 0;
+                        y = next_y;
+                    }
+                    mirror_y = !mirror_y;
+                }
+
+                prev_group = group;
+
+
+                int instance_x = x;
+                int instance_y = y;
+
+
+                if(ckt_inst->hasProperty("xoffset")){
+                    QString offset = ckt_inst->getPropertyString("xoffset");
+                    if(offset == "width")
+                    {
+                        //Not implemented
+                    }else{
+                        int xoffset = offset.toInt();
+                        instance_x = instance_x + this->rules->get("ROUTE","horizontalgrid")*xoffset;
+                    }
+                }
+
+                if(ckt_inst->hasProperty("yoffset")){
+                    QString offset = ckt_inst->getPropertyString("yoffset");
+
+                    if(offset == "height"){
+                        //Not implemented
+                    }else{
+                        int yoffset = offset.toInt();
+                        instance_y = instance_y + this->rules->get("ROUTE","verticalgrid")*yoffset;
+                    }
+                }
+
+
+                Instance* inst = this->addInstance(ckt_inst,instance_x,instance_y);
+
+
+                if(ckt_inst->hasProperty("angle")){
+                    QString angle = ckt_inst->getPropertyString("angle");
+                    if(angle == "180"){
+                        inst->setAngle("MY");
+                    }
+
+                    if(angle == "MX"){
+                        inst->setAngle("MX");
+
+                    }
+
+
+                }
+
+
+                if(alternateGroup_ && mirror_y){
+                    inst->setAngle("MY");
+
+
+                }else  if(alternateGroup_ && !mirror_y){
+
+                }
+
+                next_x = inst->x2();
+                next_y = inst->y2();
 
                 if(!_placeHorizontal){
-                    y = 0;
+                    x = inst->x1();
+                    if(useHalfHeight){
+                        y += (inst->y2() - instance_y)/2;
+                    }else{
+                        y = next_y;
+                    }
+                }else{
                     x = next_x;
-                }
-                mirror_y = !mirror_y;
-            }
-
-            prev_group = group;
-
-
-            int instance_x = x;
-            int instance_y = y;
-
-
-            if(ckt_inst->hasProperty("xoffset")){
-                QString offset = ckt_inst->getPropertyString("xoffset");
-                if(offset == "width")
-                {
-                    //Not implemented
-                }else{
-                    int xoffset = offset.toInt();
-                    instance_x = instance_x + this->rules->get("ROUTE","horizontalgrid")*xoffset;
-                }
-            }
-
-            if(ckt_inst->hasProperty("yoffset")){
-                QString offset = ckt_inst->getPropertyString("yoffset");
-
-                if(offset == "height"){
-                    //Not implemented
-                }else{
-                    int yoffset = offset.toInt();
-                    instance_y = instance_y + this->rules->get("ROUTE","verticalgrid")*yoffset;
-                }
-            }
-
-
-            Instance* inst = this->addInstance(ckt_inst,instance_x,instance_y);
-
-
-            if(ckt_inst->hasProperty("angle")){
-                QString angle = ckt_inst->getPropertyString("angle");
-                if(angle == "180"){
-                    inst->setAngle("MY");
-                }
-
-                if(angle == "MX"){
-                    inst->setAngle("MX");
-
+                    y = inst->y1();
                 }
 
 
-            }
-
-
-            if(alternateGroup_ && mirror_y){
-                inst->setAngle("MY");
-
-
-            }else  if(alternateGroup_ && !mirror_y){
 
             }
 
-            next_x = inst->x2();
-            next_y = inst->y2();
+            this->updateBoundingRect();
 
-            x = inst->x1();
-
-            if(useHalfHeight){
-                y += (inst->y2() - instance_y)/2;
-            }else{
-                y = next_y;
-            }
         }
 
-        this->updateBoundingRect();
+        Instance* LayoutCell::addInstance(cIcSpice::SubcktInstance* ckt_inst, int x, int y)
+        {
 
-    }
-
-    Instance* LayoutCell::addInstance(cIcSpice::SubcktInstance* ckt_inst, int x, int y)
-    {
-
-        //The chain of events is important here, ports get defined in the setSubckInstance
-        Instance * inst = Instance::getInstance(ckt_inst->subcktName());
-        inst->setSubcktInstance(ckt_inst);
-        this->add(inst);
-        Text * t = new Text(ckt_inst->name());
-        t->moveTo( inst->width()/2,  inst->height()/2);
-        inst->add(t);
-        inst->moveTo(x,y);
-        this->addToNodeGraph(inst);
-        return inst;
-    }
-
-    void LayoutCell::addToNodeGraph(Instance * inst){
-
-        if(inst == NULL) return;
-
-        auto allp = inst->allports();
-        auto keys = inst->allPortNames();
-
-        foreach(QString s, keys){
-
-            foreach(Port * p,allp[s]){
-                if(p == NULL) continue;
-                if(nodeGraph_.contains(p->name())){
-
-                    nodeGraph_[p->name()]->append(p);
-
-                }else{
-                    Graph *g = new Graph();
-                    g->name = p->name();
-                    g->append(p);
-                    nodeGraphList_.append(p->name());
-                    nodeGraph_[p->name()] = g;
-                }
-
-            }
+            //The chain of events is important here, ports get defined in the setSubckInstance
+            Instance * inst = Instance::getInstance(ckt_inst->subcktName());
+            inst->setSubcktInstance(ckt_inst);
+            this->add(inst);
+            Text * t = new Text(ckt_inst->name());
+            t->moveTo( inst->width()/2,  inst->height()/2);
+            inst->add(t);
+            inst->moveTo(x,y);
+            this->addToNodeGraph(inst);
+            return inst;
         }
 
-    }
+        void LayoutCell::addToNodeGraph(Instance * inst){
 
-    QList<QString> LayoutCell::nodeGraphList()
-    {
+            if(inst == NULL) return;
 
+            auto allp = inst->allports();
+            auto keys = inst->allPortNames();
 
-        return nodeGraphList_;
+            foreach(QString s, keys){
 
-    }
+                foreach(Port * p,allp[s]){
+                    if(p == NULL) continue;
+                    if(nodeGraph_.contains(p->name())){
 
+                        nodeGraph_[p->name()]->append(p);
 
-    void LayoutCell::route(){
-        foreach(Rect *r, routes_){
-            if(r->isRoute()){
-                Route * route = static_cast<Route *>(r);
-                route->route();
+                    }else{
+                        Graph *g = new Graph();
+                        g->name = p->name();
+                        g->append(p);
+                        nodeGraphList_.append(p->name());
+                        nodeGraph_[p->name()] = g;
+                    }
+
+                }
             }
+
+        }
+
+        QList<QString> LayoutCell::nodeGraphList()
+        {
+
+
+            return nodeGraphList_;
+
         }
 
 
-
-    }
-
-    void LayoutCell::paint(){
-        if(!noPowerRoute_){
-            this->routePower();
-        }
-
-        Cell::paint();
-    }
-
-    QList<Rect *> LayoutCell::findRectanglesByNode(QString node,  QString filterChild, QString matchInstance)
-    {
-        QList<Rect *> rects;
-        foreach(Rect * r, this->children()){
-            if(!r->isInstance()) continue;
-            Instance * i = static_cast<Instance *>(r);
-            if(i == NULL){continue;}
-
-            if(matchInstance != "" && !i->name().contains(QRegularExpression(matchInstance))){continue;}
-            QList<Rect* > childRects = i->findRectanglesByNode(node, filterChild);
-            foreach(Rect *r, childRects){
-                rects.append(r);
-            }
-        }
-        return rects;
-
-    }
-
-    void LayoutCell::addPowerRoute(QString net,QString excludeInstances)
-    {
-        QList<Rect*> foundrects  = this->findRectanglesByNode(net,"^(B|G|BULKP|BULKN)$", "");
-
-        QList<Rect*> rects;
-        foreach(Rect * r, foundrects){
-            Rect * parent  = r->parent();
-            if(parent && parent->isCell() ){
-                Cell *c = static_cast<Cell*>(parent);
-                QString name = c->name();
-                bool skip = false;
-
-                if(excludeInstances != "" && c->isInstance()){
-                    Instance* i = static_cast<Instance*>(c);
-                    QString lname = i->name();
-                    QString instName = i->instanceName();
-                    if(lname.contains(QRegularExpression(excludeInstances))) skip = true;
-                    if(instName.contains(QRegularExpression(excludeInstances))) skip = true;
+        void LayoutCell::route(){
+            foreach(Rect *r, routes_){
+                if(r->isRoute()){
+                    Route * route = static_cast<Route *>(r);
+                    route->route();
                 }
+            }
 
-                if(!skip)
+
+
+        }
+
+        void LayoutCell::paint(){
+            if(!noPowerRoute_){
+                this->routePower();
+            }
+
+            Cell::paint();
+        }
+
+        QList<Rect *> LayoutCell::findRectanglesByNode(QString node,  QString filterChild, QString matchInstance)
+        {
+            QList<Rect *> rects;
+            foreach(Rect * r, this->children()){
+                if(!r->isInstance()) continue;
+                Instance * i = static_cast<Instance *>(r);
+                if(i == NULL){continue;}
+
+                if(matchInstance != "" && !i->name().contains(QRegularExpression(matchInstance))){continue;}
+                QList<Rect* > childRects = i->findRectanglesByNode(node, filterChild);
+                foreach(Rect *r, childRects){
                     rects.append(r);
-
-            }else{
-                rects.append(r);
+                }
             }
+            return rects;
 
         }
 
-        //TODO: If there are multiple rectangles horizontally this
-        //method makes a sheet, should really make it better
-        if(rects.length() > 0){
-            QList<Rect*>  cuts = Cut::getCutsForRects("M4",rects,2,1);
-            Rect * rp = NULL;
-            if(cuts.count() > 0){
-                Rect r=  Cell::calcBoundingRect(cuts,false);
-                r.setTop(this->top());
-                r.setBottom(this->bottom());
-                r.setLayer("M4");
-                this->add(cuts);
+        void LayoutCell::addPowerRoute(QString net,QString excludeInstances)
+        {
+            QList<Rect*> foundrects  = this->findRectanglesByNode(net,"^(B|G|BULKP|BULKN)$", "");
 
-                rp = new Rect(r);
-            }else{
-                Rect r=  Cell::calcBoundingRect(rects,false);
-                r.setTop(this->top());
-                r.setBottom(this->bottom());
-                r.setLayer("M4");
-                rp = new Rect(r);
+            QList<Rect*> rects;
+            foreach(Rect * r, foundrects){
+                Rect * parent  = r->parent();
+                if(parent && parent->isCell() ){
+                    Cell *c = static_cast<Cell*>(parent);
+                    QString name = c->name();
+                    bool skip = false;
+
+                    if(excludeInstances != "" && c->isInstance()){
+                        Instance* i = static_cast<Instance*>(c);
+                        QString lname = i->name();
+                        QString instName = i->instanceName();
+                        if(lname.contains(QRegularExpression(excludeInstances))) skip = true;
+                        if(instName.contains(QRegularExpression(excludeInstances))) skip = true;
+                    }
+
+                    if(!skip)
+                        rects.append(r);
+
+                }else{
+                    rects.append(r);
+                }
+
             }
-            if(rp){
-                this->add(rp);
-                if(ports_.contains(net)){
-                    Port * p = ports_[net];
-                    p->set(rp);
+
+            //TODO: If there are multiple rectangles horizontally this
+            //method makes a sheet, should really make it better
+            if(rects.length() > 0){
+                QList<Rect*>  cuts = Cut::getCutsForRects("M4",rects,2,1);
+                Rect * rp = NULL;
+                if(cuts.count() > 0){
+                    Rect r=  Cell::calcBoundingRect(cuts,false);
+                    r.setTop(this->top());
+                    r.setBottom(this->bottom());
+                    r.setLayer("M4");
+                    this->add(cuts);
+
+                    rp = new Rect(r);
+                }else{
+                    Rect r=  Cell::calcBoundingRect(rects,false);
+                    r.setTop(this->top());
+                    r.setBottom(this->bottom());
+                    r.setLayer("M4");
+                    rp = new Rect(r);
+                }
+                if(rp){
+                    this->add(rp);
+                    if(ports_.contains(net)){
+                        Port * p = ports_[net];
+                        p->set(rp);
+                    }
                 }
             }
         }
-    }
 
-    void LayoutCell::fromJson(QJsonObject o){
-        Cell::fromJson(o);
+        void LayoutCell::fromJson(QJsonObject o){
+            Cell::fromJson(o);
 
-        this->updateBoundingRect();
-
-
-        this->useHalfHeight = o["useHalfHeight"].toBool();
-        this->alternateGroup_ = o["alternateGroup"].toBool();
-        this->noPowerRoute_ = o["noPowerRoute"].toBool();
-    }
-
-    Rect * LayoutCell::cellFromJson(QJsonObject co){
-
-        auto c = Cell::cellFromJson(co);
+            this->updateBoundingRect();
 
 
-        if(c == 0){
-            QString cl = co["class"].toString();
-            if(cl == "Instance"){
-                Instance * i = new Instance();
-                i->fromJson(co);
-                this->addToNodeGraph(i);
-                return i;
-            }else if(cl== "cIcCore::LayoutCell" || cl== "cIcCore::Route" || cl == "cIcCore::RouteRing" || cl == "cIcCore::Guard" ){
+            this->useHalfHeight = o["useHalfHeight"].toBool();
+            this->alternateGroup_ = o["alternateGroup"].toBool();
+            this->noPowerRoute_ = o["noPowerRoute"].toBool();
+        }
 
-                LayoutCell * l = new LayoutCell();
-                l->fromJson(co);
-                return l;
-            }else{
-                qDebug() << "Could not read class " << cl;
-                return 0;
+        Rect * LayoutCell::cellFromJson(QJsonObject co){
+
+            auto c = Cell::cellFromJson(co);
+
+
+            if(c == 0){
+                QString cl = co["class"].toString();
+                if(cl == "Instance"){
+                    Instance * i = new Instance();
+                    i->fromJson(co);
+                    this->addToNodeGraph(i);
+                    return i;
+                }else if(cl== "cIcCore::LayoutCell" || cl== "cIcCore::Route" || cl == "cIcCore::RouteRing" || cl == "cIcCore::Guard" ){
+
+                    LayoutCell * l = new LayoutCell();
+                    l->fromJson(co);
+                    return l;
+                }else{
+                    qDebug() << "Could not read class " << cl;
+                    return 0;
+                }
             }
+
+            return c;
         }
 
-        return c;
-    }
+
+        void LayoutCell::routePower(){
+            this->addPowerRoute("AVDD","NCH|DMY");
+            this->addPowerRoute("AVSS","PCH|DMY");
+        }
+
+        void LayoutCell::addAllPorts(){
+            if(!_subckt) return;
+            QStringList nodes = _subckt->nodes();
 
 
-    void LayoutCell::routePower(){
-        this->addPowerRoute("AVDD","NCH|DMY");
-        this->addPowerRoute("AVSS","PCH|DMY");
-    }
+            QString filterChild = "^B$";
+            QString filterInstance = "";
+            foreach(QString node,nodes){
 
-    void LayoutCell::addAllPorts(){
-        if(!_subckt) return;
-        QStringList nodes = _subckt->nodes();
+                if(ports_.contains(node)) continue;
 
+                QList<Rect*> rects = this->findRectanglesByNode("^" + node+"$",filterChild,filterInstance);
 
-        QString filterChild = "^B$";
-        QString filterInstance = "";
-        foreach(QString node,nodes){
+                if(rects.count() > 0){
+                    this->updatePort(node,rects[0]);
 
-            if(ports_.contains(node)) continue;
-
-            QList<Rect*> rects = this->findRectanglesByNode("^" + node+"$",filterChild,filterInstance);
-
-            if(rects.count() > 0){
-                this->updatePort(node,rects[0]);
-
-            }else{
-                qDebug() << "Error: No rects found on " <<node;
+                }else{
+                    qDebug() << "Error: No rects found on " <<node;
+                }
             }
+
+
+
         }
 
+        QJsonObject LayoutCell::toJson(){
+            QJsonObject o = Cell::toJson();
+            o["useHalfHeight"] = this->useHalfHeight;
+            o["alternateGroup"] = this->alternateGroup_;
+            o["noPowerRoute"] = this->noPowerRoute_;
 
+            QJsonArray graph;
+            foreach(QString node, nodeGraphList()){
+                Graph * g = nodeGraph_[node];
+                graph.append(g->toJson());
+            }
+            o["graph"] = graph;
 
-    }
-
-    QJsonObject LayoutCell::toJson(){
-        QJsonObject o = Cell::toJson();
-        o["useHalfHeight"] = this->useHalfHeight;
-        o["alternateGroup"] = this->alternateGroup_;
-        o["noPowerRoute"] = this->noPowerRoute_;
-
-        QJsonArray graph;
-        foreach(QString node, nodeGraphList()){
-            Graph * g = nodeGraph_[node];
-            graph.append(g->toJson());
+            return o;
         }
-        o["graph"] = graph;
 
-        return o;
     }
-
-}

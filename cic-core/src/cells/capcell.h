@@ -45,6 +45,12 @@ namespace cIcCells{
 
             Q_INVOKABLE
             /**
+             * @brief Use Metal 5 shield
+             */
+            void usem5(QJsonValue obj);
+
+            Q_INVOKABLE
+            /**
              * @brief Increase multiplier height
              */
             void heightIncreaseMult(QJsonValue obj);
@@ -54,6 +60,7 @@ namespace cIcCells{
             int xorg = 0;
             int yMax = 0;
             bool usem3_ = true;
+            bool usem5_ = false;
             int heightIncreaseMult_ = 1;
 
 

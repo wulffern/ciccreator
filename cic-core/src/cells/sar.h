@@ -41,6 +41,12 @@ namespace cIcCells{
         
         virtual void place();
         virtual void route();
+
+        Q_INVOKABLE
+        /**
+        * @brief Use Metal 5 shield
+        */
+        void usem5(QJsonValue obj);
         
         int getCellWidth(SARgroup groups,QString group);
         cIcCore::Instance* placeAlternateMirror(SARgroup groups,QString group, int i, int x ,int y, int xoffset);
@@ -53,6 +59,7 @@ namespace cIcCells{
 
         Rect* sarn = NULL;
         Rect* sarp = NULL;
+        bool usem5_ = true;
 
     };
     

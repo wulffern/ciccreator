@@ -29,6 +29,7 @@ namespace cIcCore{
         _physicalOnly = false;
         abstract_ = false;
         lib_cell_ = false;
+        lib_path_ = "";
         cell_used_ = false;
         _has_pr = false;
 
@@ -580,6 +581,7 @@ namespace cIcCore{
 
         if(o.contains("ckt")){
             cIcSpice::Subckt * subckt = new cIcSpice::Subckt();
+            subckt->setLibPath(lib_path_);
             subckt->fromJson(o["ckt"].toObject());
             _subckt = subckt;
         }
