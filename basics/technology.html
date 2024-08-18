@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Technology File &#8212; Custom IC Creator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Object Definition File" href="object.html" />
+    <link rel="prev" title="Basics" href="basics.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="object.html" title="Object Definition File"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="basics.html" title="Basics"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Custom IC Creator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="basics.html" accesskey="U">Basics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Technology File</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="technology-file">
+<h1>Technology File<a class="headerlink" href="#technology-file" title="Permalink to this heading">¶</a></h1>
+<p>The technology file has sections: layers, technology, rules.</p>
+<p>An example of a technology file for <a class="reference external" href="https://github.com/wulffern/sun_tr_sky130nm/blob/main/cic/sky130.tech">Skywater 130 nm</a></p>
+<section id="layers">
+<h2>layers<a class="headerlink" href="#layers" title="Permalink to this heading">¶</a></h2>
+<p>cic expect to find some common layers, like “OD” (diffusion, active, the stuff
+that is under the poly gates), “PO” (the gate material), “M1” “M2” (meta
+layers).</p>
+<p>cic does not care that much about the number, or datatype anymore, but they
+still need to be there. The
+important parts are the material, previous, next, and pin.</p>
+<p>The color is used by cic-gui.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;PO&quot;</span>  <span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;number&quot;</span> <span class="p">:</span> <span class="mi">7</span><span class="p">,</span>         <span class="o">//</span><span class="n">SKILL</span> <span class="n">layer</span> <span class="n">number</span>
+          <span class="s2">&quot;datatype&quot;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>       <span class="o">//</span><span class="n">SKILL</span> <span class="n">layer</span> <span class="n">datatype</span>
+          <span class="s2">&quot;alias&quot;</span> <span class="p">:</span> <span class="s2">&quot;poly&quot;</span><span class="p">,</span>     <span class="o">//</span><span class="n">Name</span> <span class="ow">in</span> <span class="n">Skywater</span> <span class="mi">130</span> <span class="n">nm</span> <span class="n">Magic</span> <span class="n">VLSI</span>
+          <span class="s2">&quot;material&quot;</span> <span class="p">:</span> <span class="s2">&quot;poly&quot;</span><span class="p">,</span>  <span class="o">//</span><span class="n">Type</span> <span class="n">of</span> <span class="n">layer</span> <span class="p">[</span><span class="n">poly</span><span class="p">,</span><span class="n">cut</span><span class="p">,</span><span class="n">metal</span><span class="p">,</span><span class="n">marker</span><span class="p">,</span><span class="n">implant</span><span class="p">]</span>
+          <span class="s2">&quot;previous&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>      <span class="o">//</span><span class="n">Previous</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">connect</span> <span class="n">stack</span><span class="o">.</span> <span class="n">For</span> <span class="n">M1</span> <span class="n">it</span> <span class="n">would</span> <span class="n">be</span> <span class="n">CO</span>
+          <span class="s2">&quot;next&quot;</span> <span class="p">:</span> <span class="s2">&quot;CO&quot;</span><span class="p">,</span>        <span class="o">//</span><span class="n">Layer</span> <span class="n">to</span> <span class="n">used</span> <span class="n">to</span> <span class="n">connect</span> <span class="n">to</span> <span class="n">the</span> <span class="nb">next</span> <span class="n">routing</span> <span class="n">layer</span>
+          <span class="s2">&quot;pin&quot;</span> <span class="p">:</span> <span class="s2">&quot;PO_pin&quot;</span> <span class="p">,</span>    <span class="o">//</span><span class="n">Layer</span> <span class="n">to</span> <span class="n">be</span> <span class="n">used</span> <span class="k">for</span> <span class="n">pins</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">layer</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">e</span> <span class="n">port</span> <span class="n">text</span><span class="p">)</span>
+          <span class="s2">&quot;color&quot;</span> <span class="p">:</span> <span class="s2">&quot;red&quot;</span>       <span class="o">//</span><span class="n">Color</span> <span class="n">of</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">cic</span><span class="o">-</span><span class="n">gui</span>
+        <span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="technology">
+<h2>technology<a class="headerlink" href="#technology" title="Permalink to this heading">¶</a></h2>
+<p>Most of the technology file is irrelevant for cic, but the rule file still
+expects to find gamma, grid, spiceunit, devices (name,devicetype,ports).</p>
+<p>The “gamma” keyword is the unit used to translate from “rules” into real numbers
+(Ångstrøm). The default gamma is 50 Ångstrøm.</p>
+<p>The “grid” is the minimum snap distance, for example all units will be rounded
+to “5 nm”</p>
+<p>The “spiceunit” is no longer applicable, but has not been removed from “core/rules.cpp”</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;gamma&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">500</span><span class="p">,</span>
+<span class="nt">&quot;grid&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">5</span>
+<span class="nt">&quot;spiceunit&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</pre></div>
+</div>
+</section>
+<section id="rules">
+<h2>rules<a class="headerlink" href="#rules" title="Permalink to this heading">¶</a></h2>
+<p>All rules are defined as a multiplum of the gamma.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;M2&quot;</span><span class="w">   </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">                      </span><span class="c1">// Layer to apply rules for</span>
+<span class="w">    </span><span class="nt">&quot;space&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">                </span><span class="c1">// rule name : multiplum of gamma</span>
+<span class="w">    </span><span class="nt">&quot;width&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="w"> </span><span class="p">},</span>
+</pre></div>
+</div>
+<p>Common rule names are</p>
+<ul class="simple">
+<li><p>space : distance between two rectangles</p></li>
+<li><p>width : default width</p></li>
+<li><p>height : default height, common for cut layers</p></li>
+<li><p>enclosure : default enclosure of for example OD around this layer</p></li>
+<li><p>XXXenclosure : enclosure of current layer around layer XXX</p></li>
+<li><p>XXXencOpposite : enclosure of current layer around layer XXX, used when there is more than two cuts on a via</p></li>
+</ul>
+<p>A special rule is the ‘ROUTE’ layer, which does not correspond to a
+layer. It’s used to set the grid for the PatternTile objects, and only
+has ‘verticalgrid’ and ‘horizontal grid’ rule names.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;ROUTE&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;horizontalgrid&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;verticalgrid&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">22</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="basics.html">Basics</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Technology File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object.html">Object Definition File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netlist.html">Netlist</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cells/cells.html">Cells</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../routing/route.html">Routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="object.html" title="Object Definition File"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="basics.html" title="Basics"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Custom IC Creator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="basics.html" >Basics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Technology File</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Carsten Wulff.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>
