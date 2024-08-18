@@ -83,7 +83,9 @@ namespace cIcSpice{
                 r->fromJson(od);
                 this->add(r);
             }else{
-                qDebug() << "Unknown device class " << o["class"];
+                SpiceDevice * s = new SpiceDevice();
+                s->fromJson(od);
+                this->add(s);
             }
         }
 
@@ -177,9 +179,6 @@ namespace cIcSpice{
                 continue;
 
             SubcktInstance * inst = new SubcktInstance();
-
-
-
             inst->parse(line,instance_line_number);
             if(this->_inst_index.contains(inst->name())){
                 qWarning() << "Error: " << this->name() << " already contains an " << inst->name();

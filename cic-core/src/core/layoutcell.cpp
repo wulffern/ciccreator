@@ -96,6 +96,12 @@ namespace cIcCore{
 
     }
 
+    void LayoutCell::parseSubckt(QJsonObject obj){
+        cIcSpice::Subckt * ckt = new cIcSpice::Subckt();
+        ckt->fromJson(obj);
+        this->setSubckt(ckt);
+    }
+
 
     void LayoutCell::setSpiceParam(QJsonArray obj){
         if(obj.size() < 3){
@@ -218,7 +224,7 @@ namespace cIcCore{
     void LayoutCell::addPortOnRect(QJsonArray obj)
     {
         if(obj.size() < 2){
-            qDebug() << "Error: addPortsOnRect must contain at least two elements\n";
+            qDebug() << "Error: addPortsOnRect must contain at least two elements (port,layer,path)\n";
             return;
         }
 
@@ -249,7 +255,7 @@ namespace cIcCore{
     void LayoutCell::addVia(QJsonArray obj)
     {
         if(obj.size() < 4){
-            qDebug() << "Error: addVia must contain at least four elements\n";
+            qDebug() << "Error: addVia must contain at least four elements (startlayer,stoplayer,path,hcuts,vcuts,offset,name,yoffset)\n";
             return;
         }
 
@@ -303,7 +309,7 @@ namespace cIcCore{
     void LayoutCell::addConnectivityVia(QJsonArray obj)
     {
         if(obj.size() < 4){
-            qDebug() << "Error: addVia must contain at least four elements\n";
+            qDebug() << "Error: addVia must contain at least four elements (startlayer,stoplayer,name,gridMult,vcuts,hcuts,xoffset,yoffset,netname)\n";
             return;
         }
 
@@ -319,8 +325,6 @@ namespace cIcCore{
 
         int grid = this->rules->get("ROUTE","horizontalgrid");
         grid = int(grid*gridMultiplier/10)*10;
-
-
 
         QList<Rect*> rects = this->findAllRectangles(name,startlayer);
         bool setPort = true;
@@ -363,7 +367,7 @@ namespace cIcCore{
     void LayoutCell::addPortVia(QJsonArray obj)
     {
         if(obj.size() < 8){
-            qDebug() << "Error: addPortVia must contain at least 8 elements\n";
+            qDebug() << "Error: addPortVia must contain at least 8 elements (startlayer,stoplayer,port,path,vcuts,hcuts,xoffset,yoffset,name)\n";
             return;
         }
 
@@ -410,7 +414,7 @@ namespace cIcCore{
     void LayoutCell::addVerticalRect(QJsonArray obj)
     {
         if(obj.size() < 2){
-            qDebug() << "Error: addVerticalRects must contain at least 2 elements\n";
+            qDebug() << "Error: addVerticalRects must contain at least 2 elements (layer,path,cuts)\n";
             return;
         }
 
@@ -442,7 +446,7 @@ namespace cIcCore{
     void LayoutCell::addHorizontalRect(QJsonArray obj)
     {
         if(obj.size() < 2){
-            qDebug() << "Error: addHorizontalRects must contain at least 2 elements\n";
+            qDebug() << "Error: addHorizontalRects must contain at least 2 elements (layer,path,xsize,ysize)\n";
             return;
         }
 
@@ -480,10 +484,50 @@ namespace cIcCore{
     }
 
 
+    void LayoutCell::addPortRectangle(QJsonArray obj)
+    {
+        if(obj.size() < 6){
+            qDebug() << "Error: addRectangle must contain at least 6 elements (layer,x1,y1,width,height,angle,portname)\n";
+            return;
+        }
+        QString layer = obj[0].toString();
+        int x1 = obj[1].toInt();
+        int y1 = obj[2].toInt();
+        int width = obj[3].toInt();
+        int height = obj[4].toInt();
+        QString angle = obj[5].toString();
+        QString portname = obj[6].toString();
+        this->addPortRectangle(layer,x1,y1,width,height,angle,portname);
+
+    }
+
+    void LayoutCell::addPortRectangle(QString layer, int x1, int y1, int width, int height,QString angle,QString portname)
+    {
+        Rect *r = new Rect(layer,x1,y1,width,height);
+        Port *p = new Port(portname);
+        p->set(r);
+
+        if(angle == "R90"){
+            r->rotate(90);
+        }else if(angle == "R180"){
+            r->rotate(90);
+            r->rotate(90);
+        }else if(angle == "R270"){
+            r->rotate(90);
+            r->rotate(90);
+            r->rotate(90);
+        }
+
+        this->add(r);
+        this->add(p);
+    }
+
+
+
     void LayoutCell::addRectangle(QJsonArray obj)
     {
         if(obj.size() < 4){
-            qDebug() << "Error: addRectangle must contain at least 4 element\n";
+            qDebug() << "Error: addRectangle must contain at least 4 elements (layer,x1,y1,width,height,angle)\n";
             return;
         }
         QString layer = obj[0].toString();
@@ -512,7 +556,6 @@ namespace cIcCore{
         }
 
         this->add(r);
-
     }
 
 
@@ -520,7 +563,7 @@ namespace cIcCore{
     void LayoutCell::addPowerRing(QJsonArray obj)
     {
         if(obj.size() < 2){
-            qDebug() << "Error: addPowerRing must contain at least 2 element\n";
+            qDebug() << "Error: addPowerRing must contain at least 2 elements (layer,name,location,widthmult,spacemult)\n";
             return;
         }
         QString layer = obj[0].toString();
@@ -561,7 +604,7 @@ namespace cIcCore{
     void LayoutCell::addRouteHorizontalRect(QJsonArray obj)
     {
         if(obj.size() < 3){
-            qDebug() << "Error: addRouteHorizontalRects must contain at least 3 element\n";
+            qDebug() << "Error: addRouteHorizontalRects must contain at least 3 elements (layer,rectpath,x,name)\n";
             return;
         }
         QString layer = obj[0].toString();
@@ -575,7 +618,7 @@ namespace cIcCore{
     void LayoutCell::addPortOnEdge(QJsonArray obj)
     {
         if(obj.size() < 5){
-            qDebug() << "Error: addPortOnEdge must contain at least 3 element\n";
+            qDebug() << "Error: addPortOnEdge must contain at least 3 elements (layer,node,location,routeType,options)\n";
             return;
         }
         QString layer = obj[0].toString();
@@ -625,7 +668,7 @@ namespace cIcCore{
     void LayoutCell::addGuard(QJsonArray obj)
     {
         if(obj.size() < 3){
-            qDebug() << "Error: addRouteHorizontalRects must contain at least 3 element\n";
+            qDebug() << "Error: addRouteHorizontalRects must contain at least 3 elements (layer,enc,encl)\n";
             return;
         }
         QString layer = obj[0].toString();
@@ -690,7 +733,7 @@ namespace cIcCore{
     void LayoutCell::addRouteRing(QJsonArray obj)
     {
         if(obj.size() < 3){
-            qDebug() << "Error: addRouteRing must contain at least 3 element\n";
+            qDebug() << "Error: addRouteRing must contain at least 3 elements (layer,name,location,widthmult,spacemult)\n";
             return;
         }
         QString layer = obj[0].toString();
@@ -747,7 +790,7 @@ namespace cIcCore{
     void LayoutCell::addPowerConnection(QJsonArray obj)
     {
         if(obj.size() < 3){
-            qDebug() << "Error: addRouteRing must contain at least 3 element\n";
+            qDebug() << "Error: addRouteRing must contain at least 3 elements (name,incInst,location)\n";
             return;
         }
         QString name = obj[0].toString();
@@ -795,7 +838,7 @@ namespace cIcCore{
     void LayoutCell::addRouteConnection(QJsonArray obj)
     {
         if(obj.size() < 3){
-            qDebug() << "Error: addRouteRing must contain at least 3 element\n";
+            qDebug() << "Error: addRouteRing must contain at least 3 elements (path,incInst,location,layer,options,routeTypeOverrride)\n";
             return;
         }
         QString path = obj[0].toString();
@@ -864,7 +907,7 @@ namespace cIcCore{
         {
 
             if(obj.size() < 3){
-                qDebug() << "Error: trimRouteRings must contain at least 3 element\n";
+                qDebug() << "Error: trimRouteRings must contain at least 3 elements (path,location,whichEndToTrim)\n";
                 return;
             }
             QString path = obj[0].toString();
@@ -956,7 +999,7 @@ namespace cIcCore{
                     {
                         //Not implemented
                     }else{
-                        int xoffset = offset.toInt();
+                        double xoffset = offset.toDouble();
                         instance_x = instance_x + this->rules->get("ROUTE","horizontalgrid")*xoffset;
                     }
                 }
@@ -967,7 +1010,7 @@ namespace cIcCore{
                     if(offset == "height"){
                         //Not implemented
                     }else{
-                        int yoffset = offset.toInt();
+                        double yoffset = offset.toDouble();
                         instance_y = instance_y + this->rules->get("ROUTE","verticalgrid")*yoffset;
                     }
                 }

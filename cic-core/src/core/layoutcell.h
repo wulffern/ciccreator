@@ -58,6 +58,10 @@ namespace cIcCore{
                         void addPortOnRect(QJsonArray obj);
 
                         Q_INVOKABLE
+                        void addPortRectangle(QJsonArray obj);
+
+
+                        Q_INVOKABLE
                         void addVia(QJsonArray obj);
 
                         Q_INVOKABLE
@@ -71,6 +75,9 @@ namespace cIcCore{
 
                         Q_INVOKABLE
                         void addRouteRing(QJsonArray obj); //doc
+                                                           //
+                        Q_INVOKABLE
+                        void parseSubckt(QJsonObject obj);
 
                         Q_INVOKABLE
                         void addPowerRing(QJsonArray obj); //doc
@@ -86,6 +93,7 @@ namespace cIcCore{
 
                         Q_INVOKABLE
                         void addRectangle(QJsonArray obj);
+
 
                         Q_INVOKABLE
                         void addRouteHorizontalRect(QString layer, QString rectpath, int x, QString name);
@@ -120,6 +128,7 @@ namespace cIcCore{
                         Instance* addInstance(cIcSpice::SubcktInstance* ckt,int x, int y);
 
                         void addRectangle(QString layer, int x1, int y1, int width, int height, QString angle);
+                        void addPortRectangle(QString layer, int x1, int y1, int width, int height, QString angle,QString port);
                         void addConnectivityRoute(QString layer,QString regex, QString routeType,QString options,QString cuts,QString excludeInstances, QString includeInstances);
 
                         void trimRouteRing(QString path, QString location,QString whichEndToTrim);
