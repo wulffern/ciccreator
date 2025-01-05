@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Directed Route &#8212; Custom IC Creator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Via/Cut" href="via.html" />
+    <link rel="prev" title="Connectivity Route" href="con_route.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="via.html" title="Via/Cut"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="con_route.html" title="Connectivity Route"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Custom IC Creator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="route.html" accesskey="U">Routing</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Directed Route</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="directed-route">
+<h1>Directed Route<a class="headerlink" href="#directed-route" title="Permalink to this heading">¶</a></h1>
+<p>DirectedRoute is for the cases were you want to access a port deep in
+the hierarchy, but it’s not available on top level via a port. The</p>
+<p>DirectedRoute should be avoided if at all possible, because it’s hard
+linked to the hierarchy, so if you change instance names, or the
+hierarchy, they will no longer work. But it’s perfect for those tricky
+situations where ConnectivityRoute falls short.</p>
+<p>The arguments for directed route are layer, net, and ‘route command’.</p>
+<section id="route-command">
+<h2>Route Command<a class="headerlink" href="#route-command" title="Permalink to this heading">¶</a></h2>
+<p>A route command looks like this</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;XA1:S-|--XB2:S&quot;</span>
+</pre></div>
+</div>
+<p>The route command contains three parts, start rectangles path regex,
+route type, and stop rectangles path regex. See addDirectedRoute in
+[[LayoutCell]] for details.</p>
+<p>A ‘path regex’ looks like this ‘XA1:XB2:D,XA2:XB2:D’, the colon denotes
+a hierarchy border, while the stuff between are the regular expressions
+used to match instance names. The last ‘D’ is the port name of an
+instance. Multiple paths can be specified in one routecommand, separated
+by a comma.</p>
+<p>The <cite>-|–</cite> is the [[Route Type]] of this particular route command.</p>
+<p>With the spice</p>
+<div class="highlight-spice notranslate"><div class="highlight"><pre><span></span><span class="p">.</span><span class="nx">subckt</span><span class="w"> </span><span class="nx">TEST</span><span class="w"> </span><span class="nx">A</span><span class="w"> </span><span class="nx">B</span>
+<span class="nx">XA1</span><span class="w"> </span><span class="nx">B</span><span class="w"> </span><span class="nx">DDD</span>
+<span class="nx">XA2</span><span class="w"> </span><span class="nx">A</span><span class="w"> </span><span class="nx">DDD</span>
+<span class="nx">XB1</span><span class="w"> </span><span class="nx">B</span><span class="w"> </span><span class="nx">DDD</span>
+<span class="nx">XB2</span><span class="w"> </span><span class="nx">A</span><span class="w"> </span><span class="nx">DDD</span>
+<span class="p">.</span><span class="nx">ends</span>
+</pre></div>
+</div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Directed_StartLeft_Left(-|--)&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;inherit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TEST&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;beforeRoute&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">&quot;addDirectedRoutes&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="s2">&quot;S&quot;</span><span class="p">,</span><span class="s2">&quot;XA1:S-|--XB2:S&quot;</span><span class="p">]]}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Will produce</p>
+<img alt="../_images/DirectedRoute.png" src="../_images/DirectedRoute.png" />
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../basics/basics.html">Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cells/cells.html">Cells</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="route.html">Routing</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="con_route.html">Connectivity Route</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Directed Route</a></li>
+<li class="toctree-l2"><a class="reference internal" href="via.html">Via/Cut</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type.html">Route Type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">Route Options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="via.html" title="Via/Cut"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="con_route.html" title="Connectivity Route"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Custom IC Creator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="route.html" >Routing</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Directed Route</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Carsten Wulff.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

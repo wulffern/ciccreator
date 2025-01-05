@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Connectivity Route &#8212; Custom IC Creator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Directed Route" href="dir_route.html" />
+    <link rel="prev" title="Routing" href="route.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="dir_route.html" title="Directed Route"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="route.html" title="Routing"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Custom IC Creator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="route.html" accesskey="U">Routing</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Connectivity Route</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="connectivity-route">
+<h1>Connectivity Route<a class="headerlink" href="#connectivity-route" title="Permalink to this heading">¶</a></h1>
+<p>ConnectivityRoute uses regular expressions to match the net names. For
+example, take the spice circuit below</p>
+<div class="highlight-spice notranslate"><div class="highlight"><pre><span></span><span class="p">.</span><span class="nx">subckt</span><span class="w"> </span><span class="nx">TEST</span><span class="w"> </span><span class="nx">A</span><span class="w"> </span><span class="nx">B</span>
+<span class="nx">XA1</span><span class="w"> </span><span class="nx">B</span><span class="w"> </span><span class="nx">DDD</span>
+<span class="nx">XA2</span><span class="w"> </span><span class="nx">A</span><span class="w"> </span><span class="nx">DDD</span>
+<span class="nx">XB1</span><span class="w"> </span><span class="nx">B</span><span class="w"> </span><span class="nx">DDD</span>
+<span class="nx">XB2</span><span class="w"> </span><span class="nx">A</span><span class="w"> </span><span class="nx">DDD</span>
+<span class="p">.</span><span class="nx">ends</span>
+</pre></div>
+</div>
+<p>Without any routes, we’ll get</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TEST&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;class&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cIcCore::LayoutCell&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+<img alt="../_images/TEST.png" src="../_images/TEST.png" />
+<p>We can add a route by matching for example ‘B’ with</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Connectivity_B_-|--&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;inherit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TEST&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;beforeRoute&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">&quot;addConnectivityRoutes&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="s2">&quot;-|--&quot;</span><span class="p">]]}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<img alt="../_images/Connectivity_B.png" src="../_images/Connectivity_B.png" />
+<p>Or even matching both A and B</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Connectivity_A|B_-&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;inherit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TEST&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;beforeRoute&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span><span class="nt">&quot;addConnectivityRoutes&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="s2">&quot;A|B&quot;</span><span class="p">,</span><span class="s2">&quot;-&quot;</span><span class="p">]]}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<img alt="../_images/Connectivity_AB.png" src="../_images/Connectivity_AB.png" />
+<p>Even though we match both nets, the compiler knows it should not try and
+route A-&gt;B. But the Router is very dum, it does not know if it’s created a
+short.</p>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../basics/basics.html">Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cells/cells.html">Cells</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="route.html">Routing</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Connectivity Route</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dir_route.html">Directed Route</a></li>
+<li class="toctree-l2"><a class="reference internal" href="via.html">Via/Cut</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type.html">Route Type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">Route Options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="dir_route.html" title="Directed Route"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="route.html" title="Routing"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Custom IC Creator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="route.html" >Routing</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Connectivity Route</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Carsten Wulff.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>
