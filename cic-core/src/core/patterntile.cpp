@@ -47,6 +47,10 @@ namespace cIcCore {
         prev_rect_  = 0;
         _has_pr = true;
 
+        Subckt * ckt = new Subckt();
+        this->setSubckt(ckt);
+
+
     }
 
     Rect PatternTile::calcBoundingRect(){

@@ -24,9 +24,10 @@
 #include "cell.h"
 #include "consoleoutput.h"
 #include "core/port.h"
+#include "spice/subckt.h"
 
 namespace cIcCore{
-
+    using namespace cIcSpice;
     struct CopyColumn{
         int count;
         int offset;
