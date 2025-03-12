@@ -35,6 +35,7 @@
 #include "cells/phcapcell.h"
 #include "spice/spiceparser.h"
 #include "core/patternhighresistor.h"
+#include "core/patternhighresistornobulk.h"
 #include "core/patternresistor.h"
 #include "cells/sar.h"
 #include "cells/cdac.h"

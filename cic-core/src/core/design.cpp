@@ -37,6 +37,7 @@ namespace cIcCore{
         qRegisterMetaType<cIcCells::PhCapCell>("cIcCells::PhCapCell");
         qRegisterMetaType<cIcCells::CDAC>("cIcCells::CDAC");
         qRegisterMetaType<cIcCore::PatternHighResistor>("cIcCore::PatternHighResistor");
+        qRegisterMetaType<cIcCore::PatternHighResistorNoBulk>("cIcCore::PatternHighResistorNoBulk");
         qRegisterMetaType<cIcCore::PatternResistor>("cIcCore::PatternResistor");
         qRegisterMetaType<cIcCore::ConnectSourceDrain>("ConnectSourceDrain");
         qRegisterMetaType<cIcCells::CapCellV2>("cIcCells::CapCellV2");
