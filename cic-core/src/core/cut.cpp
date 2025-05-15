@@ -1,3 +1,5 @@
+#include <QtLogging>
+
 #include "cut.h"
 
 namespace cIcCore {
@@ -26,7 +28,7 @@ namespace cIcCore {
 
         this->setName(this->makeName(layers.first()->name,layers.last()->name,horizontal_cuts,vertical_cuts));
 
-        foreach(Layer * l, layers){
+        for (auto l: layers) {
             if(l->material == Layer::metal || l->material == Layer::poly|| l->material == Layer::diffusion ){
                 QString encRule = l->next  + "encOpposite";
                 int encOpposite = rules->get(l->name,encRule);
@@ -121,7 +123,7 @@ namespace cIcCore {
 
         this->setName("fillCut");
 
-        foreach(Layer * l, layers){
+        for (auto l: layers) {
             if(l->material == Layer::metal || l->material == Layer::poly|| l->material == Layer::diffusion ){
 
 
@@ -216,18 +218,18 @@ namespace cIcCore {
 
 
 
-    QList<Rect*> Cut::getVerticalFillCutsForRects(QString layer1, QList<Rect*> rects, int horizontal_cuts)
+    QList<Rect*> Cut::getVerticalFillCutsForRects(QString layer1, QList<Rect*> rects, int /*horizontal_cuts*/)
     {
 
         //TODO: Make fill rectangle
-
+        qCritical("Cut::getVerticalFillCutsForRects is unimplmented and will not generate the fill cuts");
 
         QList<Rect*> cuts;
-        foreach(Rect *r, rects){
+        for (auto r: rects) {
             if(r == NULL) continue;
             if(layer1 == r->layer()) continue;
         }
-
+        return cuts;
     }
 
     QList<Rect*> Cut::getCutsForRects(QString layer1, QList<Rect*> rects, int horizontal_cuts,int vertical_cuts){
@@ -240,7 +242,7 @@ namespace cIcCore {
     QList<Rect*> Cut::getCutsForRects(QString layer1, QList<Rect*> rects, int horizontal_cuts,int vertical_cuts, bool alignLeft){
 
         QList<Rect*> cuts;
-        foreach(Rect *r, rects){
+        for (auto r: rects) {
             if(r == NULL){continue;}
             if(layer1 != r->layer()){
 

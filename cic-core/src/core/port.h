@@ -58,7 +58,7 @@ namespace cIcCore{
       void mirrorX(int ay) override;
       void mirrorY(int ax) override;
 
-      QString toString();
+      QString toString() override;
 
 	  void add(Rect* r);
 

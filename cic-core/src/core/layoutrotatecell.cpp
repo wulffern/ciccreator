@@ -23,7 +23,7 @@ namespace cIcCore{
 
     void LayoutRotateCell::place(){
 
-        foreach(cIcSpice::SubcktInstance * ckt_inst,_subckt->instances()){
+        for (auto ckt_inst: _subckt->instances()) {
             //The chain of events is important here, ports get defined in the setSubckInstance
             Instance * inst = Instance::getInstance(ckt_inst->subcktName());
             inst->setSubcktInstance(ckt_inst);

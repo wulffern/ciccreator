@@ -34,17 +34,12 @@ namespace cIcCore{
 
     }
 
-    PatternHighResistorNoBulk::PatternHighResistorNoBulk(const PatternHighResistorNoBulk& mos)
-    {
-    }
-
-
     PatternHighResistorNoBulk::~PatternHighResistorNoBulk()
     {
 
     }
 
-    void PatternHighResistorNoBulk::onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data){
+    void PatternHighResistorNoBulk::onFillCoordinate(QChar, QString layer, int x, int, QMap<QString,QVariant> &data){
 
 
 

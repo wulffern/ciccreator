@@ -75,7 +75,7 @@ namespace cIcCore{
         Rect * b = new Rect("M1",r->x1() + xod, r->y1() + yod, r->width() - xod*2,odw);
         this->add(b);
             
-        foreach( Cell* c2, rects){
+        for (auto c2: rects) {
 
             //TODO  Need to write a fill-cut function to add cuts
 

@@ -44,7 +44,7 @@ namespace cIcCore{
 
             QList<Rect*> getRectangles(QString excludeInstances,QString includeInstances, QString layer){
                 QList<Rect*> rects;
-                foreach(Port *p, ports){
+                for (auto p: ports) {
                     Rect * r = p->parent();
                     if(r == NULL) continue;
                     if(!r->isInstance()) continue;

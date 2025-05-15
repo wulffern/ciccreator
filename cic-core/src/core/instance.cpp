@@ -83,7 +83,7 @@ namespace cIcCore{
         Cell * c = this->cell();
         if(c){
             QList<Rect*> child_rects = c->findRectanglesByRegex(regex,layer);
-            foreach(Rect * r, child_rects){
+            for (auto r: child_rects) {
                 this->transform(r);
                 rects.append(r);
             }
@@ -94,7 +94,7 @@ namespace cIcCore{
     QList<Rect *> Instance::findRectanglesByNode(QString node, QString filterChild)
     {
         QList<Rect *> rects;
-        foreach(Rect * r,this->children()){
+        for (auto r: this->children()) {
 
             if(! r->isPort()) continue;
             Port * p = static_cast<Port *>(r);
@@ -176,7 +176,7 @@ namespace cIcCore{
         }else if(angle == "MX"){
             ycell = ycell +  this->cell()->y1() + this->cell()->y2();
         }
-        foreach(Rect* r,this->children()){
+        for (auto r: this->children()) {
             //TODO: HOW TO HANDLE INSTANCES WITH NEGATIVE COORDINATES
             r->translate(-this->x1(),-this->y1());
             this->transform(r);

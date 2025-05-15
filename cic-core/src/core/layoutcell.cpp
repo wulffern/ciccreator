@@ -52,11 +52,11 @@ namespace cIcCore{
 
 
 
-    void LayoutCell::alternateGroup(QJsonValue obj){
+    void LayoutCell::alternateGroup(QJsonValue){
         alternateGroup_ = true;
     }
 
-    void LayoutCell::noPowerRoute(QJsonValue obj){
+    void LayoutCell::noPowerRoute(QJsonValue){
         noPowerRoute();
     }
 
@@ -68,7 +68,7 @@ namespace cIcCore{
     {
         QList<Graph*> graphs;
 
-        foreach(QString node, nodeGraphList()){
+        for (const auto &node: nodeGraphList()) {
             if(!node.contains(QRegularExpression(regex))) continue;
             graphs.append(nodeGraph_[node]);
         }
@@ -199,10 +199,10 @@ namespace cIcCore{
     }
 
 
-    void LayoutCell::addConnectivityRoute(QString layer,QString regex, QString routeType,QString options,QString cuts,QString excludeInstances, QString includeInstances)
+    void LayoutCell::addConnectivityRoute(QString layer,QString regex, QString routeType, QString options, QString, QString excludeInstances, QString includeInstances)
     {
 
-        foreach(QString node, nodeGraphList()){
+        for (const auto &node: nodeGraphList()) {
             if(!node.contains(QRegularExpression(regex))) continue;
 
             Graph * g = nodeGraph_[node];
@@ -273,7 +273,7 @@ namespace cIcCore{
         QList<Rect*> rects = this->findAllRectangles(path,startlayer);
 
 
-        foreach(Rect* r, rects){
+        for (const auto &r: rects) {
             if(r == 0) continue;
             Instance * inst= Cut::getInstance(startlayer,stoplayer,hcuts,vcuts);
             inst->moveTo(r->x1() + offset*this->rules->get("ROUTE","horizontalgrid"),r->y1() + this->rules->get("ROUTE","verticalgrid")*yoffset);
@@ -295,7 +295,7 @@ namespace cIcCore{
     Instance* LayoutCell::getInstanceFromInstanceName(QString instanceName)
     {
         QList<Rect*> instances = this->getChildren("cIcCore::Instance");
-        foreach(Rect* r, instances){
+        for (const auto &r: instances) {
             Instance* i = static_cast<Instance*>(r);
             if(i->instanceName() == instanceName){
                 return i;
@@ -328,12 +328,12 @@ namespace cIcCore{
 
         QList<Rect*> rects = this->findAllRectangles(name,startlayer);
         bool setPort = true;
-        foreach(Rect* r, rects){
+        for (const auto &r: rects) {
             if(r == 0) continue;
 
             Instance * inst= Cut::getInstance(startlayer,stoplayer,hcuts,vcuts);
 
-            int xgrid = (grid != 0) ? grid: inst->width();
+            //int xgrid = (grid != 0) ? grid: inst->width();
 
             inst->moveTo(r->x1() + xoffset*grid,r->centerY() + yoffset*inst->height());
 
@@ -383,7 +383,7 @@ namespace cIcCore{
 
         QList<Rect*> rects = this->findAllRectangles(path,startlayer);
 
-        foreach(Rect* r, rects)
+        for (const auto &r: rects) 
         {
             if(r == 0) continue;
             Instance * inst= Cut::getInstance(startlayer,stoplayer,hcuts,vcuts);
@@ -425,7 +425,7 @@ namespace cIcCore{
         QList<Rect*> rects = this->findAllRectangles(path,layer);
 
 
-        foreach(Rect* r, rects){
+        for (const auto &r: rects) {
             int width = r->width();
             if(cuts > 0){
                 Instance * inst= Cut::getInstance("M1",layer,cuts,1);
@@ -461,7 +461,7 @@ namespace cIcCore{
 
         QList<Rect*> rects = this->findAllRectangles(path,layer);
 
-        foreach(Rect* r, rects){
+        for (const auto &r: rects) {
 
             int x;
             int y;
@@ -676,7 +676,7 @@ namespace cIcCore{
         QList<QString> layers;
         QJsonArray encl = obj[2].toArray();
 
-        foreach(QJsonValue enc, encl){
+        for (const auto &enc: encl) {
             layers.append(enc.toString());
         }
 
@@ -714,7 +714,7 @@ namespace cIcCore{
         QList<Rect*> rects = this->findAllRectangles(rectpath,layer);
         auto xgrid = this->getRules()->get("ROUTE","horizontalgrid");
         auto mw = this->getRules()->get(layer,"width");
-        foreach(Rect* r, rects) {
+        for (const auto &r: rects)  {
             auto p = new Rect(layer,r->x1(),r->y1(),xgrid*x,mw);
 
             if(name != ""){
@@ -767,7 +767,7 @@ namespace cIcCore{
 
 
         QStringList names = expandBus(name);
-        foreach(QString n,names){
+        for (const auto &n: names) {
             RouteRing* rr = new RouteRing(layer,n,this->getCopy(),location,ygrid,xgrid,metalwidth);
             QString rail = "rail_" + n;
             if(rr){
@@ -810,7 +810,7 @@ namespace cIcCore{
         QList<Rect*>  rects = g->getRectangles("",includeInstances,"");
         RouteRing* routering = static_cast<RouteRing*>(named_rects_["power_" + name]);
         Rect* rrect = routering->get(location);
-        foreach(Rect* r, rects){
+        for (const auto &r: rects) {
             Instance* ct = Cut::getInstance(r->layer(),rrect->layer(),2,2);
 
             Rect* rr = r->getCopy();
@@ -876,7 +876,7 @@ namespace cIcCore{
                 routeType = routeTypeOverride;
             }
 
-            foreach(QString node, nodeGraphList()){
+            for (const auto &node: nodeGraphList()) {
 
                 if(!node.contains(QRegularExpression(path))) continue;
                 if(!named_rects_.contains("rail_" + node)) continue;
@@ -890,7 +890,7 @@ namespace cIcCore{
                     Rect* routering = rr->get(location);
                     QList<Rect*> empty;
 
-                    foreach(Rect* r, rects){
+                    for (const auto &r: rects) {
                         QList<Rect*> stop;
                         stop.append(r);
                         stop.append(routering);
@@ -918,7 +918,7 @@ namespace cIcCore{
         void LayoutCell::trimRouteRing(QString path, QString location,QString whichEndToTrim)
         {
             QList<Rect*> rects = this->getChildren("cIcCore::RouteRing");
-            foreach(Rect* r,rects){
+            for (const auto &r: rects) {
 
                 RouteRing* rr = static_cast<RouteRing*>(r);
 
@@ -971,7 +971,7 @@ namespace cIcCore{
             if(!_subckt) return;
 
 
-            foreach(cIcSpice::SubcktInstance * ckt_inst,_subckt->instances()){
+            for (auto ckt_inst: _subckt->instances()) {
                 QString group = ckt_inst->groupName();
 
                 if(prev_group.compare(group) != 0  && prev_group.compare("")  != 0){
@@ -1087,9 +1087,9 @@ namespace cIcCore{
             auto allp = inst->allports();
             auto keys = inst->allPortNames();
 
-            foreach(QString s, keys){
+            for (const auto &s: keys) {
 
-                foreach(Port * p,allp[s]){
+                for (auto p: allp[s]) {
                     if(p == NULL) continue;
                     if(nodeGraph_.contains(p->name())){
 
@@ -1118,7 +1118,7 @@ namespace cIcCore{
 
 
         void LayoutCell::route(){
-            foreach(Rect *r, routes_){
+            for (auto r: routes_) {
                 if(r->isRoute()){
                     Route * route = static_cast<Route *>(r);
                     route->route();
@@ -1140,14 +1140,14 @@ namespace cIcCore{
         QList<Rect *> LayoutCell::findRectanglesByNode(QString node,  QString filterChild, QString matchInstance)
         {
             QList<Rect *> rects;
-            foreach(Rect * r, this->children()){
+            for (auto r: this->children()) {
                 if(!r->isInstance()) continue;
                 Instance * i = static_cast<Instance *>(r);
                 if(i == NULL){continue;}
 
                 if(matchInstance != "" && !i->name().contains(QRegularExpression(matchInstance))){continue;}
                 QList<Rect* > childRects = i->findRectanglesByNode(node, filterChild);
-                foreach(Rect *r, childRects){
+                for (auto r: childRects) {
                     rects.append(r);
                 }
             }
@@ -1160,7 +1160,7 @@ namespace cIcCore{
             QList<Rect*> foundrects  = this->findRectanglesByNode(net,"^(B|G|BULKP|BULKN)$", "");
 
             QList<Rect*> rects;
-            foreach(Rect * r, foundrects){
+            for (auto r: foundrects) {
                 Rect * parent  = r->parent();
                 if(parent && parent->isCell() ){
                     Cell *c = static_cast<Cell*>(parent);
@@ -1264,7 +1264,7 @@ namespace cIcCore{
 
             QString filterChild = "^B$";
             QString filterInstance = "";
-            foreach(QString node,nodes){
+            for (const auto &node: nodes) {
 
                 if(ports_.contains(node)) continue;
 
@@ -1289,7 +1289,7 @@ namespace cIcCore{
             o["noPowerRoute"] = this->noPowerRoute_;
 
             QJsonArray graph;
-            foreach(QString node, nodeGraphList()){
+            for (const auto &node: nodeGraphList()) {
                 Graph * g = nodeGraph_[node];
                 graph.append(g->toJson());
             }

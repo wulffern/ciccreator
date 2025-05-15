@@ -40,35 +40,20 @@ namespace cIcCore{
         string name;
         string getopt;
 
-        Option()
+        Option() : type(EMPTY)
         {
-            type = EMPTY;
-
-        }
-        
-        
-        Option(string getopt, string name, int val)
-        {
-            getopt = getopt;
-            name = name;
-            ival = val;
-            type = INT;
         }
 
-        Option(string getopt, string name, double val)
+        Option(string getopt, string name, int val) : type(INT), ival(val), name(name), getopt(getopt)
         {
-            getopt = getopt;
-            name = name;
-            dval = val;
-            type = DOUBLE;
         }
 
-        Option(string getopt, string name, string val)
+        Option(string getopt, string name, double val) : type(DOUBLE), dval(val), name(name), getopt(getopt)
         {
-            getopt = getopt;
-            name = name;
-            sval = val;
-            type = STRING;
+        }
+
+        Option(string getopt, string name, string val) : type(STRING), sval(val), name(name), getopt(getopt)
+        {
         }
     };
 

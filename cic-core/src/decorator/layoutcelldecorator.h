@@ -38,7 +38,6 @@ namespace cIcCore{
 
     public:
         LayoutCellDecorator();
-        LayoutCellDecorator(const LayoutCellDecorator &);
         LayoutCellDecorator(LayoutCell* lc);
         ~LayoutCellDecorator();
 

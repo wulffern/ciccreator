@@ -42,7 +42,7 @@ namespace cIcCore{
 
     }
 
-    void PatternCapacitor::onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data){
+    void PatternCapacitor::onFillCoordinate(QChar c, QString layer, int, int, QMap<QString,QVariant> &){
 
         switch(c.unicode()){
             //Create ports

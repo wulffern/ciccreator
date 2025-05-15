@@ -21,7 +21,7 @@
 
 namespace cIcCore{
 
-    Rules * Rules::myRules_;
+    Rules * Rules::myRules_ = NULL;
 
     Rules::Rules(){
         gamma_ = 50;
@@ -196,20 +196,20 @@ namespace cIcCore{
         if(tech.contains("spiceunit"))
             spiceunit_ = tech["spiceunit"].toDouble();
         QJsonObject devices = tech["devices"].toObject();
-        foreach(QString key, devices.keys()){
+        for (const auto &key: devices.keys()) {
             devices_[key] = new Device();
             QJsonObject dev = devices[key].toObject();
             devices_[key]->name = dev["name"].toString();
             devices_[key]->devicetype = dev["devicetype"].toString();
             QJsonArray ar = dev["ports"].toArray();
-            foreach(QJsonValue p, ar){
+            for (const auto &p: ar) {
                 devices_[key]->ports.append(p.toString());
             }
 
         }
 
         QJsonObject layers = job["layers"].toObject();
-        foreach(QString layer, layers.keys()){
+        for (const auto &layer: layers.keys()) {
             QJsonObject lay = layers[layer].toObject();
             Layer *ln = new Layer();
             ln->name = layer;
@@ -217,7 +217,7 @@ namespace cIcCore{
             QJsonValue dtv = lay["datatype"];
             if(dtv.isArray()){
                 QJsonArray dtva = dtv.toArray();
-                foreach ( const QJsonValue & value, dtva){
+                for (const auto& value: dtva) {
                     QJsonArray dtvc = value.toArray();
                     QString dts = dtvc[0].toString();
                     int dti = dtvc[1].toInt();
@@ -297,11 +297,11 @@ namespace cIcCore{
 
 
         QJsonObject r = job["rules"].toObject();
-        foreach(QString layer, r.keys()){
+        for (const auto &layer: r.keys()) {
             QJsonObject vral = r[layer].toObject();
 
 
-            foreach(QString name,vral.keys()){
+            for (const auto &name: vral.keys()) {
                 qreal v = vral[name].toDouble();
                 this->rules_[layer][name] = v;
                 //  if(this->rules_.contains(layer)){

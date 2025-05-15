@@ -89,7 +89,7 @@ namespace cIcCore{
         int index = 0;
         int count = 0;
         int x = std::numeric_limits<int>::max();
-        foreach(Rect *r, rects){
+        for (auto r: rects) {
             if(r->x1() < x){
                 index = count;
                 x = r->x1();
@@ -109,7 +109,7 @@ namespace cIcCore{
         int index = 0;
         int count = 0;
         int x = -std::numeric_limits<int>::max();
-        foreach(Rect *r, rects){
+        for (auto r: rects) {
             if(r->x2() > x){
                 index = count;
                 x = r->x2();
@@ -128,7 +128,7 @@ namespace cIcCore{
         int index = 0;
         int count = 0;
         int y = std::numeric_limits<int>::max();
-        foreach(Rect *r, rects){
+        for (auto r: rects) {
             if(r->y1() < y){
                 index = count;
                 y = r->y1();
@@ -147,7 +147,7 @@ namespace cIcCore{
         int index = 0;
         int count = 0;
         int y = -std::numeric_limits<int>::max();
-        foreach(Rect *r, rects){
+        for (auto r: rects) {
             if(r->y2() > y){
                 index = count;
                 y = r->y2();

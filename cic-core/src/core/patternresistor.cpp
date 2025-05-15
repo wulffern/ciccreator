@@ -41,7 +41,7 @@ namespace cIcCore{
         return data;
     }
 
-    void PatternResistor::onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data){
+    void PatternResistor::onFillCoordinate(QChar, QString layer, int x, int, QMap<QString,QVariant> &data){
 
         
         int pofinger = data["pofinger"].toInt();
@@ -57,15 +57,8 @@ namespace cIcCore{
 
     }
 
-    void PatternResistor::endFillCoordinate(QMap<QString,QVariant> &data){
+    void PatternResistor::endFillCoordinate(QMap<QString,QVariant> &){
 
-    }
-
-
-
-
-    PatternResistor::PatternResistor(const PatternResistor& mos)
-    {
     }
 
 

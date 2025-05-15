@@ -190,7 +190,7 @@ namespace cIcCore{
             //! Get a list of all cells in this design
             static QList<Cell*> getAllCells(){
                 QList<Cell*> cells;
-                foreach(Cell * cell,_allcells){
+                for (auto cell: _allcells) {
                     cells.append(cell);
                 }
                 return cells;
