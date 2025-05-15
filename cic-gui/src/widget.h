@@ -73,11 +73,11 @@ public:
     
 
 protected:
-    virtual void wheelEvent(QWheelEvent *event);
-    bool eventFilter(QObject *obj, QEvent *event);
-    virtual void mousePressEvent(QMouseEvent *event);
-    virtual void mouseMoveEvent(QMouseEvent *event);
-    virtual void mouseReleaseEvent(QMouseEvent *event);
+    virtual void wheelEvent(QWheelEvent *event) override;
+    bool eventFilter(QObject *obj, QEvent *event) override;
+    virtual void mousePressEvent(QMouseEvent *event) override;
+    virtual void mouseMoveEvent(QMouseEvent *event) override;
+    virtual void mouseReleaseEvent(QMouseEvent *event) override;
     
 private:
     Cell* cell;

@@ -135,8 +135,7 @@ void Widget::moveDown()
 
 void Widget::fit()
 {
-
-    if(!cell || !this) return;
+    if(!cell) return;
 
     xcenter = this->width()/2;
     ycenter = this->height()/2;
@@ -265,10 +264,8 @@ void Widget::setCell(Cell* c)
 
 
 
-void Widget::paintEvent(QPaintEvent *event)
+void Widget::paintEvent(QPaintEvent *)
 {
-
-
     QPainter painter;
     painter.begin(this);
 //    glClearColor(1.0,1.0,1.0,1.0);
@@ -315,8 +312,6 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 
         int keyInt = keyEvent->key();
-
-        Qt::Key key = static_cast<Qt::Key>(keyInt);
 
         if(keyEvent->key() == Qt::Key_F){
             this->fit();
