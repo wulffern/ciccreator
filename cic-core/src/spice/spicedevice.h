@@ -36,13 +36,12 @@ namespace cIcSpice{
 
     public:
         SpiceDevice();
-        SpiceDevice(const SpiceDevice&);
         ~SpiceDevice();
 
-        virtual QJsonObject toJson();
         virtual QString toSpice( QString instance, QStringList nodes);
         virtual QString toSpice();
-            virtual void fromJson(QJsonObject o);
+        virtual QJsonObject toJson();
+        virtual void fromJson(QJsonObject o);
         
 
     protected:

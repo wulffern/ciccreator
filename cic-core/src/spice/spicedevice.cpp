@@ -25,11 +25,6 @@ namespace cIcSpice{
         
     }
 
-    SpiceDevice::SpiceDevice(const SpiceDevice &d)
-    {
-        
-    }
-    
     SpiceDevice::~SpiceDevice()
     {
         
@@ -37,12 +32,15 @@ namespace cIcSpice{
 
     QString SpiceDevice::toSpice()
     {
+        qCritical("toSpice called on unknown device type");
+        return "";
     }
     
 
-    QString SpiceDevice::toSpice( QString instance, QStringList nodes)
+    QString SpiceDevice::toSpice(QString , QStringList )
     {
-        
+        qCritical("toSpice called on unknown device type");
+        return "";
     }
     
     

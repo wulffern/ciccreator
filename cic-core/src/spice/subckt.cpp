@@ -26,7 +26,7 @@ namespace cIcSpice{
 
     }
 
-    Subckt::Subckt(QList<QString> buffer){
+    Subckt::Subckt(QList<QString>){
 
     }
 
@@ -40,12 +40,13 @@ namespace cIcSpice{
 
     SubcktInstance* Subckt::getInstance(QString name){
 
-        foreach(SubcktInstance* i, _instances){
+        for (const auto &i: _instances) {
             //cout << i->name();
             if(i->name() == name){
                 return i;
             }
         }
+        return NULL;
     }
 
 
@@ -64,14 +65,14 @@ namespace cIcSpice{
 
         this->setName(o["name"].toString());
         QJsonArray insts = o["instances"].toArray();
-        foreach(auto i, insts){
+        for (const auto &i: insts) {
             SubcktInstance * is = new SubcktInstance();
             is->fromJson(i.toObject());
             this->add(is);
 
         }
         QJsonArray dev = o["devices"].toArray();
-        foreach(auto d, dev){
+        for (const auto &d: dev) {
             auto od = d.toObject();
             //TODO: Parse devices
             if(od["class"] == "cIcSpice::Mosfet"){
@@ -89,11 +90,12 @@ namespace cIcSpice{
             }
         }
 
+        /*TODO parse properties
         QJsonArray prop = o["properties"].toArray();
-        foreach(auto p, prop){
+        for (const auto &p: prop) {
 
-            //TODO parse properties
         }
+        */
 
     }
 
@@ -102,14 +104,14 @@ namespace cIcSpice{
     {
         QJsonObject o = SpiceObject::toJson();
         QJsonArray ar;
-        foreach(SubcktInstance* i, _instances){
+        for (const auto &i: _instances) {
             i->setPrefix(this->prefix_);
             QJsonObject oi = i->toJson();
             ar.append(oi);
         }
 
         QJsonArray ar1;
-        foreach(SpiceDevice* i, _devices){
+        for (const auto &i: _devices) {
             i->setPrefix(this->prefix_);
             QJsonObject oi = i->toJson();
             ar1.append(oi);
@@ -173,7 +175,7 @@ namespace cIcSpice{
 
         int instance_line_number = line;
         QRegularExpression re_ignore("(^\\s*$)|(^\\s*\\*)");
-        foreach(QString line, subckt_buffer){
+        for (const auto &line: subckt_buffer) {
             QRegularExpressionMatch m_ignore = re_ignore.match(line);
             if(m_ignore.hasMatch())
                 continue;

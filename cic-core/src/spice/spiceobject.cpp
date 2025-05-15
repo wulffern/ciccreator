@@ -116,7 +116,7 @@ namespace cIcSpice{
         this->setDeviceName(o["deviceName"].toString());
         _nodes.clear();
         QJsonArray ar = o["nodes"].toArray();
-        foreach(auto n,ar){
+        for (const auto &n: ar) {
             _nodes.append(n.toString());
         }
 
@@ -132,7 +132,7 @@ namespace cIcSpice{
         o["deviceName"] = deviceName_;
 
         QJsonArray ar;        
-        foreach(QString n,nodes()){
+        for (const auto &n: nodes()) {
             if(n == ""){
                 continue;
             }

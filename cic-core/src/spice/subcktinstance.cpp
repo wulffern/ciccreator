@@ -41,17 +41,10 @@ namespace cIcSpice{
 
     }
 
-    SubcktInstance::SubcktInstance(QString buffer){
-
-    }
-
     SubcktInstance::~SubcktInstance(){
 
     }
 
-    SubcktInstance::SubcktInstance(const SubcktInstance&){
-
-    }
 
     void SubcktInstance::parse(QString buffer,int line_number){
 

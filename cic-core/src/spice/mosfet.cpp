@@ -34,7 +34,7 @@ namespace cIcSpice{
         setProperty("multiplier",1);
     }
 
-    Mosfet::Mosfet(const Mosfet& mos){
+    Mosfet::Mosfet(const Mosfet&){
 
     }
 

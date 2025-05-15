@@ -40,7 +40,6 @@ namespace cIcSpice{
         
         void init(QStringList n);
          
-        Capacitor(const Capacitor& mos);
         ~Capacitor();
         virtual QString toSpice( QString instance, QStringList nodes);
         virtual QJsonObject toJson();

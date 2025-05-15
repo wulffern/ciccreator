@@ -37,7 +37,6 @@ namespace cIcSpice{
     public:
         SubcktInstance();
         SubcktInstance(QString buffer);
-        SubcktInstance(const SubcktInstance&);
         ~SubcktInstance();
         virtual QString setName(QString val);
         QString subcktName(){return _subckt_name;}

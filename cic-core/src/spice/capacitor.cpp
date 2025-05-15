@@ -57,15 +57,6 @@ namespace cIcSpice{
     }
 
 
-    Capacitor::Capacitor(const Capacitor& cap){
-
-    }
-
-    Capacitor::~Capacitor(){
-
-    }
-
-
     QString Capacitor::toSpice( QString instance, QStringList nodes){
         QString s;
         QTextStream ts(&s);
@@ -92,7 +83,7 @@ namespace cIcSpice{
         cIcCore::Device * mtype = rules->getDevice(this->deviceName());
 
 
-        foreach(SubcktInstance* ins,instances){
+        for (auto ins: instances) {
             ins->setSubcktName(mtype->name);
         }
         
