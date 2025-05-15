@@ -343,6 +343,8 @@ namespace cIcCore {
 
     }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
     void PatternTile::paint(){
 
 
@@ -438,6 +440,7 @@ namespace cIcCore {
                             p = new Port(c);
                             this->add(p);
                         }
+                        break;
                     case 'x':
                     case 'X':
                     case 'K':
@@ -677,7 +680,7 @@ namespace cIcCore {
 
         return columnrects;
     }
-
+#pragma GCC diagnostic pop
 
 
     void PatternTile::addEnclosure(QJsonArray ar){
