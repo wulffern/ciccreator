@@ -61,7 +61,7 @@ namespace cIcCells{
         int xc = x;
 
         if(groups.contains(group)){
-            foreach(SubcktInstance* ckt, groups[group]){
+            for (auto ckt: groups[group]) {
                 if(ind % 2 == 0){
                     inst = this->addInstance(ckt,xc,y);
                 }else{
@@ -91,7 +91,7 @@ namespace cIcCells{
         //Collect groups
         if(_subckt){
             
-        foreach(cIcSpice::SubcktInstance * ckt_inst,_subckt->instances()){
+        for (auto ckt_inst: _subckt->instances()) {
             if(ckt_inst){                
                 QString group = ckt_inst->groupName();            
                 groups[group].append(ckt_inst);
@@ -161,7 +161,7 @@ namespace cIcCells{
         std::sort(graphs.begin(), graphs.end(), sortGraph);
 
         Instance* c;
-        foreach(Graph* graph, graphs){
+        for (auto graph: graphs) {
 
             auto r0 = new Rect("M3",this->x1(),yc,this->width(),mw);
             yc += msw;
@@ -169,7 +169,7 @@ namespace cIcCells{
             double xfmax = -1e32;
 
             QList<Rect*> rects = graph->getRectangles("","SARDIG","");
-            foreach(Rect* r,rects){
+            for (auto r: rects) {
                 auto r1 = new Rect("M4",r->x1(),r0->y2(),mw,r->y1()  - r0->y2());
                 c = Cut::getInstance("M3","M4",1,2);
                 c->moveCenter(r1->centerX(),r0->centerY());
@@ -181,7 +181,7 @@ namespace cIcCells{
             }
 
             QList<Rect*> rects_cdac = graph->getRectangles("","CDAC","");
-            foreach(Rect* r,rects_cdac){
+            for (auto r: rects_cdac) {
                 c = Cut::getInstance("M2","M3",1,2);
                 c->moveCenter(r->centerX(),r0->centerY());
                 auto r1 = new Rect("M2",r->x1(),r->y2(),mw,r0->y1()  - r->y2());
@@ -342,7 +342,8 @@ namespace cIcCells{
                 auto ra = new Rect("M4",r->x2()+ms,ycc,mw,r->y1()-ycc);
                 cta_cmp->moveTo(r->x2() + ms + mw - ct_cmp->width(),r->y1());
                 ct_cmp->moveTo(r->x1(),r->y1());
-                auto rmet = new Rect("M3",ct_cmp->x1(),ct_cmp->y1(),cta_cmp->x2() - ct_cmp->x1(),ct_cmp->height());
+                //TODO: Should this be in added in rects?
+                //auto rmet = new Rect("M3",ct_cmp->x1(),ct_cmp->y1(),cta_cmp->x2() - ct_cmp->x1(),ct_cmp->height());
                 Rect * rb_cmp = nullptr;
                 if(usem5_){
                      rb_cmp = new Rect("M5",ra->x1(),sarn->y1(),mw,ycc-sarn->y1());

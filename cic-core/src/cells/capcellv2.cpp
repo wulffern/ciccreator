@@ -210,7 +210,7 @@ namespace cIcCells{
         //this->add(rects);
     }
 
-    void CapCellV2::addContacts(QString name, QString node,int y,QList<int> array){
+    void CapCellV2::addContacts(QString name, QString,int y,QList<int> array){
 
         auto ms =  this->getRules()->get("M2","space");
 
@@ -218,7 +218,7 @@ namespace cIcCells{
         auto inst = this->getInstanceFromInstanceName(name);
         if(!inst){return;}
         inst->moveTo(ctres->width(),y);
-        foreach(int x,array) {
+        for (const auto &x: array)  {
 
             auto ct = Cut::getInstance("M1","M4",1,2);
             auto mw = ct->width();
