@@ -297,7 +297,7 @@ namespace cIcCore{
 
             void paint() override;
 
-            virtual Rect calcBoundingRect() override;
+            virtual SimpleRect calcBoundingRect() override;
 
             qreal minPolyLength(){return minPolyLength_;}
             qreal setMinPolyLength(qreal val){ minPolyLength_ = val*this->rules->gamma(); return minPolyLength_;  }

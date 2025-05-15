@@ -30,12 +30,6 @@ namespace cIcCore{
         _placeHorizontal = false;
     }
 
-    LayoutCell::LayoutCell(const LayoutCell& cell): Cell(cell){
-        useHalfHeight = false;
-        noPowerRoute_ = false;
-        _placeHorizontal = false;
-    }
-
     LayoutCell::~LayoutCell()
     {
         useHalfHeight = false;
@@ -1190,19 +1184,17 @@ namespace cIcCore{
                 QList<Rect*>  cuts = Cut::getCutsForRects("M4",rects,2,1);
                 Rect * rp = NULL;
                 if(cuts.count() > 0){
-                    Rect r=  Cell::calcBoundingRect(cuts,false);
+                    SimpleRect r=  Cell::calcBoundingRect(cuts,false);
                     r.setTop(this->top());
                     r.setBottom(this->bottom());
-                    r.setLayer("M4");
                     this->add(cuts);
 
-                    rp = new Rect(r);
+                    rp = new Rect("M4", r);
                 }else{
-                    Rect r=  Cell::calcBoundingRect(rects,false);
+                    SimpleRect r=  Cell::calcBoundingRect(rects,false);
                     r.setTop(this->top());
                     r.setBottom(this->bottom());
-                    r.setLayer("M4");
-                    rp = new Rect(r);
+                    rp = new Rect("M4", r);
                 }
                 if(rp){
                     this->add(rp);

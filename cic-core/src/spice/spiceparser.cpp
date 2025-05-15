@@ -30,11 +30,6 @@ namespace cIcSpice{
 
     }
 
-    SpiceParser::SpiceParser(const SpiceParser&){
-
-    }
-
-
     void SpiceParser::parseSubckt(int line_number, QList<QString> subckt_buffer)
     {
         Subckt * ckt = new Subckt();

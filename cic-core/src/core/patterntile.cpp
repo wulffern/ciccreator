@@ -53,7 +53,7 @@ namespace cIcCore {
 
     }
 
-    Rect PatternTile::calcBoundingRect(){
+    SimpleRect PatternTile::calcBoundingRect() {
 
         int x1  = 0;
         int y1  = 0;

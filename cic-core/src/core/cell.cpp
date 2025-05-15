@@ -35,16 +35,6 @@ namespace cIcCore{
 
     }
 
-    Cell::Cell(const Cell&){
-        _subckt = NULL;
-        boundaryIgnoreRouting_ = false;
-        _physicalOnly = false;
-        lib_cell_ = false;
-        lib_path_ = "";
-        cell_used_ = false;
-        _has_pr = false;
-    }
-
     Cell::~Cell() {
 
     }
@@ -443,20 +433,15 @@ namespace cIcCore{
     // Bounding rectangle functions
     //-------------------------------------------------------------
     void Cell::updateBoundingRect(){
-
-        Rect r = this->calcBoundingRect();
-        this->setRect(r);
+        this->setRect(this->calcBoundingRect());
     }
 
-    Rect Cell::calcBoundingRect(QList<Rect*> children){
+    SimpleRect Cell::calcBoundingRect(QList<Rect*> children){
         return Cell::calcBoundingRect(children,false);
     }
 
 
-    Rect Cell::calcBoundingRect(QList<Rect*> children,bool ignoreBoundaryRouting){
-
-
-
+    SimpleRect Cell::calcBoundingRect(QList<Rect*> children,bool ignoreBoundaryRouting){
         int x1  = std::numeric_limits<int>::max();
         int y1  = std::numeric_limits<int>::max();
         int x2  = -std::numeric_limits<int>::max();
@@ -492,16 +477,14 @@ namespace cIcCore{
             }
 
         }
-        Rect r;
-        r.setPoint1(x1,y1);
-        r.setPoint2(x2,y2);
+        SimpleRect r(x1,y1,x2,y2);
 
         return r;
 
 
     }
 
-    Rect Cell::calcBoundingRect(){
+    SimpleRect Cell::calcBoundingRect(){
         return this->calcBoundingRect(this->children(),this->boundaryIgnoreRouting());
     }
 

@@ -36,7 +36,6 @@ namespace cIcCore{
 
                 public:
                         LayoutCell();
-                        LayoutCell(const LayoutCell&);
                         ~LayoutCell() ;
 
                         Q_INVOKABLE

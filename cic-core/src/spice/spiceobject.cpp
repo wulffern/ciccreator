@@ -29,10 +29,6 @@ namespace cIcSpice{
 
     }
 
-    SpiceObject::SpiceObject(const SpiceObject&){
-
-    }
-
     void SpiceObject::setPrefix(QString prefix){
         prefix_ = prefix;
     }

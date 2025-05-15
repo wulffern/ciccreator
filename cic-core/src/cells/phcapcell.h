@@ -34,7 +34,7 @@ namespace cIcCells{
         Q_INVOKABLE void unaryBits(QJsonValue obj);
         
         virtual void place();
-        virtual Rect calcBoundingRect();
+        virtual SimpleRect calcBoundingRect();
         int addFinger(int x, int y, int msw, int mw, int mh,int i,string name);
 
         

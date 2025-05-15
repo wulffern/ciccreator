@@ -46,7 +46,6 @@ namespace cIcCore{
                 void routeOne();
                 public:
                         Route(QString net, QString layer, QList<Rect*> start, QList<Rect*> stop, QString options, QString routeType);
-                        Route(const Route&);
                         ~Route();
 
                         virtual void addStartCuts();

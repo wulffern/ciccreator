@@ -172,7 +172,7 @@ void Widget::fit()
 
 
 
-void Widget::zoomArea(Rect r)
+void Widget::zoomArea(SimpleRect r)
 {
     if(r.width() < 10 || r.height() < 10|| visibleArea.zoom == 0) return;
 
@@ -383,7 +383,7 @@ void Widget::mouseReleaseEvent(QMouseEvent *event)
     if(rubberBand){
         QPoint end = event->pos();
 
-        Rect r1 = Rect("",origin.x(),origin.y(),(end.x() - origin.x()),(end.y() - origin.y()));
+        SimpleRect r1(origin.x(),origin.y(),(end.x() - origin.x()),(end.y() - origin.y()));
         zoomArea(r1);
         rubberBand->hide();
     }

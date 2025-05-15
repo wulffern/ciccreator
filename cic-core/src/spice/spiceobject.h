@@ -41,7 +41,6 @@ namespace cIcSpice{
 
                 public:
                         SpiceObject();
-                        SpiceObject(const SpiceObject&);
                         ~SpiceObject();
 
                         QString name();

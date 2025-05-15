@@ -27,9 +27,9 @@ using namespace cIcCore;
 
 namespace cIcCells{
 
-    Rect CapCellV2::calcBoundingRect()
+    SimpleRect CapCellV2::calcBoundingRect()
     {
-        Rect r = LayoutCell::calcBoundingRect();
+        SimpleRect r = LayoutCell::calcBoundingRect();
         int mw =  this->rules->get("M2","width");
         r.adjust(0,+mw/2,0,-mw/2);
         return r;

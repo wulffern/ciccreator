@@ -60,7 +60,7 @@ public:
     void moveUp();
     void moveDown();
     void fit();
-    void zoomArea(Rect r);
+    void zoomArea(SimpleRect r);
     QPixmap getIcon(Layer *l);
     QImage drawColorIconProof(QColor color, const QImage & alpha);
     QImage icon(int size);

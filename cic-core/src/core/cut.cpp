@@ -1,4 +1,4 @@
-#include <QtLogging>
+#include <QtGlobal>
 
 #include "cut.h"
 

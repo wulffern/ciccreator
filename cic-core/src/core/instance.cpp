@@ -29,17 +29,6 @@ namespace cIcCore{
         angle_ = "";
     }
 
-    Instance::Instance(const Instance& inst): Cell(inst)
-    {
-        _cell = 0;
-        ckt_inst_ = 0;
-        xcell = 0;
-        ycell = 0;
-        angle_ = "";
-
-    }
-
-
     Instance::~Instance()
     {
         delete(ckt_inst_);
@@ -186,16 +175,14 @@ namespace cIcCore{
         this->updateBoundingRect();
     }
 
-    Rect Instance::calcBoundingRect(){
-
-
+    SimpleRect Instance::calcBoundingRect(){
         //- Somehow the cell is not set, so keep the bounding box
         if(this->_cell == 0){
             qDebug() << "_cell in " << this->name() << " instance is null, that should not happen";
             return Rect(static_cast<Rect *>(this));
         }
 
-        Rect r = this->_cell->calcBoundingRect();
+        SimpleRect r = this->_cell->calcBoundingRect();
 
         if(this->angle() == "R90"){
             r.rotate(90);

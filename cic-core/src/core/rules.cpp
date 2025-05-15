@@ -30,9 +30,6 @@ namespace cIcCore{
 
     }
 
-    Rules::Rules(const Rules&){
-
-    }
 
     double Rules::spiceUnit(){
         return spiceunit_;

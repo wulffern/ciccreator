@@ -34,9 +34,6 @@ namespace cIcSpice{
 
     }
 
-    Subckt::Subckt(const Subckt&){
-
-    }
 
     SubcktInstance* Subckt::getInstance(QString name){
 

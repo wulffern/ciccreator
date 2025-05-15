@@ -45,7 +45,6 @@ namespace cIcCore{
     public:
         ConnectSourceDrain(){};
         ~ConnectSourceDrain(){};
-        ConnectSourceDrain(const ConnectSourceDrain&){};
         virtual void parseOptions();
         virtual void beforeRoute();
 

@@ -38,7 +38,6 @@ namespace cIcSpice{
 	//	Q_PROPERTY(QMap<QString, Subckt*> subckt READ subckt)
 	public:
 		SpiceParser();
-		SpiceParser(const SpiceParser&);
 		~SpiceParser();
 		void parseFile(QString filename);
 
