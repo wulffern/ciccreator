@@ -311,7 +311,7 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
 
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 
-        int keyInt = keyEvent->key();
+        //int keyInt = keyEvent->key();
 
         if(keyEvent->key() == Qt::Key_F){
             this->fit();

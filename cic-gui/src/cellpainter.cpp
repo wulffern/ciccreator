@@ -172,8 +172,7 @@ namespace cIcPainter{
 
     }
 
-    void CellPainter::endCell(QPainter & painter){
-
+    void CellPainter::endCell(QPainter & ){
     }
 
     /*    void CellPainter::paint(QPainter & painter, Cell *c, int x, int y,int width, int height,QString instanceName)
