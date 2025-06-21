@@ -21,4 +21,13 @@ jobs:
       run: |
         pip install cicpy
         make compile
+    - name: Test
+      run: |
         make test
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: release
+        path: |
+          release/
+          tests/

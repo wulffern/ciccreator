@@ -58,7 +58,7 @@
         "VIA4" : { "alias" : "v3","number" : 41, "datatype" : -1, "material" : "cut", "previous" : "M4", "next" : "M5" ,"color" : "limegreen","fill" : "fill"},
         "VIA5" : { "alias" : "v4","number" : 82, "datatype" : -1, "material" : "cut", "previous" : "M5", "next" : "M6" },
 
-        "PR" : { "alias" : "","number" : 0, "datatype" : 20 ,"fill" : "nofill","color" : "red"},
+        "PR" : { "alias" : "","number" : 0, "datatype" : 20 ,"material": "pnr", "fill" : "nofill","color" : "red"},
 
         "NW" : { "alias" : "nwell","number" : 21, "datatype" : -1 , "material" : "implant", "color" : "red","fill" : "nofill"},
         "PP" : { "alias" : "pdiff","number" : 31, "datatype" : -1 , "material" : "implant", "color" : "pink","fill" : "nofill"},
@@ -80,8 +80,9 @@
         "gamma" : 200,
         "grid" : 5,
         "spiceunit":1,
-        "techlib" : "sky130B",
+        "techlib" : "sky130A",
         "devices" : {
+
             "mresM1" : { "name" : "sky130_fd_pr__res_generic_l1",
                          "devicetype" : "R",
                          "ports" : ["M","P"],
@@ -93,6 +94,7 @@
             "mresM2" : { "inherit" : "mresM1", "name" : "sky130_fd_pr__res_generic_m1"},
             "mresM3" : { "inherit" : "mresM1", "name" : "sky130_fd_pr__res_generic_m2"},
             "mresM4" : { "inherit" : "mresM1", "name" : "sky130_fd_pr__res_generic_m3"},
+            "mres" : { "inherit" : "mresM1", "name" : "sky130_fd_pr__res_generic_m1"},
             "nch_lvt" : { "name" : "sky130_fd_pr__nfet_01v8",    "ports" : ["D","G","S","B"],
                           "devicetype" : "XM",
                           "propertymap" : {
@@ -107,12 +109,12 @@
         "symbol_lib" : "cpdk",
         "symbol_libs" : ["../../cpdk/design/cic_wbulk",
                          "../../cpdk/design/cic",
-                         "$PDK_ROOT/sky130B/libs.tech/xschem/sky130_fd_pr"
+                         "$PDK_ROOT/sky130A/libs.tech/xschem/sky130_fd_pr"
                         ]
     },
     "rules" : {
         "ROUTE": { "horizontalgrid": 18, "verticalgrid" : 22 },
-        "CELL" : { "space" : 40, "digitalspace" : 18 },
+        "CELL" : { "space" : 20, "digitalspace" : 18 },
 
         "PPT"   : { "enclosure" : 0},
         "NPT"   : { "enclosure" : 0},
@@ -127,7 +129,7 @@
         "CO"   : { "space" : 10, "width" : 8 , "height" : 8},
         "VIA1" : { "space" : 12, "width" : 14 , "height" : 14},
         "VIA2" : { "space" : 12, "width" : 14 , "height" : 14},
-        "VIA3" : { "space" : 12, "width" : 16 , "height" : 16},
+        "VIA3" : { "space" : 12, "width" : 14 , "height" : 14},
         "VIA4" : { "space" : 12, "width" : 16 , "height" : 16},
         "VIA5" : { "space" : 12, "width" : 16 , "height" : 16},
 
@@ -140,11 +142,11 @@
         "NDIFFC"   : { "width" : 10},
         "PDIFFC"   : { "width" : 10},
 
-        "M1"   : { "space" : 15, "ana_width": 15, "cap_width" : 15, "width" : 15, "minwidth":15,  "VIA1enclosure" : 1.5, "VIA1encOpposite" : 3, "capspace" : 16},
-        "M2"   : { "space" : 15, "width" : 15, "minwidth":15,  "VIA1encOpposite" : 3, "VIA1enclosure" : 1.5, "VIA2encOpposite" : 3, "VIA2enclosure" : 1.5, "capspace" : 16},
-        "M3"   : { "space" : 16, "width" : 19, "minwidth":15 , "VIA2enclosure" : 1.5, "VIA2encOpposite" : 3, "VIA3enclosure" : 1.5,"VIA3encOpposite" : 3, "capspace" : 16},
-        "M4"   : { "space" : 18, "width" : 19, "minwidth":15 , "cap_width" : 20, "VIA3enclosure" : 1.5, "VIA3encOpposite" : 3,"VIA4enclosure" : 1.5, "VIA4encOpposite" : 3, "capspace" : 16},
-        "M5"   : { "space" : 18, "width" : 19, "minwidth":15 , "cap_width" : 20, "VIA4enclosure" : 1.5, "VIA4encOpposite" : 3,"VIA5enclosure" : 1.5, "VIA5encOpposite" : 3, "capspace" : 16},
+        "M1"   : { "space" : 15, "width" : 17, "minwidth":15,  "cap_width" : 20, "VIA1enclosure" : 1.5, "VIA1encOpposite" : 3, "capspace" : 16},
+        "M2"   : { "space" : 15, "width" : 17, "minwidth":15,  "cap_width" : 20, "VIA1enclosure" : 1.5, "VIA1encOppboxosite" : 3, "VIA2encOpposite" : 3, "VIA2enclosure" : 1.5, "capspace" : 16},
+        "M3"   : { "space" : 15, "width" : 17, "minwidth":15 , "cap_width":  20, "VIA2enclosure" : 1.5, "VIA2encOpposite" : 3, "VIA3enclosure" : 1.5,"VIA3encOpposite" : 3, "capspace" : 16},
+        "M4"   : { "space" : 15, "width" : 17, "minwidth":15 , "cap_width" : 20, "VIA3enclosure" : 1.5, "VIA3encOpposite" : 3, "VIA4enclosure" : 1.5, "VIA4encOpposite" : 3, "capspace" : 16},
+        "M5"   : { "space" : 15, "width" : 17, "minwidth":15 , "cap_width" : 20, "VIA4enclosure" : 1.5, "VIA4encOpposite" : 3, "VIA5enclosure" : 1.5, "VIA5encOpposite" : 3, "capspace" : 16},
 
 
         "OP"   : { "POenclosure" : 0, "POencOpposite" : 40},

@@ -14,6 +14,7 @@ and outputs a cic description file (.cic).
 
 Use cicpy (https://github.com/wulffern/cicpy) to transpile the .cic file to other formats.
 
+Download `PDF <customiccreator.pdf>`.
 
 Getting started
 ===============

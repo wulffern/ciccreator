@@ -2,33 +2,37 @@ name: Docs
 on: [push, pull_request, workflow_dispatch]
 jobs:
   docs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+    container:
+      image: texlive/texlive:latest-basic
+      options: --user root
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-      - name: Install dependencies
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v3
+      - name: Update apt
         run: |
-          pip install sphinx sphinx_rtd_theme
-
+          sudo apt update -y --allow-insecure-repositories
       - name: Install doxygen
         run: |
-          sudo apt-get update
-          sudo apt-get install -y doxygen
+          sudo apt-get install -y doxygen graphviz
       - name: Install breathe and run doxygen
         run: |
           git clone https://github.com/wulffern/breathe.git
           cd breathe
           python3 -m pip install .
+          python3 -m pip install standard-imghdr
           cd ..
           doxygen
       - name: Sphinx build
         run: |
-          sphinx-build docs/source _build
+          cd docs && make latexpdf
+          cp build/latex/customiccreator.pdf  docs/_build/
+          sphinx-build docs/source docs/_build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         with:
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: _build/
+          publish_dir: docs/_build/
           force_orphan: true
