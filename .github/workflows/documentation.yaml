@@ -5,33 +5,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - name: Install dependencies
+        run: |
+          pip install sphinx sphinx_rtd_theme
 
-      - name: Set up PDM
-        uses: pdm-project/setup-pdm@v4
-        with:
-          cache: true
-          cache-dependency-path: docs/pdm.lock
-          python-version-file: docs/pyproject.toml
-
-      - name: Set up PDM
-        run: pdm install -p docs
-
-      - name: Install debian requirements
+      - name: Install doxygen
         run: |
           sudo apt-get update
-          sudo apt-get install -y doxygen texlive-font-utils
-
-      - name: run doxygen
-        run: doxygen
-
+          sudo apt-get install -y doxygen
+      - name: Install breathe and run doxygen
+        run: |
+          git clone https://github.com/wulffern/breathe.git
+          cd breathe
+          python3 -m pip install .
+          cd ..
+          doxygen
       - name: Sphinx build
-        run: pdm run -p docs sphinx-build docs/source _build
-
+        run: |
+          sphinx-build docs/source _build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         with:
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/_build/
+          publish_dir: _build/
           force_orphan: true
