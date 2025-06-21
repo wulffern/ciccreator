@@ -32,9 +32,9 @@ namespace cIcCells{
         _unaryBits = obj.toInt();
     }
 
-    Rect PhCapCell::calcBoundingRect()
+    SimpleRect PhCapCell::calcBoundingRect()
     {
-        Rect r = LayoutCell::calcBoundingRect();
+        SimpleRect r = LayoutCell::calcBoundingRect();
         int mw =  this->rules->get("M2","width");
         r.adjust(0,+mw/2,0,-mw/2);
         return r;
@@ -88,13 +88,13 @@ namespace cIcCells{
         this->add(rects);
     }
 
-    int PhCapCell::addFinger(int x, int y, int msw, int mw, int mh, int i, string name){
+    int PhCapCell::addFinger(int x, int y, int msw, int mw, int , int i, string name){
 
             Instance *ct1 = Cut::getInstance("M4","M5",2,1);
             ct1->moveTo(x + msw-mw,y);
             //- Plate 1
             auto p1 = new Rect("M5", ct1->x2() ,y , mw*(pow(2,(_binaryBits + 1)) + pow(2,i+1)-1 ) , mw);
-            
+
             auto name_a = name + "_A";
 
             auto pa = new Port(QString::fromLocal8Bit(name_a.c_str()));
@@ -102,13 +102,13 @@ namespace cIcCells{
             //- Plate 2
             auto p2 = new Rect("M5", p1->x2() +  mw*2  ,y , (pow(2,(_binaryBits + 1)) - pow(2,i+1)+1 )*mw  , mw);
             auto ct2 = Cut::getInstance("M4","M5",2,1);
-            ct2->moveTo(p2->x2(),y);  
-            auto name_b = name + "_B";  
+            ct2->moveTo(p2->x2(),y);
+            auto name_b = name + "_B";
             auto pb = new Port(QString::fromLocal8Bit(name_b.c_str()));
             pb->moveTo(ct2->x1(),ct2->y1());
 
-            
-            y += msw;   
+
+            y += msw;
             this->add(ct1);
             this->add(ct2);
             this->add(p1);

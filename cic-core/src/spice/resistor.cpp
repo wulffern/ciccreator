@@ -31,10 +31,6 @@ namespace cIcSpice{
     }
 
 
-    Resistor::Resistor(const Resistor& cap){
-        
-    } 
-
     void Resistor::init(QStringList n)
     {
         this->deviceName_ = "mres";

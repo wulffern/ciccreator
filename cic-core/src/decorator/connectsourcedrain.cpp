@@ -53,7 +53,7 @@ namespace cIcCore{
             
             
         QList<Instance*> transistors;
-        foreach(auto cell, layoutcell->children()){
+        for (const auto &cell: layoutcell->children()) {
             if(cell && cell->isInstance())
             {
                 Instance * inst = static_cast<Instance*>(cell);

@@ -68,13 +68,13 @@ namespace cIcPrinter{
 
     }
 
-    void Cics::printRect(Rect *rect){
+    void Cics::printRect(Rect *){
     }
 
     void Cics::printPort(Port *){
     }
 
-    void Cics::printReference(Cell *c){
+    void Cics::printReference(Cell *){
     }
 
 

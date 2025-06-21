@@ -34,12 +34,6 @@ namespace cIcCore{
 
     }
 
-
-    LayoutCellDecorator::LayoutCellDecorator(const LayoutCellDecorator& )
-    {
-
-    }
-
     
     LayoutCellDecorator::LayoutCellDecorator(LayoutCell * lc)
     {

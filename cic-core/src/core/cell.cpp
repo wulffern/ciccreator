@@ -35,16 +35,6 @@ namespace cIcCore{
 
     }
 
-    Cell::Cell(const Cell&){
-        _subckt = NULL;
-        boundaryIgnoreRouting_ = false;
-        _physicalOnly = false;
-        lib_cell_ = false;
-        lib_path_ = "";
-        cell_used_ = false;
-        _has_pr = false;
-    }
-
     Cell::~Cell() {
 
     }
@@ -106,12 +96,12 @@ namespace cIcCore{
     void Cell::findRectangles(QList<Rect*> &rects, QString name, QString layer){
 
         //Search instance ports
-        foreach(Rect* child, children()){
+        for (const auto child: children()) {
             if(child == NULL) continue;
             if(child->isInstance()){
                 Cell * inst = static_cast<Cell *>(child);
                 if(inst == NULL) continue;
-                foreach(Port *p, inst->ports()){
+                for (const auto p: inst->ports()) {
                     if(p->name() == name){
                         Rect *r = p->get(layer);
                         if(r==NULL)
@@ -125,7 +115,7 @@ namespace cIcCore{
         }
 
         //Search custom ports
-        foreach(QString rect_name,named_rects_.keys()){
+        for (const auto &rect_name: named_rects_.keys()) {
             if(rect_name == name){
                 rects.append(named_rects_[rect_name]);
             }
@@ -137,7 +127,7 @@ namespace cIcCore{
         //If the regex contains : then search child ports, if it does not, then search local ports
         QStringList re_s = regex.split(",",Qt::SkipEmptyParts);
         QList<Rect*> rects;
-        foreach(QString s,re_s){
+        for (const auto &s: re_s) {
             if(s.contains(":")){
                 QStringList str_tok = s.split(":",Qt::SkipEmptyParts);
                 QString instname = str_tok[0];
@@ -146,13 +136,13 @@ namespace cIcCore{
 
                 //Find and match instance
                 QRegularExpression re_inst(instname);
-                foreach(Rect * child, children()){
+                for (const auto child: children()) {
                     if(child->isInstance()){
                         Cell * inst = static_cast<Cell *>(child);
                         QRegularExpressionMatch m_inst = re_inst.match(inst->instanceName_);
                         if(m_inst.hasMatch()){
                             QList<Rect*> child_rects = inst->findRectanglesByRegex(path,layer);
-                            foreach(Rect * r, child_rects){
+                            for (const auto r: child_rects) {
                                 rects.append(r);
                             }
                         }
@@ -163,7 +153,7 @@ namespace cIcCore{
 
 
                 //Search ports
-                foreach(Port * p, ports_){
+                for (const auto p: ports_) {
                     bool hasMatch = false;
                     if(0){
                         //Match name on top level
@@ -234,7 +224,7 @@ namespace cIcCore{
     }
 
     Rect* Cell::getRect(QString layer){
-        foreach (Rect* child, _children){
+        for (const auto child: _children) {
             QString lay = child->layer();
             if (lay.compare(layer) == 0) {
                 return child;
@@ -308,7 +298,7 @@ namespace cIcCore{
 
 
     void Cell::add(QList<Rect*> children){
-        foreach(Rect * r, children){
+        for (const auto r: children) {
             this->add(r);
         }
     }
@@ -358,7 +348,7 @@ namespace cIcCore{
 
     void Cell::translate(int dx, int dy) {
         Rect::translate(dx,dy);
-        foreach(Rect* child, _children) {
+        for (const auto child: _children) {
             child->translate(dx,dy);
         }
         this->updateBoundingRect();
@@ -368,11 +358,11 @@ namespace cIcCore{
     void Cell::mirrorY(int ax) {
         Rect::mirrorY(ax);
 
-        foreach(Rect * child, _children) {
+        for (const auto child: _children) {
             child->mirrorY(ax);
         }
 
-        foreach(Port* p, ports_){
+        for (const auto p: ports_) {
             if(!p) continue;
             p->mirrorY(ax);
         }
@@ -386,11 +376,11 @@ namespace cIcCore{
         Rect::mirrorX(ay);
 
 
-        foreach(Rect* child, _children) {
+        for (const auto child: _children) {
             child->mirrorX(ay);
         }
 
-        foreach(Port* p, ports_){
+        for (const auto  p: ports_) {
             if(!p) continue;
             p->mirrorX(ay);
         }
@@ -419,7 +409,7 @@ namespace cIcCore{
         int x1 = this->x1();
         int y1 = this->y1();
         Rect::moveTo(ax,ay);
-        foreach(Rect* child, _children) {
+        for (const auto child: _children) {
             child->translate( ax - x1, ay -  y1);
         }
         emit updated();
@@ -443,20 +433,15 @@ namespace cIcCore{
     // Bounding rectangle functions
     //-------------------------------------------------------------
     void Cell::updateBoundingRect(){
-
-        Rect r = this->calcBoundingRect();
-        this->setRect(r);
+        this->setRect(this->calcBoundingRect());
     }
 
-    Rect Cell::calcBoundingRect(QList<Rect*> children){
+    SimpleRect Cell::calcBoundingRect(QList<Rect*> children){
         return Cell::calcBoundingRect(children,false);
     }
 
 
-    Rect Cell::calcBoundingRect(QList<Rect*> children,bool ignoreBoundaryRouting){
-
-
-
+    SimpleRect Cell::calcBoundingRect(QList<Rect*> children,bool ignoreBoundaryRouting){
         int x1  = std::numeric_limits<int>::max();
         int y1  = std::numeric_limits<int>::max();
         int x2  = -std::numeric_limits<int>::max();
@@ -465,7 +450,7 @@ namespace cIcCore{
         if(children.count() == 0){
             x1 = y1 = x2 = y2 = 0;
         }
-        foreach(Rect* cr, children) {
+        for (const auto cr: children) {
 
             if(ignoreBoundaryRouting && (!cr->isInstance() || cr->isCut())) continue;
 
@@ -492,16 +477,14 @@ namespace cIcCore{
             }
 
         }
-        Rect r;
-        r.setPoint1(x1,y1);
-        r.setPoint2(x2,y2);
+        SimpleRect r(x1,y1,x2,y2);
 
         return r;
 
 
     }
 
-    Rect Cell::calcBoundingRect(){
+    SimpleRect Cell::calcBoundingRect(){
         return this->calcBoundingRect(this->children(),this->boundaryIgnoreRouting());
     }
 
@@ -513,7 +496,7 @@ namespace cIcCore{
         str.append(Rect::toString());
         str.append("\n {\n");
         QString strpar = this->metaObject()->className();
-        foreach(Rect* child, _children){
+        for (const auto child: _children) {
             str.append("  ");
             str.append(child->toString());
             str.append("\n");
@@ -527,7 +510,7 @@ namespace cIcCore{
         int xmin = std::numeric_limits<int>::max();
         int ymin = std::numeric_limits<int>::max();
         Rect * bottomLeft = NULL;
-        foreach(Rect * r, this->_children){
+        for (const auto r: this->_children) {
             if(r->x1() < xmin && r->y1() < ymin){
                 xmin = r->x1();
                 ymin = r->y1();
@@ -542,7 +525,7 @@ namespace cIcCore{
         int xmin = std::numeric_limits<int>::max();
         int ymax = -std::numeric_limits<int>::max();
         Rect * topLeft = NULL;
-        foreach(Rect * r, this->_children){
+        for (const auto r: this->_children) {
             if(r->x1() < xmin && r->y2() > ymax){
                 xmin = r->x1();
                 ymax = r->y2();
@@ -586,7 +569,7 @@ namespace cIcCore{
             _subckt = subckt;
         }
 
-        foreach(QJsonValue child,car){
+        for (const auto &child: car) {
             QJsonObject co = child.toObject();
 
             auto c = cellFromJson(co);
@@ -662,7 +645,7 @@ namespace cIcCore{
 
         QMap<QString,bool> _printedRects;
 
-        foreach(Rect * r, children()){
+        for (const auto r: children()) {
 
             //If it's a rectangle, then don't print duplicates
             if(r->isRect()){
@@ -699,7 +682,7 @@ namespace cIcCore{
 
 
         Rect* r = this->getCopy();
-        foreach(QString lay, layers){
+        for (const auto &lay: layers) {
 
             int enc = 0;
             if(rules->hasRule(lay,this->layer() + "enclosure")){
@@ -717,7 +700,7 @@ namespace cIcCore{
     }
 
     void Cell::updateUsedChildren(){
-        foreach(Rect * r, this->_children){
+        for (const auto r: this->_children) {
             if(r->isCell()){
                 Cell * c = static_cast<Cell*>(r);
                 c->setUsed(this->cell_used_);

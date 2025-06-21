@@ -54,7 +54,7 @@ namespace cIcPrinter{
     
 
     void DesignPrinter::printChildren(QList<Rect*> children){
-        foreach(Rect * child,children){
+        for (auto child: children) {
             if(!child){continue;}
             if(child->isInstance()){
                 Instance * inst = static_cast<Instance*>(child);

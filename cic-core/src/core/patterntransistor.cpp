@@ -48,7 +48,7 @@ namespace cIcCore{
         return data;
     }
 
-	void PatternTransistor::paintRect(Rect *r, QChar c, int x, int y){
+	void PatternTransistor::paintRect(Rect *r, QChar, int x, int y){
 		if(r->layer() == "PO" && rectangle_strings_.contains("OD") && rectangle_strings_["OD"].contains(x)  && rectangle_strings_["OD"][x].contains(y)){
 
             //Update length of transistor

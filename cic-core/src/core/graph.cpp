@@ -25,7 +25,7 @@ namespace cIcCore{
         QJsonObject o;
         o["node"] = name;
         QJsonArray pa;
-        foreach(auto * p, this->ports){
+        for (auto p: this->ports) {
             QJsonObject op;
 
             if(p->isInstancePort()){

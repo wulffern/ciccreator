@@ -17,6 +17,7 @@
 //   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //====================================================================
 
+#include <QtGlobal>
 #include "core/console.h"
 
 
@@ -24,12 +25,14 @@ namespace cIcCore{
 
     Console::Console(int argc, char* argv[])
     {
-
         this->initialize(argc, argv);
     }
 
     void Console::initialize(int argc, char* argv[])
     {
+        Q_UNUSED(argc)
+        Q_UNUSED(argv)
+
         this->initialize();
     }
 

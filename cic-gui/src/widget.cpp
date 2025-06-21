@@ -135,8 +135,7 @@ void Widget::moveDown()
 
 void Widget::fit()
 {
-
-    if(!cell || !this) return;
+    if(!cell) return;
 
     xcenter = this->width()/2;
     ycenter = this->height()/2;
@@ -173,7 +172,7 @@ void Widget::fit()
 
 
 
-void Widget::zoomArea(Rect r)
+void Widget::zoomArea(SimpleRect r)
 {
     if(r.width() < 10 || r.height() < 10|| visibleArea.zoom == 0) return;
 
@@ -265,10 +264,8 @@ void Widget::setCell(Cell* c)
 
 
 
-void Widget::paintEvent(QPaintEvent *event)
+void Widget::paintEvent(QPaintEvent *)
 {
-
-
     QPainter painter;
     painter.begin(this);
 //    glClearColor(1.0,1.0,1.0,1.0);
@@ -314,9 +311,7 @@ bool Widget::eventFilter(QObject *obj, QEvent *event)
 
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 
-        int keyInt = keyEvent->key();
-
-        Qt::Key key = static_cast<Qt::Key>(keyInt);
+        //int keyInt = keyEvent->key();
 
         if(keyEvent->key() == Qt::Key_F){
             this->fit();
@@ -388,7 +383,7 @@ void Widget::mouseReleaseEvent(QMouseEvent *event)
     if(rubberBand){
         QPoint end = event->pos();
 
-        Rect r1 = Rect("",origin.x(),origin.y(),(end.x() - origin.x()),(end.y() - origin.y()));
+        SimpleRect r1(origin.x(),origin.y(),(end.x() - origin.x()),(end.y() - origin.y()));
         zoomArea(r1);
         rubberBand->hide();
     }

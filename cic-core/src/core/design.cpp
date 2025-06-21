@@ -116,7 +116,7 @@ namespace cIcCore{
 
             if(opt.contains("topcells")){
                 QJsonArray a = opt["topcells"].toArray();
-                    foreach(const QJsonValue & v, a){
+                    for (const auto &v: a) {
                         topcells_.append(v.toString());
                     }
             }
@@ -128,13 +128,13 @@ namespace cIcCore{
         QJsonValue patterns = obj["patterns"];
         if(patterns.isObject()){
             QJsonObject pat = patterns.toObject();
-            foreach(const QString & str, pat.keys()){
+            for (const auto &str: pat.keys()) {
                 QStringList lst;
                 QJsonValue jv = pat[str];
                 if(jv.isArray()){
 
                     QJsonArray a = jv.toArray();
-                    foreach(const QJsonValue & v, a){
+                    for (const auto &v: a) {
                         lst.append(v.toString());
 
                     }
@@ -148,7 +148,7 @@ namespace cIcCore{
         QJsonValue library = obj["library"];
         if(library.isArray()){
             QJsonArray libraryArray  = library.toArray();
-            foreach (const QJsonValue & value, libraryArray) {
+            for (const auto & value: libraryArray) {
                 QString libfile = value.toString();
 
                 bool fileNotFound = true;
@@ -174,7 +174,7 @@ namespace cIcCore{
         QJsonValue include = obj["include"];
         if(include.isArray()){
             QJsonArray includeArray  = include.toArray();
-            foreach (const QJsonValue & value, includeArray) {
+            for (const auto & value: includeArray) {
                 QString incfile = value.toString();
 
                 bool fileNotFound = true;
@@ -187,7 +187,7 @@ namespace cIcCore{
                     }
                 }
 
-                foreach (QString incpath,_includePaths){
+                for (const auto &incpath: _includePaths) {
                     QString incf = QString("%1/%2").arg(incpath).arg(incfile);
 
                     if(fexists(incf.toStdString().c_str())){
@@ -212,7 +212,7 @@ namespace cIcCore{
         if(cells.isArray()){
             //Run through the array of design cells, and try an match objects
             QJsonArray cellArray  = cells.toArray();
-            foreach (const QJsonValue & value, cellArray) {
+            for (const auto &value: cellArray) {
                 try{
                 QJsonObject c = value.toObject();
                 QJsonValue name = c["name"];
@@ -241,7 +241,7 @@ namespace cIcCore{
 
         if(readCells(filename)){
             //Import all cuts, and put them on top
-            foreach(Cut* cut,Cut::getCuts()){
+            for (const auto &cut: Cut::getCuts()) {
                 Cell::addCell(cut);
 
                 this->add(cut);
@@ -249,7 +249,7 @@ namespace cIcCore{
             }
 
             //If topcells is set, then mark which cells have been used
-            foreach(QString s,topcells_){
+            for (const auto &s: topcells_) {
                 Cell * c = Cell::getCell(s);
                 if(c){
                     c->setUsed(true);
@@ -272,7 +272,7 @@ namespace cIcCore{
         if(ckt == NULL && jobj.contains("spice")){
             QJsonArray ar = jobj["spice"].toArray();
             QStringList strlist;
-            foreach(QJsonValue v,ar){
+            for (const auto &v: ar) {
                 strlist.append(v.toString());
             }
 
@@ -280,7 +280,7 @@ namespace cIcCore{
             if(jobj.contains("spiceRegex")){
 
                 QJsonArray jarr = jobj["spiceRegex"].toArray();
-                foreach(QJsonValue rval, jarr){
+                for (const auto &rval: jarr) {
                     QJsonArray reg_arr = rval.toArray();
                     QString from = reg_arr[0].toString();
                     QString to = reg_arr[1].toString();
@@ -322,7 +322,7 @@ namespace cIcCore{
             QStringList strlist = ckt->spiceStr();
 
             QJsonArray jarr = jobj["spiceRegex"].toArray();
-            foreach(QJsonValue rval, jarr){
+            for (const auto &rval: jarr) {
                 QJsonArray reg_arr = rval.toArray();
                 QString from = reg_arr[0].toString();
                 QString to = reg_arr[1].toString();
@@ -364,7 +364,7 @@ namespace cIcCore{
         if (jobj.contains("class")  && reverse_parents->count() > 0) {
             int count = reverse_parents->count();
             for(int i=0;i<count; i++){
-                //   foreach(QJsonObject parent, reverse_parents){
+                //   for (const auto &parent: reverse_parents) {
                 QJsonObject parent  = reverse_parents->at(i);
                 if(parent.contains("class")){
                     cl = parent["class"].toString();
@@ -402,7 +402,7 @@ namespace cIcCore{
         //Find decorators
         if( jobj.contains("decorator") ){
             QJsonArray ar = jobj["decorator"].toArray();
-            foreach(QJsonValue dcjv, ar){
+            for (const auto &dcjv: ar) {
                 QJsonObject djob = dcjv.toObject();
                 QString decorator = djob.keys()[0];
                 QJsonValue jv = djob[decorator];
@@ -433,7 +433,7 @@ namespace cIcCore{
             this->runAllParentMethods("afterNew",c,reverse_parents);
             this->runAllMethods("afterNew",c,jobj);
 
-            foreach(auto lcd, decorators){
+            for (const auto &lcd: decorators) {
                 if(c->isLayoutCell()){
                     lcd->setCell(static_cast<LayoutCell*>(c));
                     lcd->afterNew();
@@ -450,14 +450,14 @@ namespace cIcCore{
             //- Place
             this->runAllParentMethods("beforePlace",c,reverse_parents);
             this->runAllMethods("beforePlace",c,jobj);
-            foreach(auto lcd, decorators){
+            for (const auto &lcd: decorators) {
                 if(c->isLayoutCell()){
                     lcd->setCell(static_cast<LayoutCell*>(c));
                     lcd->beforePlace();
                 }
             }
             c->place();
-            foreach(auto lcd, decorators){
+            for (const auto &lcd: decorators) {
                 if(c->isLayoutCell()){
                     lcd->setCell(static_cast<LayoutCell*>(c));
                     lcd->place();
@@ -465,7 +465,7 @@ namespace cIcCore{
             }
             this->runAllParentMethods("afterPlace",c,reverse_parents);
             this->runAllMethods("afterPlace",c,jobj);
-            foreach(auto lcd, decorators){
+            for (const auto &lcd: decorators) {
                 if(c->isLayoutCell()){
                     lcd->setCell(static_cast<LayoutCell*>(c));
                     lcd->afterPlace();
@@ -475,7 +475,7 @@ namespace cIcCore{
             //- Route
             this->runAllParentMethods("beforeRoute",c,reverse_parents);
             this->runAllMethods("beforeRoute",c,jobj);
-            foreach(auto lcd, decorators){
+            for (const auto &lcd: decorators) {
                 if(c->isLayoutCell()){
                     lcd->setCell(static_cast<LayoutCell*>(c));
                     lcd->beforeRoute();
@@ -484,7 +484,7 @@ namespace cIcCore{
             c->route();
             this->runAllParentMethods("afterRoute",c,reverse_parents);
             this->runAllMethods("afterRoute",c,jobj);
-            foreach(auto lcd, decorators){
+            for (const auto &lcd: decorators) {
                 if(c->isLayoutCell()){
                     lcd->setCell(static_cast<LayoutCell*>(c));
                     lcd->afterRoute();
@@ -495,14 +495,14 @@ namespace cIcCore{
             //- Paint
             this->runAllParentMethods("beforePaint",c,reverse_parents);
             this->runAllMethods("beforePaint",c,jobj);
-            foreach(auto lcd, decorators){
+            for (const auto &lcd: decorators) {
                 if(c->isLayoutCell()){
                     lcd->setCell(static_cast<LayoutCell*>(c));
                     lcd->beforePaint();
                 }
             }
             c->paint();
-            foreach(auto lcd, decorators){
+            for (const auto &lcd: decorators) {
                 if(c->isLayoutCell()){
                     lcd->setCell(static_cast<LayoutCell*>(c));
                     lcd->paint();
@@ -510,7 +510,7 @@ namespace cIcCore{
             }
             this->runAllParentMethods("afterPaint",c,reverse_parents);
             this->runAllMethods("afterPaint",c,jobj);
-            foreach(auto lcd, decorators){
+            for (const auto &lcd: decorators) {
                 if(c->isLayoutCell()){
                     lcd->setCell(static_cast<LayoutCell*>(c));
                     lcd->afterPaint();
@@ -572,7 +572,7 @@ namespace cIcCore{
 
         }else if (jo.isArray()){
             QJsonArray job = jo.toArray();
-            foreach(QJsonValue cjv, job){
+            for (const auto &cjv: job) {
 
                 QJsonObject ljob = cjv.toObject();
                 ljob["name"] = name;
@@ -635,7 +635,7 @@ namespace cIcCore{
         QRegularExpression re("^new|inherit|leech|class|name|before.*|after.*|comment|decorator|spiceRegex");
 
 
-        foreach( QString key, jobj.keys()){
+        for (const auto &key: jobj.keys()) {
             if(re.match(key).hasMatch()){ continue;}
             if( ignoreSetYoffsetHalf && key == "setYoffsetHalf"){continue;}
 
@@ -662,7 +662,7 @@ namespace cIcCore{
                 QMetaMethod method = methods[method_key.left(key.length()-1)];
                 QJsonArray arg = jobj[key].toArray();
 
-                foreach(QJsonValue value, arg){
+                for (const auto &value: arg) {
                     this->runMethod(value, method, c);
                 }
 
@@ -691,7 +691,7 @@ namespace cIcCore{
 
         QJsonArray ar =  obj["cells"].toArray();
 
-        foreach(QJsonValue v,ar){
+        for (const auto &v: ar) {
 
             QJsonObject o = v.toObject();
             QString cl = o["class"].toString();
@@ -794,7 +794,7 @@ namespace cIcCore{
             int charcount =0;
             int line_count = 0;
 
-            foreach(QString s, valList){
+            for (const auto &s: valList) {
                 charcount += s.length();
                 if(charcount < err.offset){
                     line_count += 1;

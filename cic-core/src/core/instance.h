@@ -34,7 +34,6 @@ namespace cIcCore{
 
                 public:
                         Instance();
-                        Instance(const Instance&);
                         ~Instance();
                         Cell * cell(){return _cell;}
                         QString instanceName(){return instanceName_;}
@@ -43,7 +42,7 @@ namespace cIcCore{
                                 return name()  + instanceName_;
                         }
 
-                        Rect calcBoundingRect() override;
+                        SimpleRect calcBoundingRect() override;
                         QString angle(){return angle_;}
                         void setAngle(QString angle);
 

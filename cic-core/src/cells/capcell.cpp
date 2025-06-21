@@ -52,9 +52,9 @@ namespace cIcCells{
     }
 
 
-    Rect CapCell::calcBoundingRect()
+    SimpleRect CapCell::calcBoundingRect()
     {
-        Rect r = LayoutCell::calcBoundingRect();
+        SimpleRect r = LayoutCell::calcBoundingRect();
         int mw =  this->rules->get("M2","width");
         r.adjust(0,+mw/2,0,-mw/2);
         return r;
@@ -233,7 +233,7 @@ namespace cIcCells{
         this->add(rects);
     }
 
-    void CapCell::addContacts(QString name, QString node,int y,QList<int> array, Rect * cp){
+    void CapCell::addContacts(QString name, QString,int y,QList<int> array, Rect * cp){
 
         auto ms =  this->getRules()->get("M2","space");
 
@@ -247,7 +247,7 @@ namespace cIcCells{
         cp->setLeft(inst->x2());
 
 
-        foreach(int x,array) {
+        for (const auto &x: array)  {
 
             auto ct = Cut::getInstance("M1","M4",1,2);
             auto mw = ct->width();

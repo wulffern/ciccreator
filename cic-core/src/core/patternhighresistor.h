@@ -40,7 +40,6 @@ namespace cIcCore{
     public:
         virtual void paintRect(Rect*, QChar ,int , int );
         PatternHighResistor();
-        PatternHighResistor(const PatternHighResistor& mos);
         ~PatternHighResistor();
         virtual void onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data);
         void onPaintEnclosure(Rect* r);

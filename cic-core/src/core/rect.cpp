@@ -21,56 +21,6 @@
 
 namespace cIcCore{
 
-
-    //----------------------------------------------------------------------
-    // Constructors
-    //----------------------------------------------------------------------
-    Rect::~Rect(){
-        x1_ = 0;
-        y1_ = 0;
-        x2_ = 0;
-        y2_ = 0;
-        _layer = "PR";
-        rules = Rules::getRules();
-    }
-
-    Rect::Rect(const Rect& r){
-        x1_= r.x1_;
-        x2_= r.x2_;
-        y1_= r.y1_;
-        y2_= r.y2_;
-        _layer= r._layer;
-        rules = Rules::getRules();
-    }
-
-
-    Rect::Rect(Rect * r){
-        x1_= r->x1_;
-        x2_= r->x2_;
-        y1_= r->y1_;
-        y2_= r->y2_;
-        _layer= r->_layer;
-        rules = Rules::getRules();
-    }
-
-    Rect::Rect(){
-        _layer = "PR";
-        x1_ = 0;
-        y1_ = 0;
-        x2_ = 0;
-        y2_ = 0;
-        rules = Rules::getRules();
-    }
-
-    Rect::Rect(QString layer, int x, int y, int width, int height){
-        _layer = layer;
-        x1_ = x;
-        y1_ = y;
-        x2_ = x + width;
-        y2_ = y + height;
-        rules = Rules::getRules();
-    }
-
     void Rect::setPrefix(QString prefix){
         prefix_ = prefix;
     }
@@ -89,7 +39,7 @@ namespace cIcCore{
         int index = 0;
         int count = 0;
         int x = std::numeric_limits<int>::max();
-        foreach(Rect *r, rects){
+        for (auto r: rects) {
             if(r->x1() < x){
                 index = count;
                 x = r->x1();
@@ -109,7 +59,7 @@ namespace cIcCore{
         int index = 0;
         int count = 0;
         int x = -std::numeric_limits<int>::max();
-        foreach(Rect *r, rects){
+        for (auto r: rects) {
             if(r->x2() > x){
                 index = count;
                 x = r->x2();
@@ -128,7 +78,7 @@ namespace cIcCore{
         int index = 0;
         int count = 0;
         int y = std::numeric_limits<int>::max();
-        foreach(Rect *r, rects){
+        for (auto r: rects) {
             if(r->y1() < y){
                 index = count;
                 y = r->y1();
@@ -147,7 +97,7 @@ namespace cIcCore{
         int index = 0;
         int count = 0;
         int y = -std::numeric_limits<int>::max();
-        foreach(Rect *r, rects){
+        for (auto r: rects) {
             if(r->y2() > y){
                 index = count;
                 y = r->y2();
@@ -192,17 +142,14 @@ namespace cIcCore{
         return r;
     }
 
-    Rect Rect::getScaled(Rect* r, int unit){
-        Rect ro;
-        ro.setPoint1(r->x1()/unit,r->y1()/unit);
-        ro.setPoint2(r->x2()/unit,r->y2()/unit);
-        ro.setLayer(r->layer());
-        
-        return ro;
-        
-    }
-    
+    Rect* Rect::getScaled(Rect* r, int unit){
+        Rect* ro =  new Rect();
+        ro->setPoint1(r->x1()/unit,r->y1()/unit);
+        ro->setPoint2(r->x2()/unit,r->y2()/unit);
+        ro->setLayer(r->layer());
 
+        return r;
+    }
 
     Rect* Rect::getCopy(const QString layer){
         Rect * r = new Rect(layer, x1(), y1(), width(), height() );
@@ -216,7 +163,7 @@ namespace cIcCore{
         return _x;
     }
 
-    void Rect::rotate(int i)  {
+    void SimpleRect::rotate(int i)  {
         Point p1(x1_,y1_);
         Point p2(x2_,y2_);
 
@@ -240,6 +187,10 @@ namespace cIcCore{
         x2_ = p2.x;
         y1_ = p1.y;
         y2_ = p2.y;
+    }
+
+    void Rect::rotate(int i)  {
+        SimpleRect::rotate(i);
         emit updated();
     }
 

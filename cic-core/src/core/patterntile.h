@@ -297,7 +297,7 @@ namespace cIcCore{
 
             void paint() override;
 
-            virtual Rect calcBoundingRect();
+            virtual SimpleRect calcBoundingRect() override;
 
             qreal minPolyLength(){return minPolyLength_;}
             qreal setMinPolyLength(qreal val){ minPolyLength_ = val*this->rules->gamma(); return minPolyLength_;  }
@@ -384,8 +384,8 @@ namespace cIcCore{
             void paintEnclosures();
             virtual void onPaintEnd();
             virtual void readPatterns();
-            virtual QJsonObject toJson();
-            virtual void fromJson(QJsonObject o);
+            virtual QJsonObject toJson() override;
+            virtual void fromJson(QJsonObject o) override;
 
 
 

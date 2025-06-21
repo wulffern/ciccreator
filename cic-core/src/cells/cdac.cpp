@@ -32,24 +32,23 @@ namespace cIcCells{
 
         int xs = this->rules->get("M1","space");
         int xw = this->rules->get("M1","width");
-        int xg = this->rules->get("ROUTE","horizontalgrid");
+        //int xg = this->rules->get("ROUTE","horizontalgrid");
 
                  //Find how many nets called CP
         QStringList nodes= subckt()->nodes();
         int i=-1;
-        foreach(QString s,nodes){
+        for (const auto &s: nodes) {
             if(s.contains("CP")){
                 i += 1;
             }
         }
 
-        
-        int prev_width = 0;
+
         int x =  (xw + xs*2)*(i+2);
         int y = 0;
         bool first = true;
-        
-        foreach(cIcSpice::SubcktInstance * ckt_inst,_subckt->instances()){
+
+        for (auto ckt_inst: _subckt->instances()) {
             inst= this->addInstance(ckt_inst,x,y);
             y += inst->height();
             if(first){
@@ -71,8 +70,8 @@ namespace cIcCells{
 
         //- Add AVSS connections
         QList<Graph*> graphs = this->getNodeGraphs("AVSS");
-        foreach(Graph* graph,graphs){
-            foreach(Port* p, graph->ports){
+        for (const auto &graph: graphs) {
+            for (const auto &p: graph->ports) {
                 if(!p->isInstancePort()) continue;
                 InstancePort* ip = static_cast<InstancePort*>(p);
                 if(!ip->childName().contains("C")) continue;

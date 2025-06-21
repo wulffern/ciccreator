@@ -42,7 +42,6 @@ namespace cIcSpice{
         public:
             Subckt();
             Subckt(QList<QString> buffer);
-            Subckt(const Subckt&);
             ~Subckt();
 
             virtual QJsonObject toJson();

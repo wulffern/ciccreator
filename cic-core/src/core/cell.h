@@ -57,7 +57,6 @@ namespace cIcCore{
 
         public:
             Cell();
-            Cell(const Cell&);
             ~Cell();
 
             //! Find the first rectangle in this cell that uses layer
@@ -103,9 +102,9 @@ namespace cIcCore{
             void mirrorCenterY();
 
             //! Calculate the extent of this cell. Should be overriden by children
-            virtual Rect calcBoundingRect();
-            static Rect calcBoundingRect(QList<Rect*> children);
-            static Rect calcBoundingRect(QList<Rect*> children,bool ignoreBoundaryRouting);
+            virtual SimpleRect calcBoundingRect();
+            static SimpleRect calcBoundingRect(QList<Rect*> children);
+            static SimpleRect calcBoundingRect(QList<Rect*> children,bool ignoreBoundaryRouting);
 
             static bool isEmpty(Cell *c);
 
@@ -190,7 +189,7 @@ namespace cIcCore{
             //! Get a list of all cells in this design
             static QList<Cell*> getAllCells(){
                 QList<Cell*> cells;
-                foreach(Cell * cell,_allcells){
+                for (auto cell: _allcells) {
                     cells.append(cell);
                 }
                 return cells;

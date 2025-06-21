@@ -41,12 +41,12 @@ namespace cIcCore{
 
     
 
-    void Port::mirrorX(int ay)
+    void Port::mirrorX(int)
     {
         updateRect();
     }
 
-    void Port::mirrorY(int ax)
+    void Port::mirrorY(int)
     {
         updateRect();
     }
@@ -90,7 +90,7 @@ namespace cIcCore{
     }
 
     Rect * Port::get(QString layer){
-        foreach(Rect* r,alternates_rectangles_){
+        for (auto r: alternates_rectangles_) {
             if(r->layer() == layer){
                 Rect * rp = r->getCopy();
                 rp->setNet(this->name());
@@ -103,7 +103,7 @@ namespace cIcCore{
     QList<Rect*> Port::getAll(QString layer)
     {
         QList<Rect*> rects;
-        foreach(Rect* r, alternates_rectangles_){
+        for (auto r: alternates_rectangles_) {
             if(layer == "" && r->layer() == layer){
                 Rect * rp = r->getCopy();
                 rp->setNet(this->name());

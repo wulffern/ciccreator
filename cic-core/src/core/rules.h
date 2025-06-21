@@ -48,7 +48,6 @@ namespace cIcCore{
         Rules();
 
         ~Rules(){}
-        Rules(const Rules&);
 
         static void loadRules(QString path);
 

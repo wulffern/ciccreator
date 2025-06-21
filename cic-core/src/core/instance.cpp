@@ -29,17 +29,6 @@ namespace cIcCore{
         angle_ = "";
     }
 
-    Instance::Instance(const Instance& inst): Cell(inst)
-    {
-        _cell = 0;
-        ckt_inst_ = 0;
-        xcell = 0;
-        ycell = 0;
-        angle_ = "";
-
-    }
-
-
     Instance::~Instance()
     {
         delete(ckt_inst_);
@@ -83,7 +72,7 @@ namespace cIcCore{
         Cell * c = this->cell();
         if(c){
             QList<Rect*> child_rects = c->findRectanglesByRegex(regex,layer);
-            foreach(Rect * r, child_rects){
+            for (auto r: child_rects) {
                 this->transform(r);
                 rects.append(r);
             }
@@ -94,7 +83,7 @@ namespace cIcCore{
     QList<Rect *> Instance::findRectanglesByNode(QString node, QString filterChild)
     {
         QList<Rect *> rects;
-        foreach(Rect * r,this->children()){
+        for (auto r: this->children()) {
 
             if(! r->isPort()) continue;
             Port * p = static_cast<Port *>(r);
@@ -176,7 +165,7 @@ namespace cIcCore{
         }else if(angle == "MX"){
             ycell = ycell +  this->cell()->y1() + this->cell()->y2();
         }
-        foreach(Rect* r,this->children()){
+        for (auto r: this->children()) {
             //TODO: HOW TO HANDLE INSTANCES WITH NEGATIVE COORDINATES
             r->translate(-this->x1(),-this->y1());
             this->transform(r);
@@ -186,16 +175,14 @@ namespace cIcCore{
         this->updateBoundingRect();
     }
 
-    Rect Instance::calcBoundingRect(){
-
-
+    SimpleRect Instance::calcBoundingRect(){
         //- Somehow the cell is not set, so keep the bounding box
         if(this->_cell == 0){
             qDebug() << "_cell in " << this->name() << " instance is null, that should not happen";
             return Rect(static_cast<Rect *>(this));
         }
 
-        Rect r = this->_cell->calcBoundingRect();
+        SimpleRect r = this->_cell->calcBoundingRect();
 
         if(this->angle() == "R90"){
             r.rotate(90);

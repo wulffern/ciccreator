@@ -155,7 +155,7 @@ namespace cIcCore{
     startLayer_ = getQStringFromMatch("startLayer=([^,\\s+,$]+)",options,"");
 
     if(startLayer_ != ""){
-      foreach( auto *r,start_rects_){
+      for (auto r: start_rects_) {
         r->setLayer(startLayer_);
       }
     }
@@ -164,7 +164,7 @@ namespace cIcCore{
     stopLayer_ = getQStringFromMatch("stopLayer=([^,\\s+,$]+)",options,"");
 
     if(stopLayer_ != ""){
-      foreach( auto *r,stop_rects_){
+      for (auto r: stop_rects_) {
         r->setLayer(stopLayer_);
       }
     }
@@ -206,24 +206,6 @@ namespace cIcCore{
 
   }
 
-  Route::Route(const Route& r){
-    routeType_ = r.routeType_;
-    sortDirection_ = r.sortDirection_;
-    startOffset_ = r.startOffset_;
-    startOffsetCut_ = r.startOffsetCut_;
-    endOffsetCut_ = r.endOffsetCut_;
-    stopOffset_ = r.stopOffset_;
-    startTrim_ = r.startTrim_;
-    endTrim_ = r.endTrim_;
-    track_ = r.track_;
-    startCuts_ = r.startCuts_;
-    startVCuts_ = r.startVCuts_;
-    endCuts_ = r.endCuts_;
-    cuts_ = r.cuts_;
-    vcuts_= r.vcuts_;
-    endVCuts_ = r.endVCuts_;
-  }
-
   Route::~Route(){
 
   }
@@ -237,7 +219,7 @@ namespace cIcCore{
     }
   }
   void Route::add(QList<Rect *> children){
-    foreach(Rect * r, children){
+    for (auto r: children) {
       this->add(r);
     }
   }
@@ -251,17 +233,17 @@ namespace cIcCore{
 
       QList<Rect*> cuts = this->addCuts(start_rects_,startcuts,lcuts,lvcuts);
       if(startOffsetCut_ == HIGH){
-        foreach(auto *cut, cuts){
+        for (auto cut: cuts) {
           cut->translate(0,cut->height()/2);
         }
-        foreach(auto *r,start_rects_){
+        for (auto r: start_rects_) {
           r->translate(0,r->height()/2);
         }
       }else if(startOffsetCut_ == LOW){
-        foreach(auto *cut, cuts){
+        for (auto cut: cuts) {
           cut->translate(0,-cut->height()/2);
         }
-        foreach(auto *r,start_rects_){
+        for (auto r: start_rects_) {
           r->translate(0,-r->height()/2);
         }
       }
@@ -280,17 +262,17 @@ namespace cIcCore{
       QList<Rect*> cuts = this->addCuts(stop_rects_,endcuts,lcuts,lvcuts);
 
       if(endOffsetCut_ == HIGH){
-        foreach(auto *cut, cuts){
+        for (auto cut: cuts) {
           cut->translate(0,cut->height()/2);
         }
-        foreach(auto *r,stop_rects_){
+        for (auto r: stop_rects_) {
           r->translate(0,r->height()/2);
         }
       }else if(endOffsetCut_ == LOW){
-        foreach(auto *cut, cuts){
+        for (auto cut: cuts) {
           cut->translate(0,-cut->height()/2);
         }
-        foreach(auto *r,stop_rects_){
+        for (auto r: stop_rects_) {
           r->translate(0,-r->height()/2);
         }
       }
@@ -318,7 +300,7 @@ namespace cIcCore{
 
 
     cuts = Cut::getCutsForRects(routeLayer_,rects,cuts_,vcuts_,leftAlignCut);
-    foreach(Rect* r,cuts){
+    for (const auto &r: cuts) {
       allcuts.append(r);
     }
 
@@ -333,10 +315,10 @@ namespace cIcCore{
     stop_rects_.clear();
     start_rects_.clear();
 
-    foreach(Rect* r, start_rects_org){
+    for (const auto &r: start_rects_org) {
       start_rects_.append(r->getCopy());
     }
-    foreach(Rect* r, stop_rects_org){
+    for (const auto &r: stop_rects_org) {
       stop_rects_.append(r->getCopy());
     }
 
@@ -455,21 +437,21 @@ namespace cIcCore{
     }
 
     if(startTrim_ == TRIM_START_LEFT){
-      foreach(auto rect, start_rects_){
+      for (const auto &rect: start_rects_) {
         rect->setLeft(rect->x2() - 2* width);
       }
     }else if(startTrim_ == TRIM_START_RIGHT){
-      foreach(auto rect, start_rects_){
+      for (const auto &rect: start_rects_) {
         rect->setRight(rect->x1() + 2* width);
       }
     }
 
     if(endTrim_ == TRIM_END_LEFT){
-      foreach(auto rect, stop_rects_){
+      for (const auto &rect: stop_rects_) {
         rect->setLeft(rect->x2() - 2* width);
       }
     }else if(endTrim_ == TRIM_END_RIGHT){
-      foreach(auto rect, stop_rects_){
+      for (const auto &rect: stop_rects_) {
         rect->setRight(rect->x1() + 2* width);
       }
     }
@@ -482,7 +464,7 @@ namespace cIcCore{
     this->addVertical(x);
 
     //TODO:Probably need a better hack than this, not that pretty
-    foreach(auto r, add_after_route){
+    for (const auto &r: add_after_route) {
       this->add(r);
     }
   }
@@ -498,7 +480,7 @@ namespace cIcCore{
 
     x = start_bound.x2() + space*2;
 
-    foreach(auto rect,start_rects_){
+    for (const auto &rect: start_rects_) {
 
       auto r = new Rect(routeLayer_,rect->x1(),rect->y1(),x-rect->x1(),width);
       this->applyOffset(width,r,startOffset_);
@@ -506,7 +488,7 @@ namespace cIcCore{
 
     }
 
-    foreach(auto rect,stop_rects_) {
+    for (const auto &rect: stop_rects_)  {
 
       auto x1 = rect->x1();
       Rect* ra;
@@ -541,7 +523,7 @@ namespace cIcCore{
     x = start_bound.x2() + space*2;
     int y = 0;
 
-    foreach(auto rect,start_rects_){
+    for (const auto &rect: start_rects_) {
       auto r = new Rect(routeLayer_,rect->x1(),rect->y1(),x-rect->x1(),width);
       this->applyOffset(width,r,startOffset_);
       this->add(r);
@@ -555,7 +537,7 @@ namespace cIcCore{
 
 
 
-    foreach(auto rect,stop_rects_) {
+    for (const auto &rect: stop_rects_)  {
 
       auto x1 = rect->x1();
       Rect* ra;
@@ -580,10 +562,8 @@ namespace cIcCore{
 
   }
 
-  void Route::routeStrapRects(Rect * sr,QList<Rect*> rects,bool start){
-
-
-
+  void Route::routeStrapRects(Rect *, QList<Rect*>, bool)
+  {
   }
 
   void Route::routeStrap(){
@@ -600,7 +580,7 @@ namespace cIcCore{
     if(this->options_.contains(QRegularExpression("vertical(,|\\s+|$)"))){
       if(start_rects_.count() == 1){
         auto sr = start_rects_[0];
-        foreach(auto r, stop_rects_){
+        for (const auto &r: stop_rects_) {
           if(!r){continue;}
 
           auto rc = new Rect(routeLayer_,r->x1(),sr->y1(),width,r->y1() - sr->y1());
@@ -617,7 +597,7 @@ namespace cIcCore{
         qDebug() << "Error: Not implemented";
         /*
           auto sr = stop_rects_[0];
-          foreach(Rect* r, start_rects_){
+          for (const auto &r: start_rects_) {
           if(!r){continue;}
           auto rc = new Rect(routeLayer_,r->x2(),r->y1(),sr->x2()-r->x2(),width);
 
@@ -636,7 +616,7 @@ namespace cIcCore{
 
       if(start_rects_.count() == 1){
         auto sr = start_rects_[0];
-        foreach(auto r, stop_rects_){
+        for (const auto &r: stop_rects_) {
           if(!r){continue;}
 
           auto rc = new Rect(routeLayer_,sr->x1(),r->y1(),r->x1()-sr->x1(),width);
@@ -651,7 +631,7 @@ namespace cIcCore{
         }
       }else if (stop_rects_.count() == 1){
         auto sr = stop_rects_[0];
-        foreach(Rect* r, start_rects_){
+        for (const auto &r: start_rects_) {
           if(!r){continue;}
           auto rc = new Rect(routeLayer_,r->x2(),r->y1(),sr->x2()-r->x2(),width);
 
@@ -743,7 +723,7 @@ namespace cIcCore{
 
 
     //Align cuts with center of start rectangle
-    foreach(Rect * r, this->children()){
+    for (auto r: this->children()) {
 
       if(r->isCut()){
         r->moveCenter(start_bound.centerX(), r->centerY());
@@ -775,7 +755,7 @@ namespace cIcCore{
         this->add(r);
 
         //TODO: Relocate cuts for endcuts
-        foreach(Rect* r,endcuts){
+        for (const auto &r: endcuts) {
           r->moveCenter(r2->centerX(),center);
 
         }
@@ -842,8 +822,8 @@ namespace cIcCore{
     Rect * rect  = Rect::getHorizontalRectangleFromTo(routeLayer_,all_bound.left(),all_bound.right(),y,width);
     if(rect){this->add(rect);}
 
-    foreach(auto * r,allrect){
-      Rect * ra;
+    for (auto r: allrect) {
+      Rect * ra = NULL;
       if(routeType_ == U_BOTTOM){
         ra = Rect::getVerticalRectangleFromTo(routeLayer_,r->x1()-width,rect->y1(),r->y2(),width);
       }
@@ -895,7 +875,7 @@ namespace cIcCore{
       minwidth = this->rules->get(routeLayer_,"minwidth");
     };
 
-    foreach(Rect *r, rects){
+    for (auto r: rects) {
       if(offset == HIGH or offset == LOW){
         int x1 = r->centerX();
         if(x1 < x){ // Left to right

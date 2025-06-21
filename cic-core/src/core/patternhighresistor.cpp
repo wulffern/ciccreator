@@ -34,19 +34,12 @@ namespace cIcCore{
 
     }
 
-    PatternHighResistor::PatternHighResistor(const PatternHighResistor& mos)
-    {
-    }
-
-
     PatternHighResistor::~PatternHighResistor()
     {
 
     }
 
-    void PatternHighResistor::onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data){
-
-
+    void PatternHighResistor::onFillCoordinate(QChar, QString layer, int x, int, QMap<QString,QVariant> &data){
 
         if(layer.startsWith("PO")){
 

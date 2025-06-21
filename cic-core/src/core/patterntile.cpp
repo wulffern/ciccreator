@@ -53,7 +53,7 @@ namespace cIcCore {
 
     }
 
-    Rect PatternTile::calcBoundingRect(){
+    SimpleRect PatternTile::calcBoundingRect() {
 
         int x1  = 0;
         int y1  = 0;
@@ -85,7 +85,7 @@ namespace cIcCore {
     }
 
     void PatternTile::verticalMultiplyVector(QJsonArray ar){
-        foreach(QJsonValue v, ar){
+        for (const auto &v : ar){
             verticalMultiplyVector_.append(v.toDouble());
         }
     }
@@ -185,13 +185,13 @@ namespace cIcCore {
     //so some sort of loop that adds sub-rectangles?
     void PatternTile::readPatterns()
     {
-        foreach(const QString & key, Patterns.keys()){
+        for (const auto &key: Patterns.keys()) {
             QStringList sl = Patterns[key];
             int ycount = sl.count();
             int xcount = 0;
 
 
-            foreach(const QString & s, sl){
+            for (const auto &s: sl) {
                 int xc = s.length();
                 if(xc > xcount){
                     xcount = xc;
@@ -242,7 +242,7 @@ namespace cIcCore {
        }
 
        //Check if the current layer is supposed to be copied. If so, then run fillCoordinates
-       foreach(CopyLayer cl, copyLayer_){
+       for (const auto &cl : copyLayer_) {
             if(layer == cl.from){
                 QJsonArray ar2 = ar;
                 ar2.push_front(cl.to);
@@ -343,6 +343,8 @@ namespace cIcCore {
 
     }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
     void PatternTile::paint(){
 
 
@@ -361,7 +363,7 @@ namespace cIcCore {
         //- Load all user-defined patterns
         readPatterns();
 
-        foreach(QString layer, layerNames_){
+        for (const auto &layer: layerNames_) {
 
             QList<QString> strs = layers_[layer];
 
@@ -438,6 +440,7 @@ namespace cIcCore {
                             p = new Port(c);
                             this->add(p);
                         }
+                        break;
                     case 'x':
                     case 'X':
                     case 'K':
@@ -476,10 +479,10 @@ namespace cIcCore {
 
                         PatternData *pl = Pattern[c];
                         if(pl){
-                            rect->setRect(xs,ys,xspace_,lyspace_);                            
+                            rect->setRect(xs,ys,xspace_,lyspace_);
                             QList<Rect*> rects = pl->getRectangles(rect);
-                            foreach(Rect* r,rects){
-                                this->add(rects);
+                            for (const auto &r: rects) {
+                                this->add(r);
                             }
                             rect->setRect(xs,ys,0,0);
                         }
@@ -638,7 +641,7 @@ namespace cIcCore {
                 if(row.contains(x)){
                     Rect* r = row[x];
                     bool foundRect = false;
-                    foreach(Rect* rx,rowrects){
+                    for (const auto rx: rowrects) {
                         if(rx->x2() == r->x1() && rx->y1() == r->y1() && rx->y2() == r->y2()){
                             rx->setRight(r->x2());
                             foundRect = true;
@@ -655,9 +658,9 @@ namespace cIcCore {
 
 
 
-            foreach(Rect * r, rowrects){
+            for (const auto r: rowrects) {
                 bool foundRect = false;
-                foreach(Rect* ry,columnrects){
+                for (const auto ry : columnrects) {
                     if(ry->y2() == r->y1() && ry->x1() == r->x1()){
                         ry->setTop(r->y2());
                         foundRect = true;
@@ -677,7 +680,7 @@ namespace cIcCore {
 
         return columnrects;
     }
-
+#pragma GCC diagnostic pop
 
 
     void PatternTile::addEnclosure(QJsonArray ar){
@@ -687,7 +690,7 @@ namespace cIcCore {
         e->startx  = ar[1].toInt();
         QJsonArray encl = ar[2].toArray();
 
-        foreach(QJsonValue enc, encl){
+        for (const auto &enc: encl) {
             e->encloseWithLayers.append(enc.toString()) ;
         }
 
@@ -696,7 +699,7 @@ namespace cIcCore {
     }
 
     void PatternTile::addEnclosuresByRectangle(QJsonArray ar){
-        foreach(QJsonValue v, ar){
+        for (const auto &v: ar) {
             this->addEnclosureByRectangle(v.toArray());
         }
     }
@@ -723,8 +726,8 @@ namespace cIcCore {
             }else{
                 e->width = w.toDouble();
                 if(this->copyColumn_.count() > 0){
-                    foreach(CopyColumn c,copyColumn_){
-                        
+                    for (const auto &c: copyColumn_) {
+
                         if(e->x1 < c.offset && (e->x1 + e->width) > c.offset){
                             e->width += (c.length)*c.count;
                         }else if(mirrorPatternString_) {
@@ -746,7 +749,7 @@ namespace cIcCore {
 
                 }
             }
-            
+
             QJsonValue h = rect[3];
             if(h.isString() && h.toString() == "height"){
                 e->height = verticalMultiplyVectorSum(ymax_+1);
@@ -757,7 +760,7 @@ namespace cIcCore {
 
         QJsonArray encl = ar[2].toArray();
 
-        foreach(QJsonValue enc, encl){
+        for (const auto &enc: encl) {
             e->encloseWithLayers.append(enc.toString()) ;
         }
 
@@ -772,7 +775,7 @@ namespace cIcCore {
         for(int i=0;i<enclosures_.count();i++){
             Enclosure *e = enclosures_[i];
             QList<Rect*> rects = this->findPatternRects(e->layer);
-            foreach(QString lay, e->encloseWithLayers){
+            for (const auto &lay: e->encloseWithLayers) {
                 if(rects.count() > e->startx){
                     Rect* r = new Rect(rects[e->startx]);
 
@@ -798,7 +801,7 @@ namespace cIcCore {
         //- Paint enclosures by rectangle
         for(int i=0;i<enclosures_by_rect_.count();i++){
             EnclosureRectangle *e = enclosures_by_rect_[i];
-            foreach(QString lay, e->encloseWithLayers){
+            for (const auto &lay: e->encloseWithLayers) {
 
 
                 Rect* r = new Rect(lay,translateX(e->x1),translateY(e->y1),e->width*xspace_,e->height*yspace_);
@@ -824,7 +827,7 @@ namespace cIcCore {
 
     }
 
-    void PatternTile::onPaintEnclosure(Rect* r)
+    void PatternTile::onPaintEnclosure(Rect*)
     {
     }
 
@@ -847,7 +850,7 @@ namespace cIcCore {
         o["heightoffset"] = heightoffset_;
 
         QJsonArray ar;
-        foreach(double d, verticalMultiplyVector_){
+       for (const auto d: verticalMultiplyVector_) {
             ar.append(d);
         }
 
@@ -874,7 +877,7 @@ namespace cIcCore {
 
         if(o.contains("verticalMultiplyVector")){
             QJsonArray car = o["verticalMultiplyVector"].toArray();
-            foreach(QJsonValue c, car){
+            for (const auto &c: car) {
                 verticalMultiplyVector_.append(c.toDouble());
             }
         }
