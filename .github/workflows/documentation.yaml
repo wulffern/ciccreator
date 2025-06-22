@@ -1,22 +1,35 @@
 name: Docs
-on: [push, pull_request, workflow_dispatch]
+
+on:
+  push:
+    paths:
+      - '**.cpp'
+      - '**.h'
+      - 'Makefile'
+  pull_request:
+    branches: [ master ]
 jobs:
   docs:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     container:
-      image: texlive/texlive:latest-full
+      image: texlive/texlive:latest
       options: --user root
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v3
       - name: Update apt
         run: |
           apt update -y --allow-insecure-repositories
       - name: Install doxygen
         run: |
-          apt-get install -y doxygen graphviz
+          apt-get install -y doxygen graphviz python3  python3-venv python3-pip sudo
+          test -d /opt || sudo mkdir /opt
+          test -d /opt/eda/ || sudo mkdir /opt/eda
+          test -d /opt/eda/python3 || sudo mkdir /opt/eda/python3
+          sudo chown -R $USER:$USER /opt/eda/python3/
+          python3 -m venv /opt/eda/python3
       - name: Install breathe and run doxygen
         run: |
+          export PATH=/opt/eda/bin:/opt/eda/python3/bin:$HOME/.local/bin:$PATH
           git clone https://github.com/wulffern/breathe.git
           cd breathe
           python3 -m pip install .
@@ -25,9 +38,9 @@ jobs:
           doxygen
       - name: Sphinx build
         run: |
-          #cd docs && make latexpdf
-          #cp build/latex/customiccreator.pdf  docs/_build/
+          export PATH=/opt/eda/bin:/opt/eda/python3/bin:$HOME/.local/bin:$PATH
           sphinx-build docs/source docs/_build
+          cd docs && make latexpdf && cp build/latex/customiccreator.pdf  _build/
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
