@@ -4,7 +4,7 @@ jobs:
   docs:
     runs-on: ubuntu-22.04
     container:
-      image: texlive/texlive:latest-basic
+      image: texlive/texlive:latest-full
       options: --user root
     steps:
       - uses: actions/checkout@v4
@@ -25,8 +25,8 @@ jobs:
           doxygen
       - name: Sphinx build
         run: |
-          cd docs && make latexpdf
-          cp build/latex/customiccreator.pdf  docs/_build/
+          #cd docs && make latexpdf
+          #cp build/latex/customiccreator.pdf  docs/_build/
           sphinx-build docs/source docs/_build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
