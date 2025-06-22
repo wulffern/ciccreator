@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Route Options &#8212; Custom IC Creator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API" href="../api.html" />
+    <link rel="prev" title="Route Type" href="type.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../api.html" title="API"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="type.html" title="Route Type"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Custom IC Creator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="route.html" accesskey="U">Routing</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Route Options</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="route-options">
+<h1>Route Options<a class="headerlink" href="#route-options" title="Permalink to this heading">¶</a></h1>
+<p>The router has some options to ease routing. Both connectivity routes
+and directed routes have options. Options are separated by a comma.</p>
+<section id="sort-options">
+<h2>Sort options<a class="headerlink" href="#sort-options" title="Permalink to this heading">¶</a></h2>
+<p>These options specify which rectangle to route from. They are useful for
+connectivity route where the start rectangles are not specified.</p>
+<section id="ontopb">
+<h3>onTopB<a class="headerlink" href="#ontopb" title="Permalink to this heading">¶</a></h3>
+<p>Put the bottom rectangle as start rectangle</p>
+<img alt="../_images/Options_onTopB.png" src="../_images/Options_onTopB.png" />
+</section>
+<section id="ontopt">
+<h3>onTopT<a class="headerlink" href="#ontopt" title="Permalink to this heading">¶</a></h3>
+<p>Put the top rectangle as
+start rectangle</p>
+<img alt="../_images/Options_onTopT.png" src="../_images/Options_onTopT.png" />
+</section>
+<section id="ontopr">
+<h3>onTopR<a class="headerlink" href="#ontopr" title="Permalink to this heading">¶</a></h3>
+<p>Put the
+right rectangle as start rectangle</p>
+<img alt="../_images/Options_onTopR.png" src="../_images/Options_onTopR.png" />
+</section>
+<section id="ontopl">
+<h3>onTopL<a class="headerlink" href="#ontopl" title="Permalink to this heading">¶</a></h3>
+<p>Put the left rectangle as start rectangle</p>
+<img alt="../_images/Options_onTopL.png" src="../_images/Options_onTopL.png" />
+</section>
+</section>
+<section id="offset">
+<h2>Offset<a class="headerlink" href="#offset" title="Permalink to this heading">¶</a></h2>
+<p>These options can offset the routing rectangle to avoid nearby routings</p>
+<section id="offsethigh">
+<h3>offsethigh<a class="headerlink" href="#offsethigh" title="Permalink to this heading">¶</a></h3>
+<img alt="../_images/Options_offsethigh.png" src="../_images/Options_offsethigh.png" />
+</section>
+<section id="offsetlow">
+<h3>offsetlow<a class="headerlink" href="#offsetlow" title="Permalink to this heading">¶</a></h3>
+<img alt="../_images/Options_offsetlow.png" src="../_images/Options_offsetlow.png" />
+</section>
+<section id="offsethighend">
+<h3>offsethighend<a class="headerlink" href="#offsethighend" title="Permalink to this heading">¶</a></h3>
+<img alt="../_images/Options_offsethighend.png" src="../_images/Options_offsethighend.png" />
+</section>
+<section id="offsetlowend">
+<h3>offsetlowend<a class="headerlink" href="#offsetlowend" title="Permalink to this heading">¶</a></h3>
+<img alt="../_images/Options_offsetlowend.png" src="../_images/Options_offsetlowend.png" />
+</section>
+</section>
+<section id="track">
+<h2>Track<a class="headerlink" href="#track" title="Permalink to this heading">¶</a></h2>
+<p>‘track’ can be used to specifiy how many grids the route is offset. It
+uses “ROUTE” and “horizontalgrid”.</p>
+<p>For example ‘track4’, gives</p>
+<img alt="../_images/Options_track4.png" src="../_images/Options_track4.png" />
+<p>For example ‘track8’, gives</p>
+<img alt="../_images/Options_track8.png" src="../_images/Options_track8.png" />
+</section>
+<section id="cuts">
+<h2>Cuts<a class="headerlink" href="#cuts" title="Permalink to this heading">¶</a></h2>
+<p>The number of cuts used by the route can be modified. Default is two
+cuts for the horizontal via.</p>
+<section id="d-cuts">
+<span id="cuts-1"></span><h3>\d+cuts<a class="headerlink" href="#d-cuts" title="Permalink to this heading">¶</a></h3>
+<p>For example ‘3cuts’</p>
+<img alt="../_images/Options_3cuts.png" src="../_images/Options_3cuts.png" />
+<p>And for example ‘5cuts’</p>
+<img alt="../_images/Options_5cuts.png" src="../_images/Options_5cuts.png" />
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../basics/basics.html">Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cells/cells.html">Cells</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="route.html">Routing</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="con_route.html">Connectivity Route</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dir_route.html">Directed Route</a></li>
+<li class="toctree-l2"><a class="reference internal" href="via.html">Via/Cut</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type.html">Route Type</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Route Options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../api.html" title="API"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="type.html" title="Route Type"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Custom IC Creator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="route.html" >Routing</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Route Options</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Carsten Wulff.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Object Definition File &#8212; Custom IC Creator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Netlist" href="netlist.html" />
+    <link rel="prev" title="Technology File" href="technology.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="netlist.html" title="Netlist"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="technology.html" title="Technology File"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Custom IC Creator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="basics.html" accesskey="U">Basics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Object Definition File</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="object-definition-file">
+<h1>Object Definition File<a class="headerlink" href="#object-definition-file" title="Permalink to this heading">¶</a></h1>
+<p>The object definition file contains the almost everything except for the
+placement information, and the connectivity, both of which are in the
+Netlist.</p>
+<p>An example object definition file can be seen at <a class="reference external" href="https://github.com/wulffern/sun_tr_sky130nm/blob/main/cic/ip.json">ip.json</a></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;options&quot;</span><span class="w"> </span><span class="p">:</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;ignoreSetYoffsetHalf&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;prefix&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SUNTR_&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;include&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;dmos_sky130nm_core.json&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;dcap.json&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;tr.json&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;resistors.json&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;dig.json&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;components.json&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;capacitor.json&quot;</span>
+
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;cells&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="comments">
+<h2>Comments<a class="headerlink" href="#comments" title="Permalink to this heading">¶</a></h2>
+<p>Any line starting with <cite>s*//</cite> (space followed by //), will be ignored by the compiler.</p>
+</section>
+<section id="options">
+<h2>Options<a class="headerlink" href="#options" title="Permalink to this heading">¶</a></h2>
+<p>Options are instructions to cic. For example, “ignoreSetYoffsetHalf” is a global
+parameter to override overlap of source/drain (custom feature).</p>
+<p>Prefix is the name to prepend to all cells, which is useful for technologies
+where one need to have multiple, slightly different, versision of the design.</p>
+</section>
+<section id="include">
+<h2>Include<a class="headerlink" href="#include" title="Permalink to this heading">¶</a></h2>
+<p>The include sections link to other object definition files, and is mostly to
+avoid having everything in one big file. The array is read sequentially, as
+such, the order of the files are important. For example, if <cite>tr.json</cite> has an
+instance of a MOSFET from <cite>dmos_sky130nm_core.json</cite> the MOSFET must be created
+first.</p>
+</section>
+<section id="cells">
+<h2>Cells<a class="headerlink" href="#cells" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">cells</span></code> is an array of all the cells in the design. The order of the
+cells are important, since a cell can’t be referenced until it’s been
+created.</p>
+<p>An example of cell definition can be seen in <a class="reference external" href="https://github.com/wulffern/sun_tr_sky130nm/blob/main/cic/dig.json">dig.json</a></p>
+<p>Each of the cells are read by cic, one by one, in sequence. cic will create an
+instance of the class, and run methods on that class.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;cells&quot;</span><span class="p">:</span>
+<span class="w">  </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TAPCELLB_CV&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;class&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Layout::LayoutDigitalCell&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;meta&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;symbol&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cic_wbulk/tap&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+
+<span class="w">        </span><span class="nt">&quot;boundaryIgnoreRouting&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;beforeRoute&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;addDirectedRoutes&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="s2">&quot;AVSS&quot;</span><span class="p">,</span><span class="s2">&quot;MN1:B-&gt;MN1:G&quot;</span><span class="p">],</span>
+<span class="w">                                    </span><span class="p">[</span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="s2">&quot;AVSS&quot;</span><span class="p">,</span><span class="s2">&quot;MN1:G-|--MN1:S&quot;</span><span class="p">],</span>
+<span class="w">                                    </span><span class="p">[</span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="s2">&quot;AVSS&quot;</span><span class="p">,</span><span class="s2">&quot;MN1:G-|--MN1:D&quot;</span><span class="p">],</span>
+<span class="w">                                    </span><span class="p">[</span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="s2">&quot;AVDD&quot;</span><span class="p">,</span><span class="s2">&quot;MP:S-|--MP:G&quot;</span><span class="p">],</span>
+<span class="w">                                    </span><span class="p">[</span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="s2">&quot;AVDD&quot;</span><span class="p">,</span><span class="s2">&quot;MP:D-|--MP:G&quot;</span><span class="p">],</span>
+<span class="w">                                    </span><span class="p">[</span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="s2">&quot;AVDD&quot;</span><span class="p">,</span><span class="s2">&quot;MP:G-&gt;MP:B&quot;</span><span class="p">]</span>
+<span class="w">                                  </span><span class="p">]</span>
+
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">      </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+</pre></div>
+</div>
+<section id="name">
+<h3>Name<a class="headerlink" href="#name" title="Permalink to this heading">¶</a></h3>
+<p>All cells must have a name. The name is used to search the spice file (assumed
+to be called <cite>dig.spi</cite> for a <cite>dig.json</cite> file). The name will also be used for
+the cell in the output file</p>
+</section>
+<section id="class">
+<h3>Class<a class="headerlink" href="#class" title="Permalink to this heading">¶</a></h3>
+<p>The class correspond to a class inside cic</p>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="basics.html">Basics</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="technology.html">Technology File</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Object Definition File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netlist.html">Netlist</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cells/cells.html">Cells</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../routing/route.html">Routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="netlist.html" title="Netlist"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="technology.html" title="Technology File"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Custom IC Creator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="basics.html" >Basics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Object Definition File</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Carsten Wulff.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

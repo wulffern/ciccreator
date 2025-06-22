@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Route Type &#8212; Custom IC Creator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Route Options" href="options.html" />
+    <link rel="prev" title="Via/Cut" href="via.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="options.html" title="Route Options"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="via.html" title="Via/Cut"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Custom IC Creator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="route.html" accesskey="U">Routing</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Route Type</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="route-type">
+<h1>Route Type<a class="headerlink" href="#route-type" title="Permalink to this heading">¶</a></h1>
+<p>The following route types can be used, all of them have a short-hand
+notation.</p>
+<section id="left">
+<h2>Left (-|–)<a class="headerlink" href="#left" title="Permalink to this heading">¶</a></h2>
+<p>The ‘Left’ route will go one metal space to the left, then up, and or
+down, and finish the route. The type of route will depend on whether the
+start rectangle is to the left, or the right of the finish.</p>
+<p>Starting from the left</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Directed_StartLeft_Left(-|--)&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;inherit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TEST&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;beforeRoute&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">&quot;addDirectedRoutes&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="s2">&quot;S&quot;</span><span class="p">,</span><span class="s2">&quot;XA1:S-|--XB2:S&quot;</span><span class="p">]]}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<img alt="../_images/StartLeft_Left.png" src="../_images/StartLeft_Left.png" />
+<p>Starting from the right</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Directed_StartRight_Left(-|--)&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;inherit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TEST&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;beforeRoute&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">&quot;addDirectedRoutes&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="s2">&quot;S&quot;</span><span class="p">,</span><span class="s2">&quot;XB1:S-|--XA2:S&quot;</span><span class="p">]]}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<img alt="../_images/StartRight_Left.png" src="../_images/StartRight_Left.png" />
+</section>
+<section id="right">
+<h2>Right (–|-)<a class="headerlink" href="#right" title="Permalink to this heading">¶</a></h2>
+<p>The ‘Right’ route will go one metal spacing to the right, then up, and
+or down, and finish the route.</p>
+<p>Starting from the left</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Directed_StartLeft_Right(--|-)&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;inherit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TEST&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;beforeRoute&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">&quot;addDirectedRoutes&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="s2">&quot;S&quot;</span><span class="p">,</span><span class="s2">&quot;XB1:S--|-XB2:S&quot;</span><span class="p">]]}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<img alt="../_images/StartLeft_Right.png" src="../_images/StartLeft_Right.png" />
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Directed_StartRight_Right(--|-)&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;inherit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TEST&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;beforeRoute&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">&quot;addDirectedRoutes&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="s2">&quot;S&quot;</span><span class="p">,</span><span class="s2">&quot;XB1:S--|-XA2:S&quot;</span><span class="p">]]}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<img alt="../_images/StartRight_Right.png" src="../_images/StartRight_Right.png" />
+</section>
+<section id="u-left-route">
+<h2>U left route (|-)<a class="headerlink" href="#u-left-route" title="Permalink to this heading">¶</a></h2>
+<p>The U route will go one metal spacing left, up or down, and back again.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Directed_U_Left(|-)&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;inherit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TEST&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;beforeRoute&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">&quot;addDirectedRoutes&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="s2">&quot;S&quot;</span><span class="p">,</span><span class="s2">&quot;XB1:S|-XB2:S&quot;</span><span class="p">]]}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<img alt="../_images/U_Left.png" src="../_images/U_Left.png" />
+</section>
+<section id="u-right-route">
+<h2>U right route (-|)<a class="headerlink" href="#u-right-route" title="Permalink to this heading">¶</a></h2>
+<p>The U route will go one metal spacing right, up or down, and back again.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Directed_U_Right(-|)&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;inherit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TEST&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;beforeRoute&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">&quot;addDirectedRoutes&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="s2">&quot;S&quot;</span><span class="p">,</span><span class="s2">&quot;XB1:S-|XB2:S&quot;</span><span class="p">]]}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<img alt="../_images/U_Right.png" src="../_images/U_Right.png" />
+</section>
+<section id="vertical-route">
+<h2>Vertical route (||)<a class="headerlink" href="#vertical-route" title="Permalink to this heading">¶</a></h2>
+<p>The vertical route will find the center of the start rectangles and draw
+a straight vertical line up, or down to the stop rectangles.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Directed_Vertical(||)&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;inherit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TEST&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;beforeRoute&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">     </span><span class="p">{</span><span class="nt">&quot;addDirectedRoutes&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="s2">&quot;S&quot;</span><span class="p">,</span><span class="s2">&quot;XB1:S||XB2:S&quot;</span><span class="p">]]}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<img alt="../_images/Vertical.png" src="../_images/Vertical.png" />
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../basics/basics.html">Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cells/cells.html">Cells</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="route.html">Routing</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="con_route.html">Connectivity Route</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dir_route.html">Directed Route</a></li>
+<li class="toctree-l2"><a class="reference internal" href="via.html">Via/Cut</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Route Type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">Route Options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="options.html" title="Route Options"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="via.html" title="Via/Cut"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Custom IC Creator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="route.html" >Routing</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Route Type</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Carsten Wulff.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

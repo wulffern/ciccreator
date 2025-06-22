@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Custom IC Creator &#8212; Custom IC Creator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Basics" href="basics/basics.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="basics/basics.html" title="Basics"
+             accesskey="N">next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">Custom IC Creator  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Custom IC Creator</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="custom-ic-creator">
+<h1>Custom IC Creator<a class="headerlink" href="#custom-ic-creator" title="Permalink to this heading">¶</a></h1>
+<p>cIcCreator is a compiler for integrated circuits.</p>
+<p>cIcCreator reads a JSON object definition file, technology rule file
+and a SPICE netlist (assumes same name as object definition file)
+and outputs a cic description file (.cic).</p>
+<p>Use cicpy (<a class="reference external" href="https://github.com/wulffern/cicpy">https://github.com/wulffern/cicpy</a>) to transpile the .cic file to other formats.</p>
+<p>Download <a class="reference external" href="customiccreator.pdf">PDF</a>.</p>
+</section>
+<section id="getting-started">
+<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h1>
+<p>First clone the repo</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/wulffern/ciccreator
+<span class="nb">cd</span><span class="w"> </span>ciccreator
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/wulffern/ciccreator-bin<span class="w"> </span>release
+</pre></div>
+</div>
+<p>In the release folder, you hopefully find the binary for your platform.</p>
+<p>There are three input files needed to run the compiler</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/wulffern/ciccreator/blob/master/examples/tech.json">Technology file</a></p></li>
+<li><p><a class="reference external" href="https://github.com/wulffern/ciccreator/blob/master/examples/SAR_ESSCIRC16_28N.json">Object definition file</a></p></li>
+<li><p><a class="reference external" href="https://github.com/wulffern/ciccreator/blob/master/examples/SAR_ESSCIRC16_28N.json">Netlist</a></p></li>
+</ul>
+<p>The description below is for MacOS. For other OS replace the .darwin with the
+binary that applies to your platform.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>release/cic.darwin-latest<span class="w"> </span>examples/SAR_ESSCIRC16_28N.json<span class="w"> </span>examples/tech.json<span class="w"> </span>SAR_TEST
+</pre></div>
+</div>
+<p>The output of the compiler will be SAR_TEST.cic</p>
+<p>To view the output, do</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>release/cic-gui.darwin-latest<span class="w"> </span>SAR_TEST.cic<span class="w"> </span>examples/tech.json
+</pre></div>
+</div>
+<p>The examples/routes.json show some examples of the routings, and other options</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>release/cic.darwin-latest<span class="w"> </span>examples/routes.json<span class="w"> </span>examples/tech.json<span class="w"> </span>routes
+release/cic-gui.darwin-latest<span class="w"> </span>routes.cic<span class="w"> </span>examples/tech.json
+</pre></div>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="basics/basics.html">Basics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="basics/technology.html">Technology File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics/object.html">Object Definition File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics/netlist.html">Netlist</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cells/cells.html">Cells</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cells/cell.html">Cell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cells/patterntile.html">PatternTile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cells/patterncapacitor.html">PatternCapacitor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cells/patterntransistor.html">PatternTransistor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cells/patternresistor.html">PatternResistor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cells/layoutcell.html">LayoutCell</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="routing/route.html">Routing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="routing/con_route.html">Connectivity Route</a></li>
+<li class="toctree-l2"><a class="reference internal" href="routing/dir_route.html">Directed Route</a></li>
+<li class="toctree-l2"><a class="reference internal" href="routing/via.html">Via/Cut</a></li>
+<li class="toctree-l2"><a class="reference internal" href="routing/type.html">Route Type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="routing/options.html">Route Options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#main">Main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#basics">Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#basic-cells">Basic Cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#pattern-cells">Pattern Cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#route">Route</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#layout-cells">Layout Cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#complex-cells">Complex Cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#spice">Spice</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="#">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="basics/basics.html">Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cells/cells.html">Cells</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routing/route.html">Routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="basics/basics.html" title="Basics"
+             >next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">Custom IC Creator  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Custom IC Creator</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Carsten Wulff.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>
