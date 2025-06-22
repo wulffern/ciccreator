@@ -6,6 +6,7 @@ on:
       - 'docs/**'
   pull_request:
     branches: [ master ]
+  workflow_dispatch:
 jobs:
   docs:
     runs-on: ubuntu-latest
