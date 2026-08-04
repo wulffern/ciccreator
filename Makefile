@@ -86,12 +86,25 @@ lay:
 debug:
 	${MAKE} compile QTOPT="CONFIG+=debug"
 
+#- Apple removed the AGL framework after SDK 15, but Qt's mkspecs still list it
+#- in QMAKE_LIBS_OPENGL, so linking dies with "framework 'AGL' not found".
+#- qt_lib_gui_private.pri re-adds it after the .pro files are read, so it has to
+#- come back out of the generated makefiles. Nothing here uses AGL.
+strip_agl:
+ifeq (${UNAME_S},Darwin)
+	${foreach d, cic-core cic cic-gui, \
+	  cd ${cwd}/${d} && \
+	  ( test -e Makefile || ${QMAKE} -o Makefile ${d}.pro DEFINES+="${DEFQMAKE}" ${QTOPT} ) && \
+	  sed -i '' -e 's/-framework AGL//g' Makefile; }
+endif
+
 compile:
 	echo "#define CICVERSION \""${VERSION_DATE}"\""  > cic/src/version.h
 	echo "#define CICHASH \""${VERSION_HASH}"\""  >> cic/src/version.h
 	echo "#define CICVERSION \""${VERSION_DATE}"\""  > cic-gui/src/version.h
 	echo "#define CICHASH \""${VERSION_HASH}"\""  >> cic-gui/src/version.h
 	${QMAKE} -o qmake.make DEFINES+="${DEFQMAKE}" ${QMAKEOPT}  ciccreator.pro ${QTOPT}
+	${MAKE} strip_agl
 	${MAKE} -f qmake.make
 	test -d release || mkdir release
 	cp release/${CIC} release/cic.${OSBIN}${OSID}${OSVER}_${VERSION}
