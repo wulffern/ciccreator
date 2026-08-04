@@ -175,6 +175,10 @@ namespace cIcCore{
 
     //Route
 
+    //- "-|-" carries no alignment of its own, so the options decide what it
+    //- does, and it falls back to a right route when none of them match
+    bool optionsDecideRoute = false;
+
     if(routeType == "-|--"){routeType_ = LEFT;}
     else if(routeType == "--|-"){routeType_ = RIGHT; leftAlignCut = false;}
     else if(routeType == "-"){routeType_ = STRAIGHT;}
@@ -184,6 +188,11 @@ namespace cIcCore{
     else if(routeType == "|--"){routeType_ = U_BOTTOM;}
     else if(routeType == "->"){routeType_ = STRAIGHT;}
     else if(routeType == "||"){routeType_ = VERTICAL;}
+    else if(routeType == "-|-"){routeType_ = RIGHT; leftAlignCut = false; optionsDecideRoute = true;}
+
+    //- ">-|--" is a left route where the start is pulled down by one routing
+    //- width, the same as a left route with the offsetlow option
+    else if(routeType == ">-|--"){routeType_ = LEFT; startOffset_ = LOW;}
 
     else{
       routeType_ = ROUTE_UNKNOWN;
@@ -191,12 +200,19 @@ namespace cIcCore{
 
     if(options.contains(QRegularExpression("cutalignright(,|\\s+|$)"))){ leftAlignCut = false ; }
 
-    //- Route
+    //- Route. The order matters, an explicit left route wins over "straight"
     if(options.contains(QRegularExpression("leftdownleftup"))){
       routeType_ = LEFT_DOWN_LEFT_UP;
     }
     if(options.contains(QRegularExpression("leftupleftdown"))){
       routeType_ = LEFT_UP_LEFT_DOWN;
+    }
+
+    //- Only for the types that have no alignment of their own, so that a
+    //- "straight" option cannot turn an explicit left or right route into a
+    //- straight one
+    if(optionsDecideRoute && options.contains(QRegularExpression("straight"))){
+      routeType_ = STRAIGHT;
     }
 
     if(options.contains(QRegularExpression("strap"))){
