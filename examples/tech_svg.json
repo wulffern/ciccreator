@@ -82,6 +82,7 @@
     "technology" :{
         "gamma" : 20000,
         "grid" : 5,
+        "spiceunit" : 1e-6,
         "techlib" : "gf01",
         "devices" : {
             "mresM1" : { "name" : "rm1",
