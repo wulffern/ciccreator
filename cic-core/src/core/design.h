@@ -83,7 +83,10 @@ namespace cIcCore{
                 private:
 
                         //Check if an object (c) can run methods defined in object (jobj)
-                        void runIfObjectCanMethods(Cell * c, QJsonObject jobj, QString theme = "");
+                        //fromParent is set when jobj belongs to an inherited cell rather
+                        //than to the cell itself, so that properties which describe only
+                        //the cell that declares them are not passed down
+                        void runIfObjectCanMethods(Cell * c, QJsonObject jobj, QString theme = "", bool fromParent = false);
 
                         //Check if an object (c) can run methods defined in parents
                         void runParentsIfObjectCanMethods(Cell * c, QList<QJsonObject> * parents, QString theme = "");

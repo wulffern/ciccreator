@@ -589,7 +589,7 @@ namespace cIcCore{
         for(int i=0;i<count;i++){
             QJsonObject par = parents->at(i);
 //          par["name"] = c->name();
-            this->runIfObjectCanMethods(c,par,theme);
+            this->runIfObjectCanMethods(c,par,theme,true);
         }
 
     }
@@ -609,7 +609,7 @@ namespace cIcCore{
         }
     }
 
-    void Design::runIfObjectCanMethods(Cell * c, QJsonObject jobj, QString theme){
+    void Design::runIfObjectCanMethods(Cell * c, QJsonObject jobj, QString theme, bool fromParent){
 
         const QMetaObject * mobj = c->metaObject();
 
@@ -638,6 +638,11 @@ namespace cIcCore{
         for (const auto &key: jobj.keys()) {
             if(re.match(key).hasMatch()){ continue;}
             if( ignoreSetYoffsetHalf && key == "setYoffsetHalf"){continue;}
+
+            //- "abstract" marks the cell that declares it as a template that
+            //- should not be written out. The cells that inherit from it are
+            //- real cells, so the flag must not follow the inheritance chain
+            if( fromParent && key == "abstract"){continue;}
 
 
 
