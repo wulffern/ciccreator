@@ -440,7 +440,12 @@ namespace cIcCore {
                             p = new Port(c);
                             this->add(p);
                         }
-                        break;
+                        //- The fall through is intentional. A port cell is
+                        //- also painted like a plain cell, and the rectangle
+                        //- sized below is what p->set(rect) picks up further
+                        //- down. With a break here every port comes out zero
+                        //- size and the metal the port used to paint is gone
+                        [[fallthrough]];
                     case 'x':
                     case 'X':
                     case 'K':
