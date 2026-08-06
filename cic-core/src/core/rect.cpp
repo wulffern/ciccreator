@@ -218,14 +218,12 @@ namespace cIcCore{
 
     void Rect::mirrorX(int ay){
 
-        //- top() and setTop() do not mean the same edge: top() reads y1_
-        //- while setTop() writes y2_, and bottom()/setBottom() are crossed
-        //- the same way. Mirroring through them wrote the new y2 and then
-        //- read it straight back as "bottom", so the second line put y1
-        //- back where it started and the rect came out stretched from its
-        //- old bottom to its mirrored top instead of flipped. A 3400 tall
-        //- source strap became 12200 tall and swallowed the drain.
-        //- y1() and y2() say which edge they mean, so use those.
+        //- Mirror through y1()/y2() directly rather than top()/bottom().
+        //- The getters briefly meant the opposite edges after the
+        //- SimpleRect rewrite, and mirroring through them stretched the
+        //- rect from its old bottom to its mirrored top instead of
+        //- flipping it. The getters are fixed, but y1/y2 say which edge
+        //- they mean and cannot regress the same way.
         int new_y1 = 2 * ay - this->y2();
         int new_y2 = 2 * ay - this->y1();
 

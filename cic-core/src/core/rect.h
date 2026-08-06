@@ -47,8 +47,15 @@ namespace cIcCore{
 
         int left() const      { return x1_; }
         int right() const     { return x2_; }
-        int top() const       { return y1_; }
-        int bottom() const    { return y2_; }
+        //- top is y2 and bottom is y1, matching setTop/setBottom and the
+        //- inline implementations that lived in this file from 2016 to
+        //- 2025. The SimpleRect rewrite implemented these two from a
+        //- stale comment that said the opposite, and every reader --
+        //- mirrorX, track routing, guard rings -- started getting the
+        //- wrong edge. The commented declarations further down still
+        //- carry the correct intent: "Set the top coordinate (y2)"
+        int top() const       { return y2_; }
+        int bottom() const    { return y1_; }
         int width() const     { return x2_ - x1_; }
         int height() const    { return y2_ - y1_; }
         int centerX() const   { return x1_ + (x2_ - x1_)/2; }
