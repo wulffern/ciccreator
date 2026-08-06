@@ -6,7 +6,7 @@ int main(int argc, char *argv[])
 {
 
     int error =0;
-	if(argc >=  2){
+	if(argc >=  3){
 		
         QString file = argv[1];
         QString rules = argv[2];
