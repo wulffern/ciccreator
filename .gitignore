@@ -46,3 +46,13 @@ Makefile
 *.out
 *.app
 doxygen
+
+# Test artifacts, written by tests/*/Makefile on every "make test".
+# tests/sun_sar9b/ref.cic is the checked-in golden reference, not an
+# artifact, and sar.json/ref.json are the jq extracts diffed against it.
+tests/*/*.cic
+!tests/sun_sar9b/ref.cic
+tests/*/*_svg.html
+tests/*/*_svg/
+tests/sun_sar9b/sar.json
+tests/sun_sar9b/ref.json
