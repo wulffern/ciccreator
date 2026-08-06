@@ -50,6 +50,19 @@ To view the output, do
 
    release/cic-gui.darwin-latest SAR_TEST.cic examples/tech.json
 
+.. note::
+
+   ``cic-gui`` has been superseded by the GUI in cicpy, which is more
+   advanced: it finds the technology file and dependency libraries from the
+   IP configuration, can merge additional ``.cic`` libraries, and can re-run
+   the flow while you look at the layout. ``cic-gui`` still works, but new
+   viewer work happens in cicpy.
+
+   .. code-block:: bash
+
+      pip install 'cicpy[gui]'
+      cicpy gui SAR_TEST.cic
+
 
 The examples/routes.json show some examples of the routings, and other options
 

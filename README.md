@@ -11,6 +11,20 @@ closed source, and not available outside NTNU. cIcCreator is the C++ version,
 it's been written from scratch to support the same input files as the Perl
 compiler, but with a vastly improved performance.
 
+# Viewing a .cic file
+
+The bundled `cic-gui` has been superseded by the GUI in
+[cicpy](https://github.com/wulffern/cicpy), which is more advanced. It finds the
+technology file and dependency libraries from the IP configuration, can merge
+extra `.cic` libraries, and can re-run the flow while you look at the layout.
+
+``` bash
+pip install 'cicpy[gui]'
+cicpy gui <file.cic>
+```
+
+`cic-gui` still works, but new viewer work happens in cicpy.
+
 # Documentation
 
 Head over to
