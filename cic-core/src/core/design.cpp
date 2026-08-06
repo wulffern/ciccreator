@@ -597,6 +597,17 @@ namespace cIcCore{
     void Design::runMethod(QJsonValue v, QMetaMethod m, Cell* c)
     {
 
+        //- mirrorCenterX and mirrorCenterY take no argument. Older Qt
+        //- quietly dropped the extra one and ran them anyway, newer Qt
+        //- refuses the call with "cannot convert formal parameter 0" and
+        //- the hook silently does nothing, so a cell that every library
+        //- expects to be mirrored comes out unmirrored. Ask the method
+        //- how many parameters it wants instead of relying on that
+        if(m.parameterCount() == 0){
+            m.invoke(c,Qt::DirectConnection);
+            return;
+        }
+
         if(v.isArray()){
             QJsonArray ar1 = v.toArray();
             m.invoke(c,Qt::DirectConnection, Q_ARG(QJsonArray, ar1));

@@ -218,15 +218,26 @@ namespace cIcCore{
 
     void Rect::mirrorX(int ay){
 
-        this->setTop(2 *  ay - this->top());
-        this->setBottom(2 *  ay - this->bottom());
+        //- top() and setTop() do not mean the same edge: top() reads y1_
+        //- while setTop() writes y2_, and bottom()/setBottom() are crossed
+        //- the same way. Mirroring through them wrote the new y2 and then
+        //- read it straight back as "bottom", so the second line put y1
+        //- back where it started and the rect came out stretched from its
+        //- old bottom to its mirrored top instead of flipped. A 3400 tall
+        //- source strap became 12200 tall and swallowed the drain.
+        //- y1() and y2() say which edge they mean, so use those.
+        int new_y1 = 2 * ay - this->y2();
+        int new_y2 = 2 * ay - this->y1();
 
-        //Flip top and bottom if height is negative
-        if (this->height() < 0) {
-            qreal tmp = this->top();
-            this->setTop(this->bottom());
-            this->setBottom(tmp);
+        //- Keep the guard for a rect that arrives inverted
+        if (new_y2 < new_y1) {
+            int tmp = new_y1;
+            new_y1 = new_y2;
+            new_y2 = tmp;
         }
+
+        this->setBottom(new_y1);
+        this->setTop(new_y2);
 
         emit updated();
     }
