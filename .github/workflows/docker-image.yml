@@ -3,10 +3,17 @@ name: CI
 on:
   push:
     branches: [ master ]
+    #- The tests read json and tech files and compare against a reference
+    #- cic. Without those paths a commit that changes the inputs or the
+    #- reference cannot run the test that guards them, which is how
+    #- tests/sun_sar9b came to sit red for over a year
     paths:
       - '**.cpp'
       - '**.h'
       - 'Makefile'
+      - 'tests/**'
+      - 'examples/**'
+      - '.github/workflows/**'
   pull_request:
     branches: [ master ]
   workflow_dispatch:
