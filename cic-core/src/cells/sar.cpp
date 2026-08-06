@@ -158,7 +158,14 @@ namespace cIcCells{
 
 
         //Scramble routing
-        std::sort(graphs.begin(), graphs.end(), sortGraph);
+        //- sortGraph ties whenever two nodes reach the same height, and it
+        //- calls every pair equal when either side has no SARDIG
+        //- rectangle. std::sort orders ties however the standard library
+        //- likes, so libstdc++ and libc++ put D<7> and CN<5> on swapped
+        //- tracks and the same design file produced different layouts on
+        //- different machines. stable_sort keeps ties in discovery order,
+        //- which is the same everywhere.
+        std::stable_sort(graphs.begin(), graphs.end(), sortGraph);
 
         Instance* c;
         for (auto graph: graphs) {

@@ -1,6 +1,7 @@
 test:
 	../../bin/cic ../../examples/SAR_ESSCIRC16_28N.json ../../examples/tech.json SAR
 	python3 ../check_ports.py SAR.cic
+	python3 ../check_cuts.py SAR.cic --allow 2
 	cicpy svg SAR.cic ../../examples/tech_svg.json SAR --x 300 --y 400
 
 clean:
