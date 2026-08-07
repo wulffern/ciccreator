@@ -485,7 +485,8 @@ namespace cIcCore {
                         PatternData *pl = Pattern[c];
                         if(pl){
                             rect->setRect(xs,ys,xspace_,lyspace_);
-                            QList<Rect*> rects = pl->getRectangles(rect);
+                            //- database units are angstrom, the rule is nm
+                            QList<Rect*> rects = pl->getRectangles(rect, this->rules->grid()*10);
                             for (const auto &r: rects) {
                                 this->add(r);
                             }

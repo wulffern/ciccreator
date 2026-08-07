@@ -62,7 +62,25 @@ namespace cIcCore{
             QChar name;
             QStringList pattern;
 
-            QList<Rect*> getRectangles(Rect* r)
+            //- A sub pattern divides one pattern column into xcount parts,
+            //- and the column pitch is not generally divisible by that.
+            //- A truncated step then puts every boundary off the
+            //- manufacturing grid and accumulates the remainder at the
+            //- right edge: 3200 over six parts stepped 533, so a four
+            //- part contact came out 2132 wide starting at a coordinate
+            //- ending in 33. Computing each boundary from the exact
+            //- fraction and snapping it to the grid keeps the sub pattern
+            //- filling its column, keeps the parts within half a grid of
+            //- equal, and puts every edge where the technology can make
+            //- it. Called with grid 0 it behaves exactly as before.
+            static int snap(long long v, int grid)
+            {
+                if(grid <= 0) return (int)v;
+                long long q = (v >= 0) ? (v + grid/2) / grid : (v - grid/2) / grid;
+                return (int)(q*grid);
+            }
+
+            QList<Rect*> getRectangles(Rect* r, int grid = 0)
             {
                 QList<Rect*> rects;
                 if(!r) return rects;
@@ -72,31 +90,31 @@ namespace cIcCore{
                 int y1 = r->y1();
                 int x2 = r->x2();
                 int y2 = r->y2();
-                int xstep = (x2 - x1)/xcount;
-                int ystep = (y2 - y1)/ycount;
-                int xa = x1;
-                int ya = y1;
+
+                QVector<int> xat(xcount+1), yat(ycount+1);
+                for(int i=0;i<=xcount;i++)
+                    xat[i] = snap(x1 + (long long)(x2-x1)*i/xcount, grid);
+                for(int i=0;i<=ycount;i++)
+                    yat[i] = snap(y1 + (long long)(y2-y1)*i/ycount, grid);
 
                 Rect* prevrect = NULL;
 
                 for(int y=0;y<ycount;y++){
                     QString s = pattern[y];
-                    xa = x1;
                     for(int x = 0;x<xcount;x++){
                         QChar c = s[x];
                         if(c == 'x'){
-                            if(prevrect && prevrect->x2() == xa){
-                                prevrect->setRight(xa+xstep);
+                            if(prevrect && prevrect->x2() == xat[x]){
+                                prevrect->setRight(xat[x+1]);
                             }else{
-                                Rect * ra = new Rect(r->layer(),xa,ya,xstep,ystep);
+                                Rect * ra = new Rect(r->layer(),xat[x],yat[y],
+                                                     xat[x+1]-xat[x],yat[y+1]-yat[y]);
                                 rects.append(ra);
                                 prevrect = ra;
 
                             }
                         }
-                        xa += xstep;
                     }
-                    ya += ystep;
                 }
                 return rects;
 
