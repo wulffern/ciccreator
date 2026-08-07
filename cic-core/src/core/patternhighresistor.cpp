@@ -23,6 +23,7 @@ namespace cIcCore{
 
     PatternHighResistor::PatternHighResistor()
     {
+        transposed_ = false;
         res = new Resistor();
         res->setDeviceName("rppo");
         res->setNodes(QStringList() << "N" << "P" << "B") ;
@@ -39,18 +40,33 @@ namespace cIcCore{
 
     }
 
-    void PatternHighResistor::onFillCoordinate(QChar, QString layer, int x, int, QMap<QString,QVariant> &data){
+    void PatternHighResistor::onFillCoordinate(QChar, QString layer, int x, int y, QMap<QString,QVariant> &data){
 
         if(layer.startsWith("PO")){
 
-            int pofinger = data["pofinger"].toInt();
-            if(pofinger < x){
-                data["nf"] = data["nf"].toInt() +  1;
-                data["pofinger"] = x;
+            if(transposed_){
+                //- Stripes run across the cell, so a finger is a ROW.
+                //- The fill loop walks rows outer and columns inner,
+                //- and y DECREASES as it goes (patterntile.cpp: y =
+                //- rstrs.count() - i - 1), so the "highest so far"
+                //- test the vertical path uses would count exactly
+                //- one. Count a finger whenever the row changes
+                //- instead, which does not care about direction.
+                if(!data.contains("porow") || data["porow"].toInt() != y){
+                    data["nf"] = data["nf"].toInt() + 1;
+                    data["porow"] = y;
+                }
+                //- the stripe width is the row pitch, not the column
+                res->setProperty("width",this->rules->toMicron(yspace_));
+            }else{
+                int pofinger = data["pofinger"].toInt();
+                if(pofinger < x){
+                    data["nf"] = data["nf"].toInt() +  1;
+                    data["pofinger"] = x;
+                }
+
+                res->setProperty("width",this->rules->toMicron(xspace_));
             }
-
-
-            res->setProperty("width",this->rules->toMicron(xspace_));
         }
     }
 
@@ -58,7 +74,11 @@ namespace cIcCore{
     void PatternHighResistor::onPaintEnclosure(Rect* r)
     {
         if(r->layer() == "OP"){
-            res->setProperty("length",this->rules->toMicron( r->height() ) );
+            //- the OP rectangle spans the resistor; its long side is
+            //- the length, and which side that is depends on the
+            //- orientation
+            res->setProperty("length",this->rules->toMicron(
+                                 transposed_ ? r->width() : r->height() ) );
         }
 
     }

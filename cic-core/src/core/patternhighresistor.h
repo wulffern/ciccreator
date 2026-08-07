@@ -37,6 +37,25 @@ namespace cIcCore{
     {
         Q_OBJECT
 
+        /*!
+         * \brief Stripes run horizontally rather than vertically.
+         *
+         * The measurements this class takes are axis dependent: a
+         * finger is a column, the stripe width is the column pitch and
+         * the length is the height of the OP rectangle. All three hold
+         * only while the poly runs up the cell. Turn the resistor on
+         * its side and every one of them is on the wrong axis -- a four
+         * stripe cell reports 34 fingers of the column width, which is
+         * the drawn length mistaken for a count.
+         *
+         * With this set the three swap together. It changes no
+         * geometry: the cell is drawn by PatternTile either way, and
+         * this only decides how the device is measured for the netlist.
+         *
+         * \accessors transposed(), setTransposed()
+         */
+        Q_PROPERTY(bool transposed READ transposed WRITE setTransposed)
+
     public:
         virtual void paintRect(Rect*, QChar ,int , int );
         PatternHighResistor();
@@ -44,9 +63,13 @@ namespace cIcCore{
         virtual void onFillCoordinate(QChar c, QString layer, int x, int y, QMap<QString,QVariant> &data);
         void onPaintEnclosure(Rect* r);
         void endFillCoordinate(QMap<QString,QVariant> &data);
-        
+
+        bool transposed(){return transposed_;}
+        bool setTransposed(bool val){ transposed_ = val; return transposed_; }
+
     protected:
         Resistor * res;
+        bool transposed_;
     };
 
 }
