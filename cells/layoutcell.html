@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>LayoutCell &#8212; Custom IC Creator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Routing" href="../routing/route.html" />
+    <link rel="prev" title="PatternResistor" href="patternresistor.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../routing/route.html" title="Routing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="patternresistor.html" title="PatternResistor"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Custom IC Creator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="cells.html" accesskey="U">Cells</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">LayoutCell</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="layoutcell">
+<h1>LayoutCell<a class="headerlink" href="#layoutcell" title="Permalink to this heading">¶</a></h1>
+<p>LayoutCell extends Cell, it’s the most basic cell. It’s the default
+class unless <code class="docutils literal notranslate"><span class="pre">class</span></code> parameter is defined. LayoutCell can be found in
+<code class="docutils literal notranslate"><span class="pre">cici-core/src/core/layoutcell.cpp</span></code></p>
+<section id="setyoffsethalf">
+<h2>setYoffsetHalf<a class="headerlink" href="#setyoffsethalf" title="Permalink to this heading">¶</a></h2>
+<p>If called it will calculate the height of the cell, and adjust the
+height of the cell to half. It’s used to overlap transistor drain/source</p>
+</section>
+<section id="nopowerroute-1-0">
+<h2>noPowerRoute : 1 | 0<a class="headerlink" href="#nopowerroute-1-0" title="Permalink to this heading">¶</a></h2>
+<p>At paint() the power will be routedd unless <code class="docutils literal notranslate"><span class="pre">noRoutePower</span> <span class="pre">:</span> <span class="pre">1</span></code></p>
+</section>
+<section id="adddirectedroute-array">
+<h2>addDirectedRoute : Array<a class="headerlink" href="#adddirectedroute-array" title="Permalink to this heading">¶</a></h2>
+<p>Adds a route from start rectangles to stop rectangles. The rectangles
+are determined based on the route command.</p>
+<p><strong>Arguments</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="w"> </span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">//Layer name</span>
+<span class="w">  </span><span class="s2">&quot;CKN&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">//Net name</span>
+<span class="w">  </span><span class="s2">&quot;XA1:MP0:D-|--XA2:MP0:G&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">//Route command</span>
+<span class="w">  </span><span class="s2">&quot;offsetlowend&quot;</span><span class="w"> </span><span class="c1">//Route Options [optional]</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p><strong>Route command</strong> The routecommand is split with the following regex</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>^([^-\|&lt;&gt;]*)([-\|&lt;&gt;]+)([^-\|&lt;&gt;]*)$
+</pre></div>
+</div>
+<p>A route is defined by the characters <code class="docutils literal notranslate"><span class="pre">-|&lt;&gt;</span></code>, everything before is put
+into a “start rectangle” path regex, and everything after is put into a
+“stop rectangle” path regex.</p>
+<p>The path regex uses [[Cell::findAllRectangles(pathRegex,layer)|Cell]]</p>
+<p>See [[Route]] for the route definitions and options</p>
+</section>
+<section id="addconnectivityroute-array">
+<h2>addConnectivityRoute: Array<a class="headerlink" href="#addconnectivityroute-array" title="Permalink to this heading">¶</a></h2>
+<p>Adds a route based on the connectivity of the subcircuit.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="w"> </span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="w">    </span><span class="c1">//Layer name</span>
+<span class="w">  </span><span class="s2">&quot;^ENO$&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">//Regular expression for net match</span>
+<span class="w">  </span><span class="s2">&quot;-|--&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">//Route</span>
+<span class="w">  </span><span class="s2">&quot;onTopL,offsetlow&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">//Route options [optional]</span>
+<span class="w">  </span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="w">                  </span><span class="c1">//Number of cuts to use [optional]</span>
+<span class="w">  </span><span class="s2">&quot;IVX|STATE&quot;</span><span class="w">          </span><span class="c1">//Instances to include [optional]</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="addportonrect-array">
+<h2>addPortOnRect: Array<a class="headerlink" href="#addportonrect-array" title="Permalink to this heading">¶</a></h2>
+<p>Define which rectangles to add ports on</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+<span class="w"> </span><span class="s2">&quot;CMP_OP&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1">//Port name</span>
+<span class="w"> </span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="w">       </span><span class="c1">//Layer name</span>
+<span class="w"> </span><span class="s2">&quot;XA4:A&quot;</span><span class="w">     </span><span class="c1">//Path regex</span>
+<span class="w"> </span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="addvia-array">
+<h2>addVia: Array<a class="headerlink" href="#addvia-array" title="Permalink to this heading">¶</a></h2>
+<p>Add a via at an horizontal offset to a rectangle defined by a path regex</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="w"> </span><span class="s2">&quot;M3&quot;</span><span class="p">,</span><span class="w">          </span><span class="c1">//Start layer</span>
+<span class="w">  </span><span class="s2">&quot;M4&quot;</span><span class="p">,</span><span class="w">          </span><span class="c1">//Stop layer</span>
+<span class="w">  </span><span class="s2">&quot;MP1:D&quot;</span><span class="p">,</span><span class="w">       </span><span class="c1">//Path regex to find rectangle</span>
+<span class="w">  </span><span class="mi">2</span><span class="p">,</span><span class="w">             </span><span class="c1">//Horizontal cuts</span>
+<span class="w">  </span><span class="mi">1</span><span class="p">,</span><span class="w">             </span><span class="c1">//Vertical cuts       [optional]</span>
+<span class="w">  </span><span class="mi">8</span><span class="p">,</span><span class="w">             </span><span class="c1">//Horizontal offset   [optional]</span>
+<span class="w">  </span><span class="s2">&quot;CUST_VREF&quot;</span><span class="w">    </span><span class="c1">//Custom name for via [optional]</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="addconnectivityvia-array">
+<h2>addConnectivityVia: Array<a class="headerlink" href="#addconnectivityvia-array" title="Permalink to this heading">¶</a></h2>
+<p>Add a via on ports defined by a net name regular epression</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s2">&quot;M4&quot;</span><span class="p">,</span><span class="w">      </span><span class="c1">//Start layer</span>
+<span class="w"> </span><span class="s2">&quot;M5&quot;</span><span class="p">,</span><span class="w">      </span><span class="c1">//Stop layer</span>
+<span class="w"> </span><span class="s2">&quot;C16&quot;</span><span class="p">,</span><span class="w">     </span><span class="c1">//Path regex</span>
+<span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w">      </span><span class="c1">//Grid overrride, if 0 it&#39;s equal the grid is a cut width</span>
+<span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">         </span><span class="c1">//Vertical cuts</span>
+<span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">         </span><span class="c1">//Horizontal cuts    [optional]</span>
+<span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w">        </span><span class="c1">//Horizontal offset  [optional]</span>
+<span class="w"> </span><span class="mf">-0.5</span><span class="p">,</span><span class="w">      </span><span class="c1">//Vertical offset    [optional]</span>
+<span class="w"> </span><span class="s2">&quot;CUST_C16&quot;</span><span class="w"> </span><span class="c1">//Custom name, searchable by path regex [optional]</span>
+<span class="w"> </span><span class="p">],</span>
+</pre></div>
+</div>
+</section>
+<section id="addportvia-array">
+<h2>addPortVia: Array<a class="headerlink" href="#addportvia-array" title="Permalink to this heading">¶</a></h2>
+<p>Adds a via, and places a port on the via</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="w"> </span><span class="s2">&quot;M2&quot;</span><span class="p">,</span><span class="w">         </span><span class="c1">//Start layer</span>
+<span class="w">  </span><span class="s2">&quot;M4&quot;</span><span class="p">,</span><span class="w">         </span><span class="c1">//Stop layer</span>
+<span class="w">  </span><span class="s2">&quot;RESN&quot;</span><span class="p">,</span><span class="w">       </span><span class="c1">//Port name</span>
+<span class="w">  </span><span class="s2">&quot;X9$:MN1$:D&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">//Path regex</span>
+<span class="w">  </span><span class="mi">1</span><span class="p">,</span><span class="w">            </span><span class="c1">//Vertical cuts</span>
+<span class="w">  </span><span class="mi">2</span><span class="p">,</span><span class="w">            </span><span class="c1">//Horizontal cuts</span>
+<span class="w">  </span><span class="mi">-3</span><span class="p">,</span><span class="w">           </span><span class="c1">//Horizontal offset, multiplum of via width</span>
+<span class="w">  </span><span class="mi">-1</span><span class="p">,</span><span class="w">           </span><span class="c1">//Vertical offset, multiplum of via height</span>
+<span class="w">  </span><span class="s2">&quot;CUST_RESN&quot;</span><span class="w">   </span><span class="c1">//Custom name, searchable by path regex [optional]</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="addverticalrect-array">
+<h2>addVerticalrect: Array<a class="headerlink" href="#addverticalrect-array" title="Permalink to this heading">¶</a></h2>
+<p>Adds a custom rectangle for the height of the module</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s2">&quot;M5&quot;</span><span class="p">,</span><span class="w">          </span><span class="c1">//Layer</span>
+<span class="w"> </span><span class="s2">&quot;CUST_C16&quot;</span><span class="p">,</span><span class="w">    </span><span class="c1">//Path regex</span>
+<span class="w"> </span><span class="mi">1</span><span class="w">              </span><span class="c1">//Cuts, default 0, if 0 then use rectangle width</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../basics/basics.html">Basics</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="cells.html">Cells</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cell.html">Cell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="patterntile.html">PatternTile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="patterncapacitor.html">PatternCapacitor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="patterntransistor.html">PatternTransistor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="patternresistor.html">PatternResistor</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">LayoutCell</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../routing/route.html">Routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../routing/route.html" title="Routing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="patternresistor.html" title="PatternResistor"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Custom IC Creator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="cells.html" >Cells</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">LayoutCell</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Carsten Wulff.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>
